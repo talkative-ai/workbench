@@ -40,4 +40,10 @@ input {
 .spring {
   flex: 1;
 }
+
+a {
+  color: inherit;
+  font-style: inherit;
+  text-decoration: none;
+}
 </style>

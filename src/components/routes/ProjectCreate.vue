@@ -1,16 +1,20 @@
 <template>
   <div id="RouteProjectCreate">
     <div class="main-container">
-      <h1>"All children, except for one, grow up..."</h1>
+      <h1>"All children, except one, grow up..."</h1>
       <h2>Imagine a place.</h2>
-      <h3>Now give your game a name:</h3>
+      <h3>Now give your project a name:</h3>
       <input />
       <div class="input-hint">
         You can change this later.
         <i>(Other people will see this name when you publish!)</i>
       </div>
     </div>
-    <div class="bottom-container">Begin ></div>
+    <div class="bottom-container">
+      <router-link to="/zone/create">
+      Begin &gt;
+      </router-link>
+    </div>
   </div>
 </template>
 
