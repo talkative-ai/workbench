@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" :class="bgImageClass">
     <ComponentHeader />
     <router-view></router-view>
   </div>
@@ -8,10 +8,30 @@
 <script>
 import ComponentHeader from './components/Header.vue'
 
+let bgImageClasses = {
+  clouds: 'bg-clouds',
+  space: 'bg-milkyway'
+}
+
 export default {
   name: 'app',
   components: {
     ComponentHeader
+  },
+  data () {
+    return {
+      bgImageClass: this.generateAppClass(this.$route)
+    }
+  },
+  methods: {
+    generateAppClass (route) {
+      return `${bgImageClasses[route.meta.background]} theme-${route.meta.theme}`
+    }
+  },
+  watch: {
+    '$route' (to, from) {
+      this.$set(this, 'bgImageClass', this.generateAppClass(to))
+    }
   }
 }
 </script>
@@ -20,14 +40,25 @@ export default {
 html, body {
   margin: 0;
   padding: 0;
-  min-height: 100%;
+  min-height: 100vh;
 }
 body {
-  background-image: url("./assets/background/clouds1-background-light.jpg");
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+}
+
+#app {
+  min-height: 100vh;
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+}
+
+.bg-clouds {
+  background-image: url("./assets/background/clouds1-background-light.jpg");
+}
+
+.bg-milkyway {
+  background-image: url("./assets/images/milky-way.jpg")
 }
 
 input {

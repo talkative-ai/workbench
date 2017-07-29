@@ -15,7 +15,11 @@ export default new Router({
     {
       path: '/',
       name: 'ProjectCreate',
-      component: ProjectCreate
+      component: ProjectCreate,
+      meta: {
+        background: 'clouds',
+        theme: 'light'
+      }
     },
     {
       path: '/project/create',
@@ -45,7 +49,11 @@ export default new Router({
     {
       path: '/zone/create',
       name: 'ZoneCreate',
-      component: ZoneCreate
+      component: ZoneCreate,
+      meta: {
+        background: 'space',
+        theme: 'dark'
+      }
     },
     {
       path: '/zone/:id',

@@ -12,14 +12,23 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss">
 #Header {
   display: flex;
   padding: 15pt;
 }
 
+.theme-dark > #Header {
+  color: white;
+  .logo img {
+    filter: grayscale(100%) brightness(1000%);
+  }
+}
 
-.logo img {
-  filter: grayscale(100%) brightness(0);
+.theme-light > #Header {
+  color: black;
+  .logo img {
+    filter: grayscale(100%) brightness(0);
+  }
 }
 </style>
