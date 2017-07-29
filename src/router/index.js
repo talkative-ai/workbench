@@ -13,6 +13,11 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
+      path: '/',
+      name: 'ProjectCreate',
+      component: ProjectCreate
+    },
+    {
       path: '/project/create',
       name: 'ProjectCreate',
       component: ProjectCreate

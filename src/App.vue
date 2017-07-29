@@ -1,23 +1,43 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
+    <ComponentHeader />
     <router-view></router-view>
   </div>
 </template>
 
 <script>
+import ComponentHeader from './components/Header.vue'
+
 export default {
-  name: 'app'
+  name: 'app',
+  components: {
+    ComponentHeader
+  }
 }
 </script>
 
-<style>
-#app {
+<style lang="scss">
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+body {
+  background-image: url("./assets/background/clouds1-background-light.jpg");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+}
+
+input {
+  background-color: rgba(0,0,0,0);
+  border: none;
+  border-bottom: 1px solid $light-grey;
+  outline: none;
+}
+
+.spring {
+  flex: 1;
 }
 </style>
