@@ -53,6 +53,14 @@ body {
   background-repeat: no-repeat;
 }
 
+input {
+  width: 50%;
+  margin-top: 1rem;
+  font-size: 2.5rem;
+  padding: 0.5rem 0;
+  font-weight: 100;
+}
+
 .bg-clouds {
   background-image: url("./assets/background/clouds1-background-light.jpg");
 }

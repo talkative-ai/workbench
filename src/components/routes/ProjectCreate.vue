@@ -49,14 +49,6 @@ h2, h3 {
   font-size: 1.7rem;
 }
 
-input {
-  width: 50%;
-  margin-top: 1rem;
-  font-size: 2.5rem;
-  padding: 0.5rem 0;
-  font-weight: 100;
-}
-
 h3 {
   color: $light-grey;
 }
