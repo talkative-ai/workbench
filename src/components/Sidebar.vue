@@ -24,26 +24,28 @@ export default {
   margin-right: 0;
   span {
     background-color: transparent;
-    border: 2px solid #7F29FC;
-    border-right-width: 4px;
-    border-left-width: 4px;
+    border: 1px solid #efefef;
+    border-right-width: 1px;
+    border-left-width: 1px;
     padding: 10pt;
     width: 10rem;
     height: 1.2rem;
 
     &:nth-child(1) {
-      border-top-width: 4px;
+      border-top-width: 2px;
     }
     &:last-child() {
-      border-bottom-width: 4px;
+      border-bottom-width: 2px;
     }
 
     &.selected {
       background-color: $purple;
+      border-color: $purple;
+      color: white;
     }
   }
   .new {
-    border: 4px solid white;
+    border: 1px solid #efefef;
     background-color: white;
     color: $purple;
     font-weight: bold;

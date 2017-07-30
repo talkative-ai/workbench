@@ -16,6 +16,7 @@ export default {
 #Header {
   display: flex;
   padding: 15pt;
+  align-items: center;
 }
 
 .theme-dark > #Header {

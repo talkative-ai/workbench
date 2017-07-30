@@ -8,11 +8,6 @@
 <script>
 import ComponentHeader from './components/Header.vue'
 
-let bgImageClasses = {
-  clouds: 'bg-clouds',
-  space: 'bg-milkyway'
-}
-
 export default {
   name: 'app',
   components: {
@@ -25,7 +20,7 @@ export default {
   },
   methods: {
     generateAppClass (route) {
-      return `${bgImageClasses[route.meta.background]} theme-${route.meta.theme}`
+      return `bg-${route.meta.background} theme-${route.meta.theme}`
     }
   },
   watch: {
@@ -65,8 +60,12 @@ input {
   background-image: url("./assets/background/clouds1-background-light.jpg");
 }
 
-.bg-milkyway {
+.bg-space {
   background-image: url("./assets/images/milky-way.jpg")
+}
+
+.bg-paper {
+  background-color: #f7f7f7;
 }
 
 input {

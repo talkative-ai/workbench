@@ -58,7 +58,11 @@ export default new Router({
     {
       path: '/zone/:id',
       name: 'ZoneHome',
-      component: ZoneHome
+      component: ZoneHome,
+      meta: {
+        background: 'paper',
+        theme: 'light'
+      }
     }
   ]
 })
