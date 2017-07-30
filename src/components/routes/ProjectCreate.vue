@@ -65,6 +65,5 @@ h3 {
   text-align: right;
   padding-right: 10%;
   font-size: 2rem;
-
 }
 </style>
