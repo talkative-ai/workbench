@@ -1,8 +1,17 @@
 <template>
   <div id="Sidebar">
-    <div class="zones-wrapper">
+    <div class="zones wrapper">
       <span class="selected">Zone 1</span>
-      <span class="new">New Zone</span>
+      <span class="new" @click="$router.push('/zone/create/')">New Zone</span>
+    </div>
+    <div class="actor wrapper">
+      <span>Actor 1</span>
+      <span>Actor 2</span>
+      <span>Actor 3</span>
+      <span>Actor 4</span>
+      <span>Actor 5</span>
+      <span>Actor 6</span>
+      <span class="new">New Actor</span>
     </div>
   </div>
 </template>
@@ -14,22 +23,28 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#Sidebar, .zones-wrapper {
+#Sidebar, .wrapper {
   display: flex;
   flex-direction: column;
 }
 
-.zones-wrapper {
+.wrapper {
   margin: 2rem;
   margin-right: 0;
   span {
-    background-color: transparent;
+    background-color: white;
     border: 1px solid #efefef;
     border-right-width: 1px;
     border-left-width: 1px;
-    padding: 10pt;
+    padding: 1rem;
     width: 10rem;
     height: 1.2rem;
+    color: #828282;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #eee;
+    }
 
     &:nth-child(1) {
       border-top-width: 2px;
@@ -42,6 +57,7 @@ export default {
       background-color: $purple;
       border-color: $purple;
       color: white;
+      cursor: default;
     }
   }
   .new {
@@ -56,6 +72,12 @@ export default {
       font-weight: 100;
       content: '+';
       margin-right: 0.7rem;
+      margin-bottom: 0.5rem;
+    }
+    &:hover {
+      background-color: $purple;
+      color: white;
+      border-color: $purple;
     }
   }
 }

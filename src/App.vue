@@ -38,7 +38,7 @@ html, body {
   min-height: 100vh;
 }
 body {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: 'Montserrat', Helvetica, Arial, sans-serif;
 }
 
 #app {
