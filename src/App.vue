@@ -38,7 +38,7 @@ html, body {
   min-height: 100vh;
 }
 body {
-  font-family: 'Montserrat', Helvetica, Arial, sans-serif;
+  font-family: 'Quicksand', Helvetica, Arial, sans-serif;
 }
 
 #app {
@@ -71,7 +71,7 @@ input {
 input {
   background-color: rgba(0,0,0,0);
   border: none;
-  border-bottom: 1px solid $light-grey;
+  border-bottom: 1px solid $purple;
   outline: none;
 }
 
