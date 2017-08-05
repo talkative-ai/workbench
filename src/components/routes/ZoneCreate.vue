@@ -7,7 +7,7 @@
       <div class="flex">
         <input v-model="zoneName" />
         <router-link :class="'button no-outline ' + ((!zoneName.length && 'hidden') || '')" to="/zone/1">
-          Enter!
+          Enter
         </router-link>
       </div>
     </div>
@@ -46,17 +46,6 @@ h1, h2 {
   font-weight: 100;
   margin: 0;
   font-size: 2rem;
-}
-
-a {
-  transition: opacity 0.5s;
-  text-align: right;
-  padding-left: 5%;
-  font-size: 2rem;
-  opacity: 1;
-  &.hidden {
-    opacity: 0;
-  }
 }
 
 .main-container {

@@ -89,8 +89,15 @@ input {
   display: inline-flex;
   align-items: center;
   cursor: pointer;
+  opacity: 1;
 
-  transition: background-color 0.1s, color 0.1s;
+  &.hidden {
+    opacity: 0;
+    cursor: default;
+    pointer-events: none;
+  }
+
+  transition: background-color 0.1s, color 0.1s, opacity 0.2s ease-out;
 
   &::after {
     content: '\25b6';
