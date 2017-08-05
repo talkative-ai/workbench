@@ -10,10 +10,8 @@
       </div>
     </div>
     <div class="bottom-container">
-      <router-link to="/zone/create">
-        <button>
+      <router-link class="button" to="/zone/create">
           Begin
-        </button>
       </router-link>
     </div>
   </div>
@@ -47,30 +45,6 @@ h1 {
 
 h2 {
   font-size: 2.6rem;
-}
-
-button {
-  color: $purple;
-  background-color: transparent;
-  border: 1pt solid $purple;
-  padding: 1rem 2rem;
-  font-size: 2rem;
-  display: inline-flex;
-  align-items: center;
-  cursor: pointer;
-
-  transition: background-color 0.1s, color 0.1s;
-
-  &::after {
-    content: '\25b6';
-    font-size: 1.5rem;
-    padding-left: 0.5rem;
-  }
-
-  &:hover {
-    background-color: $purple;
-    color: white;
-  }
 }
 
 h2, h3 {

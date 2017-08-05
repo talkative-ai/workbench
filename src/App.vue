@@ -54,6 +54,21 @@ input {
   font-size: 2.5rem;
   padding: 0.5rem 0;
   font-weight: 100;
+  background-color: transparent;
+  border: none;
+  outline: none;
+}
+
+.theme-light {
+  input {
+    border-bottom: 1px solid $purple;
+  }
+}
+
+.theme-dark {
+  input {
+    border-bottom: 1px solid white;
+  }
 }
 
 .bg-clouds {
@@ -64,15 +79,47 @@ input {
   background-image: url("./assets/images/milky-way.jpg")
 }
 
-.bg-paper {
-  background-color: #f7f7f7;
+
+.button {
+  color: $purple;
+  background-color: transparent;
+  border: 1pt solid $purple;
+  padding: 1rem 2rem;
+  font-size: 2rem;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+
+  transition: background-color 0.1s, color 0.1s;
+
+  &::after {
+    content: '\25b6';
+    font-size: 1rem;
+    padding-left: 0.5rem;
+  }
+
+  &:hover {
+    background-color: $purple;
+    color: white;
+  }
+
+  &.no-outline {
+    border: 0;
+  }
 }
 
-input {
-  background-color: rgba(0,0,0,0);
-  border: none;
-  border-bottom: 1px solid $purple;
-  outline: none;
+.theme-dark {
+  .button {
+    border-color: white;
+    color: white;
+    &:hover {
+      background-color: transparent;
+    }
+  }
+}
+
+.bg-paper {
+  background-color: #f7f7f7;
 }
 
 .spring {

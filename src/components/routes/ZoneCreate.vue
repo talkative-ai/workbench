@@ -6,8 +6,8 @@
       <h2>Name this Zone:</h2>
       <div class="flex">
         <input v-model="zoneName" />
-        <router-link :class="!zoneName.length && 'hidden'" to="/zone/1">
-          Enter! &gt;
+        <router-link :class="'button no-outline ' + ((!zoneName.length && 'hidden') || '')" to="/zone/1">
+          Enter!
         </router-link>
       </div>
     </div>

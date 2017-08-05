@@ -39,8 +39,8 @@ export default {
     background: url('../assets/icons/icon-profile.svg');
   }
   &.small {
-    width: 16pt;
-    height: 16pt;
+    width: 24pt;
+    height: 24pt;
     margin: 5pt;
   }
 }
