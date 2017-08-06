@@ -1,7 +1,9 @@
 <template>
   <div id="app" :class="bgImageClass">
-    <ComponentHeader />
-    <router-view></router-view>
+    <div id="app-pad">
+      <ComponentHeader />
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
@@ -41,11 +43,22 @@ body {
   font-family: 'Quicksand', Helvetica, Arial, sans-serif;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 #app {
   min-height: 100vh;
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+}
+
+#app-pad {
+  width: 70vw;
+  display: inline-block;
 }
 
 input {
@@ -61,13 +74,32 @@ input {
 
 .theme-light {
   input {
-    border-bottom: 1px solid $purple;
+    border-bottom: 0px solid $purple;
   }
 }
 
 .theme-dark {
   input {
-    border-bottom: 1px solid white;
+    border-bottom: 0px solid white;
+  }
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  margin: 0.5rem;
+  font-weight: bold;
+  .note {
+    color: $purple;
+  }
+  input {
+    margin-top: 0;
+    border-bottom-width: 0;
+    font-size: 2rem;
+    width: 100%;
+    &:focus {
+      border-bottom-width: 1px;
+    }
   }
 }
 
@@ -90,11 +122,22 @@ input {
   align-items: center;
   cursor: pointer;
   opacity: 1;
+  justify-content: center;
+
+  &.wide {
+    width: 100%;
+  }
 
   &.hidden {
     opacity: 0;
     cursor: default;
     pointer-events: none;
+  }
+
+  &.disabled {
+    cursor: default;
+    border-color: lightgrey;
+    color: lightgrey;
   }
 
   transition: background-color 0.1s, color 0.1s, opacity 0.2s ease-out;
@@ -137,5 +180,25 @@ a {
   color: inherit;
   font-style: inherit;
   text-decoration: none;
+}
+
+.icon {
+
+  &.img-profile {
+    background: url('./assets/icons/icon-profile.svg') transparent no-repeat;
+  }
+  &.img-actor {
+    background: url('./assets/icons/icon-actor.svg') transparent no-repeat;
+  }
+  &.small {
+    width: 24pt;
+    height: 24pt;
+    margin: 5pt;
+  }
+  &.sized {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin: 5pt 5pt 5pt 0;
+  }
 }
 </style>

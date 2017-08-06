@@ -1,7 +1,7 @@
 <template>
   <div id="RouteZoneHome">
     <Sidebar />
-    <div class="zone-body-wrap">
+    <PaperWorkspace>
       <div class="text">
         <h1>You're in the zone.</h1>
         <h1>What do you want to happen?</h1>
@@ -9,7 +9,7 @@
       <span class="buttons-box">
         <span>
           <h1>Actors say and do what you wish!</h1>
-          <div>
+          <div @click="$router.push({ name: 'ActorCreate' })">
             Add an Actor
           </div>
         </span>
@@ -20,17 +20,19 @@
           </div>
         </span>
       </span>
-    </div>
+    </PaperWorkspace>
   </div>
 </template>
 
 <script>
 import Sidebar from '../Sidebar'
+import PaperWorkspace from '../PaperWorkspace'
 
 export default {
   name: 'ZoneHome',
   components: {
-    Sidebar
+    Sidebar,
+    PaperWorkspace
   }
 }
 </script>
@@ -38,39 +40,21 @@ export default {
 <style lang="scss">
 #RouteZoneHome {
   display: flex;
-
-  .zone-body-wrap {
-    align-self: baseline;
-    min-height: 20vh;
-    width: 75%;
-    background-color: white;
-    box-shadow: 0pt 3pt 20pt rgba(0,0,0,0.2);
-
-    .buttons-box {
-      display: flex;
-      span {
-        flex: 1;
-        margin: 0.5rem;
-        &:first-child {
-          margin-left: 1rem;
-        }
-        &:last-child {
-          margin-right: 1rem;
-        }
-        div {
-          height: 40vh;
-          background-color: beige;
-        }
+  .buttons-box {
+    display: flex;
+    span {
+      flex: 1;
+      margin: 0.5rem;
+      &:first-child {
+        margin-left: 1rem;
       }
-    }
-    h1 {
-      font-weight: 100;
-      margin: 0;
-      color: $lighter-grey;
-    }
-
-    .text {
-      margin: 2.5rem 4rem;
+      &:last-child {
+        margin-right: 1rem;
+      }
+      div {
+        height: 40vh;
+        background-color: beige;
+      }
     }
   }
 }

@@ -34,7 +34,11 @@ export default new Router({
     {
       path: '/actor/create',
       name: 'ActorCreate',
-      component: ActorCreate
+      component: ActorCreate,
+      meta: {
+        background: 'paper',
+        theme: 'light'
+      }
     },
     {
       path: '/actor/:id',
