@@ -84,7 +84,11 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   if (!store.state.user && to.path !== '/sign-in') {
-    next('/sign-in')
+    return next('/sign-in')
+  }
+
+  if (store.state.user && to.path === '/sign-in') {
+    return next('/')
   }
 
   return next()
