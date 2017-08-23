@@ -74,13 +74,13 @@ input {
 
 .theme-light {
   input {
-    border-bottom: 0px solid $purple;
+    border-bottom: 1px solid $purple;
   }
 }
 
 .theme-dark {
   input {
-    border-bottom: 0px solid white;
+    border-bottom: 1px solid white;
   }
 }
 

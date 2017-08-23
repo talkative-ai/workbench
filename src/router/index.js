@@ -7,10 +7,12 @@ import ActorCreate from '@/components/routes/ActorCreate'
 import DialogEditor from '@/components/routes/DialogEditor'
 import ProjectCreate from '@/components/routes/ProjectCreate'
 import ProjectSelect from '@/components/routes/ProjectSelect'
+import SignIn from '@/components/routes/SignIn'
+import store from '../store'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: '/',
@@ -18,6 +20,15 @@ export default new Router({
       component: ProjectCreate,
       meta: {
         background: 'clouds',
+        theme: 'light'
+      }
+    },
+    {
+      path: '/sign-in',
+      name: 'SignIn',
+      component: SignIn,
+      meta: {
+        background: 'paper',
         theme: 'light'
       }
     },
@@ -70,3 +81,13 @@ export default new Router({
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  if (!store.state.user && to.path !== '/sign-in') {
+    next('/sign-in')
+  }
+
+  return next()
+})
+
+export default router
