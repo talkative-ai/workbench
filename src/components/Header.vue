@@ -1,7 +1,7 @@
 <template>
   <div id="Header">
     <span class="icon small img-profile" />
-    <div class="username">Wyatt</div>
+    <div class="username">{{ user ? user.GivenName : "Please Sign In" }}</div>
     <div class="spring"></div>
     <div class="logo"><img src="../assets/logo/32.png" /></div>
   </div>
@@ -9,7 +9,12 @@
 
 <script>
 export default {
-  name: 'Header'
+  name: 'Header',
+  computed: {
+    user () {
+      return this.$store.state.user
+    }
+  }
 }
 </script>
 

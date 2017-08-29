@@ -30,11 +30,21 @@ export default {
   components: {
     PaperWorkspace
   },
+  computed: {
+    user () {
+      return this.$store.state.user
+    }
+  },
+  watch: {
+    user (newVal, oldVal) {
+      if (newVal) {
+        this.$router.push({ name: 'ProjectCreate' })
+      }
+    }
+  },
   methods: {
     onSignInSuccess (googleUser) {
-      const profile = googleUser.getBasicProfile()
-      const authResponse = googleUser.getAuthResponse()
-      console.log(profile, authResponse)
+      this.$store.dispatch('authGoogle', googleUser)
     },
     onSignInError (error) {
       console.log('OH NOES', error)
