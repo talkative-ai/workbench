@@ -1,8 +1,15 @@
 <template>
   <div id="Header">
-    <span class="icon small img-profile" />
-    <div class="username">{{ user ? user.GivenName : "Please Sign In" }}</div>
-    <div class="spring"></div>
+    <div class="user">
+      <template v-if="user">
+        <span class="icon small img-profile" />
+        {{ user.GivenName }}
+      </template>
+    </div>
+    <div class="title">
+      {{ $route.meta.title }}
+    </div>
+    <div class="spring" />
     <div class="logo"><img src="../assets/logo/32.png" /></div>
   </div>
 </template>
@@ -23,6 +30,17 @@ export default {
   display: flex;
   padding: 15pt 0;
   align-items: center;
+  width: 100%;
+}
+
+.user {
+  width: 15vw;
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  padding: 0 15pt;
 }
 
 .theme-dark #Header {

@@ -1,17 +1,12 @@
 <template>
   <div id="RouteSignIn">
-    <PaperWorkspace>
-      <div class="padded">
-        <h1>Sign In!</h1>
-        <h4><i>Currently only sign in with Google is supported</i></h4>
-        <g-signin-button
-          :params="googleSignInParams"
-          @success="onSignInSuccess"
-          @error="onSignInError">
-          Sign in with Google
-        </g-signin-button>
-      </div>
-    </PaperWorkspace>
+    <g-signin-button
+      :params="googleSignInParams"
+      @success="onSignInSuccess"
+      @error="onSignInError">
+      Sign in with Google
+    </g-signin-button>
+    <h4><i>Currently only sign in with Google is supported</i></h4>
   </div>
 </template>
 

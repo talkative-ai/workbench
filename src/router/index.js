@@ -16,11 +16,12 @@ const router = new Router({
   routes: [
     {
       path: '/',
-      name: 'ProjectCreate',
-      component: ProjectCreate,
+      name: 'ProjectSelect',
+      component: ProjectSelect,
       meta: {
-        background: 'clouds',
-        theme: 'light'
+        background: 'paper',
+        theme: 'light',
+        title: 'Your games'
       }
     },
     {
@@ -29,18 +30,19 @@ const router = new Router({
       component: SignIn,
       meta: {
         background: 'paper',
-        theme: 'light'
+        theme: 'light',
+        title: 'Sign in'
       }
     },
     {
       path: '/project/create',
       name: 'ProjectCreate',
-      component: ProjectCreate
-    },
-    {
-      path: '/project/select',
-      name: 'ProjectSelect',
-      component: ProjectSelect
+      component: ProjectCreate,
+      meta: {
+        background: 'clouds',
+        theme: 'light',
+        title: 'Create a new game'
+      }
     },
     {
       path: '/actor/create',

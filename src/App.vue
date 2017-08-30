@@ -1,7 +1,7 @@
 <template>
   <div id="app" :class="bgImageClass">
-    <div id="app-pad">
-      <ComponentHeader />
+    <ComponentHeader />
+    <div id="route-pad">
       <router-view></router-view>
     </div>
   </div>
@@ -53,10 +53,11 @@ body {
   background-size: cover;
   background-repeat: no-repeat;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 
-#app-pad {
+#route-pad {
   width: 70vw;
   display: inline-block;
 }
@@ -183,7 +184,8 @@ a {
 }
 
 .icon {
-
+  display: inline-block;
+  
   &.img-profile {
     background: url('./assets/icons/icon-profile.svg') transparent no-repeat;
   }
