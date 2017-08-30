@@ -6,31 +6,40 @@ import API from '@/api'
 
 Vue.use(Vuex)
 
-let ready
-export default new Promise((resolve, reject) => { ready = resolve })
-
 const state = {
+  initializing: true,
+
   user: null,
   token: null,
 
-  projectID: null,
-  projectTitle: null,
+  path: '',
 
-  currentZone: null,
-  zoneActors: {},
-
-  currentActor: null,
-  actorDialogs: {}
+  selectedProject: null,
+  selectedEntity: null
 }
 
+let ready
+export const initializer = new Promise((resolve, reject) => { ready = resolve })
+
 localforage.iterate((v, k) => {
-  let statek = k.split('aum.state.')
+  let statek = k.split('aum.state.v1.')
   if (statek.length <= 1) return
 
   statek = statek.pop()
 
-  state[statek] = v
-}).then(ready)
+  store.commit('set', { key: statek, value: v })
+})
+.then(() => {
+  console.log('Load project')
+})
+.then(() => {
+  ready()
+  return initializer
+})
+.then(() => {
+  store.commit('initialized')
+  console.log('initialized', state)
+})
 
 const actions = {
   createProject ({ commit, state }) {
@@ -45,22 +54,22 @@ const actions = {
       familyName: profile.getFamilyName()
     })
     .then(result => {
-      commit('token', result.headers.get('x-token'))
+      commit('set', { key: 'token', value: result.headers.get('x-token') })
       return result.json()
     })
     .then(user => {
-      commit('user', user)
+      commit('set', { key: 'user', value: user })
     })
   }
 }
 
 const mutations = {
-  token (state, tkn) {
-    state.token = tkn
+  set (state, {key, value}) {
+    state[key] = value
   },
 
-  user (state, user) {
-    state.user = user
+  initialized (state) {
+    state.initializing = false
   }
 }
 
@@ -71,12 +80,13 @@ const store = new Vuex.Store({
 })
 
 for (let k in state) {
+  if (k === 'initializing') continue
   store.watch(state => state[k], (value) => {
-    localforage.setItem(`aum.state.${k}`, state[k])
+    localforage.setItem(`aum.state.v1.${k}`, state[k])
   }, {
     immediate: true,
     deep: true
   })
 }
 
-export { store }
+export default store

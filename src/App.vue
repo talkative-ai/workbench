@@ -1,5 +1,8 @@
 <template>
-  <div id="app" :class="bgImageClass">
+  <div v-if="$store.state.initializing">
+    <h1>Loading AUM</h1>
+  </div>
+  <div v-else id="app" :class="bgImageClass">
     <ComponentHeader />
     <div id="route-pad">
       <router-view></router-view>

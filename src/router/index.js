@@ -8,7 +8,7 @@ import DialogEditor from '@/components/routes/DialogEditor'
 import ProjectCreate from '@/components/routes/ProjectCreate'
 import ProjectSelect from '@/components/routes/ProjectSelect'
 import SignIn from '@/components/routes/SignIn'
-import { store } from '../store'
+import store, { initializer } from '../store'
 
 Vue.use(Router)
 
@@ -85,7 +85,12 @@ const router = new Router({
   ]
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, from, nxt) => {
+  function next (p) {
+    store.commit('set', { key: 'path', value: p || to.path })
+    return nxt(p)
+  }
+
   if (!store.state.user && to.path !== '/sign-in') {
     return next('/sign-in')
   }
@@ -95,6 +100,10 @@ router.beforeEach((to, from, next) => {
   }
 
   return next()
+})
+
+initializer.then(() => {
+  router.replace(store.state.path)
 })
 
 export default router
