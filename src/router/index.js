@@ -85,25 +85,25 @@ const router = new Router({
   ]
 })
 
-router.beforeEach((to, from, nxt) => {
-  function next (p) {
-    store.commit('set', { key: 'path', value: p || to.path })
-    return nxt(p)
+router.beforeEach((to, from, next) => {
+  if (to.path !== '/sign-in') {
+    store.commit('set', { key: 'path', value: to.path })
   }
-
-  if (!store.state.user && to.path !== '/sign-in') {
-    return next('/sign-in')
-  }
-
-  if (store.state.user && to.path === '/sign-in') {
-    return next('/')
-  }
-
   return next()
 })
 
 initializer.then(() => {
-  router.replace(store.state.path)
+  const initialPath = router.currentRoute.path
+
+  if (!store.state.user) {
+    return router.replace('/sign-in')
+  }
+
+  if (initialPath === '/' || initialPath === '/sign-in') {
+    return router.replace(store.state.path)
+  }
+
+  store.commit('set', { key: 'path', value: initialPath })
 })
 
 export default router
