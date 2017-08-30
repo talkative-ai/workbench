@@ -1,9 +1,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import localforage from 'localforage'
 
 import API from '@/api'
 
 Vue.use(Vuex)
+
+let ready
+export default new Promise((resolve, reject) => { ready = resolve })
 
 const state = {
   user: null,
@@ -18,6 +22,15 @@ const state = {
   currentActor: null,
   actorDialogs: {}
 }
+
+localforage.iterate((v, k) => {
+  let statek = k.split('aum.state.')
+  if (statek.length <= 1) return
+
+  statek = statek.pop()
+
+  state[statek] = v
+}).then(ready)
 
 const actions = {
   createProject ({ commit, state }) {
@@ -51,8 +64,19 @@ const mutations = {
   }
 }
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
   state,
   actions,
   mutations
 })
+
+for (let k in state) {
+  store.watch(state => state[k], (value) => {
+    localforage.setItem(`aum.state.${k}`, state[k])
+  }, {
+    immediate: true,
+    deep: true
+  })
+}
+
+export { store }

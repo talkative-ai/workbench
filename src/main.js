@@ -5,17 +5,20 @@ import GSignInButton from 'vue-google-signin-button'
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import store from './store'
+import storeReady, { store } from './store'
 
 Vue.config.productionTip = false
 
 Vue.use(GSignInButton)
 
-/* eslint-disable no-new */
-new Vue({
-  el: '#app',
-  router,
-  store,
-  template: '<App/>',
-  components: { App }
+storeReady.then(() => {
+  /* eslint-disable no-new */
+  new Vue({
+    el: '#app',
+    router,
+    store,
+    template: '<App/>',
+    components: { App }
+  })
 })
+

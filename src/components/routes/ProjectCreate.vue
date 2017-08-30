@@ -2,7 +2,7 @@
   <div id="RouteProjectCreate">
     <div class="main-container">
       <h1>Imagine a place, and...</h1>
-      <h2>Name your world:</h2>
+      <h2>Name your game:</h2>
       <input />
       <div class="input-hint">
         You can change this later.
@@ -30,7 +30,7 @@ export default {
 }
 
 .main-container {
-  margin: 15%;
+  margin: 15% 0;
 }
 
 h1, h2, h3, h4, h5, h6 {

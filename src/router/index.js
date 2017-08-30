@@ -8,7 +8,7 @@ import DialogEditor from '@/components/routes/DialogEditor'
 import ProjectCreate from '@/components/routes/ProjectCreate'
 import ProjectSelect from '@/components/routes/ProjectSelect'
 import SignIn from '@/components/routes/SignIn'
-import store from '../store'
+import { store } from '../store'
 
 Vue.use(Router)
 
