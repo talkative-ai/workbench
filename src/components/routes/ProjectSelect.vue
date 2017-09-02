@@ -1,7 +1,9 @@
 <template>
   <div id="RouteProjectSelect">
     <h1>Choose a game:</h1>
-    <h2>Sunrise Over Babylon</h2>
+    <div v-for="project in projects" :key="project.ID">
+      <h2>{{ project.Title }}</h2>
+    </div>
     <hr />
     <button>Create new game</button>
   </div>
@@ -9,7 +11,12 @@
 
 <script>
 export default {
-  name: 'ProjectSelect'
+  name: 'ProjectSelect',
+  computed: {
+    projects () {
+      return this.$store.state.projectsList
+    }
+  }
 }
 </script>
 

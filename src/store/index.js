@@ -14,6 +14,7 @@ const state = {
 
   path: '',
 
+  projectsList: null,
   selectedProject: null,
   selectedEntity: null
 }

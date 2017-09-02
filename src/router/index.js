@@ -9,6 +9,7 @@ import ProjectCreate from '@/components/routes/ProjectCreate'
 import ProjectSelect from '@/components/routes/ProjectSelect'
 import SignIn from '@/components/routes/SignIn'
 import store, { initializer } from '../store'
+import API from '../api'
 
 Vue.use(Router)
 
@@ -23,6 +24,17 @@ const router = new Router({
         background: 'paper',
         theme: 'light',
         title: 'Your games'
+      },
+      beforeEnter (to, from, next) {
+        API.GetProjects().then(result => {
+          return result.json()
+        }).then(result => {
+          store.commit('set', { key: 'projectsList', value: result })
+          if (!result.length) {
+            return next({ name: 'ProjectCreate' })
+          }
+          return next()
+        })
       }
     },
     {
@@ -94,7 +106,7 @@ router.beforeEach((to, from, next) => {
     return next('/sign-in')
   }
 
-  if (!store.state.selectedProject && store.state.user && to.path !== '/') {
+  if (!store.state.selectedProject && store.state.user && to.path !== '/' && !store.state.projectsList) {
     return next('/')
   }
 
