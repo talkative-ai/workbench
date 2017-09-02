@@ -18,7 +18,7 @@ const router = new Router({
   mode: 'history',
   routes: [
     {
-      path: '/',
+      path: '/project/select',
       name: 'ProjectSelect',
       component: ProjectSelect,
       meta: {
@@ -96,7 +96,7 @@ const router = new Router({
       }
     },
     {
-      path: '/project',
+      path: '/',
       name: 'ProjectHome',
       component: ProjectHome,
       meta: {
