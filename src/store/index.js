@@ -30,15 +30,11 @@ localforage.iterate((v, k) => {
   store.commit('set', { key: statek, value: v })
 })
 .then(() => {
-  console.log('Load project')
-})
-.then(() => {
   ready()
   return initializer
 })
 .then(() => {
   store.commit('initialized')
-  console.log('initialized', state)
 })
 
 const actions = {

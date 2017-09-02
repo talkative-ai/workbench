@@ -89,15 +89,20 @@ router.beforeEach((to, from, next) => {
   if (to.path !== '/sign-in') {
     store.commit('set', { key: 'path', value: to.path })
   }
+
+  if (!store.state.user && to.path !== '/sign-in') {
+    return next('/sign-in')
+  }
+
+  if (!store.state.selectedProject && store.state.user && to.path !== '/') {
+    return next('/')
+  }
+
   return next()
 })
 
 initializer.then(() => {
   const initialPath = router.currentRoute.path
-
-  if (!store.state.user) {
-    return router.replace('/sign-in')
-  }
 
   if (initialPath === '/' || initialPath === '/sign-in') {
     return router.replace(store.state.path)
