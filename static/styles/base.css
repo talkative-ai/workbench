@@ -4,6 +4,13 @@
  */
 
  @font-face {
+  font-family: "HeroNew-UltraLight";
+  src: url("/static/fonts/HeroNew-UltraLight.woff") format("woff");
+  font-weight: 200;
+  font-style: normal;
+}
+
+ @font-face {
   font-family: "HeroNew-Light";
   src: url("/static/fonts/HeroNew-Light.woff") format("woff");
   font-weight: 300;

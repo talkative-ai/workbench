@@ -31,6 +31,7 @@ export default {
   padding: 15pt 0;
   align-items: center;
   width: 100%;
+  font-family: 'HeroNew-Regular', Helvetica, Arial, sans-serif;
 }
 
 .user {

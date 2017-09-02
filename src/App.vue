@@ -43,7 +43,7 @@ html, body {
   min-height: 100vh;
 }
 body {
-  font-family: 'HeroNew-Regular', Helvetica, Arial, sans-serif;
+  font-family: 'HeroNew-UltraLight', Helvetica, Arial, sans-serif;
 }
 input {
   font-family: 'HeroNew-Light', Helvetica, Arial, sans-serif;
@@ -117,6 +117,18 @@ label {
   background-image: url("./assets/images/milky-way.jpg")
 }
 
+.postarrow::after {
+  content: '\25b6';
+  font-size: 1rem;
+  padding-left: 0.5rem;
+}
+
+.preplus::before {
+  content: '+';
+  font-size: 3rem;
+  font-family: "HeroNew-UltraLight";
+  padding-right: 0.5rem;
+}
 
 .button {
   color: $purple;
@@ -147,12 +159,6 @@ label {
   }
 
   transition: background-color 0.1s, color 0.1s, opacity 0.2s ease-out;
-
-  &::after {
-    content: '\25b6';
-    font-size: 1rem;
-    padding-left: 0.5rem;
-  }
 
   &:hover {
     background-color: $purple;
