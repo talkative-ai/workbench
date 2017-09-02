@@ -1,0 +1,25 @@
+/*
+ * Type
+ * --------------------
+ */
+
+ @font-face {
+  font-family: "HeroNew-Light";
+  src: url("/static/fonts/HeroNew-Light.woff") format("woff");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "HeroNew-Regular";
+  src: url("/static/fonts/HeroNew-Regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "HeroNew-Bold";
+  src: url("/static/fonts/HeroNew-Bold.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+}

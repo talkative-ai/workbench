@@ -43,9 +43,11 @@ html, body {
   min-height: 100vh;
 }
 body {
-  font-family: 'Quicksand', Helvetica, Arial, sans-serif;
+  font-family: 'HeroNew-Regular', Helvetica, Arial, sans-serif;
 }
-
+input {
+  font-family: 'HeroNew-Light', Helvetica, Arial, sans-serif;
+}
 * {
   box-sizing: border-box;
 }
