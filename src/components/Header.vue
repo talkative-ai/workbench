@@ -7,7 +7,7 @@
       </template>
     </div>
     <div class="title">
-      {{ $route.meta.title }}
+      {{ title }}
     </div>
     <div class="spring" />
     <div class="logo"><img src="../assets/logo/32.png" /></div>
@@ -20,6 +20,10 @@ export default {
   computed: {
     user () {
       return this.$store.state.user
+    },
+    title () {
+      if (typeof this.$route.meta.title === 'function') return this.$route.meta.title()
+      return this.$route.meta.title
     }
   }
 }

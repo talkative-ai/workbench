@@ -1,10 +1,20 @@
 <template>
   <div id="RouteProjectSelect">
     <h1>Choose a game:</h1>
-    <div @click="toggleSelected(project.ID)" :class="`project ${selected === project.ID ? 'selected' : ''}`" v-for="project in projects" :key="project.ID">
+    <div
+      @click="toggleSelected(project)"
+      :class="`project ${selected.ID === project.ID ? 'selected' : ''}`"
+      v-for="project in projects" :key="project.ID">
       {{ project.Title }}
     </div>
     <hr />
+    <button
+      @click="openProject()"
+      v-if="selected"
+      class="button no-outline"
+      to="/project/create">
+      Open Game
+    </button>
     <router-link class="button no-outline preplus" to="/project/create">
       Create New Game
     </router-link>
@@ -31,6 +41,10 @@ export default {
       } else {
         this.selected = id
       }
+    },
+    openProject () {
+      this.$store.commit('set', { key: 'selectedProject', value: this.selected })
+      this.$router.push({ name: 'ProjectHome' })
     }
   }
 }

@@ -7,6 +7,7 @@ import ActorCreate from '@/components/routes/ActorCreate'
 import DialogEditor from '@/components/routes/DialogEditor'
 import ProjectCreate from '@/components/routes/ProjectCreate'
 import ProjectSelect from '@/components/routes/ProjectSelect'
+import ProjectHome from '@/components/routes/ProjectHome'
 import SignIn from '@/components/routes/SignIn'
 import store, { initializer } from '../store'
 import API from '../api'
@@ -93,6 +94,16 @@ const router = new Router({
         background: 'paper',
         theme: 'light'
       }
+    },
+    {
+      path: '/project',
+      name: 'ProjectHome',
+      component: ProjectHome,
+      meta: {
+        background: 'paper',
+        theme: 'light',
+        title: () => store.state.selectedProject.Title
+      }
     }
   ]
 })
@@ -119,7 +130,7 @@ router.beforeEach((to, from, next) => {
 initializer.then(() => {
   const initialPath = router.currentRoute.name
 
-  if (initialPath === 'ProjectSelect' || initialPath === 'SignIn') {
+  if (!initialPath || initialPath === 'ProjectSelect' || initialPath === 'SignIn') {
     return router.replace({ name: store.state.path })
   }
 

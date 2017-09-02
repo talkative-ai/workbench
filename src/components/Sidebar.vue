@@ -1,16 +1,26 @@
 <template>
   <div id="Sidebar">
     <div class="zones wrapper">
-      <span class="selected">Zone 1</span>
-      <span class="new" @click="$router.push('/zone/create/')">New Zone</span>
-      <span class="nav" @click="$router.push('/zone/create/')"><span class="icon sized img-actor" />Actors</span>
+      <span
+        v-for="zone in $store.state.zonesList"
+        :key="zone.ID"
+        :class="selectedZoneTitle === zone.Title">zone.Title</span>
+      <span class="new" @click="$router.push({ name: 'ZoneCreate' })">New Zone</span>
+      <span class="nav" @click="$router.push({ name: 'ActorHome' })"><span class="icon sized img-actor" />Actors</span>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Sidebar'
+  name: 'Sidebar',
+  computed: {
+    selectedZoneTitle () {
+      if (!this.$store.state.selectedZone) return false
+
+      return this.$store.state.selectedZone.Title
+    }
+  }
 }
 </script>
 
