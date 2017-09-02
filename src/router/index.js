@@ -98,26 +98,29 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.path !== '/sign-in') {
-    store.commit('set', { key: 'path', value: to.path })
+  if (to.name !== 'SignIn') {
+    store.commit('set', { key: 'path', value: to.name })
   }
 
-  if (!store.state.user && to.path !== '/sign-in') {
-    return next('/sign-in')
+  if (!store.state.user && to.name !== 'SignIn') {
+    return next({ name: 'SignIn' })
   }
 
-  if (!store.state.selectedProject && store.state.user && to.path !== '/' && !store.state.projectsList) {
-    return next('/')
+  if (!store.state.selectedProject &&
+    store.state.user &&
+    to.name !== 'ProjectSelect' &&
+    to.name !== 'ProjectCreate') {
+    return next({ name: 'ProjectSelect' })
   }
 
   return next()
 })
 
 initializer.then(() => {
-  const initialPath = router.currentRoute.path
+  const initialPath = router.currentRoute.name
 
-  if (initialPath === '/' || initialPath === '/sign-in') {
-    return router.replace(store.state.path)
+  if (initialPath === 'ProjectSelect' || initialPath === 'SignIn') {
+    return router.replace({ name: store.state.path })
   }
 
   store.commit('set', { key: 'path', value: initialPath })

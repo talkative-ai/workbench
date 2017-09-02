@@ -15,6 +15,8 @@ const state = {
   path: '',
 
   projectsList: null,
+  zonesList: null,
+  actorsList: null,
   selectedProject: null,
   selectedEntity: null
 }
@@ -22,6 +24,7 @@ const state = {
 let ready
 export const initializer = new Promise((resolve, reject) => { ready = resolve })
 
+localforage.setDriver(localforage.LOCALSTORAGE)
 localforage.iterate((v, k) => {
   let statek = k.split('aum.state.v1.')
   if (statek.length <= 1) return
