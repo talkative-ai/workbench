@@ -6,7 +6,9 @@
         {{ user.GivenName }}
       </template>
     </div>
-    <div class="title">
+    <div
+    @click="$route.meta.titleLink ? $route.meta.titleLink() : () => {}"
+    :class="`title ${$route.meta.titleLink ? 'clickable' : ''}`">
       {{ title }}
     </div>
     <div class="spring" />
@@ -36,6 +38,10 @@ export default {
   align-items: center;
   width: 100%;
   font-family: 'HeroNew-Regular', Helvetica, Arial, sans-serif;
+}
+
+.clickable {
+  cursor: pointer;
 }
 
 .user {

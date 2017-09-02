@@ -83,7 +83,9 @@ const router = new Router({
       component: ZoneCreate,
       meta: {
         background: 'space',
-        theme: 'dark'
+        theme: 'dark',
+        title: () => store.state.selectedProject.Title,
+        titleLink: () => router.push({ name: 'ProjectHome' })
       }
     },
     {
