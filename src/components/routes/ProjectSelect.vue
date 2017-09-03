@@ -43,8 +43,10 @@ export default {
       }
     },
     openProject () {
-      this.$store.commit('set', { key: 'selectedProject', value: this.selected })
-      this.$router.push({ name: 'ProjectHome' })
+      this.$store.dispatch('selectProject', this.selected)
+      .then(() => {
+        this.$router.push({ name: 'ProjectHome' })
+      })
     }
   }
 }

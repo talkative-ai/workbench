@@ -15,10 +15,10 @@ const state = {
   path: '',
 
   projectsList: null,
-  zonesList: null,
-  actorsList: null,
   selectedProject: null,
-  selectedEntity: null
+  selectedEntity: null,
+
+  createID: 0
 }
 
 let ready
@@ -46,6 +46,17 @@ const actions = {
     return state
   },
 
+  createZone ({ commit, state }, zone) {
+    commit('incrCreate')
+    zone.CreateID = store.state.createID
+    return API.CreateZone(zone)
+    .then(newZone => {
+      commit('addZone', newZone)
+      commit('selectEntity', { type: 'zone', entity: newZone })
+      return newZone
+    })
+  },
+
   authGoogle ({ commit, state }, googleUser) {
     const profile = googleUser.getBasicProfile()
     API.GetAuthGoogle({
@@ -60,6 +71,19 @@ const actions = {
     .then(user => {
       commit('set', { key: 'user', value: user })
     })
+  },
+
+  selectProject ({ commit, state }, p) {
+    return API.GetProject(p)
+    .then(result => result.json())
+    .then(project => {
+      commit('set', { key: 'selectedProject', value: project })
+      return project
+    })
+  },
+
+  selectZone ({ commit, state }, zone) {
+    commit('selectEntity', { type: 'zone', entity: zone })
   }
 }
 
@@ -70,7 +94,20 @@ const mutations = {
 
   initialized (state) {
     state.initializing = false
+  },
+
+  incrCreate () {
+    state.createID++
+  },
+
+  addZone (state, zone) {
+    state.selectedProject.Zones.push(zone)
+  },
+
+  selectEntity (state, entity) {
+    state.selectedEntity = entity
   }
+
 }
 
 const store = new Vuex.Store({

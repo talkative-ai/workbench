@@ -2,9 +2,10 @@
   <div id="Sidebar">
     <div class="zones wrapper">
       <span
-        v-for="zone in $store.state.zonesList"
+        v-for="zone in $store.state.selectedProject.Zones"
         :key="zone.ID"
-        :class="selectedZoneTitle === zone.Title">zone.Title</span>
+        @click="selectZone(zone)"
+        :class="selectedZoneID === zone.ID ? 'selected' : ''">{{ zone.Title }}</span>
       <span class="new" @click="$router.push({ name: 'ZoneCreate' })">New Zone</span>
       <span class="nav" @click="$router.push({ name: 'ActorHome' })"><span class="icon sized img-actor" />Actors</span>
     </div>
@@ -15,10 +16,18 @@
 export default {
   name: 'Sidebar',
   computed: {
-    selectedZoneTitle () {
-      if (!this.$store.state.selectedZone) return false
+    selectedZoneID () {
+      if (!this.$store.state.selectedEntity.entity) return false
 
-      return this.$store.state.selectedZone.Title
+      return this.$store.state.selectedEntity.entity.ID
+    }
+  },
+  methods: {
+    selectZone (zone) {
+      this.$store.dispatch('selectZone', zone)
+      .then(() => {
+        this.$router.push({ name: 'ZoneHome', params: { id: zone.ID } })
+      })
     }
   }
 }

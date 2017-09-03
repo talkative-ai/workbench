@@ -9,6 +9,24 @@ export default {
 
   GetProjects () {
     return aumFetch('GET', 'projects')
+  },
+
+  GetProject ({ ID }) {
+    return aumFetch('GET', `project/${ID}`)
+  },
+
+  CreateZone ({ CreateID, Title }) {
+    return aumFetch('PATCH', `project/${store.state.selectedProject.ID}`, {
+      Zones: [{
+        CreateID,
+        Title
+      }]
+    })
+    .then(idMap => idMap.json())
+    .then(idMap => ({
+      ID: idMap[CreateID],
+      Title
+    }))
   }
 }
 
@@ -21,12 +39,13 @@ function generateHeaders () {
   return myHeaders
 }
 
-function aumFetch (method, path) {
+function aumFetch (method, path, payload) {
   const config = {
     method,
     headers: generateHeaders(),
     mode: 'cors',
-    cache: 'default'
+    cache: 'default',
+    body: JSON.stringify(payload)
   }
 
   let req = new Request(`${API_URL}/${path}`, config)

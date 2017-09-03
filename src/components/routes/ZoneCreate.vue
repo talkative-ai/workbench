@@ -5,10 +5,12 @@
       <h1>Everything happens in a Zone.</h1>
       <h2>Name this Zone:</h2>
       <div class="flex">
-        <input v-model="zoneName" />
-        <router-link :class="'button no-outline ' + ((!zoneName.length && 'hidden') || '')" to="/zone/1">
+        <input v-model="zone.Title" />
+        <button
+          @click="create"
+          :class="'button no-outline ' + ((!zone.Title.length && 'hidden') || '')">
           Enter
-        </router-link>
+        </button>
       </div>
     </div>
   </div>
@@ -23,7 +25,17 @@ export default {
   },
   data () {
     return {
-      zoneName: ''
+      zone: {
+        Title: ''
+      }
+    }
+  },
+  methods: {
+    create () {
+      this.$store.dispatch('createZone', this.zone)
+      .then(zone => {
+        this.$router.replace({ name: 'ZoneHome', params: { id: zone.ID } })
+      })
     }
   }
 }

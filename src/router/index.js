@@ -94,7 +94,9 @@ const router = new Router({
       component: ZoneHome,
       meta: {
         background: 'paper',
-        theme: 'light'
+        theme: 'light',
+        title: () => store.state.selectedProject.Title,
+        titleLink: () => router.push({ name: 'ProjectHome' })
       }
     },
     {
@@ -132,11 +134,13 @@ router.beforeEach((to, from, next) => {
 initializer.then(() => {
   const initialPath = router.currentRoute.name
 
-  if (!initialPath || initialPath === 'ProjectSelect' || initialPath === 'SignIn') {
+  if (initialPath && (initialPath === 'ProjectHome' || initialPath === 'SignIn')) {
     return router.replace({ name: store.state.path })
   }
 
-  store.commit('set', { key: 'path', value: initialPath })
+  if (initialPath) {
+    store.commit('set', { key: 'path', value: initialPath })
+  }
 })
 
 export default router
