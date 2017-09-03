@@ -12,13 +12,13 @@
             <div class="background" />
             upload image
           </div>
-          <div class="button wide disabled">
+          <div :class="`button wide ${!actor.Title.length ? 'disabled' : ''}`">
             Create actor
           </div>
         </div>
         <div class="panel">
           <label><span>Name <span class="note">(*required)</span>:</span>
-            <input placeholder="What's their name?">
+            <input placeholder="What's their name?" v-model="actor.Title">
           </label>
           <label><span>Sex:</span>
             <input placeholder="Female, male, transgender, or...?">
@@ -50,6 +50,13 @@ export default {
   components: {
     Sidebar,
     PaperWorkspace
+  },
+  data () {
+    return {
+      actor: {
+        Title: ''
+      }
+    }
   }
 }
 </script>

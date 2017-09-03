@@ -8,7 +8,7 @@
         <input v-model="zone.Title" />
         <button
           @click="create"
-          :class="'button no-outline ' + ((!zone.Title.length && 'hidden') || '')">
+          :class="`button no-outline ${!zone.Title.length ? 'hidden' : ''}`">
           Enter
         </button>
       </div>

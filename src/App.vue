@@ -156,6 +156,11 @@ label {
     cursor: default;
     border-color: lightgrey;
     color: lightgrey;
+
+    &:hover {
+      background-color: inherit;
+      color: lightgrey;
+    }
   }
 
   transition: background-color 0.1s, color 0.1s, opacity 0.2s ease-out;

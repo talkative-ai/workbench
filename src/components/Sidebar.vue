@@ -39,6 +39,7 @@ export default {
 #Sidebar, .wrapper {
   display: flex;
   flex-direction: column;
+  user-select: none;
 }
 
 .wrapper {

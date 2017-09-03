@@ -111,6 +111,10 @@ const router = new Router({
         background: 'paper',
         theme: 'light',
         title: () => store.state.selectedProject.Title
+      },
+      beforeEnter (to, from, next) {
+        store.commit('clearSelectedEntity')
+        next()
       }
     }
   ]
