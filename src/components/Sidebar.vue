@@ -6,7 +6,9 @@
         :key="zone.ID"
         @click="selectZone(zone)"
         :class="selectedZoneID === zone.ID ? 'selected' : ''">{{ zone.Title }}</span>
-      <span class="new" @click="$router.push({ name: 'ZoneCreate' })">New Zone</span>
+      <span class="new"
+      :class="$router.currentRoute.name === 'ZoneCreate' ? 'selected' : ''"
+      @click="$router.push({ name: 'ZoneCreate' })">New Zone</span>
       <span class="nav" @click="$router.push({ name: 'ActorHome' })"><span class="icon sized img-actor" />Actors</span>
     </div>
   </div>

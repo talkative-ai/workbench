@@ -16,7 +16,7 @@ const state = {
 
   projectsList: null,
   selectedProject: null,
-  selectedEntity: null,
+  selectedEntity: {},
 
   createID: 0
 }
@@ -106,6 +106,10 @@ const mutations = {
 
   selectEntity (state, entity) {
     state.selectedEntity = entity
+  },
+
+  clearSelectedEntity (state, entity) {
+    state.selectedEntity = {}
   }
 
 }

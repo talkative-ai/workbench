@@ -86,6 +86,10 @@ const router = new Router({
         theme: 'dark',
         title: () => store.state.selectedProject.Title,
         titleLink: () => router.push({ name: 'ProjectHome' })
+      },
+      beforeEnter (to, from, next) {
+        store.commit('clearSelectedEntity')
+        next()
       }
     },
     {
