@@ -27,6 +27,17 @@ export default {
       ID: idMap[CreateID],
       Title
     }))
+  },
+
+  CreateActor (actor) {
+    return aumFetch('PATCH', `project/${store.state.selectedProject.ID}`, {
+      Actors: [actor]
+    })
+    .then(idMap => idMap.json())
+    .then(idMap => ({
+      ID: idMap[actor.CreateID],
+      Title: actor.Title
+    }))
   }
 }
 

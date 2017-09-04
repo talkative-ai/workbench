@@ -12,7 +12,9 @@
             <div class="background" />
             upload image
           </div>
-          <div :class="`button wide ${!actor.Title.length ? 'disabled' : ''}`">
+          <div
+          @click="actor.Title.length && create()"
+          :class="`button wide ${!actor.Title.length ? 'disabled' : ''}`">
             Create actor
           </div>
         </div>
@@ -47,6 +49,7 @@ import PaperWorkspace from '../PaperWorkspace'
 
 export default {
   name: 'ActorCreate',
+  props: ['zoneid'],
   components: {
     Sidebar,
     PaperWorkspace
@@ -56,6 +59,22 @@ export default {
       actor: {
         Title: ''
       }
+    }
+  },
+  methods: {
+    create () {
+      console.log(this.zoneid)
+      if (this.zoneid) {
+        this.actor.ZoneID = this.zoneid
+      }
+      this.$store.dispatch('createActor', this.actor)
+      .then(actor => {
+        if (this.zoneid) {
+          this.$router.replace({ name: 'ZoneHome', params: { id: this.zoneid } })
+        } else {
+          this.$router.replace({ name: 'ActorHome', params: { id: actor.ID } })
+        }
+      })
     }
   }
 }

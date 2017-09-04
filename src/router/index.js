@@ -61,10 +61,13 @@ const router = new Router({
     {
       path: '/actor/create',
       name: 'ActorCreate',
+      props: true,
       component: ActorCreate,
       meta: {
         background: 'paper',
-        theme: 'light'
+        theme: 'light',
+        title: () => store.state.selectedProject.Title,
+        titleLink: () => router.push({ name: 'ProjectHome' })
       }
     },
     {

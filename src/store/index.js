@@ -57,6 +57,17 @@ const actions = {
     })
   },
 
+  createActor ({ commit, state }, zone) {
+    commit('incrCreate')
+    zone.CreateID = store.state.createID
+    return API.CreateActor(zone)
+    .then(newActor => {
+      commit('addActor', newActor)
+      commit('selectEntity', { type: 'actor', entity: newActor })
+      return newActor
+    })
+  },
+
   authGoogle ({ commit, state }, googleUser) {
     const profile = googleUser.getBasicProfile()
     API.GetAuthGoogle({
@@ -102,6 +113,10 @@ const mutations = {
 
   addZone (state, zone) {
     state.selectedProject.Zones.push(zone)
+  },
+
+  addActor (state, actor) {
+    state.selectedProject.Actors.push(actor)
   },
 
   selectEntity (state, entity) {

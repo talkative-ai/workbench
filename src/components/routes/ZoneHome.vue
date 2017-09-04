@@ -9,7 +9,7 @@
       <span class="buttons-box">
         <span>
           <h1>Actors say and do what you wish!</h1>
-          <div @click="$router.push({ name: 'ActorCreate' })">
+          <div @click="$router.push({ name: 'ActorCreate', params: { zoneid: 1 } })">
             Add an Actor
           </div>
         </span>
