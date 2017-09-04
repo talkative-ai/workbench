@@ -73,7 +73,13 @@ const router = new Router({
     {
       path: '/actor/:id',
       name: 'ActorHome',
-      component: ActorHome
+      component: ActorHome,
+      title: () => store.state.selectedProject.Title,
+      titleLink: () => router.push({ name: 'ProjectHome' }),
+      beforeEnter (to, from, next) {
+        store.dispatch('selectActor', to.params.id)
+        .then(() => next())
+      }
     },
     {
       path: '/actor/:id/dialog',
@@ -104,6 +110,10 @@ const router = new Router({
         theme: 'light',
         title: () => store.state.selectedProject.Title,
         titleLink: () => router.push({ name: 'ProjectHome' })
+      },
+      beforeEnter (to, from, next) {
+        store.dispatch('selectZone', to.params.id)
+        .then(() => next())
       }
     },
     {

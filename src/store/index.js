@@ -93,8 +93,18 @@ const actions = {
     })
   },
 
-  selectZone ({ commit, state }, zone) {
-    commit('selectEntity', { type: 'zone', entity: zone })
+  selectZone ({ commit, state }, zoneID) {
+    for (let zone of state.selectedProject.Zones) {
+      if (zone.ID.toString() !== zoneID) continue
+      commit('selectEntity', { type: 'zone', entity: zone })
+    }
+  },
+
+  selectActor ({ commit, state }, actorID) {
+    for (let actor of state.selectedProject.Actors) {
+      if (actor.ID !== actorID) continue
+      return commit('selectEntity', { type: 'actor', entity: actor })
+    }
   }
 }
 

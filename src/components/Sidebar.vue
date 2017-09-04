@@ -26,10 +26,7 @@ export default {
   },
   methods: {
     selectZone (zone) {
-      this.$store.dispatch('selectZone', zone)
-      .then(() => {
-        this.$router.push({ name: 'ZoneHome', params: { id: zone.ID } })
-      })
+      this.$router.push({ name: 'ZoneHome', params: { id: zone.ID } })
     }
   }
 }
