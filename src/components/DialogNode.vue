@@ -1,6 +1,7 @@
 <template>
   <div class="DialogNode">
-    <div 
+    <div
+    @click="$router.push({ name: 'DialogHome', params: { id: $route.params.id, dialog_id: node.ID }})"
     class="node-values"
     v-for="(sound, index) of node.Always.PlaySounds" :key="`sound-${node.ID}-${index}`">
       <div class="inner-values">
@@ -34,7 +35,6 @@ export default {
   },
   computed: {
     dialogs () {
-      console.log(this.$store.state.dialogsMapped)
       return this.$store.state.dialogsMapped || {}
     }
   }

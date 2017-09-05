@@ -14,11 +14,9 @@ export default {
   },
   computed: {
     rootNodes () {
-      console.log(this.$store.state.rootNodes)
       return this.$store.state.rootNodes || new Set()
     },
     dialogs () {
-      console.log(this.$store.state.dialogsMapped)
       return this.$store.state.dialogsMapped || {}
     }
   }

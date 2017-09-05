@@ -63,7 +63,6 @@ export default {
   },
   methods: {
     create () {
-      console.log(this.zoneid)
       if (this.zoneid) {
         this.actor.ZoneID = this.zoneid
       }

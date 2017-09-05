@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import ZoneHome from '@/components/routes/ZoneHome'
 import ZoneCreate from '@/components/routes/ZoneCreate'
 import ActorHome from '@/components/routes/ActorHome'
+import DialogHome from '@/components/routes/DialogHome'
 import ActorCreate from '@/components/routes/ActorCreate'
 import ActorDialog from '@/components/routes/ActorDialog'
 import ProjectCreate from '@/components/routes/ProjectCreate'
@@ -142,6 +143,21 @@ const router = new Router({
       beforeEnter (to, from, next) {
         store.commit('clearSelectedEntity')
         next()
+      }
+    },
+    {
+      path: '/actor/:id/dialog/:dialog_id',
+      name: 'DialogHome',
+      component: DialogHome,
+      meta: {
+        background: 'paper',
+        theme: 'light',
+        title: () => store.state.selectedProject.Title,
+        titleLink: () => router.push({ name: 'ProjectHome' })
+      },
+      beforeEnter (to, from, next) {
+        store.dispatch('selectActor', to.params.id)
+        .then(() => next())
       }
     }
   ]

@@ -46,7 +46,6 @@ export default {
   },
   computed: {
     actor () {
-      console.log(this.$store.state.selectedEntity)
       return this.$store.state.selectedEntity ? this.$store.state.selectedEntity.entity : {}
     }
   }
