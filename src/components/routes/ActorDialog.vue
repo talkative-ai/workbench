@@ -1,5 +1,5 @@
 <template>
-  <div id="RouteDialogEditor">
+  <div id="RouteActorDialog">
     <DialogNode v-for="rootID of rootNodes" :key="rootID" :node="dialogs[rootID]" />
   </div>
 </template>
@@ -8,7 +8,7 @@
 import DialogNode from '../DialogNode'
 
 export default {
-  name: 'DialogEditor',
+  name: 'ActorDialog',
   components: {
     DialogNode
   },

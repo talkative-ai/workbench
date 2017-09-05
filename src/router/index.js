@@ -4,7 +4,7 @@ import ZoneHome from '@/components/routes/ZoneHome'
 import ZoneCreate from '@/components/routes/ZoneCreate'
 import ActorHome from '@/components/routes/ActorHome'
 import ActorCreate from '@/components/routes/ActorCreate'
-import DialogEditor from '@/components/routes/DialogEditor'
+import ActorDialog from '@/components/routes/ActorDialog'
 import ProjectCreate from '@/components/routes/ProjectCreate'
 import ProjectSelect from '@/components/routes/ProjectSelect'
 import ProjectHome from '@/components/routes/ProjectHome'
@@ -87,8 +87,8 @@ const router = new Router({
     },
     {
       path: '/actor/:id/dialog',
-      name: 'DialogEditor',
-      component: DialogEditor,
+      name: 'ActorDialog',
+      component: ActorDialog,
       meta: {
         background: 'paper',
         theme: 'light',
