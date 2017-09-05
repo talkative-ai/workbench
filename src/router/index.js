@@ -74,8 +74,12 @@ const router = new Router({
       path: '/actor/:id',
       name: 'ActorHome',
       component: ActorHome,
-      title: () => store.state.selectedProject.Title,
-      titleLink: () => router.push({ name: 'ProjectHome' }),
+      meta: {
+        background: 'paper',
+        theme: 'light',
+        title: () => store.state.selectedProject.Title,
+        titleLink: () => router.push({ name: 'ProjectHome' })
+      },
       beforeEnter (to, from, next) {
         store.dispatch('selectActor', to.params.id)
         .then(() => next())

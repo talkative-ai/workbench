@@ -15,6 +15,11 @@ export default {
     return aumFetch('GET', `project/${ID}`)
   },
 
+  GetActor ({ ID }) {
+    return aumFetch('GET', `actor/${ID}`)
+    .then(result => result.json())
+  },
+
   CreateZone ({ CreateID, Title }) {
     return aumFetch('PATCH', `project/${store.state.selectedProject.ID}`, {
       Zones: [{

@@ -101,9 +101,15 @@ const actions = {
   },
 
   selectActor ({ commit, state }, actorID) {
-    for (let actor of state.selectedProject.Actors) {
-      if (actor.ID !== actorID) continue
-      return commit('selectEntity', { type: 'actor', entity: actor })
+    for (let idx in state.selectedProject.Actors) {
+      const actor = state.selectedProject.Actors[idx]
+      if (actor.ID.toString() !== actorID) continue
+
+      return API.GetActor(actor)
+      .then(actor => {
+        commit('updateActor', { idx, actor })
+        commit('selectEntity', { type: 'actor', entity: state.selectedProject.Actors[idx] })
+      })
     }
   }
 }
@@ -127,6 +133,10 @@ const mutations = {
 
   addActor (state, actor) {
     state.selectedProject.Actors.push(actor)
+  },
+
+  updateActor (state, payload) {
+    state.selectedProject.Actors[payload.idx] = payload.actor
   },
 
   selectEntity (state, entity) {
