@@ -1,14 +1,17 @@
 <template>
   <div id="RouteDialogEditor">
-    <div v-for="rootID of rootNodes" :key="rootID">
-      {{ dialogs[rootID].Always.PlaySounds[0].Values }}
-    </div>
+    <DialogNode v-for="rootID of rootNodes" :key="rootID" :node="dialogs[rootID]" />
   </div>
 </template>
 
 <script>
+import DialogNode from '../DialogNode'
+
 export default {
   name: 'DialogEditor',
+  components: {
+    DialogNode
+  },
   computed: {
     rootNodes () {
       console.log(this.$store.state.rootNodes)
