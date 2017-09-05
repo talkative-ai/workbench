@@ -18,6 +18,9 @@ const state = {
   selectedProject: null,
   selectedEntity: {},
 
+  dialogsMapped: {},
+  rootNodes: [],
+
   createID: 0
 }
 
@@ -137,6 +140,24 @@ const mutations = {
 
   updateActor (state, payload) {
     state.selectedProject.Actors[payload.idx] = payload.actor
+    state.rootNodes = []
+    let rnodes = new Set()
+
+    for (const d of payload.actor.Dialogs) {
+      state.dialogsMapped[d.ID] = d
+      rnodes.add(d.ID.toString())
+    }
+
+    // Build dialog graph
+    for (const r of payload.actor.DialogRelations) {
+      state.dialogsMapped[r.ParentNodeID].ChildNodes = state.dialogsMapped[r.ParentNodeID].ChildNodes || []
+      state.dialogsMapped[r.ParentNodeID].ChildNodes.push(r.ChildNodeID)
+      rnodes.delete(r.ChildNodeID.toString())
+    }
+
+    for (let n of rnodes) {
+      state.rootNodes.push(n)
+    }
   },
 
   selectEntity (state, entity) {
