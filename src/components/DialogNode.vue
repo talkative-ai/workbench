@@ -3,9 +3,9 @@
     <div
     @click="$router.push({ name: 'DialogHome', params: { id: $route.params.id, dialog_id: node.ID }})"
     class="node-values"
-    v-for="(sound, index) of node.Always.PlaySounds" :key="`sound-${node.ID}-${index}`">
+    v-for="(sound, index) of node.AlwaysExec.PlaySounds" :key="`sound-${node.ID}-${index}`">
       <div class="inner-values">
-        {{ sound.Values }}
+        {{ sound.Val }}
       </div>
       <div v-if="node.ChildNodes" class="actions">
         await response
@@ -15,7 +15,7 @@
     <div v-if="node.ChildNodes" class="child-nodes">
       <div v-for="(nodeID, idx) of node.ChildNodes" :key="nodeID">
         <div :class="`child-node-head ${idx < node.ChildNodes.length-1 ? 'child-node-head-nth' : 'child-node-head-final'}`">
-          <div class="entry">"{{ dialogs[nodeID].Entry.Val[0] }}"</div>
+          <div class="entry">"{{ dialogs[nodeID].EntryInput[0] }}"</div>
           <div class="ball"></div>
         </div>
         <DialogNode :node="dialogs[nodeID]" />
