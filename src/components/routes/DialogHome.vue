@@ -2,25 +2,34 @@
   <div id="RouteDialogHome">
     <Sidebar />
     <PaperWorkspace>
-      <h1>"{{ node.EntryInput[0] }}"</h1>
+      <input class="quoted" v-model="node.EntryInput[0]" />
+      <button>Add potential entry input</button>
+      <hr />
       <div
       class="node-values"
       v-for="(sound, index) of node.AlwaysExec.PlaySounds" :key="`sound-${node.ID}-${index}`">
         <div class="inner-values">
-          <input placeholder="Enter speech text here!" :value="sound.Val" />
+          <input placeholder="Enter speech text here!" v-model="sound.Val" />
+          <button @click="deleteAction('PlaySounds', index)">Delete</button>
         </div>
       </div>
-      <button @click="addDialog()">
-        Add Dialog
+      <button @click="addAction()">
+        Add Action
       </button>
       <hr />
-      <div v-for="nodeID of node.ChildNodes" :key="nodeID">
+      <div
+      @click="$router.push({ name: 'DialogHome', params: { id: $route.params.id, dialog_id: nodeID }})"
+      v-for="nodeID of node.ChildNodes"
+      :key="nodeID">
         <div>
           "{{ dialogs[nodeID].EntryInput[0] }}"
         </div>
       </div>
       <button>
         Add Response
+      </button>
+      <button @click="save()">
+        Save Changes
       </button>
     </PaperWorkspace>
   </div>
@@ -32,11 +41,6 @@ import PaperWorkspace from '../PaperWorkspace'
 
 export default {
   name: 'DialogHome',
-  data () {
-    return {
-      newActions: []
-    }
-  },
   components: {
     Sidebar,
     PaperWorkspace
@@ -50,13 +54,18 @@ export default {
     }
   },
   methods: {
-    addDialog () {
+    addAction () {
       let newDialog = {
         SoundType: 0,
-        Values: ''
+        Val: ''
       }
       this.node.AlwaysExec.PlaySounds.push(newDialog)
-      this.newActions.push(newDialog)
+    },
+    save () {
+      this.$store.dispatch('updateDialog', this.node)
+    },
+    deleteAction (type, index) {
+      this.node.AlwaysExec[type].splice(index, 1)
     }
   }
 }
@@ -79,6 +88,12 @@ export default {
   input {
     border: none;
     width: 100%;
+  }
+
+  .quoted {
+    &:before {
+      content: '"';
+    }
   }
 }
 </style>

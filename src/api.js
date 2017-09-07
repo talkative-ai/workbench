@@ -20,6 +20,10 @@ export default {
     .then(result => result.json())
   },
 
+  PutActor (actor) {
+    return aumFetch('PUT', `actor/${actor.ID}`, actor)
+  },
+
   CreateZone ({ CreateID, Title }) {
     return aumFetch('PATCH', `project/${store.state.selectedProject.ID}`, {
       Zones: [{

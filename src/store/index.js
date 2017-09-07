@@ -114,6 +114,18 @@ const actions = {
         commit('selectEntity', { type: 'actor', entity: state.selectedProject.Actors[idx] })
       })
     }
+  },
+
+  updateDialog ({ commit, state }, dialog) {
+    if (state.selectedEntity.type !== 'actor') return
+    for (let idx in state.selectedEntity.Dialogs) {
+      const d = state.selectedEntity.Dialogs[idx]
+      if (d.ID === dialog.ID) {
+        state.selectedEntity.Dialogs[idx] = dialog
+        break
+      }
+    }
+    API.PutActor(state.selectedEntity.entity)
   }
 }
 
