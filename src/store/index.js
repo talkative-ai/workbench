@@ -126,6 +126,10 @@ const actions = {
       }
     }
     API.PutActor(state.selectedEntity.entity)
+  },
+
+  publish ({ commit, state }) {
+    API.Publish()
   }
 }
 

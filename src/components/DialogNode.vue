@@ -1,10 +1,9 @@
 <template>
   <div class="DialogNode">
-    <div
-    @click="$router.push({ name: 'DialogHome', params: { id: $route.params.id, dialog_id: node.ID }})"
-    class="node-values"
-    v-for="(sound, index) of node.AlwaysExec.PlaySounds" :key="`sound-${node.ID}-${index}`">
-      <div class="inner-values">
+    <div class="node-values" @click="$router.push({ name: 'DialogHome', params: { id: $route.params.id, dialog_id: node.ID }})">
+      <div
+        class="inner-values"
+        v-for="(sound, index) of node.AlwaysExec.PlaySounds" :key="`sound-${node.ID}-${index}`">
         {{ sound.Val }}
       </div>
       <div v-if="node.ChildNodes" class="actions">

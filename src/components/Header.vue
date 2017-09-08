@@ -12,6 +12,7 @@
       {{ title }}
     </div>
     <div class="spring" />
+    <button @click="publish()">Publish to the Multiverse</button>
     <div class="logo"><img src="../assets/logo/32.png" /></div>
   </div>
 </template>
@@ -26,6 +27,11 @@ export default {
     title () {
       if (typeof this.$route.meta.title === 'function') return this.$route.meta.title()
       return this.$route.meta.title
+    }
+  },
+  methods: {
+    publish () {
+      this.$store.dispatch('publish')
     }
   }
 }

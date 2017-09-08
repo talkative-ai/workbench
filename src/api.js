@@ -47,6 +47,10 @@ export default {
       ID: idMap[actor.CreateID],
       Title: actor.Title
     }))
+  },
+
+  Publish () {
+    return aumFetch('POST', `publish/${store.state.selectedProject.ID}`)
   }
 }
 
