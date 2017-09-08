@@ -6,6 +6,18 @@ import API from '@/api'
 
 Vue.use(Vuex)
 
+const defaultDialog = {
+  'IsRoot': true,
+  'EntryInput': [],
+  'AlwaysExec': {
+    'SetGlobalVariables': null,
+    'PlaySounds': [],
+    'InitializeActorDialog': 0,
+    'SetZone': 0,
+    'ResetGame': false
+  }
+}
+
 const state = {
   initializing: true,
 
@@ -20,6 +32,7 @@ const state = {
 
   dialogsMapped: {},
   rootNodes: [],
+  newDialog: null,
 
   createID: 0
 }
@@ -116,20 +129,20 @@ const actions = {
     }
   },
 
-  updateDialog ({ commit, state }, dialog) {
+  updateDialog ({ commit, state }) {
     if (state.selectedEntity.type !== 'actor') return
-    for (let idx in state.selectedEntity.Dialogs) {
-      const d = state.selectedEntity.Dialogs[idx]
-      if (d.ID === dialog.ID) {
-        state.selectedEntity.Dialogs[idx] = dialog
-        break
-      }
-    }
     API.PutActor(state.selectedEntity.entity)
   },
 
   publish ({ commit, state }) {
     API.Publish()
+  },
+
+  createNewDialog ({ commit, state }, dialog) {
+    commit('incrCreate')
+    dialog.CreateID = store.state.createID
+    state.selectedEntity.entity.Dialogs.push(dialog)
+    API.PutActor(state.selectedEntity.entity)
   }
 }
 
@@ -182,6 +195,10 @@ const mutations = {
 
   clearSelectedEntity (state, entity) {
     state.selectedEntity = {}
+  },
+
+  newDialog (state, options = {}) {
+    state.newDialog = Object.assign({}, defaultDialog, options)
   }
 
 }

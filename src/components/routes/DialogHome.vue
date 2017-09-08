@@ -2,8 +2,8 @@
   <div id="RouteDialogHome">
     <Sidebar />
     <PaperWorkspace>
-      <input class="quoted" v-model="node.EntryInput[0]" />
-      <button>Add potential entry input</button>
+      <input class="quoted" v-for="(entry, index) of node.EntryInput" :key="index" v-model="node.EntryInput[index]" />
+      <button @click="addEntry">Add potential entry input</button>
       <hr />
       <div
       class="node-values"
@@ -25,7 +25,7 @@
           "{{ dialogs[nodeID].EntryInput[0] }}"
         </div>
       </div>
-      <button>
+      <button v-if="!this.isNew">
         Add Response
       </button>
       <button @click="save()">
@@ -46,7 +46,11 @@ export default {
     PaperWorkspace
   },
   computed: {
+    isNew () {
+      return this.$route.params.isNew
+    },
     node () {
+      if (this.isNew) return this.$store.state.newDialog
       return this.$store.state.dialogsMapped[this.$route.params.dialog_id]
     },
     dialogs () {
@@ -61,8 +65,15 @@ export default {
       }
       this.node.AlwaysExec.PlaySounds.push(newDialog)
     },
+    addEntry () {
+      this.node.EntryInput.push('')
+    },
     save () {
-      this.$store.dispatch('updateDialog', this.node)
+      if (!this.isNew) {
+        this.$store.dispatch('updateDialog', this.node)
+      } else {
+        this.$store.dispatch('createNewDialog', this.node)
+      }
     },
     deleteAction (type, index) {
       this.node.AlwaysExec[type].splice(index, 1)
