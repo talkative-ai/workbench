@@ -12,7 +12,10 @@
       {{ title }}
     </div>
     <div class="spring" />
-    <button class="button" @click="publish()">Publish to the Multiverse</button>
+    <button
+      v-if="user && project"
+      class="button"
+      @click="publish()">Publish to the Multiverse</button>
     <div class="logo"><img src="../assets/logo/32.png" /></div>
   </div>
 </template>
@@ -23,6 +26,9 @@ export default {
   computed: {
     user () {
       return this.$store.state.user
+    },
+    project () {
+      return this.$store.state.selectedProject
     },
     title () {
       if (typeof this.$route.meta.title === 'function') return this.$route.meta.title()

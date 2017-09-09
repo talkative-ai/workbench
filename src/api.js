@@ -74,5 +74,8 @@ function aumFetch (method, path, payload) {
   }
 
   let req = new Request(`${API_URL}/${path}`, config)
-  return fetch(req)
+  return fetch(req).then(result => {
+    store.commit('set', { key: 'token', value: result.headers.get('x-token') })
+    return result
+  })
 }

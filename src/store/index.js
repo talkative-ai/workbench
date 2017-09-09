@@ -93,7 +93,6 @@ const actions = {
       familyName: profile.getFamilyName()
     })
     .then(result => {
-      commit('set', { key: 'token', value: result.headers.get('x-token') })
       return result.json()
     })
     .then(user => {
