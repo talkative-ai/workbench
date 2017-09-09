@@ -9,15 +9,24 @@
       <span class="buttons-box">
         <span>
           <h1>Actors say and do what you wish!</h1>
-          <div @click="$router.push({ name: 'ActorCreate', params: { zoneid: 1 } })">
+          <button
+            class="button"
+            @click="$router.push({ name: 'ActorCreate', params: { zoneid: 1 } })">
             Add an Actor
+          </button>
+          <div>
+            <span v-for="za of $store.state.selectedProject.ZoneActors" :key="za.ActorID">
+              <div @click="$router.push({ name: 'ActorHome', params: { id: za.ActorID } })">
+                {{ actors[za.ActorID].Title }}
+              </div>
+            </span>
           </div>
         </span>
         <span>
           <h1>Triggers define how the zone works!</h1>
-          <div>
+          <button class="button">
             Add a Trigger
-          </div>
+          </button>
         </span>
       </span>
     </PaperWorkspace>
@@ -33,6 +42,11 @@ export default {
   components: {
     Sidebar,
     PaperWorkspace
+  },
+  computed: {
+    actors () {
+      return this.$store.state.actorsMapped
+    }
   }
 }
 </script>
@@ -50,10 +64,6 @@ export default {
       }
       &:last-child {
         margin-right: 1rem;
-      }
-      div {
-        height: 40vh;
-        background-color: beige;
       }
     }
   }

@@ -17,7 +17,6 @@ export default {
   },
   computed: {
     rootNodes () {
-      console.log(this.$store.state.rootNodes)
       return this.$store.state.rootNodes || []
     },
     dialogs () {

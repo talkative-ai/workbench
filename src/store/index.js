@@ -35,6 +35,8 @@ const state = {
   rootNodes: [],
   newDialog: null,
 
+  actorsMapped: {},
+
   createID: 0
 }
 
@@ -69,7 +71,7 @@ const actions = {
     return API.CreateZone(zone)
     .then(newZone => {
       commit('addZone', newZone)
-      commit('selectEntity', { type: 'zone', data: newZone })
+      commit('selectEntity', { type: 'zone', data: newZone, redirect: true })
       return newZone
     })
   },
@@ -80,7 +82,7 @@ const actions = {
     return API.CreateActor(zone)
     .then(newActor => {
       commit('addActor', newActor)
-      commit('selectEntity', { type: 'actor', data: newActor })
+      commit('selectEntity', { type: 'actor', data: newActor, redirect: true })
       return newActor
     })
   },
@@ -105,6 +107,9 @@ const actions = {
     .then(result => result.json())
     .then(project => {
       commit('set', { key: 'selectedProject', value: project })
+      for (const a of project.Actors) {
+        commit('set', { key: [ 'actorsMapped', a.ID ], value: a })
+      }
       return project
     })
   },
@@ -117,16 +122,12 @@ const actions = {
   },
 
   selectActor ({ commit, state }, actorID) {
-    for (let idx in state.selectedProject.Actors) {
-      const actor = state.selectedProject.Actors[idx]
-      if (actor.ID.toString() !== actorID) continue
-
-      return API.GetActor(actor)
-      .then(actor => {
-        commit('updateActor', { idx, actor })
-        commit('selectEntity', { type: 'actor', data: state.selectedProject.Actors[idx] })
-      })
-    }
+    const actor = state.actorsMapped[actorID]
+    return API.GetActor(actor)
+    .then(actor => {
+      commit('updateActor', { actor })
+      commit('selectEntity', { type: 'actor', data: actor })
+    })
   },
 
   updateDialog ({ commit, state }) {
@@ -148,7 +149,15 @@ const actions = {
 
 const mutations = {
   set (state, {key, value}) {
-    state[key] = value
+    if (Array.isArray(key)) {
+      let s = state
+      for (let i = 0; i < key.length - 1; i++) {
+        s = s[key[i]]
+      }
+      Vue.set(s, key[key.length - 1], value)
+      return
+    }
+    Vue.set(state, key, value)
   },
 
   initialized (state) {
@@ -170,33 +179,39 @@ const mutations = {
   updateActor (state, payload) {
     payload.actor.Dialogs = payload.actor.Dialogs || []
     payload.actor.DialogRelations = payload.actor.DialogRelations || []
-    state.selectedProject.Actors[payload.idx] = payload.actor
+    let id = 0
+    for (let idx in state.selectedProject.Actors) {
+      if (state.selectedProject.Actors[idx].ID === payload.actor.ID) id = state.selectedProject.Actors[idx].ID
+    }
+    Vue.set(state.selectedProject.Actors, id, payload.actor)
     state.rootNodes = []
     let rnodes = new Set()
 
     for (const d of payload.actor.Dialogs) {
-      state.dialogsMapped[d.ID] = d
+      Vue.set(state.dialogsMapped, d.ID, d)
       rnodes.add(d.ID.toString())
     }
 
     // Build dialog graph
     for (const r of payload.actor.DialogRelations) {
-      state.dialogsMapped[r.ParentNodeID].ChildNodes = state.dialogsMapped[r.ParentNodeID].ChildNodes || []
-      state.dialogsMapped[r.ParentNodeID].ChildNodes.push(r.ChildNodeID)
+      let prepend = state.dialogsMapped[r.ParentNodeID].ChildNodes || []
+      Vue.set(state.dialogsMapped[r.ParentNodeID], 'ChildNodes', [...prepend, r.ChildNodeID])
       rnodes.delete(r.ChildNodeID.toString())
     }
 
-    for (let n of rnodes) {
-      state.rootNodes.push(n)
-    }
+    Vue.set(state, 'rootNodes', [...rnodes])
   },
 
   selectEntity (state, entity) {
-    state.selectedEntity = entity
-    if (entity.type === 'dialog') {
-      router.push({ name: 'DialogHome', params: { id: entity.data.ActorID, dialog_id: entity.data.ID } })
-    } else {
-      router.push({ name: `${titlecase(entity.type)}Home`, params: { id: entity.data.ID } })
+    let redirect = entity.redirect
+    delete entity.redirect
+    state.selectedEntity = { ...state.selectedEntity, ...entity }
+    if (redirect) {
+      if (entity.type === 'dialog') {
+        router.push({ name: 'DialogHome', params: { id: entity.data.ActorID, dialog_id: entity.data.ID } })
+      } else {
+        router.push({ name: `${titlecase(entity.type)}Home`, params: { id: entity.data.ID } })
+      }
     }
   },
 
@@ -205,7 +220,7 @@ const mutations = {
   },
 
   newDialog (state, options = {}) {
-    state.newDialog = Object.assign({}, defaultDialog, options)
+    state.newDialog = { ...defaultDialog, ...options }
   }
 
 }
