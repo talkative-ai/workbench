@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import localforage from 'localforage'
 
+import router from '@/router'
 import API from '@/api'
 
 Vue.use(Vuex)
@@ -68,7 +69,7 @@ const actions = {
     return API.CreateZone(zone)
     .then(newZone => {
       commit('addZone', newZone)
-      commit('selectEntity', { type: 'zone', entity: newZone })
+      commit('selectEntity', { type: 'zone', data: newZone })
       return newZone
     })
   },
@@ -79,7 +80,7 @@ const actions = {
     return API.CreateActor(zone)
     .then(newActor => {
       commit('addActor', newActor)
-      commit('selectEntity', { type: 'actor', entity: newActor })
+      commit('selectEntity', { type: 'actor', data: newActor })
       return newActor
     })
   },
@@ -112,7 +113,7 @@ const actions = {
   selectZone ({ commit, state }, zoneID) {
     for (let zone of state.selectedProject.Zones) {
       if (zone.ID.toString() !== zoneID) continue
-      commit('selectEntity', { type: 'zone', entity: zone })
+      commit('selectEntity', { type: 'zone', data: zone })
     }
   },
 
@@ -124,14 +125,14 @@ const actions = {
       return API.GetActor(actor)
       .then(actor => {
         commit('updateActor', { idx, actor })
-        commit('selectEntity', { type: 'actor', entity: state.selectedProject.Actors[idx] })
+        commit('selectEntity', { type: 'actor', data: state.selectedProject.Actors[idx] })
       })
     }
   },
 
   updateDialog ({ commit, state }) {
     if (state.selectedEntity.type !== 'actor') return
-    API.PutActor(state.selectedEntity.entity)
+    API.PutActor(state.selectedEntity.data)
   },
 
   publish ({ commit, state }) {
@@ -141,8 +142,8 @@ const actions = {
   createNewDialog ({ commit, state }, dialog) {
     commit('incrCreate')
     dialog.CreateID = store.state.createID
-    state.selectedEntity.entity.Dialogs.push(dialog)
-    API.PutActor(state.selectedEntity.entity)
+    state.selectedEntity.data.Dialogs.push(dialog)
+    API.PutActor(state.selectedEntity.data)
   }
 }
 
@@ -168,6 +169,8 @@ const mutations = {
   },
 
   updateActor (state, payload) {
+    payload.actor.Dialogs = payload.actor.Dialogs || []
+    payload.actor.DialogRelations = payload.actor.DialogRelations || []
     state.selectedProject.Actors[payload.idx] = payload.actor
     state.rootNodes = []
     let rnodes = new Set()
@@ -191,6 +194,11 @@ const mutations = {
 
   selectEntity (state, entity) {
     state.selectedEntity = entity
+    if (entity.type === 'dialog') {
+      router.push({ name: 'DialogHome', params: { id: entity.data.ActorID, dialog_id: entity.data.ID } })
+    } else {
+      router.push({ name: `${titlecase(entity.type)}Home`, params: { id: entity.data.ID } })
+    }
   },
 
   clearSelectedEntity (state, entity) {
@@ -217,6 +225,10 @@ for (let k in state) {
     immediate: true,
     deep: true
   })
+}
+
+function titlecase (str) {
+  return `${str[0].toUpperCase()}${str.substr(1)}`
 }
 
 export default store

@@ -1,6 +1,9 @@
 <template>
   <div id="RouteActorDialog">
-    <DialogNode v-for="rootID of rootNodes" :key="rootID" :node="dialogs[rootID]" />
+    <DialogNode v-if="rootNodes.length > 0" v-for="rootID of rootNodes" :key="rootID" :node="dialogs[rootID]" />
+    <button
+      class="button"
+      @click="$router.push({ name: 'DialogCreate', params: $route.params })" v-if="!rootNodes.length">Create the first dialog</button>
   </div>
 </template>
 
@@ -14,7 +17,8 @@ export default {
   },
   computed: {
     rootNodes () {
-      return this.$store.state.rootNodes || new Set()
+      console.log(this.$store.state.rootNodes)
+      return this.$store.state.rootNodes || []
     },
     dialogs () {
       return this.$store.state.dialogsMapped || {}
@@ -24,4 +28,7 @@ export default {
 </script>
 
 <style scoped>
+h1 {
+  text-align: center;
+}
 </style>

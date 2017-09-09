@@ -30,6 +30,7 @@
           </label>
         </div>
       </div>
+      <button class="button" @click="$router.push({ name: 'ActorDialog', id: actor.ID })">Dialog View</button>
     </PaperWorkspace>
   </div>
 </template>
@@ -46,7 +47,7 @@ export default {
   },
   computed: {
     actor () {
-      return this.$store.state.selectedEntity ? this.$store.state.selectedEntity.entity : {}
+      return this.$store.state.selectedEntity ? this.$store.state.selectedEntity.data : {}
     }
   }
 }

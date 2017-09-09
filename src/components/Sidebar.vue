@@ -19,9 +19,9 @@ export default {
   name: 'Sidebar',
   computed: {
     selectedZoneID () {
-      if (!this.$store.state.selectedEntity.entity) return false
+      if (!this.$store.state.selectedEntity.data) return false
 
-      return this.$store.state.selectedEntity.entity.ID
+      return this.$store.state.selectedEntity.data.ID
     }
   },
   methods: {

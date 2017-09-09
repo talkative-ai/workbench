@@ -12,7 +12,7 @@
       {{ title }}
     </div>
     <div class="spring" />
-    <button @click="publish()">Publish to the Multiverse</button>
+    <button class="button" @click="publish()">Publish to the Multiverse</button>
     <div class="logo"><img src="../assets/logo/32.png" /></div>
   </div>
 </template>

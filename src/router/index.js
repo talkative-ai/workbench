@@ -146,8 +146,8 @@ const router = new Router({
       }
     },
     {
-      path: '/actor/:id/dialog/:dialog_id/new',
-      name: 'DialogNew',
+      path: '/actor/:id/dialog/:dialog_id/create',
+      name: 'DialogCreate',
       component: DialogHome,
       meta: {
         background: 'paper',

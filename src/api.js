@@ -43,10 +43,11 @@ export default {
       Actors: [actor]
     })
     .then(idMap => idMap.json())
-    .then(idMap => ({
-      ID: idMap[actor.CreateID],
-      Title: actor.Title
-    }))
+    .then(idMap => {
+      actor.ID = idMap[actor.CreateID]
+      delete actor.CreateID
+      return actor
+    })
   },
 
   Publish () {

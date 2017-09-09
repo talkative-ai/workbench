@@ -25,7 +25,9 @@
           "{{ dialogs[nodeID].EntryInput[0] }}"
         </div>
       </div>
-      <button v-if="!this.isNew">
+      <button
+      v-if="!this.isNew"
+      @click="$router.push({ name: 'DialogCreate', params: { id: $route.params.id, dialog_id: $route.params.dialog_id }})">
         Add Response
       </button>
       <button @click="save()">
