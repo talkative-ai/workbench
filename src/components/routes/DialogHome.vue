@@ -3,17 +3,17 @@
     <Sidebar />
     <PaperWorkspace>
       <input class="quoted" v-for="(entry, index) of node.EntryInput" :key="index" v-model="node.EntryInput[index]" />
-      <button @click="addEntry">Add potential entry input</button>
+      <button class="button" @click="addEntry">Add potential entry input</button>
       <hr />
       <div
       class="node-values"
       v-for="(sound, index) of node.AlwaysExec.PlaySounds" :key="`sound-${node.ID}-${index}`">
         <div class="inner-values">
           <input placeholder="Enter speech text here!" v-model="sound.Val" />
-          <button @click="deleteAction('PlaySounds', index)">Delete</button>
+          <button class="button" @click="deleteAction('PlaySounds', index)">Delete</button>
         </div>
       </div>
-      <button @click="addAction()">
+      <button class="button" @click="addAction()">
         Add Action
       </button>
       <hr />
@@ -30,7 +30,7 @@
       @click="$router.push({ name: 'DialogCreate', params: { id: $route.params.id, dialog_id: $route.params.dialog_id }})">
         Add Response
       </button>
-      <button @click="save()">
+      <button class="button" @click="save()">
         Save Changes
       </button>
     </PaperWorkspace>
