@@ -1,46 +1,39 @@
-<template>
-  <div id="RouteActorCreate">
-    <Sidebar />
-    <PaperWorkspace>
-      <div class="text">
-        <h1>You don't have any actors yet.</h1>
-        <h2>Create a new actor:</h2>
-      </div>
-      <div class="main">
-        <div class="panel small">
-          <div class="upload-image">
-            <div class="background" />
-            upload image
-          </div>
-          <div
-          @click="actor.Title.length && create()"
-          :class="`button wide ${!actor.Title.length ? 'disabled' : ''}`">
-            Create actor
-          </div>
-        </div>
-        <div class="panel">
-          <label><span>Name <span class="note">(*required)</span>:</span>
-            <input placeholder="What's their name?" v-model="actor.Title">
-          </label>
-          <label><span>Sex:</span>
-            <input placeholder="Female, male, transgender, or...?">
-          </label>
-          <label><span>Age:</span>
-            <input placeholder="How old are they?">
-          </label>
-          <label><span>Relationships:</span>
-            <input placeholder="Parent? Spouse? Child?">
-          </label>
-          <label><span>Background Story:</span>
-            <input placeholder="What is their story? Why are they who they are today?">
-          </label>
-          <label><span>Character:</span>
-            <input placeholder="How do they behave?">
-          </label>
-        </div>
-      </div>
-    </PaperWorkspace>
-  </div>
+<template lang="pug">
+  #RouteActorCreate
+    sidebar
+    paper-workspace
+      .text
+        h1 You don't have any actors yet.
+        h2 Create a new actor:
+      .main
+        .panel.small
+          .upload-image
+            .background
+              | upload image
+            div(@click='actor.Title.length && create()', :class="`button wide ${!actor.Title.length ? 'disabled' : ''}`")
+              | Create actor
+          .panel
+            label
+              span
+                | Name 
+                span.note (*required)
+                | :
+              input(placeholder="What's their name?", v-model='actor.Title')
+            label
+              span Sex:
+              input(placeholder='Female, male, transgender, or...?')
+            label
+              span Age:
+              input(placeholder='How old are they?')
+            label
+              span Relationships:
+              input(placeholder='Parent? Spouse? Child?')
+            label
+              span Background Story:
+              input(placeholder='What is their story? Why are they who they are today?')
+            label
+              span Character:
+              input(placeholder='How do they behave?')
 </template>
 
 <script>

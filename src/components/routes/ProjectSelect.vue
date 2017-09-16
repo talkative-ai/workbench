@@ -1,24 +1,13 @@
-<template>
-  <div id="RouteProjectSelect">
-    <h1>Choose a game:</h1>
-    <div
-      @click="toggleSelected(project)"
-      :class="`project ${selected.ID === project.ID ? 'selected' : ''}`"
-      v-for="project in projects" :key="project.ID">
-      {{ project.Title }}
-    </div>
-    <hr />
-    <button
-      @click="openProject()"
-      v-if="selected"
-      class="button no-outline"
-      to="/project/create">
-      Open Game
-    </button>
-    <router-link class="button no-outline preplus" to="/project/create">
-      Create New Game
-    </router-link>
-  </div>
+<template lang="pug">
+  #RouteProjectSelect
+    h1 Choose a game:
+    div(@click='toggleSelected(project)', :class="`project ${selected.ID === project.ID ? 'selected' : ''}`", v-for='project in projects', :key='project.ID')
+      | {{ project.Title }}
+    hr
+    button.button.no-outline(@click='openProject()', v-if='selected', to='/project/create')
+      | Open Game
+    router-link.button.no-outline.preplus(to='/project/create')
+      | Create New Game
 </template>
 
 <script>

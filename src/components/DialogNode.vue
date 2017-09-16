@@ -1,33 +1,24 @@
-<template>
-  <div class="DialogNode">
-    <div class="node-values" @click="$router.push({ name: 'DialogHome', params: { id: $route.params.id, dialog_id: node.ID }})">
-      <div
-        class="inner-values"
-        v-for="(sound, index) of node.AlwaysExec.PlaySounds" :key="`sound-${node.ID}-${index}`">
-        {{ sound.Val }}
-      </div>
-      <div v-if="node.ChildNodes" class="actions">
-        await response
-      </div>
-    </div>
-    <div v-if="node.ChildNodes" class="after-values-space"></div>
-    <div v-if="node.ChildNodes" class="child-nodes">
-      <div v-for="(nodeID, idx) of node.ChildNodes" :key="nodeID">
-        <div :class="`child-node-head ${idx < node.ChildNodes.length-1 ? 'child-node-head-nth' : 'child-node-head-final'}`">
-          <div class="entry">"{{ dialogs[nodeID].EntryInput[0] }}"</div>
-          <div class="ball"></div>
-        </div>
-        <DialogNode :node="dialogs[nodeID]" />
-      </div>
-    </div>
-  </div>
+<template lang="pug">
+  .DialogNode
+    .node-values(@click="$router.push({ name: 'DialogHome', params: { id: $route.params.id, dialog_id: node.ID }})")
+      .inner-values(v-for='(sound, index) of node.AlwaysExec.PlaySounds', :key='`sound-${node.ID}-${index}`')
+        | {{ sound.Val }}
+      .actions(v-if='node.ChildNodes')
+        | await response
+    .after-values-space(v-if='node.ChildNodes')
+    .child-nodes(v-if='node.ChildNodes')
+      div(v-for='(nodeID, idx) of node.ChildNodes', :key='nodeID')
+        div(:class="`child-node-head ${idx < node.ChildNodes.length-1 ? 'child-node-head-nth' : 'child-node-head-final'}`")
+          .entry "{{ dialogs[nodeID].EntryInput[0] }}"
+          .ball
+        dialog-node(:node='dialogs[nodeID]')
 </template>
 
 <script>
 import DialogNode from './DialogNode'
 
 export default {
-  name: 'DialogNode',
+  name: 'dialog-node',
   props: ['node'],
   components: {
     DialogNode

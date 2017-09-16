@@ -1,22 +1,15 @@
-<template>
-  <div id="Sidebar">
-    <div class="zones wrapper">
-      <span
-        v-for="zone in $store.state.selectedProject.Zones"
-        :key="zone.ID"
-        @click="selectZone(zone)"
-        :class="selectedZoneID === zone.ID ? 'selected' : ''">{{ zone.Title }}</span>
-      <span class="new"
-      :class="$router.currentRoute.name === 'ZoneCreate' ? 'selected' : ''"
-      @click="$router.push({ name: 'ZoneCreate' })">New Zone</span>
-      <span class="nav" @click="$router.push({ name: 'ActorHome' })"><span class="icon sized img-actor" />Actors</span>
-    </div>
-  </div>
+<template lang="pug">
+  #Sidebar
+    .zones.wrapper
+      span(v-for='zone in $store.state.selectedProject.Zones', :key='zone.ID', @click='selectZone(zone)', :class="selectedZoneID === zone.ID ? 'selected' : ''") {{ zone.Title }}
+      span.new(:class="$router.currentRoute.name === 'ZoneCreate' ? 'selected' : ''", @click="$router.push({ name: 'ZoneCreate' })") New Zone
+      span.nav(@click="$router.push({ name: 'ActorHome' })")
+        span.icon.sized.img-actor Actors
 </template>
 
 <script>
 export default {
-  name: 'Sidebar',
+  name: 'sidebar',
   computed: {
     selectedZoneID () {
       if (!this.$store.state.selectedEntity.data) return false

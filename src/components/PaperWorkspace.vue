@@ -1,12 +1,11 @@
-<template>
-  <div class="PaperWorkspace">
-    <slot></slot>
-  </div>
+<template lang="pug">
+  .PaperWorkspace
+    slot
 </template>
 
 <script>
 export default {
-  name: 'PaperWorkspace'
+  name: 'paper-workspace'
 }
 </script>
 

@@ -1,10 +1,13 @@
-<template>
-  <div id="RouteActorDialog">
-    <DialogNode v-if="rootNodes.length > 0" v-for="rootID of rootNodes" :key="rootID" :node="dialogs[rootID]" />
-    <button
-      class="button"
-      @click="$router.push({ name: 'DialogCreate', params: $route.params })" v-if="!rootNodes.length">Create the first dialog</button>
-  </div>
+<template lang="pug">
+  #RouteActorDialog
+    dialog-node(
+      v-if='rootNodes.length > 0',
+      v-for='rootID of rootNodes',
+      :key='rootID',
+      :node='dialogs[rootID]')
+      button.button(
+        @click="$router.push({ name: 'DialogCreate', params: $route.params })",
+        v-if='!rootNodes.length') Create the first dialog
 </template>
 
 <script>

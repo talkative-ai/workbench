@@ -1,19 +1,13 @@
-<template>
-  <div id="RouteZoneCreate">
-    <Sidebar />
-    <div class="main-container">
-      <h1>Everything happens in a Zone.</h1>
-      <h2>Name this Zone:</h2>
-      <div class="flex">
-        <input v-model="zone.Title" />
-        <button
-          @click="create"
-          :class="`button no-outline ${!zone.Title.length ? 'hidden' : ''}`">
-          Enter
-        </button>
-      </div>
-    </div>
-  </div>
+<template lang="pug">
+  #RouteZoneCreate
+    sidebar
+    .main-container
+      h1 Everything happens in a Zone.
+      h2 Name this Zone:
+      .flex
+        input(v-model='zone.Title')
+        button(@click='create', :class="`button no-outline ${!zone.Title.length ? 'hidden' : ''}`")
+          | Enter
 </template>
 
 <script>

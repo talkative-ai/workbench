@@ -1,12 +1,9 @@
-<template>
-  <div id="RouteProjectHome">
-    <Sidebar />
-    <PaperWorkspace>
-      <div class="text">
-        <h1>Dashboard</h1>
-      </div>
-    </PaperWorkspace>
-  </div>
+<template lang="pug">
+  #RouteProjectHome
+    sidebar
+    paper-workspace
+      .text
+        h1 Dashboard
 </template>
 
 <script>

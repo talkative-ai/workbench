@@ -1,23 +1,15 @@
-<template>
-  <div id="Header">
-    <div class="user">
-      <template v-if="user">
-        <span class="icon small img-profile" />
-        {{ user.GivenName }}
-      </template>
-    </div>
-    <div
-    @click="$route.meta.titleLink ? $route.meta.titleLink() : () => {}"
-    :class="`title ${$route.meta.titleLink ? 'clickable' : ''}`">
-      {{ title }}
-    </div>
-    <div class="spring" />
-    <button
-      v-if="user && project"
-      class="button"
-      @click="publish()">Publish to the Multiverse</button>
-    <div class="logo"><img src="../assets/logo/32.png" /></div>
-  </div>
+<template lang="pug">
+  #Header
+    .user
+      template(v-if='user')
+        span.icon.small.img-profile
+          | {{ user.GivenName }}
+    div(@click='$route.meta.titleLink ? $route.meta.titleLink() : () => {}', :class="`title ${$route.meta.titleLink ? 'clickable' : ''}`")
+      | {{ title }}
+    .spring
+    button.button(v-if='user && project', @click='publish()') Publish to the Multiverse
+    .logo
+      img(src='../assets/logo/32.png')
 </template>
 
 <script>

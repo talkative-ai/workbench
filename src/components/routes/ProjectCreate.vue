@@ -1,20 +1,15 @@
-<template>
-  <div id="RouteProjectCreate">
-    <div class="main-container">
-      <h1>Imagine a place, and...</h1>
-      <h2>Name your game:</h2>
-      <input />
-      <div class="input-hint">
-        You can change this later.
-        <i>(Other people will see this name when you publish!)</i>
-      </div>
-    </div>
-    <div class="bottom-container">
-      <router-link class="button" to="/zone/create">
-          Begin
-      </router-link>
-    </div>
-  </div>
+<template lang="pug">
+  #RouteProjectCreate
+    .main-container
+      h1 Imagine a place, and...
+      h2 Name your game:
+      input
+      .input-hint
+        | You can change this later.
+        i (Other people will see this name when you publish!)
+    .bottom-container
+      router-link.button(to='/zone/create')
+        | Begin
 </template>
 
 <script>
