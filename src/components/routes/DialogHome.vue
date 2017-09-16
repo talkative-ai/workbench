@@ -2,20 +2,37 @@
   <div id="RouteDialogHome">
     <Sidebar />
     <PaperWorkspace>
+      <h2>Editing a Dialog with {{ actor.Title }}</h2>
       <input class="quoted" v-for="(entry, index) of node.EntryInput" :key="index" v-model="node.EntryInput[index]" />
       <button class="button" @click="addEntry">Add potential entry input</button>
       <hr />
-      <div
-      class="node-values"
-      v-for="(sound, index) of node.AlwaysExec.PlaySounds" :key="`sound-${node.ID}-${index}`">
-        <div class="inner-values">
-          <input placeholder="Enter speech text here!" v-model="sound.Val" />
-          <button class="button" @click="deleteAction('PlaySounds', index)">Delete</button>
+      <div class="flex-columns">
+        <draggable
+          class="created-actions"
+          v-model="actionSpeech"
+          @add="onAddAction"
+          :options="{ group: 'actions' }"
+          >
+          <div
+          v-for="(sound, index) of node.AlwaysExec.PlaySounds" :key="`sound-${node.ID}-${index}`">
+            <div class="inner-values">
+              <input placeholder="Enter speech text here!" v-model="sound.Val" />
+            </div>
+          </div>
+        </draggable>
+        <div>
+          <h1>Actions</h1>
+          <draggable
+          class="available-actions"
+            v-model="actionTypes"
+            :options="{sort: false, group: 'actions'}"
+            >
+            <div v-for="action of actionTypes" :key="action" class="action">
+              {{action}}
+            </div>
+          </draggable>
         </div>
       </div>
-      <button class="button" @click="addAction()">
-        Add Action
-      </button>
       <hr />
       <div
       @click="$router.push({ name: 'DialogHome', params: { id: $route.params.id, dialog_id: nodeID }})"
@@ -26,6 +43,7 @@
         </div>
       </div>
       <button
+      class="button"
       v-if="!this.isNew"
       @click="$router.push({ name: 'DialogCreate', params: { id: $route.params.id, dialog_id: $route.params.dialog_id }})">
         Add Response
@@ -40,14 +58,19 @@
 <script>
 import Sidebar from '../Sidebar'
 import PaperWorkspace from '../PaperWorkspace'
+import draggable from 'vuedraggable'
 
 export default {
   name: 'DialogHome',
   components: {
     Sidebar,
-    PaperWorkspace
+    PaperWorkspace,
+    draggable
   },
   computed: {
+    actor () {
+      return this.$store.state.selectedEntity ? this.$store.state.selectedEntity.data : {}
+    },
     isNew () {
       return this.$route.params.isNew
     },
@@ -57,15 +80,34 @@ export default {
     },
     dialogs () {
       return this.$store.state.dialogsMapped
+    },
+    actionSpeech: {
+      get () {
+        return this.node.AlwaysExec.PlaySounds
+      },
+      set (value) {
+        for (let v of value) {
+          if (typeof v === 'string') return false
+        }
+        this.node.AlwaysExec.PlaySounds = value
+      }
+    },
+    actionTypes: {
+      get () {
+        return ['Speech']
+      },
+      set () {
+        return
+      }
     }
   },
   methods: {
-    addAction () {
+    addActionSpeech (idx) {
       let newDialog = {
         SoundType: 0,
         Val: ''
       }
-      this.node.AlwaysExec.PlaySounds.push(newDialog)
+      this.node.AlwaysExec.PlaySounds.splice(idx, 0, newDialog)
     },
     addEntry () {
       this.node.EntryInput.push('')
@@ -79,6 +121,10 @@ export default {
     },
     deleteAction (type, index) {
       this.node.AlwaysExec[type].splice(index, 1)
+    },
+    onAddAction (evt) {
+      let action = this.actionTypes[evt.oldIndex]
+      this[`addAction${action}`](evt.newIndex)
     }
   }
 }
@@ -94,13 +140,30 @@ export default {
     padding: 3rem;
   }
 
+  .created-actions {
+    flex: 1;
+  }
+
+  .available-actions {
+    flex: 0;
+    display: flex;
+    justify-content: center;
+  }
+
   .inner-values {
     font-size: 1rem;
+    display: flex;
+    align-items: center;
   }
 
   input {
     border: none;
     width: 100%;
+  }
+
+  .flex-columns {
+    display: flex;
+    flex-direction: columns;
   }
 
   .quoted {
