@@ -116,7 +116,7 @@ const actions = {
 
   selectZone ({ commit, state }, zoneID) {
     for (let zone of state.selectedProject.Zones) {
-      if (zone.ID.toString() !== zoneID) continue
+      if (zone.ID.toString() !== zoneID.toString()) continue
       commit('selectEntity', { type: 'zone', data: zone })
     }
   },
