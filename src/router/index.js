@@ -31,7 +31,7 @@ const router = new Router({
         API.GetProjects().then(result => {
           return result.json()
         }).then(result => {
-          store.commit('set', { key: 'projectsList', value: result })
+          Vue.set(store.state, 'projectsList', result)
           if (!result.length) {
             return next({ name: 'ProjectCreate' })
           }
@@ -182,7 +182,7 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   if (to.name !== 'SignIn') {
-    store.commit('set', { key: 'path', value: to.name })
+    Vue.set(store.state, 'path', to.name)
   }
 
   if (!store.state.user && to.name !== 'SignIn') {
@@ -207,7 +207,7 @@ initializer.then(() => {
   }
 
   if (initialPath) {
-    store.commit('set', { key: 'path', value: initialPath })
+    Vue.set(store.state, 'path', initialPath)
   }
 })
 

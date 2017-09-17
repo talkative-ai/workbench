@@ -11,9 +11,9 @@
           button.button(@click="$router.push({ name: 'ActorCreate', params: { zoneid: 1 } })")
             | Add an Actor
           div
-            span(v-for='za of $store.state.selectedProject.ZoneActors', :key='za.ActorID')
-              div(@click="$router.push({ name: 'ActorHome', params: { id: za.ActorID } })")
-                | {{ actors[za.ActorID].Title }}
+            span(v-for='ActorID of $store.state.zoneActors[$route.params.id]', :key='ActorID')
+              div(@click="$router.push({ name: 'ActorHome', params: { id: ActorID } })")
+                | {{ actors[ActorID].Title }}
         span
           h1 Triggers define how the zone works!
           button.button

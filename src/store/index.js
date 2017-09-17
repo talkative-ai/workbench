@@ -36,6 +36,7 @@ const state = {
   newDialog: null,
 
   actorsMapped: {},
+  zoneActors: {},
 
   createID: 0
 }
@@ -45,12 +46,15 @@ export const initializer = new Promise((resolve, reject) => { ready = resolve })
 
 localforage.setDriver(localforage.LOCALSTORAGE)
 localforage.iterate((v, k) => {
-  let statek = k.split('aum.state.v1.')
-  if (statek.length <= 1) return
+  let key = k.split('aum.state.v1.')
 
-  statek = statek.pop()
+  key = key.pop().split('.')
 
-  store.commit('set', { key: statek, value: v })
+  let s = state
+  for (let i = 0; i < key.length - 1; i++) {
+    s = s[key[i]]
+  }
+  Vue.set(s, key[key.length - 1], v)
 })
 .then(() => {
   ready()
@@ -98,7 +102,7 @@ const actions = {
       return result.json()
     })
     .then(user => {
-      commit('set', { key: 'user', value: user })
+      Vue.set(state, 'user', user)
     })
   },
 
@@ -106,9 +110,15 @@ const actions = {
     return API.GetProject(p)
     .then(result => result.json())
     .then(project => {
-      commit('set', { key: 'selectedProject', value: project })
+      Vue.set(state, 'selectedProject', project)
       for (const a of project.Actors) {
-        commit('set', { key: [ 'actorsMapped', a.ID ], value: a })
+        Vue.set(state.actorsMapped, a.ID, a)
+      }
+      for (const za of project.ZoneActors) {
+        if (!state.zoneActors[za.ZoneID]) {
+          Vue.set(state.zoneActors, za.ZoneID, [])
+        }
+        state.zoneActors[za.ZoneID].push(za.ActorID)
       }
       return project
     })
@@ -148,17 +158,6 @@ const actions = {
 }
 
 const mutations = {
-  set (state, {key, value}) {
-    if (Array.isArray(key)) {
-      let s = state
-      for (let i = 0; i < key.length - 1; i++) {
-        s = s[key[i]]
-      }
-      Vue.set(s, key[key.length - 1], value)
-      return
-    }
-    Vue.set(state, key, value)
-  },
 
   initialized (state) {
     state.initializing = false
