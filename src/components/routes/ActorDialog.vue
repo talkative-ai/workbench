@@ -5,9 +5,9 @@
       v-for='rootID of rootNodes',
       :key='rootID',
       :node='dialogs[rootID]')
-      button.button(
-        @click="$router.push({ name: 'DialogCreate', params: $route.params })",
-        v-if='!rootNodes.length') Create the first dialog
+    button.button(
+      @click="$router.push({ name: 'DialogCreate', params: $route.params })",
+      v-if='!rootNodes.length') Create the first dialog
 </template>
 
 <script>

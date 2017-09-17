@@ -12,9 +12,15 @@
       hr
       .flex-columns
         draggable.created-actions(v-model="actionSpeech", @add="onAddAction", :options="{ group: 'actions' }")
-          div(v-for="(sound, index) of node.AlwaysExec.PlaySounds", :key="`sound-${node.ID}-${index}`")
-            .inner-values
-              input(placeholder="Enter speech text here!", v-model="sound.Val")
+          div
+            div(v-for="(sound, index) of node.AlwaysExec.PlaySounds", :key="`sound-${node.ID}-${index}`")
+              .inner-values
+                input(placeholder="Enter speech text here!", v-model="sound.Val")
+            div(v-if="node.AlwaysExec.SetZone")
+              .inner-values
+                label Set Zone
+                  select(placeholder="Enter new zone", type="number", v-model="node.AlwaysExec.SetZone")
+                    option(v-for='zone in $store.state.selectedProject.Zones', :key='zone.ID', :value='zone.ID') {{ zone.Title }}
         div
           h1 Actions
           draggable.available-actions(
@@ -75,7 +81,7 @@ export default {
     },
     actionTypes: {
       get () {
-        return ['Speech']
+        return ['Speech', 'Set Zone']
       },
       set () {
         return
@@ -89,6 +95,9 @@ export default {
         Val: ''
       }
       this.node.AlwaysExec.PlaySounds.splice(idx, 0, newDialog)
+    },
+    addActionSetZone () {
+      this.node.AlwaysExec.SetZone = 1
     },
     addEntry () {
       this.node.EntryInput.push('')
@@ -104,7 +113,7 @@ export default {
       this.node.AlwaysExec[type].splice(index, 1)
     },
     onAddAction (evt) {
-      let action = this.actionTypes[evt.oldIndex]
+      let action = this.actionTypes[evt.oldIndex].replace(' ', '')
       this[`addAction${action}`](evt.newIndex)
     }
   }

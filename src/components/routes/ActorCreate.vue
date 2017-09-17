@@ -10,30 +10,30 @@
           .upload-image
             .background
               | upload image
-            div(@click='actor.Title.length && create()', :class="`button wide ${!actor.Title.length ? 'disabled' : ''}`")
-              | Create actor
-          .panel
-            label
-              span
-                | Name 
-                span.note (*required)
-                | :
-              input(placeholder="What's their name?", v-model='actor.Title')
-            label
-              span Sex:
-              input(placeholder='Female, male, transgender, or...?')
-            label
-              span Age:
-              input(placeholder='How old are they?')
-            label
-              span Relationships:
-              input(placeholder='Parent? Spouse? Child?')
-            label
-              span Background Story:
-              input(placeholder='What is their story? Why are they who they are today?')
-            label
-              span Character:
-              input(placeholder='How do they behave?')
+          div(@click='actor.Title.length && create()', :class="`button wide ${!actor.Title.length ? 'disabled' : ''}`")
+            | Create actor
+        .panel
+          label
+            span
+              | Name 
+              span.note (*required)
+              | :
+            input(placeholder="What's their name?", v-model='actor.Title')
+          label
+            span Sex:
+            input(placeholder='Female, male, transgender, or...?')
+          label
+            span Age:
+            input(placeholder='How old are they?')
+          label
+            span Relationships:
+            input(placeholder='Parent? Spouse? Child?')
+          label
+            span Background Story:
+            input(placeholder='What is their story? Why are they who they are today?')
+          label
+            span Character:
+            input(placeholder='How do they behave?')
 </template>
 
 <script>
