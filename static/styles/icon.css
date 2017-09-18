@@ -1,0 +1,33 @@
+/*
+ * Icon
+ * 1. so we can adjust it within <p>s.
+ *    Imported 'svgicon' does the rest.
+ */
+
+.svg-icon {
+  position: relative; /*1*/
+}
+
+.svg-fill {
+}
+
+/*.icon {
+  display: inline-block;
+
+  &.img-profile {
+    background: url('./assets/icons/icon-profile.svg') transparent no-repeat;
+  }
+  &.img-actor {
+    background: url('./assets/icons/icon-actor.svg') transparent no-repeat;
+  }
+  &.small {
+    width: 24pt;
+    height: 24pt;
+    margin: 5pt;
+  }
+  &.sized {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin: 5pt 5pt 5pt 0;
+  }
+}*/

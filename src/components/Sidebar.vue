@@ -1,5 +1,5 @@
 <template>
-  <div id="Sidebar">
+  <column menu id="Sidebar">
     <div class="zones wrapper">
       <span
         v-for="zone in $store.state.selectedProject.Zones"
@@ -11,12 +11,22 @@
       @click="$router.push({ name: 'ZoneCreate' })">New Zone</span>
       <span class="nav" @click="$router.push({ name: 'ActorHome' })"><span class="icon sized img-actor" />Actors</span>
     </div>
-  </div>
+  </column>
 </template>
 
+
+
+
+
+
 <script>
+import Column from './Column'
+
 export default {
   name: 'Sidebar',
+  components: {
+    Column
+  },
   computed: {
     selectedZoneID () {
       if (!this.$store.state.selectedEntity.data) return false
@@ -32,23 +42,29 @@ export default {
 }
 </script>
 
+
+
+
+
+
 <style lang="scss" scoped>
-#Sidebar, .wrapper {
+
+.wrapper {
   display: flex;
   flex-direction: column;
   user-select: none;
 }
 
 .wrapper {
-  margin: 2rem;
+  margin: var(--grid-gutter);
   margin-right: 0;
+
   > span {
     background-color: white;
     border: 1px solid #efefef;
     border-right-width: 1px;
     border-left-width: 1px;
     padding: 1rem;
-    width: 10rem;
     height: 3.5rem;
     color: #828282;
     cursor: pointer;
@@ -71,7 +87,8 @@ export default {
       cursor: default;
     }
   }
-  .new, .nav {
+  .new,
+  .nav {
     border: 1px solid #efefef;
     background-color: white;
     color: $purple;

@@ -1,0 +1,52 @@
+.button {
+  align-items: center;
+  background-color: transparent;
+  border: 1pt solid $purple;
+  color: $purple;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 2rem;
+  justify-content: center;
+  opacity: 1;
+  padding: 1rem 2rem;
+  transition: background-color 0.1s, color 0.1s, opacity 0.2s ease-out;
+
+  &.wide {
+    width: 100%;
+  }
+
+  &.hidden {
+    opacity: 0;
+    cursor: default;
+    pointer-events: none;
+  }
+
+  &.disabled {
+    cursor: default;
+    border-color: lightgrey;
+    color: lightgrey;
+
+    &:hover {
+      background-color: inherit;
+      color: lightgrey;
+    }
+  }
+
+
+  &:hover {
+    background-color: $purple;
+    color: white;
+  }
+
+  &.no-outline {
+    border: 0;
+  }
+
+  .button & {
+    border-color: white;
+    color: white;
+    &:hover {
+      background-color: transparent;
+    }
+  }
+}

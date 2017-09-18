@@ -1,0 +1,37 @@
+/*
+ * Based on SuitCSS's .Grid component
+ */
+
+/*.Row {
+  display: flex;
+  flex-flow: row wrap;
+  margin: 0;
+  padding: 0;
+}
+
+.Row > .Column {
+  flex-basis: 100%;
+  min-width: 0;
+}*/
+
+.Grid--withGutter {
+  margin: 0 calc(-1 * var(--grid-gutter));
+}
+
+.Grid--withGutter > .Grid-cell {
+  padding: 0 var(--grid-gutter);
+}
+
+
+/**/
+
+.Block {
+  padding: var(--grid-gutter);
+  padding-bottom: 0;
+}
+
+.Block + .Block {
+  /*margin-top: 2.5vh;
+  margin-top: var(--grid-gutter);
+  margin-top: var(--block);*/
+}

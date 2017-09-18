@@ -1,32 +1,32 @@
+
+@import "vars.css";
+
 /*
- * Type
+ * Base HTML elements
  * --------------------
  */
 
- @font-face {
-  font-family: "HeroNew-UltraLight";
-  src: url("/static/fonts/HeroNew-UltraLight.woff") format("woff");
-  font-weight: 200;
-  font-style: normal;
+html,
+body {
+  /*margin: 0;
+  padding: 0;
+  min-height: 100vh;*/
 }
 
- @font-face {
-  font-family: "HeroNew-Light";
-  src: url("/static/fonts/HeroNew-Light.woff") format("woff");
-  font-weight: 300;
-  font-style: normal;
+html {
 }
 
-@font-face {
-  font-family: "HeroNew-Regular";
-  src: url("/static/fonts/HeroNew-Regular.woff") format("woff");
-  font-weight: 400;
-  font-style: normal;
+body {
 }
 
-@font-face {
-  font-family: "HeroNew-Bold";
-  src: url("/static/fonts/HeroNew-Bold.woff") format("woff");
-  font-weight: 700;
-  font-style: normal;
+img {
+  max-width: 100%;
+  vertical-align: middle;
+}
+
+hr {
+  border: 0;
+  border-bottom: 1px solid var(--color-brand);
+  margin: 0;
+  margin-bottom: var(--s2a);
 }

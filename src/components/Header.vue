@@ -1,28 +1,55 @@
 <template>
-  <div id="Header">
-    <div class="user">
+  <header class="Block Grid Grid--withGutter" id="Header">
+    <column menu>
       <template v-if="user">
-        <span class="icon small img-profile" />
-        {{ user.GivenName }}
+        <div class="Header-cell smalltext">
+          <icon class="" name="author" width="24" height="24"></icon>
+          {{ user.GivenName }}
+        </div>
       </template>
-    </div>
-    <div
-    @click="$route.meta.titleLink ? $route.meta.titleLink() : () => {}"
-    :class="`title ${$route.meta.titleLink ? 'clickable' : ''}`">
-      {{ title }}
-    </div>
-    <div class="spring" />
-    <button
-      v-if="user && project"
-      class="button"
-      @click="publish()">Publish to the Multiverse</button>
-    <div class="logo"><img src="../assets/logo/32.png" /></div>
-  </div>
+    </column>
+
+    <column main>
+      <div class="Header-cell u-flexJustifyBetween">
+        <div
+        @click="$route.meta.titleLink ? $route.meta.titleLink() : () => {}"
+        :class="`smalltext title ${$route.meta.titleLink ? 'u-clickable' : ''}`">
+          {{ title }}
+        </div>
+
+        <div class="smalltext">
+          <v-button
+            lightOutline
+
+            v-if="user && project"
+            @click="publish()">
+            <icon class="" name="google-home" width="32" height="32"></icon>
+            Publish to the Multiverse
+          </v-button>
+        </div>
+      </div>
+    </column>
+
+    <column logo>
+      <a href="#" class="Header-cell Logo">
+        <icon name="logo" width="32" height="32"></icon>
+      </a>
+    </column>
+
+  </header>
 </template>
 
 <script>
+import '../assets/icons2'
+import VButton from './Button'
+import Column from './Column'
+
 export default {
   name: 'Header',
+  components: {
+    VButton,
+    Column
+  },
   computed: {
     user () {
       return this.$store.state.user
@@ -44,39 +71,32 @@ export default {
 </script>
 
 <style lang="scss">
-#Header {
-  display: flex;
-  padding: 15pt 0;
+.Header-cell {
   align-items: center;
-  width: 100%;
-  font-family: 'HeroNew-Regular', Helvetica, Arial, sans-serif;
-}
-
-.clickable {
-  cursor: pointer;
-}
-
-.user {
-  width: 15vw;
+  height: 100%;
   display: flex;
-  align-items: center;
+
 }
 
-.logo {
-  padding: 0 15pt;
-}
+.Logo {
+  color: var(--color-brand);
 
-.theme-dark #Header {
-  color: white;
-  .logo img {
-    filter: grayscale(100%) brightness(1000%);
+  > svg {
+    margin-left: auto;
   }
 }
 
 .theme-light #Header {
   color: black;
-  .logo img {
-    filter: grayscale(100%) brightness(0);
+}
+
+.theme-dark {
+  #Header {
+    color: white;
+  }
+
+  .Logo {
+    color: var(--color-bg);
   }
 }
 </style>

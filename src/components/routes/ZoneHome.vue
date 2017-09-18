@@ -1,5 +1,5 @@
 <template>
-  <div id="RouteZoneHome">
+  <grid gutter id="RouteZoneHome">
     <Sidebar />
     <PaperWorkspace>
       <div class="text">
@@ -30,16 +30,18 @@
         </span>
       </span>
     </PaperWorkspace>
-  </div>
+  </grid>
 </template>
 
 <script>
+import Grid from '../Grid'
 import Sidebar from '../Sidebar'
 import PaperWorkspace from '../PaperWorkspace'
 
 export default {
   name: 'ZoneHome',
   components: {
+    Grid,
     Sidebar,
     PaperWorkspace
   },

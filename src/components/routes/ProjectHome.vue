@@ -1,21 +1,23 @@
 <template>
-  <div id="RouteProjectHome">
+  <grid gutter id="RouteProjectHome">
     <Sidebar />
     <PaperWorkspace>
       <div class="text">
         <h1>Dashboard</h1>
       </div>
     </PaperWorkspace>
-  </div>
+  </grid>
 </template>
 
 <script>
+import Grid from '../Grid'
 import Sidebar from '../Sidebar'
 import PaperWorkspace from '../PaperWorkspace'
 
 export default {
   name: 'ProjectHome',
   components: {
+    Grid,
     Sidebar,
     PaperWorkspace
   }
@@ -24,7 +26,6 @@ export default {
 
 <style lang="scss">
 #RouteProjectHome {
-  display: flex;
   .buttons-box {
     display: flex;
     span {
