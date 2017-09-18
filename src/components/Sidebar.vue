@@ -19,7 +19,10 @@ export default {
   },
   methods: {
     selectZone (zone) {
-      this.$router.push({ name: 'ZoneHome', params: { id: zone.ID } })
+      this.$store.dispatch('selectZone', zone.ID)
+      .then(() => {
+        this.$router.push({ name: 'ZoneHome', params: { id: zone.ID } })
+      })
     }
   }
 }
