@@ -12,7 +12,7 @@
             | Add an Actor
           div
             span(v-for='ActorID of $store.state.zoneActors[$route.params.id]', :key='ActorID')
-              div(@click="$router.push({ name: 'ActorHome', params: { id: ActorID } })")
+              div(@click="selectActor(ActorID)")
                 | {{ actors[ActorID].Title }}
         span
           h1 Triggers define how the zone works!
@@ -33,6 +33,14 @@ export default {
   computed: {
     actors () {
       return this.$store.state.actorsMapped
+    }
+  },
+  methods: {
+    selectActor (ID) {
+      this.$store.dispatch('selectActor', ID)
+      .then(() => {
+        this.$router.push({ name: 'ActorHome', params: { id: ID } })
+      })
     }
   }
 }
