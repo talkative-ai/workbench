@@ -8,7 +8,7 @@
       span.buttons-box
         span
           h1 Actors say and do what you wish!
-          button.button(@click="$router.push({ name: 'ActorCreate', params: { zoneid: 1 } })")
+          button.button(@click="$router.push({ name: 'ActorCreate', params: { zoneid: $route.params.id } })")
             | Add an Actor
           div
             span(v-for='ActorID of $store.state.zoneActors[$route.params.id]', :key='ActorID')

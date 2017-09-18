@@ -80,10 +80,10 @@ const actions = {
     })
   },
 
-  createActor ({ commit, state }, zone) {
+  createActor ({ commit, state }, actor) {
     commit('incrCreate')
-    zone.CreateID = store.state.createID
-    return API.CreateActor(zone)
+    actor.CreateID = store.state.createID
+    return API.CreateActor(actor)
     .then(newActor => {
       commit('addActor', newActor)
       commit('selectEntity', { type: 'actor', data: newActor, redirect: true })
