@@ -22,6 +22,11 @@ export default {
     .then(result => result.json())
   },
 
+  GetZone ({ ID }) {
+    return aumFetch('GET', `zone/${ID}`)
+    .then(result => result.json())
+  },
+
   PutActor (actor) {
     return aumFetch('PUT', `actor/${actor.ID}`, actor)
   },

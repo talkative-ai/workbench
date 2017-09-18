@@ -36,6 +36,7 @@ const state = {
   newDialog: null,
 
   actorsMapped: {},
+  zonesMapped: {},
   zoneActors: {},
 
   createID: 0
@@ -114,6 +115,9 @@ const actions = {
       for (const a of project.Actors) {
         Vue.set(state.actorsMapped, a.ID, a)
       }
+      for (const z of project.Zones) {
+        Vue.set(state.zonesMapped, z.ID, z)
+      }
       for (const za of project.ZoneActors) {
         if (!state.zoneActors[za.ZoneID]) {
           Vue.set(state.zoneActors, za.ZoneID, [])
@@ -125,13 +129,17 @@ const actions = {
   },
 
   selectZone ({ commit, state }, zoneID) {
-    for (let zone of state.selectedProject.Zones) {
-      if (zone.ID.toString() !== zoneID.toString()) continue
+    if (state.selectedEntity.data && state.selectedEntity.data.ID === zoneID) return
+    const zone = state.zonesMapped[zoneID]
+    return API.GetZone(zone)
+    .then(zone => {
+      commit('updateZone', zone)
       commit('selectEntity', { type: 'zone', data: zone })
-    }
+    })
   },
 
   selectActor ({ commit, state }, actorID) {
+    if (state.selectedEntity.data && state.selectedEntity.data.ID === actorID) return
     const actor = state.actorsMapped[actorID]
     return API.GetActor(actor)
     .then(actor => {
@@ -173,6 +181,11 @@ const mutations = {
 
   addActor (state, actor) {
     state.selectedProject.Actors.push(actor)
+    Vue.set(state.actorsMapped, actor.ID, actor)
+    if (!state.zoneActors[actor.ZoneID]) {
+      Vue.set(state.zoneActors, actor.ZoneID, [])
+    }
+    state.zoneActors[actor.ZoneID].push(actor.ID)
   },
 
   updateActor (state, payload) {
@@ -199,6 +212,10 @@ const mutations = {
     }
 
     Vue.set(state, 'rootNodes', [...rnodes])
+  },
+
+  updateZone (state, zone) {
+    Vue.set(state.zonesMapped, zone.ID, zone)
   },
 
   selectEntity (state, entity) {

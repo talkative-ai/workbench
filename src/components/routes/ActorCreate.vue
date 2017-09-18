@@ -60,13 +60,6 @@ export default {
         this.actor.ZoneID = this.zoneid
       }
       this.$store.dispatch('createActor', this.actor)
-      .then(actor => {
-        if (this.zoneid) {
-          this.$router.replace({ name: 'ZoneHome', params: { id: this.zoneid } })
-        } else {
-          this.$router.replace({ name: 'ActorHome', params: { id: actor.ID } })
-        }
-      })
     }
   }
 }
