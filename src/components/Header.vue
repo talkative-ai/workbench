@@ -3,30 +3,29 @@
     <column menu>
       <template v-if="user">
         <div class="Header-cell smalltext">
-          <icon class="" name="author" width="30" height="30"></icon>
+          <icon name="author" width="32" height="32"></icon>
           {{ user.GivenName }}
         </div>
       </template>
     </column>
 
     <column main>
-      <div class="Header-cell u-flexJustifyBetween">
+      <div class="Header-cell smalltext u-flexJustifyBetween">
         <div
         class="Canvas-align"
-        :class="`smalltext title ${$route.meta.titleLink ? 'u-clickable' : ''}`"
+        :class="`${$route.meta.titleLink ? 'u-clickable' : ''}`"
         @click="$route.meta.titleLink ? $route.meta.titleLink() : () => {}">
           {{ title }}
+          <icon class="u-marginLSm u-colorTextLight" name="settings" width="24" height="24"></icon>
         </div>
 
-        <div class="smalltext">
-          <v-button
-            lightOutline
-            v-if="user && project"
-            @click="publish()">
-            <icon class="" name="google-home" width="32" height="32"></icon>
-            Publish to the Multiverse
-          </v-button>
-        </div>
+        <v-button
+          lightOutline
+          v-if="user && project"
+          @click="publish()">
+          <icon name="google-home" width="32" height="32"></icon>
+          Publish to the Multiverse
+        </v-button>
       </div>
     </column>
 
@@ -71,6 +70,9 @@ export default {
 </script>
 
 <style lang="scss">
+// .Author-title {}
+// .Game-title {}
+
 .Header-cell {
   align-items: center;
   height: 100%;
@@ -78,7 +80,7 @@ export default {
 }
 
 .Logo {
-  color: var(--color-brand);
+  color: var(--color-text-dark);
 
   > svg {
     margin-left: auto;

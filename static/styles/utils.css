@@ -22,3 +22,11 @@
   vertical-align: baseline;
   width: 0;
 }
+
+.u-marginLSm {
+  margin-left: 4px !important;
+}
+
+.u-colorTextLight {
+  color: var(--color-text-lite) !important;
+}

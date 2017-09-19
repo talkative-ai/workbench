@@ -4,9 +4,9 @@
   </div>
   <div v-else id="app" :class="bgImageClass">
     <ComponentHeader />
-    <div id="route-pad" class="Block">
+    <main id="route-pad" class="Block">
       <router-view></router-view>
-    </div>
+    </main>
   </div>
 </template>
 

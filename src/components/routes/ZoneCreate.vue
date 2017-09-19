@@ -1,27 +1,36 @@
 <template>
-  <div id="RouteZoneCreate">
+  <grid gutter id="RouteZoneCreate">
     <Sidebar />
-    <div class="main-container">
-      <h1>Everything happens in a Zone.</h1>
-      <h2>Name this Zone:</h2>
-      <div class="flex">
-        <input v-model="zone.Title" />
-        <button
-          @click="create"
-          :class="`button no-outline ${!zone.Title.length ? 'hidden' : ''}`">
-          Enter
-        </button>
-      </div>
-    </div>
-  </div>
+    <PaperWorkspace>
+      <CanvasText>
+        <h1 class="Headline">Everything happens in a Zone.</h1>
+        <h2 class="Headline">Name this Zone:</h2>
+        <div class="u-flex">
+          <input v-model="zone.Title" />
+          <button
+            @click="create"
+            :class="`button no-outline ${!zone.Title.length ? 'hidden' : ''}`">
+            Enter
+          </button>
+        </div>
+      </CanvasText>
+    </PaperWorkspace>
+  </grid>
 </template>
 
 <script>
-import Sidebar from '../Sidebar.vue'
+import Grid from '../elements/Grid'
+import CanvasText from '../elements/CanvasText'
+import Sidebar from '../Sidebar'
+import PaperWorkspace from '../PaperWorkspace'
+
 export default {
   name: 'ZoneCreate',
   components: {
-    Sidebar
+    Sidebar,
+    Grid,
+    CanvasText,
+    PaperWorkspace
   },
   data () {
     return {
@@ -41,28 +50,15 @@ export default {
 }
 </script>
 
+
+
 <style lang="scss" scoped>
-#RouteZoneCreate, input {
+#RouteZoneCreate,
+input {
   color: white;
 }
 
 #RouteZoneCreate {
   display: flex;
 }
-
-h1 {
-  color: $lighter-grey;
-}
-
-h1, h2 {
-  font-weight: 100;
-  margin: 0;
-  font-size: 2rem;
-}
-
-.main-container {
-  padding: 5%;
-  width: 100%;
-}
-
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <column main class="PaperWorkspace">
+  <column main class="Canvas">
     <slot></slot>
   </column>
 </template>
@@ -16,9 +16,7 @@ export default {
 </script>
 
 <style scoped>
-@import "~/../static/styles/assets/vars.css";
-
-.PaperWorkspace {
+.Canvas {
   background-color: white;
   box-shadow:
     0 3pt 19pt rgba(0,0,0,0.1),

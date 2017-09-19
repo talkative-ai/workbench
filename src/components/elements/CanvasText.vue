@@ -21,7 +21,7 @@ export default {
 
 .CanvasText {
   padding-top: calc(1.5 * var(--grid-gutter));
-  padding-bottom: calc(1.5 * var(--grid-gutter));
+  padding-bottom: calc(3 * var(--grid-gutter));
   padding-left: calc(3 * var(--grid-gutter));
 }
 

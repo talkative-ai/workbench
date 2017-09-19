@@ -1,12 +1,12 @@
 <template>
-  <div id="RouteActorCreate">
+  <grid gutter id="RouteActorCreate">
     <Sidebar />
     <PaperWorkspace>
-      <div class="text">
-        <h1>You don't have any actors yet.</h1>
-        <h2>Create a new actor:</h2>
-      </div>
-      <div class="main">
+      <CanvasText>
+        <h1 class="Headline">You don't have any actors yet.</h1>
+        <h2 class="Headline">Create a new actor:</h2>
+      </CanvasText>
+      <CanvasText>
         <div class="panel small">
           <div class="upload-image">
             <div class="background" />
@@ -38,12 +38,14 @@
             <input placeholder="How do they behave?">
           </label>
         </div>
-      </div>
+      </CanvasText>
     </PaperWorkspace>
-  </div>
+  </grid>
 </template>
 
 <script>
+import Grid from '../elements/Grid'
+import CanvasText from '../elements/CanvasText'
 import Sidebar from '../Sidebar'
 import PaperWorkspace from '../PaperWorkspace'
 
@@ -52,6 +54,8 @@ export default {
   props: ['zoneid'],
   components: {
     Sidebar,
+    Grid,
+    CanvasText,
     PaperWorkspace
   },
   data () {
@@ -80,19 +84,13 @@ export default {
 </script>
 
 <style lang="scss">
-#RouteActorCreate {
+.upload-image {
+  height: 65%;
   display: flex;
   justify-content: center;
-  
-  .upload-image {
-    height: 65%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    background-color: $purple;
-    margin-bottom: 2rem;
-  }
-
+  align-items: center;
+  color: white;
+  background-color: $purple;
+  margin-bottom: 2rem;
 }
 </style>
