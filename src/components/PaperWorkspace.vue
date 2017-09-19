@@ -25,5 +25,6 @@ export default {
     0 9pt 38pt rgba(0,0,0,0.1);
   min-height: 50vh;
   padding: 0;
+  position: relative;
 }
 </style>

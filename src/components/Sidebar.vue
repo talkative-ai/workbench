@@ -1,25 +1,42 @@
 <template>
   <column menu id="Sidebar">
-    <div class="zones wrapper">
-      <span
+    <nav class="Nav">
+      <div
+        class="Nav-item smalltext"
         v-for="zone in $store.state.selectedProject.Zones"
         :key="zone.ID"
         @click="selectZone(zone)"
-        :class="selectedZoneID === zone.ID ? 'selected' : ''">{{ zone.Title }}</span>
-      <span class="new"
-      :class="$router.currentRoute.name === 'ZoneCreate' ? 'selected' : ''"
-      @click="$router.push({ name: 'ZoneCreate' })">New Zone</span>
-      <span class="nav" @click="$router.push({ name: 'ActorHome' })"><span class="icon sized img-actor" />Actors</span>
-    </div>
+        :class="selectedZoneID === zone.ID ? 'is-selected' : ''">
+        <span>
+          <small>Zone</small>
+          {{ zone.Title }}
+        </span>
+      </div>
+      <div
+        class="Nav-item smalltext"
+        :class="$router.currentRoute.name === 'ZoneCreate' ? 'is-selected' : ''"
+        @click="$router.push({ name: 'ZoneCreate' })">
+        <span>
+          <icon class="" name="add" width="24" height="24"></icon>
+          New zone
+        </span>
+      </div>
+      <div
+        class="Nav-item smalltext"
+        @click="$router.push({ name: 'ActorHome' })">
+        <span>
+          <icon class="" name="actor" width="24" height="24"></icon>
+          Actors
+        </span>
+      </div>
+    </nav>
   </column>
 </template>
 
 
 
-
-
-
 <script>
+import '../assets/icons2'
 import Column from './elements/Column'
 
 export default {
@@ -44,69 +61,63 @@ export default {
 
 
 
-
-
-
 <style lang="scss" scoped>
+// @import "~/../static/styles/assets/vars.css";
 
-.wrapper {
+.Nav {
   display: flex;
   flex-direction: column;
+  margin: var(--grid-gutter);
+  margin-right: 0;
   user-select: none;
 }
 
-.wrapper {
-  margin: var(--grid-gutter);
-  margin-right: 0;
+.Nav-item {
+  align-items: center;
+  background-color: white;
+  border: 1px solid var(--color-border);
+  color: var(--color-brand);
+  cursor: pointer;
+  display: flex;
+  height: 4rem;
+  padding: 0 1rem;
+  position: relative;
 
-  > span {
-    background-color: white;
-    border: 1px solid #efefef;
-    border-right-width: 1px;
-    border-left-width: 1px;
-    padding: 1rem;
-    height: 3.5rem;
-    color: #828282;
-    cursor: pointer;
+  label,
+  small {
+    display: block;
+  }
 
-    &:hover {
-      background-color: #eee;
-    }
+  span {
+    transform: translateX(0);
+    transition: all 250ms ease-out;
+  }
 
-    &:nth-child(1) {
-      border-top-width: 2px;
-    }
-    &:last-child() {
-      border-bottom-width: 2px;
-    }
-
-    &.selected {
-      background-color: $purple;
-      border-color: $purple;
-      color: white;
-      cursor: default;
+  &:hover,
+  &:focus,
+  &:active {
+    // background-color: var(--color-grey);
+    // background-color: rgba(110, 0, 221, 0.1);
+    // border-color: var(--color-brand);
+    span {
+      transform: translateX(5px);
+      transition: all 250ms ease-out;
     }
   }
-  .new,
-  .nav {
-    border: 1px solid #efefef;
-    background-color: white;
-    color: $purple;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    &:hover {
-      background-color: $purple;
-      color: white;
-      border-color: $purple;
+
+  &.is-selected {
+    background-color: var(--color-brand);
+    border-color: var(--color-brand);
+    color: white;
+    cursor: default;
+
+    span {
+      transform: translateX(0);
     }
   }
-  .new::before {
-    font-size: 2rem;
-    font-weight: 100;
-    content: '+';
-    margin-right: 0.7rem;
-    margin-bottom: 0.5rem;
+
+  + .Nav-item {
+    margin-top: -1px;
   }
 }
 </style>

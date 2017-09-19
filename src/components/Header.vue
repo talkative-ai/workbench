@@ -3,7 +3,7 @@
     <column menu>
       <template v-if="user">
         <div class="Header-cell smalltext">
-          <icon class="" name="author" width="24" height="24"></icon>
+          <icon class="" name="author" width="30" height="30"></icon>
           {{ user.GivenName }}
         </div>
       </template>
@@ -12,15 +12,15 @@
     <column main>
       <div class="Header-cell u-flexJustifyBetween">
         <div
-        @click="$route.meta.titleLink ? $route.meta.titleLink() : () => {}"
-        :class="`smalltext title ${$route.meta.titleLink ? 'u-clickable' : ''}`">
+        class="Canvas-align"
+        :class="`smalltext title ${$route.meta.titleLink ? 'u-clickable' : ''}`"
+        @click="$route.meta.titleLink ? $route.meta.titleLink() : () => {}">
           {{ title }}
         </div>
 
         <div class="smalltext">
           <v-button
             lightOutline
-
             v-if="user && project"
             @click="publish()">
             <icon class="" name="google-home" width="32" height="32"></icon>
@@ -75,7 +75,6 @@ export default {
   align-items: center;
   height: 100%;
   display: flex;
-
 }
 
 .Logo {

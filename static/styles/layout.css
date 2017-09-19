@@ -33,7 +33,14 @@
   margin-top: var(--block);*/
 }
 
-/**/
+
+/*
+ * Canvas (global)
+ */
+
+.Canvas-align {
+  padding-left: calc(2.15 * var(--grid-gutter));
+}
 
 .CoverImage {
   background-position: 50% 50%;
@@ -46,13 +53,13 @@
   width: 100%;
 }
 
-
 .CanvasPath-button {
   background-image: url("/static/img/door.jpg");
   background-image: url(/static/img/milky-way.746ee38.jpg);
   background-position: 50% 50%;
   background-repeat: no-repeat;
   background-size: cover;
+  cursor: pointer;
   display: block;
   height: 100%;
   margin: 0 auto;

@@ -25,14 +25,6 @@ export default {
   padding-left: calc(3 * var(--grid-gutter));
 }
 
-.CanvasText h1 {
-  /*color: var(--color-text-lite);
-  font-family: "HeroNew-Light";
-  font-size: var(--header-s3);
-  font-weight: normal;
-  line-height: 1.25;*/
-}
-
 .CanvasText h1 span {
   color: var(--color-text-dark);
 }

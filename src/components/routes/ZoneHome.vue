@@ -19,7 +19,10 @@
               style="background-image: url(/static/img/door.jpg)"
               @click="$router.push({ name: 'ActorCreate', params: { zoneid: 1 } })">
 
-              <span class="Button FakeButton Headline">Add an Actor</span>
+              <span class="Button FakeButton Headline">
+                Add an Actor
+                <span class="u-arrowEast"></span>
+              </span>
               <span v-for="za of $store.state.selectedProject.ZoneActors" :key="za.ActorID">
                 <div @click="$router.push({ name: 'ActorHome', params: { id: za.ActorID } })">
                   {{ actors[za.ActorID].Title }}
@@ -30,7 +33,10 @@
 
           <div class="Grid-cell">
             <div class="CanvasPath-button CanvasPath-button--height">
-              <span class="Button FakeButton Headline">Add a Trigger</span>
+              <span class="Button FakeButton Headline">
+                Add a Trigger
+                <span class="u-arrowEast"></span>
+              </span>
             </div>
           </div>
         </grid>

@@ -95,3 +95,11 @@ a {
   top: -2px;
   margin-right: 4px;
 }
+
+small {
+  /*font-family: "HeroNew-Bold";*/
+  font-size: 60%;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 2px;
+}
