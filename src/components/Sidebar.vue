@@ -20,7 +20,7 @@
 
 
 <script>
-import Column from './Column'
+import Column from './elements/Column'
 
 export default {
   name: 'Sidebar',

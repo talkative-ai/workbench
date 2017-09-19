@@ -1,7 +1,10 @@
 <template>
   <div
     :class="['Grid', {
-      'Grid--withGutter': gutter
+      'Grid--withGutter': gutter,
+      'Grid--withGutterSm': gutterSm,
+      'Grid--fit': fit,
+      'u-flexAlignItemsStretch': fill
     }]">
     <slot />
   </div>
@@ -13,7 +16,10 @@
 export default {
   name: 'grid',
   props: {
-    gutter: Boolean
+    gutter: Boolean,
+    gutterSm: Boolean,
+    fit: Boolean,
+    fill: Boolean
   }
 }
 </script>

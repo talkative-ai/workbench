@@ -34,6 +34,7 @@
   --color-brand: #6e00dd;
   --color-brand-green: #35d882;
   --color-text: #787878;
+  --color-text-dark: #151515;
   --color-text-mid: #989898;
   --color-text-lite: #bbb;
   --color-highlight: rgb(135,244,180);
@@ -57,9 +58,13 @@
   --f8: 48px;
   --f9: 96px;
 
-  --header-s1: 48px;
-  --header-s2: 72px;
-  --header-s3: 96px;
+  --display-s1: 48px;
+  --display-s2: 72px;
+  --display-s3: 96px;
+
+  --header-s1: 21px;
+  --header-s2: 25px;
+  --header-s3: 30px;
 
   --smallheader-s1: 16px;
   --smallheader-s2: 20px;

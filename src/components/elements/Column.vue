@@ -5,19 +5,7 @@
       'u-sizeMain': main,
       'u-sizeLogo': logo
     }]">
-    <template v-if="footer">
-      <slot />
-    </template>
-    <template v-else-if="textColumn">
-      <container>
-        <div class="u-size11of12 u-sm-size3of4">
-          <slot />
-        </div>
-      </container>
-    </template>
-    <template v-else>
-      <slot />
-    </template>
+    <slot />
   </div>
 </template>
 
@@ -38,26 +26,6 @@ export default {
 
 <style scoped>
 @import "~/../static/styles/assets/vars.css";
-
-/*.Column {
-  flex-basis: auto;
-  padding-left: var(--grid-gutter);
-  padding-right: var(--grid-gutter);
-  width: 100%;
-}
-
-.Column.menu {
-  padding-right: 0;
-  width: calc(100% * 4 / 24);
-}
-
-.Column.main {
-  width: calc(100% * 19 / 24);
-}
-
-.Column.logo {
-  width: calc(100% * 1.5 / 24);
-}*/
 
 .u-sizeMenu {
   flex-basis: auto;

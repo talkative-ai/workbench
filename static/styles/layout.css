@@ -1,0 +1,82 @@
+/*
+ * Using SuitCSS's .Grid component
+ * TODO: build Suit again w/ correct vars.
+ */
+
+.Grid--withGutter {
+  margin: 0 calc(-1 * var(--grid-gutter));
+}
+
+.Grid--withGutter > .Grid-cell {
+  padding: 0 var(--grid-gutter);
+}
+
+.Grid--withGutterSm {
+  margin: 0 calc(-1 * 1px);
+}
+
+.Grid--withGutterSm > .Grid-cell {
+  padding: 0 1px;
+}
+
+
+/**/
+
+.Block {
+  padding: var(--grid-gutter);
+  padding-bottom: 0;
+}
+
+.Block + .Block {
+  /*margin-top: 2.5vh;
+  margin-top: var(--grid-gutter);
+  margin-top: var(--block);*/
+}
+
+/**/
+
+.CoverImage {
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: block;
+  height: 100%;
+  margin: 0 auto;
+  position: relative;
+  width: 100%;
+}
+
+
+.CanvasPath-button {
+  background-image: url("/static/img/door.jpg");
+  background-image: url(/static/img/milky-way.746ee38.jpg);
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: block;
+  height: 100%;
+  margin: 0 auto;
+  padding-top: calc(1.5 * var(--grid-gutter));
+  padding-bottom: calc(1.5 * var(--grid-gutter));
+  padding-left: calc(3 * var(--grid-gutter));
+  padding-right: calc(1.5 * var(--grid-gutter));
+  position: relative;
+  width: 100%;
+}
+
+.CanvasPath-button:after {
+  background-color: rgba(0,0,0,0.4);
+  content: " ";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.CanvasPath-button .FakeButton {
+  border: 1px solid white;
+  color: white;
+  padding: 0.4em 0.75em 0.5em 0.8em;
+  z-index: 1;
+}

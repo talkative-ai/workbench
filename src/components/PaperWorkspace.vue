@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import Column from './Column'
+import Column from './elements/Column'
 
 export default {
   name: 'PaperWorkspace',
@@ -15,42 +15,15 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.PaperWorkspace {
-  align-self: baseline;
-  background-color: white;
-  box-shadow: 0pt 3pt 20pt rgba(0,0,0,0.2);
-  padding-top: var(--grid-gutter);
-  padding-bottom: var(--grid-gutter);
-  min-height: 50vh;
+<style scoped>
+@import "~/../static/styles/assets/vars.css";
 
-  // h1,
-  // h2 {
-  //   font-weight: 100;
-  //   margin: 0;
-  //   color: $lighter-grey;
-  //   font-size: 2rem;
-  // }
-  //
-  // h2 {
-  //   color: black;
-  // }
-  //
-  // .text,
-  // .main {
-  //   margin: 2.5rem 4rem;
-  // }
-  //
-  // .main {
-  //   display: flex;
-  //
-  //   .panel {
-  //     flex: 1;
-  //     margin: 1rem;
-  //     &.small {
-  //       flex: 0.4;
-  //     }
-  //   }
-  // }
+.PaperWorkspace {
+  background-color: white;
+  box-shadow:
+    0 3pt 19pt rgba(0,0,0,0.1),
+    0 9pt 38pt rgba(0,0,0,0.1);
+  min-height: 50vh;
+  padding: 0;
 }
 </style>

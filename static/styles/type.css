@@ -79,6 +79,14 @@ a {
  * Elements
  */
 
+.Headline {
+  color: var(--color-text-lite);
+  font-family: "HeroNew-Light";
+  font-size: var(--header-s3);
+  font-weight: normal;
+  line-height: 1.25;
+}
+
 .smalltext {
    line-height: var(--line-height-text);
 }

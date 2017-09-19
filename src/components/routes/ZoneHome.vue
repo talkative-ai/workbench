@@ -2,39 +2,48 @@
   <grid gutter id="RouteZoneHome">
     <Sidebar />
     <PaperWorkspace>
-      <div class="text">
-        <h1>You're in the zone.</h1>
-        <h1>What do you want to happen?</h1>
-      </div>
-      <span class="buttons-box">
-        <span>
-          <h1>Actors say and do what you wish!</h1>
-          <button
-            class="button"
-            @click="$router.push({ name: 'ActorCreate', params: { zoneid: 1 } })">
-            Add an Actor
-          </button>
-          <div>
-            <span v-for="za of $store.state.selectedProject.ZoneActors" :key="za.ActorID">
-              <div @click="$router.push({ name: 'ActorHome', params: { id: za.ActorID } })">
-                {{ actors[za.ActorID].Title }}
-              </div>
-            </span>
+      <CanvasText>
+        <h1 class="Headline">
+          <span>You're in the zone.</span><br>
+          What do you want to happen?<br>
+          Actors say and do what you wish!<br>
+          Triggers define how the zone works.
+        </h1>
+      </CanvasText>
+
+      <CanvasPath>
+        <grid gutterSm fit>
+          <div class="Grid-cell">
+            <div
+              class="CanvasPath-button CanvasPath-button--height"
+              style="background-image: url(/static/img/door.jpg)"
+              @click="$router.push({ name: 'ActorCreate', params: { zoneid: 1 } })">
+
+              <span class="Button FakeButton Headline">Add an Actor</span>
+              <span v-for="za of $store.state.selectedProject.ZoneActors" :key="za.ActorID">
+                <div @click="$router.push({ name: 'ActorHome', params: { id: za.ActorID } })">
+                  {{ actors[za.ActorID].Title }}
+                </div>
+              </span>
+            </div>
           </div>
-        </span>
-        <span>
-          <h1>Triggers define how the zone works!</h1>
-          <button class="button">
-            Add a Trigger
-          </button>
-        </span>
-      </span>
+
+          <div class="Grid-cell">
+            <div class="CanvasPath-button CanvasPath-button--height">
+              <span class="Button FakeButton Headline">Add a Trigger</span>
+            </div>
+          </div>
+        </grid>
+      </CanvasPath>
+
     </PaperWorkspace>
   </grid>
 </template>
 
 <script>
-import Grid from '../Grid'
+import Grid from '../elements/Grid'
+import CanvasText from '../elements/CanvasText'
+import CanvasPath from '../elements/CanvasPath'
 import Sidebar from '../Sidebar'
 import PaperWorkspace from '../PaperWorkspace'
 
@@ -42,6 +51,8 @@ export default {
   name: 'ZoneHome',
   components: {
     Grid,
+    CanvasText,
+    CanvasPath,
     Sidebar,
     PaperWorkspace
   },
@@ -53,21 +64,8 @@ export default {
 }
 </script>
 
-<style lang="scss">
-#RouteZoneHome {
-  display: flex;
-  .buttons-box {
-    display: flex;
-    span {
-      flex: 1;
-      margin: 0.5rem;
-      &:first-child {
-        margin-left: 1rem;
-      }
-      &:last-child {
-        margin-right: 1rem;
-      }
-    }
-  }
+<style scoped>
+.CanvasPath-button--height {
+  height: 50vh;
 }
 </style>

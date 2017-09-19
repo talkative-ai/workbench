@@ -2,7 +2,7 @@
   <grid gutter id="RouteProjectHome">
     <Sidebar />
     <PaperWorkspace>
-      <div class="text">
+      <div class="TextWrapper">
         <h1>Dashboard</h1>
       </div>
     </PaperWorkspace>
@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import Grid from '../Grid'
+import Grid from '../elements/Grid'
 import Sidebar from '../Sidebar'
 import PaperWorkspace from '../PaperWorkspace'
 

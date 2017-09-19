@@ -41,8 +41,8 @@
 
 <script>
 import '../assets/icons2'
-import VButton from './Button'
-import Column from './Column'
+import VButton from './elements/Button'
+import Column from './elements/Column'
 
 export default {
   name: 'Header',
