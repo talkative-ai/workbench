@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="['CanvasText', {}]">
+    :class="['Paper-text', {}]">
     <slot />
   </div>
 </template>
@@ -9,7 +9,7 @@
 
 <script scoped>
 export default {
-  name: 'canvas-text',
+  name: 'paper-text',
   props: {}
 }
 </script>
@@ -19,13 +19,13 @@ export default {
 <style scoped>
 @import "~/../static/styles/assets/vars.css";
 
-.CanvasText {
+.Paper-text {
   padding-top: calc(1.5 * var(--grid-gutter));
   padding-bottom: calc(3 * var(--grid-gutter));
   padding-left: calc(3 * var(--grid-gutter));
 }
 
-.CanvasText h1 span {
+.Paper-text h1 span {
   color: var(--color-text-dark);
 }
 </style>

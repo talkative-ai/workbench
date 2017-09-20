@@ -1,5 +1,5 @@
 <template>
-  <div id="RouteSignIn">
+  <paper id="RouteSignIn">
     <g-signin-button
       :params="googleSignInParams"
       @success="onSignInSuccess"
@@ -7,11 +7,11 @@
       Sign in with Google
     </g-signin-button>
     <h4><i>Currently only sign in with Google is supported</i></h4>
-  </div>
+  </paper>
 </template>
 
 <script>
-import PaperWorkspace from '../PaperWorkspace'
+import Paper from '../Paper'
 
 export default {
   name: 'SignIn',
@@ -23,7 +23,7 @@ export default {
     }
   },
   components: {
-    PaperWorkspace
+    Paper
   },
   computed: {
     user () {

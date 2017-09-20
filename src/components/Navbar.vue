@@ -12,20 +12,20 @@
     <column main>
       <div class="Header-cell smalltext u-flexJustifyBetween">
         <div
-        class="Canvas-align"
+        class="Paper-align"
         :class="`${$route.meta.titleLink ? 'u-clickable' : ''}`"
         @click="$route.meta.titleLink ? $route.meta.titleLink() : () => {}">
           {{ title }}
           <icon class="u-marginLSm u-colorTextLight" name="settings" width="24" height="24"></icon>
         </div>
 
-        <v-button
+        <w-button
           lightOutline
           v-if="user && project"
           @click="publish()">
           <icon name="google-home" width="32" height="32"></icon>
           Publish to the Multiverse
-        </v-button>
+        </w-button>
       </div>
     </column>
 
@@ -40,13 +40,13 @@
 
 <script>
 import '../assets/icons2'
-import VButton from './elements/Button'
+import WButton from './elements/Button'
 import Column from './elements/Column'
 
 export default {
-  name: 'Header',
+  name: 'navbar',
   components: {
-    VButton,
+    WButton,
     Column
   },
   computed: {
@@ -88,7 +88,7 @@ export default {
 }
 
 .theme-light #Header {
-  color: black;
+  color: var(--colot-text-dark);
 }
 
 .theme-dark {

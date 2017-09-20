@@ -76,6 +76,7 @@ export default {
   align-items: center;
   background-color: white;
   border: 1px solid var(--color-border);
+  border-right: initial;
   color: var(--color-brand);
   cursor: pointer;
   display: flex;

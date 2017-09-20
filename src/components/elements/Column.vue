@@ -25,7 +25,7 @@ export default {
 
 
 <style scoped>
-@import "~/../static/styles/assets/vars.css";
+/*@import "~/../static/styles/assets/vars.css";*/
 
 .u-sizeMenu {
   flex-basis: auto;

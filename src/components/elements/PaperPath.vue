@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="['CanvasPath']">
+    :class="['Paper-path']">
     <slot />
   </div>
 </template>
@@ -9,7 +9,7 @@
 
 <script scoped>
 export default {
-  name: 'canvas-path',
+  name: 'paper-path',
   props: {
     gutter: Boolean
   }
@@ -21,7 +21,7 @@ export default {
 <style scoped>
 @import "~/../static/styles/assets/vars.css";
 
-.CanvasPath {
+.Paper-path {
   height: 100%;
   padding: 0;
 }

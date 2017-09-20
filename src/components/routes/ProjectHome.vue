@@ -1,49 +1,31 @@
 <template>
   <grid gutter id="RouteProjectHome">
-    <Sidebar />
-    <PaperWorkspace>
-      <CanvasText>
+    <sidebar />
+    <paper>
+      <paper-text>
         <h1 class="Headline">Dashboard</h1>
-      </CanvasText>
-    </PaperWorkspace>
+      </paper-text>
+    </paper>
   </grid>
 </template>
 
 <script>
 import Grid from '../elements/Grid'
-import CanvasText from '../elements/CanvasText'
 import Sidebar from '../Sidebar'
-import PaperWorkspace from '../PaperWorkspace'
+import Paper from '../Paper'
+import PaperText from '../elements/PaperText'
 
 export default {
   name: 'ProjectHome',
   components: {
     Grid,
-    CanvasText,
     Sidebar,
-    PaperWorkspace
+    Paper,
+    PaperText
   }
 }
 </script>
 
 <style lang="scss">
-#RouteProjectHome {
-  .buttons-box {
-    display: flex;
-    span {
-      flex: 1;
-      margin: 0.5rem;
-      &:first-child {
-        margin-left: 1rem;
-      }
-      &:last-child {
-        margin-right: 1rem;
-      }
-      div {
-        height: 40vh;
-        background-color: beige;
-      }
-    }
-  }
-}
+
 </style>

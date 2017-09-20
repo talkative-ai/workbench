@@ -24,13 +24,12 @@
 
 .Block {
   padding: var(--grid-gutter);
+  padding-top: calc(0.75 * var(--grid-gutter));
   padding-bottom: 0;
 }
 
 .Block + .Block {
-  /*margin-top: 2.5vh;
-  margin-top: var(--grid-gutter);
-  margin-top: var(--block);*/
+  padding-top: var(--grid-gutter);
 }
 
 
@@ -38,7 +37,7 @@
  * Canvas (global)
  */
 
-.Canvas-align {
+.Paper-align {
   padding-left: calc(2.15 * var(--grid-gutter));
 }
 
@@ -53,9 +52,7 @@
   width: 100%;
 }
 
-.CanvasPath-button {
-  background-image: url("/static/img/door.jpg");
-  background-image: url(/static/img/milky-way.746ee38.jpg);
+.Paper-path-button {
   background-position: 50% 50%;
   background-repeat: no-repeat;
   background-size: cover;
@@ -71,7 +68,7 @@
   width: 100%;
 }
 
-.CanvasPath-button:after {
+.Paper-path-button:after {
   background-color: rgba(0,0,0,0.4);
   content: " ";
   position: absolute;
@@ -81,7 +78,7 @@
   right: 0;
 }
 
-.CanvasPath-button .FakeButton {
+.Paper-path-button .Button {
   border: 1px solid white;
   color: white;
   padding: 0.4em 0.75em 0.5em 0.8em;

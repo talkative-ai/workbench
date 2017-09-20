@@ -1,12 +1,12 @@
 <template>
   <grid gutter id="RouteActorCreate">
-    <Sidebar />
-    <PaperWorkspace>
-      <CanvasText>
+    <sidebar />
+    <paper>
+      <paper-text>
         <h1 class="Headline">You don't have any actors yet.</h1>
         <h2 class="Headline">Create a new actor:</h2>
-      </CanvasText>
-      <CanvasText>
+      </paper-text>
+      <paper-text>
         <div class="panel small">
           <div class="upload-image">
             <div class="background" />
@@ -38,16 +38,16 @@
             <input placeholder="How do they behave?">
           </label>
         </div>
-      </CanvasText>
-    </PaperWorkspace>
+      </paper-text>
+    </paper>
   </grid>
 </template>
 
 <script>
 import Grid from '../elements/Grid'
-import CanvasText from '../elements/CanvasText'
 import Sidebar from '../Sidebar'
-import PaperWorkspace from '../PaperWorkspace'
+import Paper from '../Paper'
+import PaperText from '../elements/PaperText'
 
 export default {
   name: 'ActorCreate',
@@ -55,8 +55,8 @@ export default {
   components: {
     Sidebar,
     Grid,
-    CanvasText,
-    PaperWorkspace
+    PaperText,
+    Paper
   },
   data () {
     return {

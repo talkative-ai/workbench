@@ -1,5 +1,5 @@
 <template>
-  <column main class="Canvas">
+  <column main class="Paper">
     <slot></slot>
   </column>
 </template>
@@ -8,7 +8,7 @@
 import Column from './elements/Column'
 
 export default {
-  name: 'PaperWorkspace',
+  name: 'paper',
   components: {
     Column
   }
@@ -16,7 +16,7 @@ export default {
 </script>
 
 <style scoped>
-.Canvas {
+.Paper {
   background-color: white;
   box-shadow:
     0 3pt 19pt rgba(0,0,0,0.1),

@@ -1,7 +1,7 @@
 <template>
   <div id="RouteDialogHome">
-    <Sidebar />
-    <PaperWorkspace>
+    <sidebar />
+    <paper>
       <input class="quoted" v-for="(entry, index) of node.EntryInput" :key="index" v-model="node.EntryInput[index]" />
       <button @click="addEntry">Add potential entry input</button>
       <hr />
@@ -33,19 +33,19 @@
       <button @click="save()">
         Save Changes
       </button>
-    </PaperWorkspace>
+    </paper>
   </div>
 </template>
 
 <script>
 import Sidebar from '../Sidebar'
-import PaperWorkspace from '../PaperWorkspace'
+import Paper from '../Paper'
 
 export default {
   name: 'DialogHome',
   components: {
     Sidebar,
-    PaperWorkspace
+    Paper
   },
   computed: {
     isNew () {
@@ -90,7 +90,7 @@ export default {
   h1 {
     text-align: right;
   }
-  .PaperWorkspace {
+  .Canvas {
     padding: 3rem;
   }
 

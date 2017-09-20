@@ -1,8 +1,8 @@
 <template>
   <grid gutter id="RouteZoneCreate">
-    <Sidebar />
-    <PaperWorkspace>
-      <CanvasText>
+    <sidebar />
+    <paper>
+      <paper-text>
         <h1 class="Headline">Everything happens in a Zone.</h1>
         <h2 class="Headline">Name this Zone:</h2>
         <div class="u-flex">
@@ -13,24 +13,24 @@
             Enter
           </button>
         </div>
-      </CanvasText>
-    </PaperWorkspace>
+      </paper-text>
+    </paper>
   </grid>
 </template>
 
 <script>
 import Grid from '../elements/Grid'
-import CanvasText from '../elements/CanvasText'
+import PaperText from '../elements/PaperText'
 import Sidebar from '../Sidebar'
-import PaperWorkspace from '../PaperWorkspace'
+import Paper from '../Paper'
 
 export default {
   name: 'ZoneCreate',
   components: {
     Sidebar,
     Grid,
-    CanvasText,
-    PaperWorkspace
+    PaperText,
+    Paper
   },
   data () {
     return {

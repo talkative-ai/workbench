@@ -13,7 +13,7 @@
 
 <script scoped>
 export default {
-  name: 'v-button',
+  name: 'button',
   props: {
     circle: Boolean,
     outline: Boolean,
@@ -28,17 +28,16 @@ export default {
 @import "~/../static/styles/assets/vars.css";
 
 .Button {
+  align-items: center;
   background-color: var(--color-brand);
   border: 1pt solid var(--color-brand);
   color: var(--color-bg);
   cursor: pointer;
+  display: inline-flex;
+  height: 36px;
   opacity: 1;
   padding: 0 1rem;
   transition: background-color 0.1s, color 0.1s, opacity 0.2s ease-out;
-
-  display: inline-flex;
-  align-items: center;
-  height: 44px;
 
   &:hover {
     background-color: var(--color-brand);

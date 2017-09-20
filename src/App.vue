@@ -3,7 +3,7 @@
     <h1>Loading AUM</h1>
   </div>
   <div v-else id="app" :class="bgImageClass">
-    <ComponentHeader />
+    <navbar />
     <main id="route-pad" class="Block">
       <router-view></router-view>
     </main>
@@ -11,12 +11,12 @@
 </template>
 
 <script>
-import ComponentHeader from './components/Header.vue'
+import Navbar from './components/Navbar.vue'
 
 export default {
   name: 'app',
   components: {
-    ComponentHeader
+    Navbar
   },
   data () {
     return {
@@ -37,21 +37,6 @@ export default {
 </script>
 
 <style lang="scss">
-#app {
-  // min-height: 100vh;
-  // background-position: center;
-  // background-size: cover;
-  // background-repeat: no-repeat;
-  // display: flex;
-  // flex-direction: column;
-  // align-items: center;
-}
-
-#route-pad {
-  // width: 70vw;
-  // display: inline-block;
-}
-
 
 /*
  * Themes

@@ -1,7 +1,7 @@
 <template>
   <div id="RouteActorHome">
-    <Sidebar />
-    <PaperWorkspace>
+    <sidebar />
+    <paper>
       <div class="main">
         <div class="panel small">
           <div class="upload-image">
@@ -31,19 +31,19 @@
         </div>
       </div>
       <button class="button" @click="$router.push({ name: 'ActorDialog', id: actor.ID })">Dialog View</button>
-    </PaperWorkspace>
+    </paper>
   </div>
 </template>
 
 <script>
 import Sidebar from '../Sidebar'
-import PaperWorkspace from '../PaperWorkspace'
+import Paper from '../Paper'
 
 export default {
   name: 'ActorHome',
   components: {
     Sidebar,
-    PaperWorkspace
+    Paper
   },
   computed: {
     actor () {
