@@ -1,0 +1,105 @@
+
+/*
+ * Type
+ * --------------------
+ */
+
+@font-face {
+  font-family: "HeroNew-UltraLight";
+  src: url("/static/fonts/HeroNew-UltraLight.woff") format("woff");
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "HeroNew-Light";
+  src: url("/static/fonts/HeroNew-Light.woff") format("woff");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "HeroNew-Regular";
+  src: url("/static/fonts/HeroNew-Regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "HeroNew-Medium";
+  src: url("/static/fonts/HeroNew-Medium.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "HeroNew-Bold";
+  src: url("/static/fonts/HeroNew-Bold.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+}
+
+/*
+ * the body font-size & font-weight is used by:
+ * p, li & .lede
+ */
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-text);
+  font-family: "HeroNew-Medium";
+  font-size: var(--text-sm-s3);
+  font-weight: normal;
+  line-height: var(--line-height-text);
+  text-rendering: geometricPrecision;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+
+  @media (--sm-viewport) {
+    /*font-size: var(--text-s2);*/
+  }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-weight: normal;
+}
+
+a {
+  color: inherit;
+  font-style: inherit;
+  text-decoration: none;
+}
+
+/*
+ * Elements
+ */
+
+.Headline {
+  color: var(--color-text-lite);
+  font-family: "HeroNew-Light";
+  font-size: var(--header-s3);
+  font-weight: normal;
+  line-height: 1.25;
+}
+
+.smalltext {
+   line-height: var(--line-height-text);
+}
+
+.smalltext .svg-icon {
+  top: -2px;
+  margin-right: 4px;
+}
+
+small {
+  /*font-family: "HeroNew-Bold";*/
+  font-size: 60%;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 2px;
+}

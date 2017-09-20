@@ -1,10 +1,15 @@
 <template lang="pug">
   #RouteProjectSelect
     h1 Choose a game:
-    div(@click='toggleSelected(project)', :class="`project ${selected.ID === project.ID ? 'selected' : ''}`", v-for='project in projects', :key='project.ID')
+    div(
+      @click='toggleSelected(project)'
+      :class="`project ${selected.ID === project.ID ? 'selected' : ''}`"
+      v-for='project in projects'
+      :key='project.ID'
+    )
       | {{ project.Title }}
     hr
-    button.button.no-outline(@click='openProject()', v-if='selected', to='/project/create')
+    button.button.no-outline(@click='openProject()' v-if='selected' to='/project/create')
       | Open Game
     router-link.button.no-outline.preplus(to='/project/create')
       | Create New Game

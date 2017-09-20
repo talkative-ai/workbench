@@ -1,43 +1,43 @@
 <template lang="pug">
   #RouteActorHome
     sidebar
-    paper-workspace
+    paper
       .main
-        .panel.small
+        .panel small
           .upload-image
             .background
-              | upload image
+            | upload image
         .panel
           label
             span Name:
-            input(placeholder="What's their name?", v-model='actor.Title')
+            input(placeholder="What's their name?" v-model="actor.Title")
           label
             span Sex:
-            input(placeholder='Female, male, transgender, or...?')
+            input(placeholder="Female, male, transgender, or...?")
           label
             span Age:
-            input(placeholder='How old are they?')
+            input(placeholder="How old are they?")
           label
             span Relationships:
-            input(placeholder='Parent? Spouse? Child?')
+            input(placeholder="Parent? Spouse? Child?")
           label
             span Background Story:
-            input(placeholder='What is their story? Why are they who they are today?')
+            input(placeholder="What is their story? Why are they who they are today?")
           label
             span Character:
-            input(placeholder='How do they behave?')
+            input(placeholder="How do they behave?")
       button.button(@click="$router.push({ name: 'ActorDialog', id: actor.ID })") Dialog View
 </template>
 
 <script>
 import Sidebar from '../Sidebar'
-import PaperWorkspace from '../PaperWorkspace'
+import Paper from '../Paper'
 
 export default {
   name: 'ActorHome',
   components: {
     Sidebar,
-    PaperWorkspace
+    Paper
   },
   computed: {
     actor () {

@@ -1,0 +1,97 @@
+/*
+ * Vars
+ * --------------------
+ */
+
+:root {
+  @custom-media --sm-viewport (width >= 32em);
+  @custom-media --md-viewport (width >= 48em);
+  @custom-media --lg-viewport (width >= 80em);
+
+  --grid-gutter: 24px;
+
+  --block-sm: 3rem;
+  --block-md: 3rem;
+  --block-rg: 5rem;
+  --block: 32px;
+  --blockPlusNav: calc(var(--block) + 86px);
+
+  --container-sm: 700px;
+  --container-rg: 1008px;
+  --container-lg: 1140px;
+
+  --s1: 4px;
+  --s2: 8px;
+  --s2a: 12px;
+  --s3: 16px;
+  --s3a: 24px;
+  --s4: 32px;
+  --s5: 64px;
+  --s6: 128px;
+  --s7: 192px;
+  --s8: 256px;
+
+  --color-brand: #6e00dd;
+  --color-brand-green: #35d882;
+  --color-text: #787878;
+  --color-text-dark: #151515;
+  --color-text-mid: #989898;
+  --color-text-lite: #bbb;
+  --color-highlight: rgb(135,244,180);
+  --color-border: #e5e5e5;
+  --color-grey: #F2F2F2;
+  --color-paper: #f7f7f7;
+  --color-bg: #fefefe;
+
+  --font-header: "MFred";
+  --font-subheader: "EquitySC";
+  --font-text: "Equity";
+  --font-text-italic: "EquityItalic";
+
+  --f1: 11px;
+  --f2: 13px;
+  --f3: 16px;
+  --f4: 18px;
+  --f5: 21px;
+  --f6: 26px;
+  --f7: 33px;
+  --f8: 48px;
+  --f9: 96px;
+
+  --display-s1: 48px;
+  --display-s2: 72px;
+  --display-s3: 96px;
+
+  --header-s1: 21px;
+  --header-s2: 25px;
+  --header-s3: 30px;
+
+  --smallheader-s1: 16px;
+  --smallheader-s2: 20px;
+  --smallheader-s3: 23px;
+
+  --lede-s1: 16px;
+  --lede-s2: 21px;
+  --lede-s3: 26px;
+
+  --text-s1: 18px;
+  --text-s2: 21px;
+  --text-s3: 26px;
+
+  --text-sm-s1: 11px;
+  --text-sm-s2: 12px;
+  --text-sm-s3: 13px;
+
+  --letter-spacing-text: 0;
+  --letter-spacing-header: 0.025em;
+  --letter-spacing-subheader: 0.02em;
+
+  --line-height-meta: 1.45;
+  --line-height-text: 1.384615385;
+  --line-height-header: 1;
+  --line-height-subheader: 1.25;
+
+  --transition-duration: 0.2s;
+  --transition-delayed: 0.4s;
+  --transition-debounce: 2.5s;
+}

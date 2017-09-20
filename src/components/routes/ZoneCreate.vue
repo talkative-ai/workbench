@@ -1,21 +1,32 @@
 <template lang="pug">
-  #RouteZoneCreate
+  grid#RouteZoneCreate(gutter)
     sidebar
-    .main-container
-      h1 Everything happens in a Zone.
-      h2 Name this Zone:
-      .flex
-        input(v-model='zone.Title')
-        button(@click='create', :class="`button no-outline ${!zone.Title.length ? 'hidden' : ''}`")
-          | Enter
+    paper
+      paper-text
+        h1.Headline Everything happens in a Zone.
+        h2.Headline Name this Zone:
+        .u-flex
+          input(v-model="zone.Title")
+          button(
+            @click="create"
+            :class="`button no-outline ${!zone.Title.length ? 'hidden' : ''}`"
+          )
+            | Enter
 </template>
 
 <script>
-import Sidebar from '../Sidebar.vue'
+import Grid from '../elements/Grid'
+import PaperText from '../elements/PaperText'
+import Sidebar from '../Sidebar'
+import Paper from '../Paper'
+
 export default {
   name: 'ZoneCreate',
   components: {
-    Sidebar
+    Sidebar,
+    Grid,
+    PaperText,
+    Paper
   },
   data () {
     return {
@@ -40,28 +51,15 @@ export default {
 }
 </script>
 
+
+
 <style lang="scss" scoped>
-#RouteZoneCreate, input {
+#RouteZoneCreate,
+input {
   color: white;
 }
 
 #RouteZoneCreate {
   display: flex;
 }
-
-h1 {
-  color: $lighter-grey;
-}
-
-h1, h2 {
-  font-weight: 100;
-  margin: 0;
-  font-size: 2rem;
-}
-
-.main-container {
-  padding: 5%;
-  width: 100%;
-}
-
 </style>

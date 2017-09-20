@@ -3,20 +3,20 @@
     <h1>Loading AUM</h1>
   </div>
   <div v-else id="app" :class="bgImageClass">
-    <ComponentHeader />
-    <div id="route-pad">
+    <navbar />
+    <main id="route-pad" class="Block">
       <router-view></router-view>
-    </div>
+    </main>
   </div>
 </template>
 
 <script>
-import ComponentHeader from './components/Header.vue'
+import Navbar from './components/Navbar.vue'
 
 export default {
   name: 'app',
   components: {
-    ComponentHeader
+    Navbar
   },
   data () {
     return {
@@ -37,76 +37,26 @@ export default {
 </script>
 
 <style lang="scss">
-html, body {
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-}
-body {
-  font-family: 'HeroNew-UltraLight', Helvetica, Arial, sans-serif;
-}
-input {
-  font-family: 'HeroNew-Light', Helvetica, Arial, sans-serif;
-}
-* {
-  box-sizing: border-box;
-}
 
-#app {
-  min-height: 100vh;
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-#route-pad {
-  width: 70vw;
-  display: inline-block;
-}
-
-input {
-  width: 50%;
-  margin-top: 1rem;
-  font-size: 2.5rem;
-  padding: 0.5rem 0;
-  font-weight: 100;
-  background-color: transparent;
-  border: none;
-  outline: none;
-}
+/*
+ * Themes
+ */
 
 .theme-light {
   input {
-    border-bottom: 1px solid $purple;
+    border-color: $purple;
   }
 }
 
 .theme-dark {
   input {
-    border-bottom: 1px solid white;
+    border-color: white;
   }
 }
 
-label {
-  display: flex;
-  flex-direction: column;
-  margin: 0.5rem;
-  font-weight: bold;
-  .note {
-    color: $purple;
-  }
-  input {
-    margin-top: 0;
-    border-bottom-width: 0;
-    font-size: 2rem;
-    width: 100%;
-    &:focus {
-      border-bottom-width: 1px;
-    }
-  }
+
+.bg-paper {
+  background-color: var(--color-paper);
 }
 
 .bg-clouds {
@@ -117,6 +67,8 @@ label {
   background-image: url("./assets/images/milky-way.jpg")
 }
 
+
+// ICONS
 .postarrow::after {
   content: '\25b6';
   font-size: 1rem;
@@ -128,95 +80,5 @@ label {
   font-size: 3rem;
   font-family: "HeroNew-UltraLight";
   padding-right: 0.5rem;
-}
-
-.button {
-  color: $purple;
-  background-color: transparent;
-  border: 1pt solid $purple;
-  padding: 1rem 2rem;
-  font-size: 2rem;
-  display: inline-flex;
-  align-items: center;
-  cursor: pointer;
-  opacity: 1;
-  justify-content: center;
-
-  &.wide {
-    width: 100%;
-  }
-
-  &.hidden {
-    opacity: 0;
-    cursor: default;
-    pointer-events: none;
-  }
-
-  &.disabled {
-    cursor: default;
-    border-color: lightgrey;
-    color: lightgrey;
-
-    &:hover {
-      background-color: inherit;
-      color: lightgrey;
-    }
-  }
-
-  transition: background-color 0.1s, color 0.1s, opacity 0.2s ease-out;
-
-  &:hover {
-    background-color: $purple;
-    color: white;
-  }
-
-  &.no-outline {
-    border: 0;
-  }
-}
-
-.theme-dark {
-  .button {
-    border-color: white;
-    color: white;
-    &:hover {
-      background-color: transparent;
-    }
-  }
-}
-
-.bg-paper {
-  background-color: #f7f7f7;
-}
-
-.spring {
-  flex: 1;
-}
-
-a {
-  color: inherit;
-  font-style: inherit;
-  text-decoration: none;
-}
-
-.icon {
-  display: inline-block;
-  
-  &.img-profile {
-    background: url('./assets/icons/icon-profile.svg') transparent no-repeat;
-  }
-  &.img-actor {
-    background: url('./assets/icons/icon-actor.svg') transparent no-repeat;
-  }
-  &.small {
-    width: 24pt;
-    height: 24pt;
-    margin: 5pt;
-  }
-  &.sized {
-    width: 1.5rem;
-    height: 1.5rem;
-    margin: 5pt 5pt 5pt 0;
-  }
 }
 </style>

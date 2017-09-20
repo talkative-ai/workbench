@@ -1,58 +1,40 @@
 <template lang="pug">
   #RouteDialogHome
     sidebar
-    paper-workspace
-      h2 Editing a Dialog with {{ actor.Title }}
-      input.quoted(
-        v-for="(entry, index) of node.EntryInput",
-        :key="index",
-        v-model="node.EntryInput[index]"
-      )
-      button.button(@click="addEntry") Add potential entry input
+    paper
+      input.quoted(v-for="(entry, index) of node.EntryInput" :key="index" v-model="node.EntryInput[index]")
+      button(@click="addEntry") Add potential entry input
       hr
-      .flex-columns
-        draggable.created-actions(v-model="actionSpeech", @add="onAddAction", :options="{ group: 'actions' }")
-          div
-            div(v-for="(sound, index) of node.AlwaysExec.PlaySounds", :key="`sound-${node.ID}-${index}`")
-              .inner-values
-                input(placeholder="Enter speech text here!", v-model="sound.Val")
-            div(v-if="node.AlwaysExec.SetZone")
-              .inner-values
-                label Set Zone
-                  select(placeholder="Enter new zone", type="number", v-model="node.AlwaysExec.SetZone")
-                    option(v-for='zone in $store.state.selectedProject.Zones', :key='zone.ID', :value='zone.ID') {{ zone.Title }}
-        div
-          h1 Actions
-          draggable.available-actions(
-            v-model="actionTypes",
-            :options="{sort: false, group: 'actions'}"
-          )
-            div(v-for="action of actionTypes", :key="action", class="action") {{ action }}
+      .node-values(v-for="(sound, index) of node.AlwaysExec.PlaySounds" :key="`sound-${node.ID}-${index}`")
+        .inner-values
+          input(placeholder="Enter speech text here!" v-model="sound.Val")
+          button(@click="deleteAction('PlaySounds', index)") Delete
+      button(@click="addAction()")
+        Add Action
       hr
       div(
-        @click="$router.push({ name: 'DialogHome', params: { id: $route.params.id, dialog_id: nodeID }})",
-        v-for="nodeID of node.ChildNodes",
+        @click="$router.push({ name: 'DialogHome', params: { id: $route.params.id, dialog_id: nodeID }})"
+        v-for="nodeID of node.ChildNodes"
         :key="nodeID"
       )
         div "{{ dialogs[nodeID].EntryInput[0] }}"
-      button.button(
-        v-if="!this.isNew",
+      button(
+        v-if="!this.isNew"
         @click="$router.push({ name: 'DialogCreate', params: { id: $route.params.id, dialog_id: $route.params.dialog_id }})"
-      ) Add Response
-      button.button(@click="save()") Save Changes
+      )
+        | Add Response
+      button(@click="save()") Save Changes
 </template>
 
 <script>
 import Sidebar from '../Sidebar'
-import PaperWorkspace from '../PaperWorkspace'
-import draggable from 'vuedraggable'
+import Paper from '../Paper'
 
 export default {
   name: 'DialogHome',
   components: {
     Sidebar,
-    PaperWorkspace,
-    draggable
+    Paper
   },
   computed: {
     actor () {
@@ -126,7 +108,7 @@ export default {
   h1 {
     text-align: right;
   }
-  .PaperWorkspace {
+  .Canvas {
     padding: 3rem;
   }
 

@@ -1,43 +1,28 @@
 <template lang="pug">
-  #RouteProjectHome
+  grid#RouteProjectHome(gutter)
     sidebar
-    paper-workspace
-      .text
-        h1 Dashboard
+    paper
+      paper-text
+        h1.Headline Dashboard
 </template>
 
 <script>
+import Grid from '../elements/Grid'
 import Sidebar from '../Sidebar'
-import PaperWorkspace from '../PaperWorkspace'
+import Paper from '../Paper'
+import PaperText from '../elements/PaperText'
 
 export default {
   name: 'ProjectHome',
   components: {
+    Grid,
     Sidebar,
-    PaperWorkspace
+    Paper,
+    PaperText
   }
 }
 </script>
 
 <style lang="scss">
-#RouteProjectHome {
-  display: flex;
-  .buttons-box {
-    display: flex;
-    span {
-      flex: 1;
-      margin: 0.5rem;
-      &:first-child {
-        margin-left: 1rem;
-      }
-      &:last-child {
-        margin-right: 1rem;
-      }
-      div {
-        height: 40vh;
-        background-color: beige;
-      }
-    }
-  }
-}
+
 </style>

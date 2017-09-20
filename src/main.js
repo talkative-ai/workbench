@@ -4,10 +4,15 @@ import GSignInButton from 'vue-google-signin-button'
 
 import Vue from 'vue'
 import App from './App'
+import * as svgicon from 'vue-svgicon'
 import router from './router'
 import store, { initializer } from './store'
 
 Vue.config.productionTip = false
+
+Vue.use(svgicon, {
+  tagName: 'icon'
+})
 
 Vue.use(GSignInButton)
 
@@ -21,4 +26,3 @@ initializer.then(() => {
     components: { App }
   })
 })
-

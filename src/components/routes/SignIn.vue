@@ -1,13 +1,17 @@
 <template lang="pug">
-  #RouteSignIn
-    g-signin-button(:params='googleSignInParams', @success='onSignInSuccess', @error='onSignInError')
+  paper#RouteSignIn
+    g-signin-button(
+      :params="googleSignInParams"
+      @success="onSignInSuccess"
+      @error="onSignInError"
+    )
       | Sign in with Google
     h4
       i Currently only sign in with Google is supported
 </template>
 
 <script>
-import PaperWorkspace from '../PaperWorkspace'
+import Paper from '../Paper'
 
 export default {
   name: 'SignIn',
@@ -19,7 +23,7 @@ export default {
     }
   },
   components: {
-    PaperWorkspace
+    Paper
   },
   computed: {
     user () {

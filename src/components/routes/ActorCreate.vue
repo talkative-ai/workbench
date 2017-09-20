@@ -1,51 +1,57 @@
 <template lang="pug">
-  #RouteActorCreate
+  grid#RouteActorCreate(gutter)
     sidebar
-    paper-workspace
-      .text
-        h1 You don't have any actors yet.
-        h2 Create a new actor:
-      .main
+    paper
+      paper-text
+        h1.Headline You don't have any actors yet.
+        h2.Headline Create a new actor:
+      paper-text
         .panel.small
           .upload-image
             .background
-              | upload image
-          div(@click='actor.Title.length && create()', :class="`button wide ${!actor.Title.length ? 'disabled' : ''}`")
-            | Create actor
+            | upload image
+          div(
+            @click="actor.Title.length && create()",
+            :class="`button wide ${!actor.Title.length ? 'disabled' : ''}`"
+          )
+            Create actor
         .panel
           label
-            span
-              | Name 
+            span Name
               span.note (*required)
               | :
-            input(placeholder="What's their name?", v-model='actor.Title')
+            input(placeholder="What's their name?" v-model="actor.Title")
           label
             span Sex:
-            input(placeholder='Female, male, transgender, or...?')
+            input(placeholder="Female, male, transgender, or...?")
           label
             span Age:
-            input(placeholder='How old are they?')
+            input(placeholder="How old are they?")
           label
             span Relationships:
-            input(placeholder='Parent? Spouse? Child?')
+            input(placeholder="Parent? Spouse? Child?")
           label
             span Background Story:
-            input(placeholder='What is their story? Why are they who they are today?')
+            input(placeholder="What is their story? Why are they who they are today?")
           label
             span Character:
-            input(placeholder='How do they behave?')
+            input(placeholder="How do they behave?")
 </template>
 
 <script>
+import Grid from '../elements/Grid'
 import Sidebar from '../Sidebar'
-import PaperWorkspace from '../PaperWorkspace'
+import Paper from '../Paper'
+import PaperText from '../elements/PaperText'
 
 export default {
   name: 'ActorCreate',
   props: ['zoneid'],
   components: {
     Sidebar,
-    PaperWorkspace
+    Grid,
+    PaperText,
+    Paper
   },
   data () {
     return {
@@ -66,19 +72,13 @@ export default {
 </script>
 
 <style lang="scss">
-#RouteActorCreate {
+.upload-image {
+  height: 65%;
   display: flex;
   justify-content: center;
-  
-  .upload-image {
-    height: 65%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    background-color: $purple;
-    margin-bottom: 2rem;
-  }
-
+  align-items: center;
+  color: white;
+  background-color: $purple;
+  margin-bottom: 2rem;
 }
 </style>

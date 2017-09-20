@@ -1,34 +1,64 @@
 <template lang="pug">
-  #RouteZoneHome
+  grid(gutter id="RouteZoneHome")
     sidebar
-    paper-workspace
-      .text
-        h1 You're in the zone.
-        h1 What do you want to happen?
-      span.buttons-box
-        span
-          h1 Actors say and do what you wish!
-          button.button(@click="$router.push({ name: 'ActorCreate', params: { zoneid: $route.params.id } })")
-            | Add an Actor
-          div
-            span(v-for='ActorID of $store.state.zoneActors[$route.params.id]', :key='ActorID')
-              div(@click="selectActor(ActorID)")
-                | {{ actors[ActorID].Title }}
-        span
-          h1 Triggers define how the zone works!
-          button.button
-            | Add a Trigger
+    paper
+      paper-text
+        h1.Headline
+          span You're in the zone.
+          br
+          | What do you want to happen?
+          br
+          | Actors say and do what you wish!
+          br
+          | Triggers define how the zone works.
+
+      paper-path
+        grid(gutterSm fit)
+          .Grid-cell
+            .Paper-path-button.Paper-path-button--height(
+              :style="`background-image: url(${BGActors})`"
+              @click="$router.push({ name: 'ActorCreate', params: { zoneid: $route.params.id } })"
+            )
+
+              span.Button.Headline
+                | Add an Actor
+                span.u-arrowEast
+              span(v-for="ActorID of $store.state.zoneActors[$route.params.id]" :key="ActorID")
+                div(@click="selectActor(ActorID)")
+                  | {{ actors[ActorID].Title }}
+
+          .Grid-cell
+            .Paper-path-button.Paper-path-button--height(
+              :style="`background-image: url(${BGTriggers})`"
+            )
+              span.Button.Headline
+                | Add a Trigger
+                span.u-arrowEast
 </template>
 
 <script>
+import Grid from '../elements/Grid'
+import PaperText from '../elements/PaperText'
+import PaperPath from '../elements/PaperPath'
 import Sidebar from '../Sidebar'
-import PaperWorkspace from '../PaperWorkspace'
+import Paper from '../Paper'
+import BGActors from '@/assets/images/door.jpg'
+import BGTriggers from '@/assets/images/milky-way.jpg'
 
 export default {
   name: 'ZoneHome',
   components: {
+    Grid,
+    PaperText,
+    PaperPath,
     Sidebar,
-    PaperWorkspace
+    Paper
+  },
+  data () {
+    return {
+      BGActors,
+      BGTriggers
+    }
   },
   computed: {
     actors () {
@@ -46,21 +76,8 @@ export default {
 }
 </script>
 
-<style lang="scss">
-#RouteZoneHome {
-  display: flex;
-  .buttons-box {
-    display: flex;
-    span {
-      flex: 1;
-      margin: 0.5rem;
-      &:first-child {
-        margin-left: 1rem;
-      }
-      &:last-child {
-        margin-right: 1rem;
-      }
-    }
-  }
+<style scoped>
+.Paper-path-button--height {
+  height: 50vh;
 }
 </style>
