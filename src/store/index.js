@@ -177,15 +177,18 @@ const mutations = {
 
   addZone (state, zone) {
     state.selectedProject.Zones.push(zone)
+    Vue.set(state.zonesMapped, zone.ID, zone)
   },
 
   addActor (state, actor) {
     state.selectedProject.Actors.push(actor)
     Vue.set(state.actorsMapped, actor.ID, actor)
-    if (!state.zoneActors[actor.ZoneID]) {
-      Vue.set(state.zoneActors, actor.ZoneID, [])
+    if (actor.ZoneID) {
+      if (!state.zoneActors[actor.ZoneID]) {
+        Vue.set(state.zoneActors, actor.ZoneID, [])
+      }
+      state.zoneActors[actor.ZoneID].push(actor.ID)
     }
-    state.zoneActors[actor.ZoneID].push(actor.ID)
   },
 
   updateActor (state, payload) {

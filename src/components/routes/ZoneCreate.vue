@@ -7,7 +7,7 @@
           span.Headline--hilite Everything happens in a Zone.
           br
           | Name this Zone:
-        form.Form
+        form.Form(@submit.prevent="create")
           input.Headline.u-size1of2.u-marginR3(v-model="zone.Title")
           w-button.Headline(
             @click="create"
