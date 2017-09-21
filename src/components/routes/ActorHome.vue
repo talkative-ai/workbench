@@ -48,24 +48,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#RouteActorHome {
-  display: flex;
-  .buttons-box {
-    display: flex;
-    span {
-      flex: 1;
-      margin: 0.5rem;
-      &:first-child {
-        margin-left: 1rem;
-      }
-      &:last-child {
-        margin-right: 1rem;
-      }
-      div {
-        height: 40vh;
-        background-color: beige;
-      }
-    }
-  }
-}
+
 </style>
