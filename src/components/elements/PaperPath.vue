@@ -17,7 +17,6 @@ export default {
 
 
 <style scoped>
-@import "~/../static/styles/assets/vars.css";
 
 .Paper-path {
   height: 100%;

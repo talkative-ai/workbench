@@ -37,23 +37,17 @@ export default {
 </script>
 
 <style lang="scss">
-
-/*
- * Themes
- */
-
-.theme-light {
-  input {
-    border-color: $purple;
-  }
+#app {
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: block;
+  height: 100%;
+  min-height: 100vh;
+  margin: 0 auto;
+  position: relative;
+  width: 100%;
 }
-
-.theme-dark {
-  input {
-    border-color: white;
-  }
-}
-
 
 .bg-paper {
   background-color: var(--color-paper);
@@ -67,18 +61,14 @@ export default {
   background-image: url("./assets/images/milky-way.jpg")
 }
 
-
-// ICONS
-.postarrow::after {
-  content: '\25b6';
-  font-size: 1rem;
-  padding-left: 0.5rem;
-}
-
-.preplus::before {
-  content: '+';
-  font-size: 3rem;
-  font-family: "HeroNew-UltraLight";
-  padding-right: 0.5rem;
+// [class*="bg-"]:after {
+.bg-space:before {
+  background-color: rgba(0,0,0,0.4);
+  bottom: 0;
+  content: " ";
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 </style>

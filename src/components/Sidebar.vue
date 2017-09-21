@@ -1,7 +1,7 @@
 <template lang="pug">
   column(menu id="Sidebar")
-    nav.Nav
-      .Nav-item.smalltext(
+    nav.Sidebar
+      .Sidebar-item.smalltext(
         v-for="zone in $store.state.selectedProject.Zones"
         :key="zone.ID"
         @click="selectZone(zone)"
@@ -10,14 +10,14 @@
         span
           small Zone
           | {{ zone.Title }}
-      .Nav-item.smalltext(
+      .Sidebar-item.smalltext(
         :class="$router.currentRoute.name === 'ZoneCreate' ? 'is-selected' : ''"
         @click="$router.push({ name: 'ZoneCreate' })"
       )
         span
           icon(name="add" width="24" height="24")
           | New zone
-      .Nav-item.smalltext(
+      .Sidebar-item.smalltext(
         @click="$router.push({ name: 'ActorHome' })"
       )
         span
@@ -57,9 +57,7 @@ export default {
 
 
 <style lang="scss" scoped>
-// @import "~/../static/styles/assets/vars.css";
-
-.Nav {
+.Sidebar {
   display: flex;
   flex-direction: column;
   margin: var(--grid-gutter);
@@ -67,7 +65,7 @@ export default {
   user-select: none;
 }
 
-.Nav-item {
+.Sidebar-item {
   align-items: center;
   background-color: white;
   border: 1px solid var(--color-border);
@@ -112,8 +110,18 @@ export default {
     }
   }
 
-  + .Nav-item {
+  + .Sidebar-item {
     margin-top: -1px;
   }
+}
+
+.theme-dark .Sidebar-item:not(.is-selected) {
+  background-color: transparent;
+  border-color: rgba(229, 229, 229,0.25);
+  color: var(--color-text-mid);
+}
+
+.theme-dark .Sidebar-item:last-child {
+  border-top-color: transparent !important;
 }
 </style>

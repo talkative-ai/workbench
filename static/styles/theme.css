@@ -1,0 +1,29 @@
+/*
+ * dark
+ */
+
+.theme-dark .Navbar,
+.theme-dark .Navbar-logo,
+.theme-dark .Headline {
+  color: var(--color-text);
+}
+
+.theme-dark .Headline--hilite {
+  color: var(--color-paper);
+}
+
+
+
+
+
+/*.theme-light {
+  input {
+    border-color: $purple;
+  }
+}
+
+.theme-dark {
+  input {
+    border-color: white;
+  }
+}*/

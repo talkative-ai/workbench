@@ -11,6 +11,7 @@ export default {
   computed: {
     buttonClass () {
       return ['Button', {
+        'blank': this.blank,
         'circle': this.circle,
         'outline': this.outline,
         'outline--light': this.lightOutline
@@ -18,6 +19,7 @@ export default {
     }
   },
   props: {
+    blank: Boolean,
     circle: Boolean,
     outline: Boolean,
     lightOutline: Boolean
@@ -28,12 +30,11 @@ export default {
 
 
 <style lang="scss" scoped>
-@import "~/../static/styles/assets/vars.css";
-
 .Button {
   align-items: center;
   background-color: var(--color-brand);
   border: 1pt solid var(--color-brand);
+  border-radius: var(--border-radius-sm);
   color: var(--color-bg);
   cursor: pointer;
   display: inline-flex;
@@ -45,6 +46,12 @@ export default {
   &:hover {
     background-color: var(--color-brand);
     color: white;
+  }
+
+  &.blank {
+    color: inherit;
+    border: initial;
+    height: auto;
   }
 
   &.outline {
@@ -79,15 +86,21 @@ export default {
     }
   }
 
-  .button & {
-    border-color: white;
-    color: white;
-    &:hover {
-      background-color: transparent;
-    }
-  }
+  // .button & {
+  //   border-color: white;
+  //   color: white;
+  //   &:hover {
+  //     background-color: transparent;
+  //   }
+  // }
 }
 
+.Button.Headline {
+  height: auto;
+}
 
-
+.theme-dark .Button.outline--light {
+  border-color: currentColor;
+  color: var(--color-text);
+}
 </style>

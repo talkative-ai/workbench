@@ -23,10 +23,15 @@
   width: 0;
 }
 
-.u-marginLSm {
-  margin-left: 4px !important;
-}
+.u-marginL1 { margin-left: 4px !important; }
 
-.u-colorTextLight {
-  color: var(--color-text-lite) !important;
-}
+.u-marginR1 { margin-right: 4px !important; }
+.u-marginR2 { margin-right: 8px !important; }
+.u-marginR3 { margin-right: 16px !important; }
+.u-marginR4 { margin-right: 24px !important; }
+.u-marginR5 { margin-right: 48px !important; }
+
+.u-colorBrand { color: var(--color-brand) !important; }
+.u-colorTextLight { color: var(--color-text-lite) !important; }
+
+.u-bgColorBrand { background-color: var(--color-brand) !important; }

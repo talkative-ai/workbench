@@ -1,15 +1,5 @@
 
-input {
-  font-family: 'HeroNew-Light', Helvetica, Arial, sans-serif;
-  margin-top: 1rem;
-  font-size: 2.5rem;
-  padding: 0.5rem 0;
-  font-weight: 100;
-  background-color: transparent;
-  border: none;
-  outline: none;
-  width: 50%;
-}
+
 
 label {
   display: flex;
@@ -28,4 +18,25 @@ label {
       border-bottom-width: 1px;
     }
   }
+}
+
+.Form {
+  display: flex;
+  margin-top: var(--s4);
+}
+
+.Form input {
+  /*font-family: 'HeroNew-Light', Helvetica, Arial, sans-serif;*/
+  /*font-size: 2.5rem;*/
+  /*font-weight: 100;*/
+  background-color: transparent;
+  border: initial;
+  border-bottom: 1px solid currentColor;
+  outline: none;
+  padding: 0.5rem 0;
+  width: 100%;
+}
+
+.Form input + input {
+  margin-top: 1rem;
 }

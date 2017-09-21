@@ -1,19 +1,19 @@
 <template lang="pug">
-  header#Header.Block.Grid.Grid--withGutter
+  header#Header.Navbar.Block.Grid.Grid--withGutter
     column(menu)
       template(v-if="user")
-        .Header-cell.smalltext
+        .Navbar-cell.smalltext
           icon(name="author" width="32" height="32")
           | {{ user.GivenName }}
 
     column(main)
-      .Header-cell.smalltext.u-flexJustifyBetween
+      .Navbar-cell.smalltext.u-flexJustifyBetween
         .Paper-align(
           :class="`${$route.meta.titleLink ? 'u-clickable' : ''}`"
           @click="$route.meta.titleLink ? $route.meta.titleLink() : () => {}"
         )
           | {{ title }}
-          icon.u-marginLSm.u-colorTextLight(name="settings" width="24" height="24")
+          icon.u-marginL1(name="settings" width="24" height="24")
 
         w-button(
           lightOutline
@@ -24,7 +24,7 @@
           | Publish to the Multiverse
 
     column(logo)
-      a.Header-cell.Logo(href="#")
+      a.Navbar-cell.Navbar-logo(href="#")
         icon(name="logo" width="32" height="32")
 </template>
 
@@ -63,31 +63,32 @@ export default {
 // .Author-title {}
 // .Game-title {}
 
-.Header-cell {
-  align-items: center;
-  height: 100%;
-  display: flex;
+// .theme-light #Header {
+.Navbar {
 }
 
-.Logo {
-  color: var(--color-text-dark);
+.Navbar-cell {
+  align-items: center;
+  color: var(--color-text-lite);
+  display: flex;
+  height: 100%;
+  position: relative;
+  transition: color 0.5s ease-in-out;
+
+  // &:hover {
+  //   color: var(--color-text-lite);
+  // }
+}
+
+.Navbar-logo {
+  // color: var(--color-text-dark);
 
   > svg {
     margin-left: auto;
   }
 }
 
-.theme-light #Header {
-  color: var(--colot-text-dark);
-}
-
-.theme-dark {
-  #Header {
-    color: white;
-  }
-
-  .Logo {
-    color: var(--color-bg);
-  }
+.theme-dark .Navbar-cell {
+  color: var(--color-text);
 }
 </style>

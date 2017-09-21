@@ -1,5 +1,5 @@
 <template lang="pug">
-  div(:class="['Paper-text', {}]")
+  div(:class="paperTextClass")
     slot
 </template>
 
@@ -8,22 +8,30 @@
 <script scoped>
 export default {
   name: 'paper-text',
-  props: {}
+  computed: {
+    paperTextClass () {
+      return ['Paper-text', {
+        'full-height': this.full
+      }]
+    }
+  },
+  props: {
+    full: Boolean
+  }
 }
 </script>
 
 
 
 <style scoped>
-@import "~/../static/styles/assets/vars.css";
-
 .Paper-text {
   padding-top: calc(1.5 * var(--grid-gutter));
-  padding-bottom: calc(3 * var(--grid-gutter));
+  padding-bottom: calc(2 * var(--grid-gutter));
   padding-left: calc(3 * var(--grid-gutter));
+  padding-right: calc(2 * var(--grid-gutter));
 }
 
-.Paper-text h1 span {
-  color: var(--color-text-dark);
+.full-height {
+  height: 100%;
 }
 </style>

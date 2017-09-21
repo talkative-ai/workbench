@@ -10,6 +10,9 @@
 
   --grid-gutter: 24px;
 
+  --border-radius: 0.5em;
+  --border-radius-sm: 2px;
+
   --block-sm: 3rem;
   --block-md: 3rem;
   --block-rg: 5rem;
@@ -42,6 +45,8 @@
   --color-grey: #F2F2F2;
   --color-paper: #f7f7f7;
   --color-bg: #fefefe;
+
+  --theme-dark-color-bg: --color-text-mid;
 
   --font-header: "MFred";
   --font-subheader: "EquitySC";

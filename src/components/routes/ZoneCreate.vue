@@ -2,20 +2,24 @@
   grid#RouteZoneCreate(gutter)
     sidebar
     paper
-      paper-text
-        h1.Headline Everything happens in a Zone.
-        h2.Headline Name this Zone:
-        .u-flex
-          input(v-model="zone.Title")
-          button(
+      paper-text(full)
+        h1.Headline
+          span.Headline--hilite Everything happens in a Zone.
+          br
+          | Name this Zone:
+        form.Form
+          input.Headline.u-size1of2.u-marginR3(v-model="zone.Title")
+          w-button.Headline(
             @click="create"
-            :class="`button no-outline ${!zone.Title.length ? 'hidden' : ''}`"
+            :class="`u-bgColorBrand ${!zone.Title.length ? 'hidden' : ''}`"
           )
             | Enter
+            span.u-arrowEast
 </template>
 
 <script>
 import Grid from '../elements/Grid'
+import WButton from '../elements/Button'
 import PaperText from '../elements/PaperText'
 import Sidebar from '../Sidebar'
 import Paper from '../Paper'
@@ -24,6 +28,7 @@ export default {
   name: 'ZoneCreate',
   components: {
     Sidebar,
+    WButton,
     Grid,
     PaperText,
     Paper
@@ -59,7 +64,5 @@ input {
   color: white;
 }
 
-#RouteZoneCreate {
-  display: flex;
-}
+
 </style>

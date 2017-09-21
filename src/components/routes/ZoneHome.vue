@@ -19,7 +19,6 @@
               :style="`background-image: url(${BGActors})`"
               @click="$router.push({ name: 'ActorCreate', params: { zoneid: $route.params.id } })"
             )
-
               span.Button.Headline
                 | Add an Actor
                 span.u-arrowEast
@@ -42,8 +41,8 @@ import PaperText from '../elements/PaperText'
 import PaperPath from '../elements/PaperPath'
 import Sidebar from '../Sidebar'
 import Paper from '../Paper'
-import BGActors from '@/assets/images/door.jpg'
-import BGTriggers from '@/assets/images/milky-way.jpg'
+import BGActors from '@/assets/images/milky-way.jpg'
+import BGTriggers from '@/assets/images/door.jpg'
 
 export default {
   name: 'ZoneHome',

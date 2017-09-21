@@ -30,6 +30,5 @@ export default {
 
 
 <style >
-/*@import "~/../static/styles/assets/vars.css";*/
 
 </style>
