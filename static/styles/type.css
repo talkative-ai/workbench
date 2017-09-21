@@ -91,11 +91,11 @@ a {
   color: var(--color-text-dark);
 }
 
-.smalltext {
+.Text--sm {
    line-height: var(--line-height-text);
 }
 
-.smalltext .svg-icon {
+.Text--sm .svg-icon {
   top: -2px;
   margin-right: 4px;
 }

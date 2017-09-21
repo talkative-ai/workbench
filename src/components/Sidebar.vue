@@ -1,7 +1,7 @@
 <template lang="pug">
   column(menu id="Sidebar")
     nav.Sidebar
-      .Sidebar-item.smalltext(
+      .Sidebar-item.Text--sm(
         v-for="zone in $store.state.selectedProject.Zones"
         :key="zone.ID"
         @click="selectZone(zone)"
@@ -10,14 +10,14 @@
         span
           small Zone
           | {{ zone.Title }}
-      .Sidebar-item.smalltext(
+      .Sidebar-item.Text--sm(
         :class="$router.currentRoute.name === 'ZoneCreate' ? 'is-selected' : ''"
         @click="$router.push({ name: 'ZoneCreate' })"
       )
         span
           icon(name="add" width="24" height="24")
           | New zone
-      .Sidebar-item.smalltext(
+      .Sidebar-item.Text--sm(
         @click="$router.push({ name: 'ActorHome' })"
       )
         span
@@ -117,7 +117,7 @@ export default {
 
 .theme-dark .Sidebar-item:not(.is-selected) {
   background-color: transparent;
-  border-color: rgba(229, 229, 229,0.25);
+  border-color: rgba(229, 229, 229,0.15);
   color: var(--color-text-mid);
 }
 

@@ -2,12 +2,12 @@
   header#Header.Navbar.Block.Grid.Grid--withGutter
     column(menu)
       template(v-if="user")
-        .Navbar-cell.smalltext
+        .Navbar-cell.Text--sm
           icon(name="author" width="32" height="32")
           | {{ user.GivenName }}
 
     column(main)
-      .Navbar-cell.smalltext.u-flexJustifyBetween
+      .Navbar-cell.Text--sm.u-flexJustifyBetween
         .Paper-align(
           :class="`${$route.meta.titleLink ? 'u-clickable' : ''}`"
           @click="$route.meta.titleLink ? $route.meta.titleLink() : () => {}"
