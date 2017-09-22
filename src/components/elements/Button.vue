@@ -24,7 +24,7 @@ export default {
     blank: Boolean,
     circle: Boolean,
     outline: Boolean,
-    lightOutline: Boolean
+    lightOutline: String
   }
 }
 </script>

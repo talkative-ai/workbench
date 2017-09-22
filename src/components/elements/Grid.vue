@@ -20,7 +20,7 @@ export default {
   },
   props: {
     gutter: Boolean,
-    gutterSm: Boolean,
+    gutterSm: String,
     fit: Boolean,
     fill: Boolean
   }
