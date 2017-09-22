@@ -36,6 +36,9 @@
               w-button(outline large).Headline
                 | Add a Trigger
                 span.u-arrowEast
+        span(v-for="ActorID of $store.state.zoneActors[$route.params.id]" :key="ActorID")
+          div(@click="selectActor(ActorID)")
+            | {{ actors[ActorID].Title }}
 </template>
 
 <script>
