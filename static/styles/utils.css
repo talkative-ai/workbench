@@ -76,6 +76,7 @@
 .u-marginB5 { margin-bottom: var(--s5) !important; }
 
 .u-colorBrand { color: var(--color-brand) !important; }
+.u-colorText { color: var(--color-text) !important; }
 .u-colorTextDark { color: var(--color-text-dark) !important; }
 .u-colorTextLight { color: var(--color-text-lite) !important; }
 .u-colorBorder { color: var(--color-border) !important; }

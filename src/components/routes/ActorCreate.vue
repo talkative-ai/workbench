@@ -1,5 +1,5 @@
 <template lang="pug">
-  grid#RouteActorCreate(gutter)
+  grid(gutter)#RouteActorCreate
     sidebar
     paper
       paper-text
@@ -8,7 +8,7 @@
           br
           | Create a new actor:
         form.Form(@submit.prevent="create")
-          grid(gutter).u-width100
+          grid(gutter)
             .Grid-cell.u-size1of3
               picture-input(
                 :style="`background-image: url(${BGActor})`"
@@ -21,7 +21,6 @@
                 size="10"
                 buttonClass="btn"
               )
-
             .Grid-cell.u-size2of3
               label
                 | Name (required):
@@ -46,12 +45,12 @@
               label
                 | Background Story:
                 .PlaceholderWrapper
-                  textarea.Headline.u-colorTextDark(rows="4")
-                  .Placeholder.Headline What is their story? Why are they who they are today?
+                  textarea.Headline.u-colorTextDark(rows="3")
+                  .Placeholder.Headline What's their story?
               label
                 | Character:
                 .PlaceholderWrapper
-                  textarea.Headline.u-colorTextDark(rows="4")
+                  textarea.Headline.u-colorTextDark(rows="3")
                   .Placeholder.Headline How do they behave?
 
             .Grid-cell
@@ -113,29 +112,5 @@ export default {
 </script>
 
 <style lang="scss">
-.picture-input,
-.upload-image {
-  align-items: center;
-  background-position: 50% 50%;
-  background-repeat: no-repeat;
-  background-size: cover;
-  color: white;
-  display: flex;
-  height: 400px;
-  justify-content: center;
-  margin: 0 auto;
-  position: relative;
-  width: 100%;
 
-  &:before {
-    // @apply --mask;
-    background-color: rgba(110, 0, 221, 0.7);
-    bottom: 0;
-    content: "";
-    left: 0;
-    position: absolute;
-    right: 0;
-    top: 0;
-  }
-}
 </style>

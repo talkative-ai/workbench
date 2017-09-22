@@ -1,43 +1,64 @@
 <template lang="pug">
-  #RouteActorHome
+  grid(gutter)#RouteActorHome
     sidebar
     paper
-      .main
-        .panel small
-          .upload-image
-            .background
-            | upload image
-        .panel
-          label
-            span Name:
-            input(placeholder="What's their name?" v-model="actor.Title")
-          label
-            span Sex:
-            input(placeholder="Female, male, transgender, or...?")
-          label
-            span Age:
-            input(placeholder="How old are they?")
-          label
-            span Relationships:
-            input(placeholder="Parent? Spouse? Child?")
-          label
-            span Background Story:
-            input(placeholder="What is their story? Why are they who they are today?")
-          label
-            span Character:
-            input(placeholder="How do they behave?")
-      button.button(@click="$router.push({ name: 'ActorDialog', id: actor.ID })") Dialog View
+      paper-text
+        h1.Headline
+          span.Headline--dark Back to dialogue or Actor's name?
+
+        form.Form(@submit.prevent="create")
+          grid(gutter)
+            .Grid-cell.u-size1of3
+              .picture-input(
+                :style="`background-image: url(${BGActor})`"
+              )
+
+            .Grid-cell.u-size2of3
+              .Headline.Headline--dark {{ actor.Title }}
+              .Headline.Headline--dark(v-if="actor.Sex")
+                span {{ actor.Sex }}
+                span(v-if="actor.Age") ,&nbsp;{{ actor.Age }}
+              .Headline.Headline--dark(v-if="actor.Relationships")
+                span {{ actor.Relationships.type }}
+                | to
+                span {{ actor.Relationships }}
+              section(v-if="actor.Story")
+                p.u-colorTextDark Background Story:
+                p {{ actor.Story }}
+              section(v-if="actor.Character")
+                p.u-colorTextDark Character:
+                p {{ actor.Character }}
+
+              hr.u-colorTextDark.u-marginT5
+              p.u-colorTextDark Where this actor appears:
+              section.u-marginT3
+                h2.Text.u-colorTextLite(v-if="!actor.Appearances") {{ actor.Title }} hasn't appeared yet
+                h2.Text(v-else) Zone 1: Sunrise over Babylon
+              //- button.button(@click="$router.push({ name: 'ActorDialog', id: actor.ID })") Dialog View
 </template>
 
 <script>
+import WButton from '../elements/Button'
+import Grid from '../elements/Grid'
 import Sidebar from '../Sidebar'
 import Paper from '../Paper'
+import PaperText from '../elements/PaperText'
+import BGActor from '@/assets/images/actor-color.jpg'
+// import PictureInput from 'vue-picture-input'
 
 export default {
   name: 'ActorHome',
   components: {
+    WButton,
+    Grid,
     Sidebar,
-    Paper
+    Paper,
+    PaperText
+  },
+  data () {
+    return {
+      BGActor
+    }
   },
   computed: {
     actor () {

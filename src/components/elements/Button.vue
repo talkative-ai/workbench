@@ -54,6 +54,13 @@ export default {
     border: 1px solid white;
     color: var(--color-bg);
     padding: 0.4em 0.75em 0.5em 0.8em;
+    transform: translateX(0);
+    transition: all 250ms ease-out;
+
+    &:hover {
+      transform: translateX(5px);
+      transition: all 250ms ease-out;
+    }
   }
 
   &.blank {
@@ -108,14 +115,14 @@ export default {
   color: var(--color-text);
 }
 
-.Paper-path-button .Button {
-  transform: translateX(0);
-  transition: all 250ms ease-out;
-  z-index: 1;
-}
-
-.Paper-path-button:hover .Button {
-  transform: translateX(5px);
-  transition: all 250ms ease-out;
-}
+// .Paper-path-button .Button {
+//   transform: translateX(0);
+//   transition: all 250ms ease-out;
+//   z-index: 1;
+// }
+//
+// .Paper-path-button:hover .Button {
+//   transform: translateX(5px);
+//   transition: all 250ms ease-out;
+// }
 </style>

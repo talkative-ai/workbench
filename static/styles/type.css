@@ -91,6 +91,20 @@ a {
   color: var(--color-text-dark);
 }
 
+.Subheadline {
+  color: var(--color-text-lite);
+  font-family: "HeroNew-Light";
+  font-size: var(--smallheader-s3);
+  font-weight: normal;
+  line-height: 1.25;
+}
+
+.Text {
+  color: var(--color-text-dark);
+  font-family: "HeroNew-Light";
+  font-size: var(--text-s3);
+}
+
 .Text--sm {
    line-height: var(--line-height-text);
 }

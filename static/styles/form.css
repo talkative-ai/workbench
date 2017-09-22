@@ -4,7 +4,7 @@
  */
 
 .Form {
-  display: flex;
+  /*display: flex;*/
   margin-top: var(--s5);
 }
 
@@ -43,8 +43,15 @@
 .Form textarea {
   border: initial;
   border-bottom: 1px solid var(--color-border);
+  outline: none;
   padding: var(--fieldPadding);
   width: 100%;
+}
+
+.Form textarea:active,
+.Form textarea:focus {
+  border-bottom: 1px solid var(--color-text-dark);
+  outline: none;
 }
 
 /*
@@ -65,4 +72,31 @@
 .Form label input:active ~ .Placeholder,
 .Form label input:focus ~ .Placeholder {
   display: none;
+}
+
+.picture-input,
+.upload-image {
+  align-items: center;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: white;
+  display: flex;
+  height: 400px;
+  justify-content: center;
+  margin: 0 auto;
+  position: relative;
+  width: 100%;
+}
+
+.picture-input:before,
+.upload-image:before {
+  /*@apply --mask;*/
+  background-color: rgba(110, 0, 221, 0.7);
+  bottom: 0;
+  content: "";
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
 }

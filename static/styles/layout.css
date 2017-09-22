@@ -20,7 +20,9 @@
 }
 
 
-/**/
+/*
+ * Main layout blocks
+ */
 
 .Block {
   padding: var(--grid-gutter);
@@ -52,7 +54,25 @@
   width: 100%;
 }
 
-.Paper-path-button {
+.CoverImage--dark:before {
+  background-color: rgba(0,0,0,0.4);
+  content: " ";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+/* Dupe fro now while I play w/ scoped components */
+.Paper-text {
+  padding-top: calc(1.5 * var(--grid-gutter));
+  padding-bottom: calc(2 * var(--grid-gutter));
+  padding-left: calc(3 * var(--grid-gutter));
+  padding-right: calc(2 * var(--grid-gutter));
+}
+
+/*.Paper-path-button {
   background-position: 50% 50%;
   background-repeat: no-repeat;
   background-size: cover;
@@ -76,4 +96,4 @@
   bottom: 0;
   left: 0;
   right: 0;
-}
+}*/
