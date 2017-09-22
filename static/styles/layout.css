@@ -77,10 +77,3 @@
   left: 0;
   right: 0;
 }
-
-.Paper-path-button .Button {
-  border: 1px solid white;
-  color: white;
-  padding: 0.4em 0.75em 0.5em 0.8em;
-  z-index: 1;
-}

@@ -4,22 +4,22 @@
     paper
       paper-text
         h1.Headline
-          span You're in the zone.
+          span.Headline--dark You're in the zone.
           br
           | What do you want to happen?
           br
-          | Actors say and do what you wish!
+          | Actors say and do what you wish.
           br
-          | Triggers define how the zone works.
+          | Triggers create interactions.
 
       paper-path
         grid(gutterSm fit)
           .Grid-cell
-            .Paper-path-button.Paper-path-button--height(
+            .Paper-path-button.Paper-path-button--height.u-borderRadius-BL(
               :style="`background-image: url(${BGActors})`"
               @click="$router.push({ name: 'ActorCreate', params: { zoneid: $route.params.id } })"
             )
-              span.Button.Headline
+              w-button(outline large).Headline
                 | Add an Actor
                 span.u-arrowEast
               span(v-for="ActorID of $store.state.zoneActors[$route.params.id]" :key="ActorID")
@@ -27,15 +27,16 @@
                   | {{ actors[ActorID].Title }}
 
           .Grid-cell
-            .Paper-path-button.Paper-path-button--height(
+            .Paper-path-button.Paper-path-button--height.u-borderRadius-BR(
               :style="`background-image: url(${BGTriggers})`"
             )
-              span.Button.Headline
+              w-button(outline large).Headline
                 | Add a Trigger
                 span.u-arrowEast
 </template>
 
 <script>
+import WButton from '../elements/Button'
 import Grid from '../elements/Grid'
 import PaperText from '../elements/PaperText'
 import PaperPath from '../elements/PaperPath'
@@ -47,6 +48,7 @@ import BGTriggers from '@/assets/images/door.jpg'
 export default {
   name: 'ZoneHome',
   components: {
+    WButton,
     Grid,
     PaperText,
     PaperPath,

@@ -87,7 +87,7 @@ a {
   line-height: 1.25;
 }
 
-.Headline--hilite {
+.Headline--dark {
   color: var(--color-text-dark);
 }
 

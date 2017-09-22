@@ -70,6 +70,7 @@ export default {
   background-color: white;
   border: 1px solid var(--color-border);
   border-right: initial;
+  border-bottom: initial;
   color: var(--color-brand);
   cursor: pointer;
   display: flex;
@@ -85,6 +86,15 @@ export default {
   span {
     transform: translateX(0);
     transition: all 250ms ease-out;
+  }
+
+  &:first-child {
+    border-top-left-radius: var(--border-radius-sm);
+  }
+
+  &:last-child {
+    border-bottom-left-radius: var(--border-radius-sm);
+    border-bottom: 1px solid var(--color-border);
   }
 
   &:hover,

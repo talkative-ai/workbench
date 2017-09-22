@@ -62,7 +62,6 @@ export default {
 <style lang="scss">
 // .Author-title {}
 // .Game-title {}
-
 // .theme-light #Header {
 .Navbar {
 }

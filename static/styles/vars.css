@@ -99,4 +99,29 @@
   --transition-duration: 0.2s;
   --transition-delayed: 0.4s;
   --transition-debounce: 2.5s;
+
+  --fieldPadding: 0.1rem 0 0.25rem;
+
+  /*
+   * Mixins
+   */
+
+  --mask: {
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+  };
+
+  --coverImage: {
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: block;
+    height: 100%;
+    margin: 0 auto;
+    position: relative;
+    width: 100%;
+  }
 }

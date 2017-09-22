@@ -4,11 +4,11 @@
     paper
       paper-text(full)
         h1.Headline
-          span.Headline--hilite Everything happens in a Zone.
+          span.Headline--dark Everything happens in a Zone.
           br
-          | Name this Zone:
+          | Name your new Zone:
         form.Form(@submit.prevent="create")
-          input.Headline.u-size1of2.u-marginR3(v-model="zone.Title")
+          input.Headline.u-size1of2.u-marginR3(v-model="zone.Title", placeholder="Add name", required)
           w-button.Headline(
             @click="create"
             :class="`u-bgColorBrand ${!zone.Title.length ? 'hidden' : ''}`"

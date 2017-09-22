@@ -8,22 +8,6 @@
   color: var(--color-text);
 }
 
-.theme-dark .Headline--hilite {
+.theme-dark .Headline--dark {
   color: var(--color-paper);
 }
-
-
-
-
-
-/*.theme-light {
-  input {
-    border-color: $purple;
-  }
-}
-
-.theme-dark {
-  input {
-    border-color: white;
-  }
-}*/

@@ -1,42 +1,68 @@
 
-
-
-label {
-  display: flex;
-  flex-direction: column;
-  margin: 0.5rem;
-  font-weight: bold;
-  .note {
-    color: $purple;
-  }
-  input {
-    margin-top: 0;
-    border-bottom-width: 0;
-    font-size: 2rem;
-    width: 100%;
-    &:focus {
-      border-bottom-width: 1px;
-    }
-  }
-}
+/*
+ * form styles
+ */
 
 .Form {
   display: flex;
-  margin-top: var(--s4);
+  margin-top: var(--s5);
 }
 
 .Form input {
-  /*font-family: 'HeroNew-Light', Helvetica, Arial, sans-serif;*/
-  /*font-size: 2.5rem;*/
-  /*font-weight: 100;*/
   background-color: transparent;
   border: initial;
-  border-bottom: 1px solid currentColor;
+  border-bottom: 1px solid var(--color-border);
   outline: none;
-  padding: 0.5rem 0;
+  padding: var(--fieldPadding);
+  position: relative;
+  width: 100%;
+  z-index: 1;
+
+  &:focus {
+    /*border-bottom-width: 1px;*/
+  }
+}
+
+.Form input.u-colorTextDark:active,
+.Form input.u-colorTextDark:focus {
+  border-color: currentColor;
+}
+
+.Form input + input,
+.Form label + label {
+  margin-top: 1.25rem;
+}
+
+.Form label {
+  color: var(--color-text-dark);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.Form textarea {
+  border: initial;
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--fieldPadding);
   width: 100%;
 }
 
-.Form input + input {
-  margin-top: 1rem;
+/*
+ * Elements
+ */
+
+.PlaceholderWrapper {
+  position: relative;
+}
+
+.Placeholder {
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0.1rem;
+}
+
+.Form label input:active ~ .Placeholder,
+.Form label input:focus ~ .Placeholder {
+  display: none;
 }

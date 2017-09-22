@@ -17,9 +17,8 @@ export default {
 
 
 <style scoped>
-
 .Paper-path {
-  height: 100%;
+  /*height: 100%;*/
   padding: 0;
 }
 </style>

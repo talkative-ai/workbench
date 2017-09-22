@@ -12,6 +12,7 @@ export default {
     buttonClass () {
       return ['Button', {
         'blank': this.blank,
+        'large': this.large,
         'circle': this.circle,
         'outline': this.outline,
         'outline--light': this.lightOutline
@@ -19,6 +20,7 @@ export default {
     }
   },
   props: {
+    large: Boolean,
     blank: Boolean,
     circle: Boolean,
     outline: Boolean,
@@ -48,6 +50,12 @@ export default {
     color: white;
   }
 
+  &.large {
+    border: 1px solid white;
+    color: var(--color-bg);
+    padding: 0.4em 0.75em 0.5em 0.8em;
+  }
+
   &.blank {
     color: inherit;
     border: initial;
@@ -56,7 +64,6 @@ export default {
 
   &.outline {
     background-color: transparent;
-    color: var(--color-brand);
   }
 
   &.outline--light {
@@ -77,23 +84,20 @@ export default {
 
   &.disabled {
     cursor: default;
-    border-color: lightgrey;
-    color: lightgrey;
+    background-color: var(--color-border);
+    border-color: var(--color-border);
+    // color: var(--color-border);
 
     &:hover {
       background-color: inherit;
-      color: lightgrey;
+      background-color: var(--color-border);
+      border-color: var(--color-border);
+      color: var(--color-bg);
     }
   }
-
-  // .button & {
-  //   border-color: white;
-  //   color: white;
-  //   &:hover {
-  //     background-color: transparent;
-  //   }
-  // }
 }
+
+
 
 .Button.Headline {
   height: auto;
@@ -102,5 +106,16 @@ export default {
 .theme-dark .Button.outline--light {
   border-color: currentColor;
   color: var(--color-text);
+}
+
+.Paper-path-button .Button {
+  transform: translateX(0);
+  transition: all 250ms ease-out;
+  z-index: 1;
+}
+
+.Paper-path-button:hover .Button {
+  transform: translateX(5px);
+  transition: all 250ms ease-out;
 }
 </style>
