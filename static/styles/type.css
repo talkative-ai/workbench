@@ -47,7 +47,7 @@
 body {
   background-color: var(--color-paper);
   color: var(--color-text);
-  font-family: "HeroNew-Medium";
+  font-family: "HeroNew-Regular";
   font-size: var(--text-sm-s3);
   font-weight: normal;
   line-height: var(--line-height-text);

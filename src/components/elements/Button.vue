@@ -51,7 +51,7 @@ export default {
   }
 
   &.large {
-    border: 1px solid white;
+    border-color: var(--color-bg);
     color: var(--color-bg);
     padding: 0.4em 0.75em 0.5em 0.8em;
     transform: translateX(0);
