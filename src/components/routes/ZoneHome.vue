@@ -17,15 +17,14 @@
           .Grid-cell
             .Paper-text.Paper-path-block.CoverImage.CoverImage--dark.u-borderRadius-BL(
               :style="`background-image: url(${BGActors})`"
-              @click="$router.push({ name: 'ActorCreate', params: { zoneid: $route.params.id } })"
             )
-              w-button(outline large).Headline
+              w-button(outline large @click.native="$router.push({ name: 'ActorCreate', params: { zoneid: $route.params.id } })").Headline
                 | Add an Actor
                 span.u-arrowEast
 
               .Headline.u-colorTextLight.u-marginT3.u-marginB3 Or choose an actor:
               div(v-for="ActorID of $store.state.zoneActors[$route.params.id]" :key="ActorID")
-                w-button(outline large @click="selectActor(ActorID)").Headline
+                w-button(outline large @click.native="selectActor(ActorID)").Headline
                   | {{ actors[ActorID].Title }}
                   span.u-arrowEast
 
