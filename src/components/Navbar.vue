@@ -18,7 +18,7 @@
         w-button(
           lightOutline
           v-if="user && project"
-          @click="publish()"
+          @click.native="publish()"
         )
           icon(name="google-home" width="32" height="32")
           | Publish to the Multiverse

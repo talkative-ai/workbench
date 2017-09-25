@@ -3,14 +3,14 @@
     sidebar
     paper
       input.quoted(v-for="(entry, index) of node.EntryInput" :key="index" v-model="node.EntryInput[index]")
-      button(@click="addEntry") Add potential entry input
+      w-button(@click.native="addEntry") Add potential entry input
       hr
       .node-values(v-for="(sound, index) of node.AlwaysExec.PlaySounds" :key="`sound-${node.ID}-${index}`")
         .inner-values
           input(placeholder="Enter speech text here!" v-model="sound.Val")
-          button(@click="deleteAction('PlaySounds', index)") Delete
-      button(@click="addAction()")
-        Add Action
+          w-button(@click.native="deleteAction('PlaySounds', index)") Delete
+      w-button(@click.native="addActionSpeech()")
+        | Add Action
       hr
       div(
         @click="$router.push({ name: 'DialogHome', params: { id: $route.params.id, dialog_id: nodeID }})"
@@ -18,23 +18,25 @@
         :key="nodeID"
       )
         div "{{ dialogs[nodeID].EntryInput[0] }}"
-      button(
+      w-button(
         v-if="!this.isNew"
         @click="$router.push({ name: 'DialogCreate', params: { id: $route.params.id, dialog_id: $route.params.dialog_id }})"
       )
         | Add Response
-      button(@click="save()") Save Changes
+      w-button(@click.native="save()") Save Changes
 </template>
 
 <script>
 import Sidebar from '../Sidebar'
 import Paper from '../Paper'
+import WButton from '../elements/Button'
 
 export default {
   name: 'DialogHome',
   components: {
     Sidebar,
-    Paper
+    Paper,
+    WButton
   },
   computed: {
     actor () {
@@ -71,12 +73,12 @@ export default {
     }
   },
   methods: {
-    addActionSpeech (idx) {
+    addActionSpeech () {
       let newDialog = {
         SoundType: 0,
         Val: ''
       }
-      this.node.AlwaysExec.PlaySounds.splice(idx, 0, newDialog)
+      this.node.AlwaysExec.PlaySounds.push(newDialog)
     },
     addActionSetZone () {
       this.node.AlwaysExec.SetZone = 1
@@ -93,10 +95,6 @@ export default {
     },
     deleteAction (type, index) {
       this.node.AlwaysExec[type].splice(index, 1)
-    },
-    onAddAction (evt) {
-      let action = this.actionTypes[evt.oldIndex].replace(' ', '')
-      this[`addAction${action}`](evt.newIndex)
     }
   }
 }

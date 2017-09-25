@@ -139,7 +139,7 @@ const actions = {
   },
 
   selectActor ({ commit, state }, actorID) {
-    if (state.selectedEntity.data && state.selectedEntity.data.ID === actorID) return
+    if (state.selectedEntity.data && state.selectedEntity.type === 'actor' && state.selectedEntity.data.ID === actorID) return
     const actor = state.actorsMapped[actorID]
     return API.GetActor(actor)
     .then(actor => {
