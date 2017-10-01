@@ -2,8 +2,6 @@ import Vue from 'vue'
 
 import store from './store'
 
-export const API_URL = 'http://localhost:8000/v1'
-
 export default {
   GetAuthGoogle ({ token, givenName, familyName }) {
     return aumFetch('GET', `auth/google?token=${token}&gn=${givenName}&fn=${familyName}`)
@@ -80,7 +78,7 @@ function aumFetch (method, path, payload) {
     body: JSON.stringify(payload)
   }
 
-  let req = new Request(`${API_URL}/${path}`, config)
+  let req = new Request(`${process.env.API_URL}${path}`, config)
   return fetch(req).then(result => {
     Vue.set(store.state, 'token', result.headers.get('x-token'))
     return result
