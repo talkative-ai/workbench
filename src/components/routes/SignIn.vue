@@ -18,7 +18,7 @@ export default {
   data () {
     return {
       googleSignInParams: {
-        client_id: '558300683184-b9h5fh49dm03qo0lo6jd2pe71gbne98h.apps.googleusercontent.com'
+        client_id: '693388894852-2s2q0ggfj09c5mq094gpdbppugce944m.apps.googleusercontent.com'
       }
     }
   },
