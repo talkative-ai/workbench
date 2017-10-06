@@ -19,7 +19,7 @@ const defaultDialog = {
   }
 }
 
-const state = {
+const initialState = {
   initializing: true,
 
   user: null,
@@ -42,28 +42,35 @@ const state = {
   createID: 0
 }
 
+let state = Object.assign({}, initialState)
+
 let ready
 export const initializer = new Promise((resolve, reject) => { ready = resolve })
 
 localforage.setDriver(localforage.LOCALSTORAGE)
-localforage.iterate((v, k) => {
-  let key = k.split('aum.state.v1.')
 
-  key = key.pop().split('.')
+function resetState () {
+  store.replaceState(Object.assign({}, initialState))
 
-  let s = state
-  for (let i = 0; i < key.length - 1; i++) {
-    s = s[key[i]]
-  }
-  Vue.set(s, key[key.length - 1], v)
-})
-.then(() => {
-  ready()
-  return initializer
-})
-.then(() => {
-  store.commit('initialized')
-})
+  localforage.iterate((v, k) => {
+    let key = k.split('aum.state.v1.')
+
+    key = key.pop().split('.')
+
+    let s = state
+    for (let i = 0; i < key.length - 1; i++) {
+      s = s[key[i]]
+    }
+    Vue.set(s, key[key.length - 1], v)
+  })
+  .then(() => {
+    ready()
+    return initializer
+  })
+  .then(() => {
+    store.commit('initialized')
+  })
+}
 
 const actions = {
   createProject ({ commit, state }) {
@@ -162,6 +169,11 @@ const actions = {
     dialog.CreateID = store.state.createID
     state.selectedEntity.data.Dialogs.push(dialog)
     API.PutActor(state.selectedEntity.data)
+  },
+
+  unauthorized ({ commit, state }) {
+    resetState()
+    router.push({ name: 'SignIn' })
   }
 }
 
@@ -249,6 +261,8 @@ const store = new Vuex.Store({
   actions,
   mutations
 })
+
+resetState()
 
 for (let k in state) {
   if (k === 'initializing') continue
