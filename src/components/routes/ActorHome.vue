@@ -32,8 +32,8 @@
               hr.u-colorTextDark.u-marginT5
               p.u-colorTextDark Where this actor appears:
               section.u-marginT3
-                h2.Text.u-colorTextLite(v-if="!actor.Appearances") {{ actor.Title }} hasn't appeared yet
-                h2.Text(v-else) Zone 1: Sunrise over Babylon
+                h2.Text.u-colorTextLite(v-if="!actorZones[actor.ID] || !actorZones[actor.ID].length") {{ actor.Title }} hasn't appeared yet
+                h2.Text(v-else v-for="zoneID in actorZones[actor.ID]") {{ zones[zoneID].Title }}
               //- button.button(@click="$router.push({ name: 'ActorDialog', id: actor.ID })") Dialog View
 </template>
 
@@ -63,6 +63,14 @@ export default {
   computed: {
     actor () {
       return this.$store.state.selectedEntity ? this.$store.state.selectedEntity.data : {}
+    },
+
+    actorZones () {
+      return this.$store.state.actorZones
+    },
+
+    zones () {
+      return this.$store.state.zonesMapped
     }
   }
 }

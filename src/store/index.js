@@ -39,6 +39,8 @@ const initialState = {
   zonesMapped: {},
   zoneActors: {},
 
+  actorZones: {},
+
   createID: 0
 }
 
@@ -127,7 +129,11 @@ const actions = {
         if (!state.zoneActors[za.ZoneID]) {
           Vue.set(state.zoneActors, za.ZoneID, [])
         }
+        if (!state.actorZones[za.ActorID]) {
+          Vue.set(state.actorZones, za.ActorID, [])
+        }
         state.zoneActors[za.ZoneID].push(za.ActorID)
+        state.actorZones[za.ActorID].push(za.ZoneID)
       }
       return project
     })
