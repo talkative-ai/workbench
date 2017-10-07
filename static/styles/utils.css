@@ -80,5 +80,6 @@
 .u-colorTextDark { color: var(--color-text-dark) !important; }
 .u-colorTextLight { color: var(--color-text-lite) !important; }
 .u-colorBorder { color: var(--color-border) !important; }
+.u-colorWhite { color: white !important; }
 
 .u-bgColorBrand { background-color: var(--color-brand) !important; }

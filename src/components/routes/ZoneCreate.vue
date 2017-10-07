@@ -7,19 +7,21 @@
           span.Headline--dark Everything happens in a Zone.
           br
           | Name your new Zone:
-        form.Form(@submit.prevent="create")
+        form.Form.u-flex(@submit.prevent="create")
           input.Headline.u-size1of2.u-marginR3(v-model="zone.Title", placeholder="Add name", required)
-          w-button.Headline(
-            @click="create"
-            :class="`u-bgColorBrand ${!zone.Title.length ? 'hidden' : ''}`"
-          )
-            | Enter
-            span.u-arrowEast
+          .Headline.u-colorWhite
+            w-button(
+              @click="create"
+              lightOutline
+              :class="`${!zone.Title.length ? 'hidden' : ''}`"
+            )
+              | Enter
+              span.u-arrowEast
 </template>
 
 <script>
 import Grid from '../elements/Grid'
-import WButton from '../elements/Button'
+import Button from '../elements/Button'
 import PaperText from '../elements/PaperText'
 import Sidebar from '../Sidebar'
 import Paper from '../Paper'
@@ -28,7 +30,7 @@ export default {
   name: 'ZoneCreate',
   components: {
     Sidebar,
-    WButton,
+    'w-button': Button,
     Grid,
     PaperText,
     Paper
@@ -58,11 +60,7 @@ export default {
 
 
 
-<style lang="scss" scoped>
-#RouteZoneCreate,
-input {
-  color: white;
-}
+<style scoped>
 
 
 </style>

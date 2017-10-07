@@ -33,25 +33,96 @@ export default {
 
 <style lang="scss" scoped>
 .Button {
-  align-items: center;
+  appearance: none;
   background-color: var(--color-brand);
-  border: 1pt solid var(--color-brand);
+  border: 0;
   border-radius: var(--border-radius-sm);
-  color: var(--color-bg);
+  color: white;
   cursor: pointer;
-  display: inline-flex;
-  height: 36px;
-  opacity: 1;
-  padding: 0 1rem;
-  transition: background-color 0.1s, color 0.1s, opacity 0.2s ease-out;
+  font-family: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  padding: 8px 16px;
+  // transition: background-color 0.1s, color 0.1s, opacity 0.2s ease-out;
+  vertical-align: middle;
 
   &:hover {
-    background-color: var(--color-brand);
-    color: white;
+    box-shadow: inset 0 0 0 999px color(#6e00dd blackness(20%));
   }
 
+  &:focus {
+    outline: 0;
+    box-shadow: 0 0 0 2px var(--color-bg);
+  }
+
+  &:active {
+    background-color: var(--color-bg);
+    box-shadow: inset 0 0 8px color(#6e00dd blackness(20%));
+  }
+
+  &:disabled {
+    opacity: 0.25;
+  }
+
+  // 
+  // outline variation
+  // 
+
+  &.outline {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 1px;
+    color: var(--color-brand);
+
+    &:hover {
+      background-color: var(--color-brand);
+      color: var(--color-bg);
+    }
+
+    &:focus {
+      box-shadow: inset 0 0 0 2px, 0 0 0 1px;
+    }
+
+    &:active {
+      background-color: var(--color-brand);
+      box-shadow: inset 0 0 0 1px var(--color-brand), inset 0 0 8px color(#6e00dd blackness(20%));
+      color: var(--color-bg);
+    }
+  }
+
+  &.outline--light {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 1px;
+    color: currentColor;
+
+    &:hover {
+      background-color: var(--color-bg);
+      color: var(--color-brand);
+    }
+
+    &:focus {
+      box-shadow: inset 0 0 0 1px, 0 0 0 1px;
+    }
+
+    &:active {
+      background-color: currentColor;
+      box-shadow: inset 0 0 0 1px currentColor, inset 0 0 8px color(#6e00dd blackness(20%));
+      color: var(--color-bg);
+    }
+  }
+
+  
+
+
+  
+
+
+
+
+
+
+
   &.large {
-    border: 1px solid white;
+    border-color: var(--color-bg);
     color: var(--color-bg);
     padding: 0.4em 0.75em 0.5em 0.8em;
     transform: translateX(0);
@@ -69,15 +140,7 @@ export default {
     height: auto;
   }
 
-  &.outline {
-    background-color: transparent;
-  }
-
-  &.outline--light {
-    background-color: transparent;
-    border-color: var(--color-text-lite);
-    color: var(--color-text-lite);
-  }
+  
 
   &.wide {
     width: 100%;
@@ -89,31 +152,17 @@ export default {
     pointer-events: none;
   }
 
-  &.disabled {
-    cursor: default;
-    background-color: var(--color-border);
-    border-color: var(--color-border);
-    // color: var(--color-border);
-
-    &:hover {
-      background-color: inherit;
-      background-color: var(--color-border);
-      border-color: var(--color-border);
-      color: var(--color-bg);
-    }
-  }
+  
 }
 
 
 
-.Button.Headline {
-  height: auto;
-}
 
-.theme-dark .Button.outline--light {
-  border-color: currentColor;
-  color: var(--color-text);
-}
+
+// .theme-dark .Button.outline--light {
+//   border-color: currentColor;
+//   color: var(--color-text);
+// }
 
 // .Paper-path-button .Button {
 //   transform: translateX(0);

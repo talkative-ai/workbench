@@ -1,16 +1,27 @@
 <template lang="pug">
-  paper#RouteSignIn
-    g-signin-button(
-      :params="googleSignInParams"
-      @success="onSignInSuccess"
-      @error="onSignInError"
-    )
-      | Sign in with Google
-    h4
-      i Currently only sign in with Google is supported
+  grid(gutter)#RouteSignIn
+    column(menu)
+      | &nbsp;
+    paper
+      paper-text
+        //- w-button.Headline(
+        g-signin-button(
+          class="Headline Button large"
+          :params="googleSignInParams"
+          @success="onSignInSuccess"
+          @error="onSignInError"
+        )
+          | Sign in with Google
+        p.u-marginT3.u-colorTextLight
+          | Currently only sign in with Google is supported.
 </template>
 
+
 <script>
+import WButton from '../elements/Button'
+import Grid from '../elements/Grid'
+import Column from '../elements/Column'
+import PaperText from '../elements/PaperText'
 import Paper from '../Paper'
 
 export default {
@@ -23,7 +34,11 @@ export default {
     }
   },
   components: {
-    Paper
+    WButton,
+    Grid,
+    Column,
+    Paper,
+    PaperText
   },
   computed: {
     user () {
@@ -48,18 +63,7 @@ export default {
 }
 </script>
 
+
 <style scoped>
-.padded {
-  padding: 1rem;
-}
-.g-signin-button {
-  /* This is where you control how the button looks. Be creative! */
-  display: inline-block;
-  padding: 4px 8px;
-  border-radius: 3px;
-  background-color: #3c82f7;
-  color: #fff;
-  box-shadow: 0 3px 0 #0f69ff;
-  cursor: pointer;
-}
+
 </style>

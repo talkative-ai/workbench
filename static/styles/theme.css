@@ -11,3 +11,7 @@
 .theme-dark .Headline--dark {
   color: var(--color-paper);
 }
+
+.theme-dark .Form input {
+  color: white;
+}
