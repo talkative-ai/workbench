@@ -1,5 +1,11 @@
 <template lang="pug">
   .DialogNode
+    .root(v-if="node.IsRoot")
+      .entry.root(v-for="(entry, index) in dialogs[node.ID].EntryInput")
+        | "{{ entry }}"
+        span(v-if="index < dialogs[node.ID].EntryInput.length-1")
+          | ,
+      .ball
     .node-values(@click="$router.push({ name: 'DialogHome', params: { id: $route.params.id, dialog_id: node.ID }})")
       .inner-values(v-for='(sound, index) of node.AlwaysExec.PlaySounds', :key='`sound-${node.ID}-${index}`')
         | {{ sound.Val }}
@@ -9,7 +15,10 @@
     .child-nodes(v-if='node.ChildNodes')
       div(v-for='(nodeID, idx) of node.ChildNodes', :key='nodeID')
         div(:class="`child-node-head ${idx < node.ChildNodes.length-1 ? 'child-node-head-nth' : 'child-node-head-final'}`")
-          .entry "{{ dialogs[nodeID].EntryInput[0] }}"
+          .entry(v-for="(entry, index) in dialogs[nodeID].EntryInput")
+            | "{{ entry }}"
+            span(v-if="index < dialogs[nodeID].EntryInput.length-1")
+              | ,
           .ball
         dialog-node(:node='dialogs[nodeID]')
 </template>
@@ -57,6 +66,9 @@ export default {
   border-radius: 100%;
   position: absolute;
   left: -0.25rem;
+}
+.root .ball {
+  left: 1.25rem;
 }
 .child-node-head {
   position: relative;
