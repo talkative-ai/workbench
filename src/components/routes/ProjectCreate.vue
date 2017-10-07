@@ -8,15 +8,15 @@
           | Name your game:
         
         form.Form(@submit.prevent="create")
-          input.Headline.u-size1of2.u-marginR3(placeholder="Add name", required)
+          input.Headline.u-size1of2.u-marginR3(placeholder="Add name", v-model="projectName", required)
           .input-hint
+            | Must be 3 - 255 characters long, with no special characters like !@#$%^&*()
+            br
             | You can change this later. Other people will see this name when you publish!
-
-          router-link(to='/zone/create')
-            .Headline
-              w-button(outline)
-                | Begin
-                span.u-arrowEast
+          br
+          w-button(outline @click.native="createProject()", :disabled="isDisabled()")
+            | Begin
+            span.u-arrowEast
 </template>
 
 <script>
@@ -34,6 +34,25 @@ export default {
     PaperText,
     Sidebar,
     Paper
+  },
+  data () {
+    return {
+      projectName: ''
+    }
+  },
+  methods: {
+    createProject () {
+      this.$router.replace({ name: 'ZoneCreate' })
+    },
+    isDisabled () {
+      if (this.projectName.length < 3) {
+        return true
+      }
+      const illegalChars = new RegExp('[!$\\#%^&*()_+|~=`{}\\[\\]:";\'<>?\\/]')
+      if (illegalChars.exec(this.projectName)) {
+        return true
+      }
+    }
   }
 }
 </script>
