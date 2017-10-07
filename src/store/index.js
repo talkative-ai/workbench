@@ -206,7 +206,10 @@ const mutations = {
     payload.actor.DialogRelations = payload.actor.DialogRelations || []
     let id = 0
     for (let idx in state.selectedProject.Actors) {
-      if (state.selectedProject.Actors[idx].ID === payload.actor.ID) id = state.selectedProject.Actors[idx].ID
+      if (state.selectedProject.Actors[idx].ID === payload.actor.ID) {
+        id = idx
+        break
+      }
     }
     Vue.set(state.selectedProject.Actors, id, payload.actor)
     state.rootNodes = []
