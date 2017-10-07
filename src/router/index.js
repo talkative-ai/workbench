@@ -59,8 +59,9 @@ const router = new Router({
         title: 'Create a new game'
       },
       beforeEnter (to, from, next) {
-        store.dispatch('reset')
-        return next()
+        store.dispatch('reset').then(() => {
+          return next()
+        })
       }
     },
     {

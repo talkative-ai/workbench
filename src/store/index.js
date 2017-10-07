@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import localforage from 'localforage'
+import dcopy from 'deep-copy'
 
 import router from '@/router'
 import API from '@/api'
@@ -49,13 +50,21 @@ export const initializer = new Promise((resolve, reject) => { ready = resolve })
 
 localforage.setDriver(localforage.LOCALSTORAGE)
 
-function resetState (keepAuth = false) {
-  let freshState = Object.assign({}, initialState)
+function resetState ({ keepAuth = false, initial = false }) {
+  let freshState = dcopy(initialState)
   if (keepAuth) {
     freshState.user = store.state.user
     freshState.token = store.state.token
   }
+
   store.replaceState(freshState)
+
+  if (!initial) {
+    for (let k in store.state) {
+      if (k === 'initializing') continue
+      localforage.setItem(`aum.state.v1.${k}`, store.state[k])
+    }
+  }
 
   localforage.iterate((v, k) => {
     let key = k.split('aum.state.v1.')
@@ -181,12 +190,13 @@ const actions = {
   },
 
   unauthorized ({ commit, state }) {
-    resetState()
-    router.push({ name: 'SignIn' })
+    return resetState().then(() => {
+      router.push({ name: 'SignIn' })
+    })
   },
 
   reset () {
-    resetState(true)
+    return resetState({ keepAuth: true })
   }
 }
 
@@ -273,12 +283,12 @@ const mutations = {
 }
 
 const store = new Vuex.Store({
-  state: Object.assign({}, initialState),
+  state: dcopy(initialState),
   actions,
   mutations
 })
 
-resetState()
+resetState({ initial: true })
 
 for (let k in store.state) {
   if (k === 'initializing') continue

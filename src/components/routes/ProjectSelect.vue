@@ -11,7 +11,7 @@
     hr
     button.button.no-outline(@click='openProject()' v-if='selected' to='/project/create')
       | Open Game
-    buttin.button.no-outline.preplus(@click='createProject()')
+    button.button.no-outline.preplus(@click='createProject()')
       | Create New Game
 </template>
 
