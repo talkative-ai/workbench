@@ -11,7 +11,7 @@
     hr
     button.button.no-outline(@click='openProject()' v-if='selected' to='/project/create')
       | Open Game
-    router-link.button.no-outline.preplus(to='/project/create')
+    buttin.button.no-outline.preplus(@click='createProject()')
       | Create New Game
 </template>
 
@@ -41,6 +41,10 @@ export default {
       .then(() => {
         this.$router.push({ name: 'ProjectHome' })
       })
+    },
+
+    createProject () {
+      this.$router.push({ name: 'ProjectCreate' })
     }
   }
 }

@@ -1,6 +1,5 @@
 <template lang="pug">
   grid(gutter)#RouteProjectCreate
-    sidebar
     paper
       paper-text
         h1.Headline 

@@ -57,6 +57,10 @@ const router = new Router({
         background: 'clouds',
         theme: 'light',
         title: 'Create a new game'
+      },
+      beforeEnter (to, from, next) {
+        store.dispatch('reset')
+        return next()
       }
     },
     {

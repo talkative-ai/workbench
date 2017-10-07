@@ -49,8 +49,13 @@ export const initializer = new Promise((resolve, reject) => { ready = resolve })
 
 localforage.setDriver(localforage.LOCALSTORAGE)
 
-function resetState () {
-  store.replaceState(Object.assign({}, initialState))
+function resetState (keepAuth = false) {
+  let freshState = Object.assign({}, initialState)
+  if (keepAuth) {
+    freshState.user = store.state.user
+    freshState.token = store.state.token
+  }
+  store.replaceState(freshState)
 
   localforage.iterate((v, k) => {
     let key = k.split('aum.state.v1.')
@@ -178,6 +183,10 @@ const actions = {
   unauthorized ({ commit, state }) {
     resetState()
     router.push({ name: 'SignIn' })
+  },
+
+  reset () {
+    resetState(true)
   }
 }
 
