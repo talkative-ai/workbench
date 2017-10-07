@@ -87,5 +87,6 @@ function aumFetch (method, path, payload) {
       store.dispatch('unauthorized')
       throw new Error('Unauthorized')
     }
+    return res
   })
 }

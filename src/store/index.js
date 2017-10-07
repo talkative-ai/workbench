@@ -42,8 +42,6 @@ const initialState = {
   createID: 0
 }
 
-let state = Object.assign({}, initialState)
-
 let ready
 export const initializer = new Promise((resolve, reject) => { ready = resolve })
 
@@ -57,7 +55,7 @@ function resetState () {
 
     key = key.pop().split('.')
 
-    let s = state
+    let s = store.state
     for (let i = 0; i < key.length - 1; i++) {
       s = s[key[i]]
     }
@@ -183,7 +181,7 @@ const mutations = {
     state.initializing = false
   },
 
-  incrCreate () {
+  incrCreate (state) {
     state.createID++
   },
 
@@ -257,17 +255,17 @@ const mutations = {
 }
 
 const store = new Vuex.Store({
-  state,
+  state: Object.assign({}, initialState),
   actions,
   mutations
 })
 
 resetState()
 
-for (let k in state) {
+for (let k in store.state) {
   if (k === 'initializing') continue
   store.watch(state => state[k], (value) => {
-    localforage.setItem(`aum.state.v1.${k}`, state[k])
+    localforage.setItem(`aum.state.v1.${k}`, store.state[k])
   }, {
     immediate: true,
     deep: true
