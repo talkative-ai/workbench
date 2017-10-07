@@ -20,7 +20,7 @@
         div "{{ dialogs[nodeID].EntryInput[0] }}"
       w-button(
         v-if="!this.isNew"
-        @click="$router.push({ name: 'DialogCreate', params: { id: $route.params.id, dialog_id: $route.params.dialog_id }})"
+        @click.native="$router.push({ name: 'DialogCreate', params: { id: $route.params.id, dialog_id: $route.params.dialog_id }})"
       )
         | Add Response
       w-button(@click.native="save()") Save Changes

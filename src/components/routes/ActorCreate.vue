@@ -57,7 +57,7 @@
               .u-textRight.u-marginT4
                 w-button(
                   large
-                  @click="actor.Title.length && create()",
+                  @click.native="actor.Title.length && create()",
                   :class="`Headline ${!actor.Title.length ? 'disabled' : ''}`"
                 )
                   | Create actor

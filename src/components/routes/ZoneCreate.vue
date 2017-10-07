@@ -11,7 +11,7 @@
           input.Headline.u-size1of2.u-marginR3(v-model="zone.Title", placeholder="Add name", required)
           .Headline.u-colorWhite
             w-button(
-              @click="create"
+              @click.native="create"
               lightOutline
               :class="`${!zone.Title.length ? 'hidden' : ''}`"
             )
