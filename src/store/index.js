@@ -259,6 +259,7 @@ const mutations = {
     Vue.set(state.zonesMapped, zone.ID, zone)
   },
 
+  // TODO: Add comments
   selectEntity (state, entity) {
     let redirect = entity.redirect
     delete entity.redirect
