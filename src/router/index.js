@@ -5,7 +5,9 @@ import ZoneCreate from '@/components/routes/ZoneCreate';
 import ActorHome from '@/components/routes/ActorHome';
 import DialogHome from '@/components/routes/DialogHome';
 import ActorCreate from '@/components/routes/ActorCreate';
+import ActorSelect from '@/components/routes/ActorSelect';
 import ActorDialog from '@/components/routes/ActorDialog';
+import NotFound from '@/components/routes/NotFound';
 import ProjectCreate from '@/components/routes/ProjectCreate';
 import ProjectSelect from '@/components/routes/ProjectSelect';
 import ProjectHome from '@/components/routes/ProjectHome';
@@ -77,6 +79,18 @@ const router = new Router({
       }
     },
     {
+      path: 'zone/:id/actor/select',
+      name: 'ActorSelect',
+      props: true,
+      component: ActorSelect,
+      meta: {
+        background: 'paper',
+        theme: 'light',
+        title: () => store.state.selectedProject.Title,
+        titleLink: () => router.push({ name: 'ProjectHome' })
+      }
+    },
+    {
       path: '/actor/:id',
       name: 'ActorHome',
       component: ActorHome,
@@ -87,6 +101,9 @@ const router = new Router({
         titleLink: () => router.push({ name: 'ProjectHome' })
       },
       beforeEnter(to, from, next) {
+        if (isNaN(to.params.id)) {
+          next({ name: 'NotFound' });
+        }
         store.dispatch('selectActor', to.params.id)
         .then(() => next());
       }
@@ -181,6 +198,11 @@ const router = new Router({
         store.dispatch('selectActor', to.params.id)
         .then(() => next());
       }
+    },
+    {
+      path: '*',
+      name: 'NotFound',
+      component: NotFound
     }
   ]
 });

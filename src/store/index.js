@@ -176,6 +176,10 @@ const actions = {
   selectActor({ commit, state }, actorID) {
     if (state.selectedEntity.data && state.selectedEntity.type === 'actor' && state.selectedEntity.data.ID === actorID) return;
     const actor = state.actorsMapped[actorID];
+    if (!actor) {
+      router.push({ name: 'NotFound' });
+      return;
+    }
     return API.GetActor(actor)
     .then(actor => {
       commit('updateActor', { actor });
