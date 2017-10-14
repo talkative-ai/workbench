@@ -17,12 +17,6 @@
         span
           icon(name="add" width="24" height="24")
           | New zone
-      .Sidebar-item.Text--sm(
-        @click="$router.push({ name: 'ActorHome' })"
-      )
-        span
-          icon(name="actor" width="24" height="24")
-          | Actors
 </template>
 
 <script>
