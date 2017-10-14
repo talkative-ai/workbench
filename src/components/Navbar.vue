@@ -1,10 +1,9 @@
 <template lang="pug">
   header#Header.Navbar.Block.Grid.Grid--withGutter
     column(menu)
-      template(v-if="user")
-        .Navbar-cell.Text--sm
-          icon(name="author" width="32" height="32")
-          | {{ user.GivenName }}
+      .Navbar-cell.Text--sm.Pointer(v-if="user" @click="$router.push({ name: 'ProjectSelect' })")
+        icon(name="author" width="32" height="32")
+        | {{ user.GivenName }}
 
     column(main)
       .Navbar-cell.Text--sm.u-flexJustifyBetween

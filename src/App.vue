@@ -71,4 +71,8 @@ export default {
   right: 0;
   top: 0;
 }
+
+.Pointer {
+  cursor: pointer;
+}
 </style>
