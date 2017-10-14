@@ -27,7 +27,7 @@ const router = new Router({
       meta: {
         background: 'paper',
         theme: 'light',
-        title: 'Your games'
+        title: 'Your projects'
       },
       beforeEnter(to, from, next) {
         API.GetProjects().then(result => {
@@ -58,7 +58,7 @@ const router = new Router({
       meta: {
         background: 'clouds',
         theme: 'light',
-        title: 'Create a new game'
+        title: 'Create a new project'
       },
       beforeEnter(to, from, next) {
         store.dispatch('reset').then(() => {

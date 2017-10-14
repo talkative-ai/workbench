@@ -27,31 +27,31 @@
                 .PlaceholderWrapper
                   input.Headline.u-colorTextDark(v-model="actor.Title")
                   .Placeholder.Headline What's their name?
-              label
-                | Sex:
-                .PlaceholderWrapper
-                  input.Headline.u-colorTextDark
-                  .Placeholder.Headline Female, male, transgender?
-              label
-                | Age:
-                .PlaceholderWrapper
-                  input.Headline.u-colorTextDark
-                  .Placeholder.Headline How old are they?
-              label
-                | Relationships:
-                .PlaceholderWrapper
-                  input.Headline.u-colorTextDark
-                  .Placeholder.Headline Parent? Spouse? Child?
-              label
-                | Background Story:
-                .PlaceholderWrapper
-                  textarea.Headline.u-colorTextDark(rows="3")
-                  .Placeholder.Headline What's their story?
-              label
-                | Character:
-                .PlaceholderWrapper
-                  textarea.Headline.u-colorTextDark(rows="3")
-                  .Placeholder.Headline How do they behave?
+              //- label
+              //-   | Sex:
+              //-   .PlaceholderWrapper
+              //-     input.Headline.u-colorTextDark
+              //-     .Placeholder.Headline Female, male, transgender?
+              //- label
+              //-   | Age:
+              //-   .PlaceholderWrapper
+              //-     input.Headline.u-colorTextDark
+              //-     .Placeholder.Headline How old are they?
+              //- label
+              //-   | Relationships:
+              //-   .PlaceholderWrapper
+              //-     input.Headline.u-colorTextDark
+              //-     .Placeholder.Headline Parent? Spouse? Child?
+              //- label
+              //-   | Background Story:
+              //-   .PlaceholderWrapper
+              //-     textarea.Headline.u-colorTextDark(rows="3")
+              //-     .Placeholder.Headline What's their story?
+              //- label
+              //-   | Character:
+              //-   .PlaceholderWrapper
+              //-     textarea.Headline.u-colorTextDark(rows="3")
+              //-     .Placeholder.Headline How do they behave?
 
             .Grid-cell
               .u-textRight.u-marginT4

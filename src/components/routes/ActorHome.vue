@@ -4,7 +4,7 @@
     paper
       paper-text
         h1.Headline
-          span.Headline--dark Back to dialogue or Actor's name?
+          span.Headline--dark {{ actor.Title }}
 
         form.Form(@submit.prevent="create")
           grid(gutter)
@@ -14,7 +14,6 @@
               )
 
             .Grid-cell.u-size2of3
-              .Headline.Headline--dark {{ actor.Title }}
               .Headline.Headline--dark(v-if="actor.Sex")
                 span {{ actor.Sex }}
                 span(v-if="actor.Age") ,&nbsp;{{ actor.Age }}
@@ -28,8 +27,6 @@
               section(v-if="actor.Character")
                 p.u-colorTextDark Character:
                 p {{ actor.Character }}
-
-              hr.u-colorTextDark.u-marginT5
               p.u-colorTextDark Where this actor appears:
               section.u-marginT3
                 h2.Text.u-colorTextLite(v-if="!actorZones[actor.ID] || !actorZones[actor.ID].length") {{ actor.Title }} hasn't appeared yet

@@ -1,6 +1,6 @@
 <template lang="pug">
   #RouteProjectSelect
-    h1 Choose a game:
+    h1 Choose a project:
     div(
       @click='toggleSelected(project)'
       :class="`project ${selected.ID === project.ID ? 'selected' : ''}`"
@@ -10,9 +10,9 @@
       | {{ project.Title }}
     hr
     button.button.no-outline(@click='openProject()' v-if='selected' to='/project/create')
-      | Open Game
+      | Open Project
     button.button.no-outline.preplus(@click='createProject()')
-      | Create New Game
+      | Create New Project
 </template>
 
 <script>
