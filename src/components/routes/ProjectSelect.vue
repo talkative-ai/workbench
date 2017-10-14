@@ -18,36 +18,36 @@
 <script>
 export default {
   name: 'ProjectSelect',
-  data () {
+  data() {
     return {
       selected: false
-    }
+    };
   },
   computed: {
-    projects () {
-      return this.$store.state.projectsList
+    projects() {
+      return this.$store.state.projectsList;
     }
   },
   methods: {
-    toggleSelected (id) {
+    toggleSelected(id) {
       if (this.selected === id) {
-        this.selected = false
+        this.selected = false;
       } else {
-        this.selected = id
+        this.selected = id;
       }
     },
-    openProject () {
+    openProject() {
       this.$store.dispatch('selectProject', this.selected)
       .then(() => {
-        this.$router.push({ name: 'ProjectHome' })
-      })
+        this.$router.push({ name: 'ProjectHome' });
+      });
     },
 
-    createProject () {
-      this.$router.push({ name: 'ProjectCreate' })
+    createProject() {
+      this.$router.push({ name: 'ProjectCreate' });
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

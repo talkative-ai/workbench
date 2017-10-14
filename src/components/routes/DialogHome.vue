@@ -27,9 +27,9 @@
 </template>
 
 <script>
-import Sidebar from '../Sidebar'
-import Paper from '../Paper'
-import WButton from '../elements/Button'
+import Sidebar from '../Sidebar';
+import Paper from '../Paper';
+import WButton from '../elements/Button';
 
 export default {
   name: 'DialogHome',
@@ -39,65 +39,65 @@ export default {
     WButton
   },
   computed: {
-    actor () {
-      return this.$store.state.selectedEntity ? this.$store.state.selectedEntity.data : {}
+    actor() {
+      return this.$store.state.selectedEntity ? this.$store.state.selectedEntity.data : {};
     },
-    isNew () {
-      return this.$route.params.isNew
+    isNew() {
+      return this.$route.params.isNew;
     },
-    node () {
-      if (this.isNew) return this.$store.state.newDialog
-      return this.$store.state.dialogsMapped[this.$route.params.dialog_id]
+    node() {
+      if (this.isNew) return this.$store.state.newDialog;
+      return this.$store.state.dialogsMapped[this.$route.params.dialog_id];
     },
-    dialogs () {
-      return this.$store.state.dialogsMapped
+    dialogs() {
+      return this.$store.state.dialogsMapped;
     },
     actionSpeech: {
-      get () {
-        return this.node.AlwaysExec.PlaySounds
+      get() {
+        return this.node.AlwaysExec.PlaySounds;
       },
-      set (value) {
+      set(value) {
         for (let v of value) {
-          if (typeof v === 'string') return false
+          if (typeof v === 'string') return false;
         }
-        this.node.AlwaysExec.PlaySounds = value
+        this.node.AlwaysExec.PlaySounds = value;
       }
     },
     actionTypes: {
-      get () {
-        return ['Speech', 'Set Zone']
+      get() {
+        return ['Speech', 'Set Zone'];
       },
-      set () {
-        return
+      set() {
+        return;
       }
     }
   },
   methods: {
-    addActionSpeech () {
+    addActionSpeech() {
       let newDialog = {
         SoundType: 0,
         Val: ''
-      }
-      this.node.AlwaysExec.PlaySounds.push(newDialog)
+      };
+      this.node.AlwaysExec.PlaySounds.push(newDialog);
     },
-    addActionSetZone () {
-      this.node.AlwaysExec.SetZone = 1
+    addActionSetZone() {
+      this.node.AlwaysExec.SetZone = 1;
     },
-    addEntry () {
-      this.node.EntryInput.push('')
+    addEntry() {
+      this.node.EntryInput.push('');
     },
-    save () {
+    save() {
       if (!this.isNew) {
-        this.$store.dispatch('updateDialog', this.node)
+        this.$store.dispatch('updateDialog', this.node);
       } else {
-        this.$store.dispatch('createNewDialog', this.node)
+        this.$store.dispatch('createNewDialog', this.node);
       }
     },
-    deleteAction (type, index) {
-      this.node.AlwaysExec[type].splice(index, 1)
+    deleteAction(type, index) {
+      this.node.AlwaysExec[type].splice(index, 1);
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

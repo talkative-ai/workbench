@@ -65,13 +65,13 @@
 </template>
 
 <script>
-import WButton from '../elements/Button'
-import Grid from '../elements/Grid'
-import Sidebar from '../Sidebar'
-import Paper from '../Paper'
-import PaperText from '../elements/PaperText'
-import BGActor from '@/assets/images/actor.jpg'
-import PictureInput from 'vue-picture-input'
+import WButton from '../elements/Button';
+import Grid from '../elements/Grid';
+import Sidebar from '../Sidebar';
+import Paper from '../Paper';
+import PaperText from '../elements/PaperText';
+import BGActor from '@/assets/images/actor.jpg';
+import PictureInput from 'vue-picture-input';
 
 export default {
   name: 'ActorCreate',
@@ -84,31 +84,31 @@ export default {
     Paper,
     PictureInput
   },
-  data () {
+  data() {
     return {
       BGActor,
       actor: {
         Title: ''
       }
-    }
+    };
   },
   methods: {
-    create () {
+    create() {
       if (this.zoneid) {
-        this.actor.ZoneID = this.zoneid
+        this.actor.ZoneID = this.zoneid;
       }
-      this.$store.dispatch('createActor', this.actor)
+      this.$store.dispatch('createActor', this.actor);
     },
-    onChange () {
-      console.log('New picture selected!')
+    onChange() {
+      console.log('New picture selected!');
       if (this.$refs.pictureInput.image) {
-        console.log('Picture loaded.')
+        console.log('Picture loaded.');
       } else {
-        console.log('FileReader API not supported: use the <form>, Luke!')
+        console.log('FileReader API not supported: use the <form>, Luke!');
       }
     }
   }
-}
+};
 </script>
 
 <style lang="scss">

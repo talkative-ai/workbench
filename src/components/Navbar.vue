@@ -29,9 +29,9 @@
 </template>
 
 <script>
-import '../assets/icons2'
-import WButton from './elements/Button'
-import Column from './elements/Column'
+import '../assets/icons2';
+import WButton from './elements/Button';
+import Column from './elements/Column';
 
 export default {
   name: 'navbar',
@@ -40,23 +40,23 @@ export default {
     Column
   },
   computed: {
-    user () {
-      return this.$store.state.user
+    user() {
+      return this.$store.state.user;
     },
-    project () {
-      return this.$store.state.selectedProject
+    project() {
+      return this.$store.state.selectedProject;
     },
-    title () {
-      if (typeof this.$route.meta.title === 'function') return this.$route.meta.title()
-      return this.$route.meta.title
+    title() {
+      if (typeof this.$route.meta.title === 'function') return this.$route.meta.title();
+      return this.$route.meta.title;
     }
   },
   methods: {
-    publish () {
-      this.$store.dispatch('publish')
+    publish() {
+      this.$store.dispatch('publish');
     }
   }
-}
+};
 </script>
 
 <style lang="scss">

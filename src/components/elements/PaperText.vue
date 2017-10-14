@@ -9,16 +9,16 @@
 export default {
   name: 'paper-text',
   computed: {
-    paperTextClass () {
+    paperTextClass() {
       return ['Paper-text', {
         'full-height': this.full
-      }]
+      }];
     }
   },
   props: {
     full: Boolean
   }
-}
+};
 </script>
 
 

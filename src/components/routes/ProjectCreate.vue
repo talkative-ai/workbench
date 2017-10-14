@@ -7,7 +7,7 @@
           br
           | Name your game:
         
-        form.Form(@submit.prevent="create")
+        form.Form(@submit.prevent="createProject()")
           input.Headline.u-size1of2.u-marginR3(placeholder="Add name", v-model="projectName", required)
           .input-hint
             | Must be 3 - 255 characters long, with no special characters like !@#$%^&*()
@@ -20,11 +20,11 @@
 </template>
 
 <script>
-import Button from '../elements/Button'
-import Grid from '../elements/Grid'
-import PaperText from '../elements/PaperText'
-import Sidebar from '../Sidebar'
-import Paper from '../Paper'
+import Button from '../elements/Button';
+import Grid from '../elements/Grid';
+import PaperText from '../elements/PaperText';
+import Sidebar from '../Sidebar';
+import Paper from '../Paper';
 
 export default {
   name: 'ProjectCreate',
@@ -35,26 +35,28 @@ export default {
     Sidebar,
     Paper
   },
-  data () {
+  data() {
     return {
-      projectName: ''
-    }
+      projectName: '',
+      creating: false
+    };
   },
   methods: {
-    createProject () {
-      this.$router.replace({ name: 'ZoneCreate' })
+    createProject() {
+      this.creating = true;
+      this.$store.dispatch('createProject', this.actor);
     },
-    isDisabled () {
+    isDisabled() {
       if (this.projectName.length < 3) {
-        return true
+        return true;
       }
-      const illegalChars = new RegExp('[!$\\#%^&*()_+|~=`{}\\[\\]:";\'<>?\\/]')
+      const illegalChars = new RegExp('[!$\\#%^&*()_+|~=`{}\\[\\]:";\'<>?\\/]');
       if (illegalChars.exec(this.projectName)) {
-        return true
+        return true;
       }
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

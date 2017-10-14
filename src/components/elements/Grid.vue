@@ -9,13 +9,13 @@
 export default {
   name: 'grid',
   computed: {
-    gridClass () {
+    gridClass() {
       return ['Grid', {
         'Grid--withGutter': this.gutter,
         'Grid--withGutterSm': this.gutterSm,
         'Grid--fit': this.fit,
         'u-flexAlignItemsStretch': this.fill
-      }]
+      }];
     }
   },
   props: {
@@ -24,7 +24,7 @@ export default {
     fit: Boolean,
     fill: Boolean
   }
-}
+};
 </script>
 
 

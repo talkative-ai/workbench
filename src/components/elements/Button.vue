@@ -9,14 +9,14 @@
 export default {
   name: 'button',
   computed: {
-    buttonClass () {
+    buttonClass() {
       return ['Button', {
         'blank': this.blank,
         'large': this.large,
         'circle': this.circle,
         'outline': this.outline,
         'outline--light': this.lightOutline
-      }]
+      }];
     }
   },
   props: {
@@ -26,7 +26,7 @@ export default {
     outline: Boolean,
     lightOutline: String
   }
-}
+};
 </script>
 
 

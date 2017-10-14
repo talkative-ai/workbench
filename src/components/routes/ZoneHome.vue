@@ -38,14 +38,14 @@
 </template>
 
 <script>
-import WButton from '../elements/Button'
-import Grid from '../elements/Grid'
-import PaperText from '../elements/PaperText'
-import PaperPath from '../elements/PaperPath'
-import Sidebar from '../Sidebar'
-import Paper from '../Paper'
-import BGActors from '@/assets/images/milky-way.jpg'
-import BGTriggers from '@/assets/images/door.jpg'
+import WButton from '../elements/Button';
+import Grid from '../elements/Grid';
+import PaperText from '../elements/PaperText';
+import PaperPath from '../elements/PaperPath';
+import Sidebar from '../Sidebar';
+import Paper from '../Paper';
+import BGActors from '@/assets/images/milky-way.jpg';
+import BGTriggers from '@/assets/images/door.jpg';
 
 export default {
   name: 'ZoneHome',
@@ -57,26 +57,26 @@ export default {
     Sidebar,
     Paper
   },
-  data () {
+  data() {
     return {
       BGActors,
       BGTriggers
-    }
+    };
   },
   computed: {
-    actors () {
-      return this.$store.state.actorsMapped
+    actors() {
+      return this.$store.state.actorsMapped;
     }
   },
   methods: {
-    selectActor (ID) {
+    selectActor(ID) {
       this.$store.dispatch('selectActor', ID)
       .then(() => {
-        this.$router.push({ name: 'ActorHome', params: { id: ID } })
-      })
+        this.$router.push({ name: 'ActorHome', params: { id: ID } });
+      });
     }
   }
-}
+};
 </script>
 
 <style scoped>

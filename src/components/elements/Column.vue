@@ -9,14 +9,14 @@
 export default {
   name: 'column',
   computed: {
-    columnClass () {
+    columnClass() {
       return ['Grid-cell', {
         'u-sizeMenu': this.menu,
         'u-sizeMain': this.main,
         'u-sizeLogo': this.logo,
         'u-beforeSizeMenu': this.beforeMenu,
         'Grid-cell--center': this.center
-      }]
+      }];
     }
   },
   props: {
@@ -26,7 +26,7 @@ export default {
     beforeMenu: String,
     center: Boolean
   }
-}
+};
 </script>
 
 

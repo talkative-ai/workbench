@@ -18,20 +18,20 @@
 
 
 <script>
-import WButton from '../elements/Button'
-import Grid from '../elements/Grid'
-import Column from '../elements/Column'
-import PaperText from '../elements/PaperText'
-import Paper from '../Paper'
+import WButton from '../elements/Button';
+import Grid from '../elements/Grid';
+import Column from '../elements/Column';
+import PaperText from '../elements/PaperText';
+import Paper from '../Paper';
 
 export default {
   name: 'SignIn',
-  data () {
+  data() {
     return {
       googleSignInParams: {
         client_id: '693388894852-2s2q0ggfj09c5mq094gpdbppugce944m.apps.googleusercontent.com'
       }
-    }
+    };
   },
   components: {
     WButton,
@@ -41,26 +41,26 @@ export default {
     PaperText
   },
   computed: {
-    user () {
-      return this.$store.state.user
+    user() {
+      return this.$store.state.user;
     }
   },
   watch: {
-    user (newVal, oldVal) {
+    user(newVal, oldVal) {
       if (newVal) {
-        this.$router.push({ name: 'ProjectSelect' })
+        this.$router.push({ name: 'ProjectSelect' });
       }
     }
   },
   methods: {
-    onSignInSuccess (googleUser) {
-      this.$store.dispatch('authGoogle', googleUser)
+    onSignInSuccess(googleUser) {
+      this.$store.dispatch('authGoogle', googleUser);
     },
-    onSignInError (error) {
-      console.log('OH NOES', error)
+    onSignInError(error) {
+      console.log('OH NOES', error);
     }
   }
-}
+};
 </script>
 
 

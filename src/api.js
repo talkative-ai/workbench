@@ -1,35 +1,35 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
-import store from './store'
+import store from './store';
 
 export default {
-  GetAuthGoogle ({ token, givenName, familyName }) {
-    return aumFetch('GET', `auth/google?token=${token}&gn=${givenName}&fn=${familyName}`)
+  GetAuthGoogle({ token, givenName, familyName }) {
+    return aumFetch('GET', `auth/google?token=${token}&gn=${givenName}&fn=${familyName}`);
   },
 
-  GetProjects () {
-    return aumFetch('GET', 'projects')
+  GetProjects() {
+    return aumFetch('GET', 'projects');
   },
 
-  GetProject ({ ID }) {
-    return aumFetch('GET', `project/${ID}`)
+  GetProject({ ID }) {
+    return aumFetch('GET', `project/${ID}`);
   },
 
-  GetActor ({ ID }) {
+  GetActor({ ID }) {
     return aumFetch('GET', `actor/${ID}`)
-    .then(result => result.json())
+    .then(result => result.json());
   },
 
-  GetZone ({ ID }) {
+  GetZone({ ID }) {
     return aumFetch('GET', `zone/${ID}`)
-    .then(result => result.json())
+    .then(result => result.json());
   },
 
-  PutActor (actor) {
-    return aumFetch('PUT', `actor/${actor.ID}`, actor)
+  PutActor(actor) {
+    return aumFetch('PUT', `actor/${actor.ID}`, actor);
   },
 
-  CreateZone ({ CreateID, Title }) {
+  CreateZone({ CreateID, Title }) {
     return aumFetch('PATCH', `project/${store.state.selectedProject.ID}`, {
       Zones: [{
         CreateID,
@@ -40,53 +40,61 @@ export default {
     .then(idMap => ({
       ID: idMap[CreateID],
       Title
-    }))
+    }));
   },
 
-  CreateActor (actor) {
+  CreateActor(actor) {
     return aumFetch('PATCH', `project/${store.state.selectedProject.ID}`, {
       Actors: [actor]
     })
     .then(idMap => idMap.json())
     .then(idMap => {
-      actor.ID = idMap[actor.CreateID]
-      delete actor.CreateID
-      return actor
-    })
+      actor.ID = idMap[actor.CreateID];
+      delete actor.CreateID;
+      return actor;
+    });
   },
 
-  Publish () {
-    return aumFetch('POST', `publish/${store.state.selectedProject.ID}`)
-  }
-}
+  CreateProject(project) {
+    return aumFetch('POST', `project`, project)
+    .then(p => {
+      console.log(p);
+      return p;
+    });
+  },
 
-function generateHeaders () {
-  var myHeaders = new Headers()
-  myHeaders.append('content-type', 'application/json')
+  Publish() {
+    return aumFetch('POST', `publish/${store.state.selectedProject.ID}`);
+  }
+};
+
+function generateHeaders() {
+  var myHeaders = new Headers();
+  myHeaders.append('content-type', 'application/json');
   if (store.state.token) {
-    myHeaders.append('x-token', store.state.token)
+    myHeaders.append('x-token', store.state.token);
   }
-  return myHeaders
+  return myHeaders;
 }
 
-function aumFetch (method, path, payload) {
+function aumFetch(method, path, payload) {
   const config = {
     method,
     headers: generateHeaders(),
     mode: 'cors',
     cache: 'default',
     body: JSON.stringify(payload)
-  }
+  };
 
-  let req = new Request(`${process.env.API_URL}${path}`, config)
+  let req = new Request(`${process.env.API_URL}${path}`, config);
   return fetch(req).then(result => {
-    Vue.set(store.state, 'token', result.headers.get('x-token'))
-    return result
+    Vue.set(store.state, 'token', result.headers.get('x-token'));
+    return result;
   }).then(res => {
     if (res.status === 401) {
-      store.dispatch('unauthorized')
-      throw new Error('Unauthorized')
+      store.dispatch('unauthorized');
+      throw new Error('Unauthorized');
     }
-    return res
-  })
+    return res;
+  });
 }

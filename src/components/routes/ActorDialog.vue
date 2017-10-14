@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import DialogNode from '../DialogNode'
+import DialogNode from '../DialogNode';
 
 export default {
   name: 'ActorDialog',
@@ -21,14 +21,14 @@ export default {
     DialogNode
   },
   computed: {
-    rootNodes () {
-      return this.$store.state.rootNodes || []
+    rootNodes() {
+      return this.$store.state.rootNodes || [];
     },
-    dialogs () {
-      return this.$store.state.dialogsMapped || {}
+    dialogs() {
+      return this.$store.state.dialogsMapped || {};
     }
   }
-}
+};
 </script>
 
 <style scoped>

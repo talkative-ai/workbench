@@ -1,19 +1,19 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import ZoneHome from '@/components/routes/ZoneHome'
-import ZoneCreate from '@/components/routes/ZoneCreate'
-import ActorHome from '@/components/routes/ActorHome'
-import DialogHome from '@/components/routes/DialogHome'
-import ActorCreate from '@/components/routes/ActorCreate'
-import ActorDialog from '@/components/routes/ActorDialog'
-import ProjectCreate from '@/components/routes/ProjectCreate'
-import ProjectSelect from '@/components/routes/ProjectSelect'
-import ProjectHome from '@/components/routes/ProjectHome'
-import SignIn from '@/components/routes/SignIn'
-import store, { initializer } from '../store'
-import API from '../api'
+import Vue from 'vue';
+import Router from 'vue-router';
+import ZoneHome from '@/components/routes/ZoneHome';
+import ZoneCreate from '@/components/routes/ZoneCreate';
+import ActorHome from '@/components/routes/ActorHome';
+import DialogHome from '@/components/routes/DialogHome';
+import ActorCreate from '@/components/routes/ActorCreate';
+import ActorDialog from '@/components/routes/ActorDialog';
+import ProjectCreate from '@/components/routes/ProjectCreate';
+import ProjectSelect from '@/components/routes/ProjectSelect';
+import ProjectHome from '@/components/routes/ProjectHome';
+import SignIn from '@/components/routes/SignIn';
+import store, { initializer } from '../store';
+import API from '../api';
 
-Vue.use(Router)
+Vue.use(Router);
 
 const router = new Router({
   mode: 'history',
@@ -27,16 +27,16 @@ const router = new Router({
         theme: 'light',
         title: 'Your games'
       },
-      beforeEnter (to, from, next) {
+      beforeEnter(to, from, next) {
         API.GetProjects().then(result => {
-          return result.json()
+          return result.json();
         }).then(result => {
-          Vue.set(store.state, 'projectsList', result)
+          Vue.set(store.state, 'projectsList', result);
           if (!result.length) {
-            return next({ name: 'ProjectCreate' })
+            return next({ name: 'ProjectCreate' });
           }
-          return next()
-        })
+          return next();
+        });
       }
     },
     {
@@ -58,10 +58,10 @@ const router = new Router({
         theme: 'light',
         title: 'Create a new game'
       },
-      beforeEnter (to, from, next) {
+      beforeEnter(to, from, next) {
         store.dispatch('reset').then(() => {
-          return next()
-        })
+          return next();
+        });
       }
     },
     {
@@ -86,9 +86,9 @@ const router = new Router({
         title: () => store.state.selectedProject.Title,
         titleLink: () => router.push({ name: 'ProjectHome' })
       },
-      beforeEnter (to, from, next) {
+      beforeEnter(to, from, next) {
         store.dispatch('selectActor', to.params.id)
-        .then(() => next())
+        .then(() => next());
       }
     },
     {
@@ -101,9 +101,9 @@ const router = new Router({
         title: () => store.state.selectedProject.Title,
         titleLink: () => router.push({ name: 'ProjectHome' })
       },
-      beforeEnter (to, from, next) {
+      beforeEnter(to, from, next) {
         store.dispatch('selectActor', to.params.id)
-        .then(() => next())
+        .then(() => next());
       }
     },
     {
@@ -116,9 +116,9 @@ const router = new Router({
         title: () => store.state.selectedProject.Title,
         titleLink: () => router.push({ name: 'ProjectHome' })
       },
-      beforeEnter (to, from, next) {
-        store.commit('clearSelectedEntity')
-        next()
+      beforeEnter(to, from, next) {
+        store.commit('clearSelectedEntity');
+        next();
       }
     },
     {
@@ -131,9 +131,9 @@ const router = new Router({
         title: () => store.state.selectedProject.Title,
         titleLink: () => router.push({ name: 'ProjectHome' })
       },
-      beforeEnter (to, from, next) {
+      beforeEnter(to, from, next) {
         store.dispatch('selectZone', to.params.id)
-        .then(() => next())
+        .then(() => next());
       }
     },
     {
@@ -145,9 +145,9 @@ const router = new Router({
         theme: 'light',
         title: () => store.state.selectedProject.Title
       },
-      beforeEnter (to, from, next) {
-        store.commit('clearSelectedEntity')
-        next()
+      beforeEnter(to, from, next) {
+        store.commit('clearSelectedEntity');
+        next();
       }
     },
     {
@@ -160,11 +160,11 @@ const router = new Router({
         title: () => store.state.selectedProject.Title,
         titleLink: () => router.push({ name: 'ProjectHome' })
       },
-      beforeEnter (to, from, next) {
-        store.commit('newDialog', { ParentID: Number(to.params.dialog_id) })
-        to.params.isNew = true
+      beforeEnter(to, from, next) {
+        store.commit('newDialog', { ParentID: Number(to.params.dialog_id) });
+        to.params.isNew = true;
         store.dispatch('selectActor', to.params.id)
-        .then(() => next())
+        .then(() => next());
       }
     },
     {
@@ -177,43 +177,43 @@ const router = new Router({
         title: () => store.state.selectedProject.Title,
         titleLink: () => router.push({ name: 'ProjectHome' })
       },
-      beforeEnter (to, from, next) {
+      beforeEnter(to, from, next) {
         store.dispatch('selectActor', to.params.id)
-        .then(() => next())
+        .then(() => next());
       }
     }
   ]
-})
+});
 
 router.beforeEach((to, from, next) => {
   if (to.name !== 'SignIn') {
-    Vue.set(store.state, 'path', to.name)
+    Vue.set(store.state, 'path', to.name);
   }
 
   if (!store.state.user && to.name !== 'SignIn') {
-    return next({ name: 'SignIn' })
+    return next({ name: 'SignIn' });
   }
 
   if (!store.state.selectedProject &&
     store.state.user &&
     to.name !== 'ProjectSelect' &&
     to.name !== 'ProjectCreate') {
-    return next({ name: 'ProjectSelect' })
+    return next({ name: 'ProjectSelect' });
   }
 
-  return next()
-})
+  return next();
+});
 
 initializer.then(() => {
-  const initialPath = router.currentRoute.name
+  const initialPath = router.currentRoute.name;
 
   if (initialPath && (initialPath === 'ProjectHome' || initialPath === 'SignIn')) {
-    return router.replace({ name: store.state.path })
+    return router.replace({ name: store.state.path });
   }
 
   if (initialPath) {
-    Vue.set(store.state, 'path', initialPath)
+    Vue.set(store.state, 'path', initialPath);
   }
-})
+});
 
-export default router
+export default router;

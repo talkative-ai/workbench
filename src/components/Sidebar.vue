@@ -25,11 +25,9 @@
           | Actors
 </template>
 
-
-
 <script>
-import '../assets/icons2'
-import Column from './elements/Column'
+import '../assets/icons2';
+import Column from './elements/Column';
 
 export default {
   name: 'sidebar',
@@ -37,21 +35,21 @@ export default {
     Column
   },
   computed: {
-    selectedZoneID () {
-      if (!this.$store.state.selectedEntity.data) return false
+    selectedZoneID() {
+      if (!this.$store.state.selectedEntity.data) return false;
 
-      return this.$store.state.selectedEntity.data.ID
+      return this.$store.state.selectedEntity.data.ID;
     }
   },
   methods: {
-    selectZone (zone) {
+    selectZone(zone) {
       this.$store.dispatch('selectZone', zone.ID)
       .then(() => {
-        this.$router.push({ name: 'ZoneHome', params: { id: zone.ID } })
-      })
+        this.$router.push({ name: 'ZoneHome', params: { id: zone.ID } });
+      });
     }
   }
-}
+};
 </script>
 
 

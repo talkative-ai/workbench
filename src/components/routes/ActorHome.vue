@@ -38,12 +38,12 @@
 </template>
 
 <script>
-import WButton from '../elements/Button'
-import Grid from '../elements/Grid'
-import Sidebar from '../Sidebar'
-import Paper from '../Paper'
-import PaperText from '../elements/PaperText'
-import BGActor from '@/assets/images/actor-color.jpg'
+import WButton from '../elements/Button';
+import Grid from '../elements/Grid';
+import Sidebar from '../Sidebar';
+import Paper from '../Paper';
+import PaperText from '../elements/PaperText';
+import BGActor from '@/assets/images/actor-color.jpg';
 // import PictureInput from 'vue-picture-input'
 
 export default {
@@ -55,25 +55,25 @@ export default {
     Paper,
     PaperText
   },
-  data () {
+  data() {
     return {
       BGActor
-    }
+    };
   },
   computed: {
-    actor () {
-      return this.$store.state.selectedEntity ? this.$store.state.selectedEntity.data : {}
+    actor() {
+      return this.$store.state.selectedEntity ? this.$store.state.selectedEntity.data : {};
     },
 
-    actorZones () {
-      return this.$store.state.actorZones
+    actorZones() {
+      return this.$store.state.actorZones;
     },
 
-    zones () {
-      return this.$store.state.zonesMapped
+    zones() {
+      return this.$store.state.zonesMapped;
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

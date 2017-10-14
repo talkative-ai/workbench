@@ -7,10 +7,10 @@
 </template>
 
 <script>
-import Grid from '../elements/Grid'
-import Sidebar from '../Sidebar'
-import Paper from '../Paper'
-import PaperText from '../elements/PaperText'
+import Grid from '../elements/Grid';
+import Sidebar from '../Sidebar';
+import Paper from '../Paper';
+import PaperText from '../elements/PaperText';
 
 export default {
   name: 'ProjectHome',
@@ -20,7 +20,7 @@ export default {
     Paper,
     PaperText
   }
-}
+};
 </script>
 
 <style lang="scss">

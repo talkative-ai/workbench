@@ -4,14 +4,14 @@
 </template>
 
 <script>
-import Column from './elements/Column'
+import Column from './elements/Column';
 
 export default {
   name: 'paper',
   components: {
     Column
   }
-}
+};
 </script>
 
 <style scoped>

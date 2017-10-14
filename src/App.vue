@@ -11,29 +11,29 @@
 </template>
 
 <script>
-import Navbar from './components/Navbar.vue'
+import Navbar from './components/Navbar.vue';
 
 export default {
   name: 'app',
   components: {
     Navbar
   },
-  data () {
+  data() {
     return {
       bgImageClass: this.generateAppClass(this.$route)
-    }
+    };
   },
   methods: {
-    generateAppClass (route) {
-      return `bg-${route.meta.background} theme-${route.meta.theme}`
+    generateAppClass(route) {
+      return `bg-${route.meta.background} theme-${route.meta.theme}`;
     }
   },
   watch: {
-    '$route' (to, from) {
-      this.$set(this, 'bgImageClass', this.generateAppClass(to))
+    '$route'(to, from) {
+      this.$set(this, 'bgImageClass', this.generateAppClass(to));
     }
   }
-}
+};
 </script>
 
 <style lang="scss">

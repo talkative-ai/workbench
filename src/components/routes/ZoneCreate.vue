@@ -20,11 +20,11 @@
 </template>
 
 <script>
-import Grid from '../elements/Grid'
-import Button from '../elements/Button'
-import PaperText from '../elements/PaperText'
-import Sidebar from '../Sidebar'
-import Paper from '../Paper'
+import Grid from '../elements/Grid';
+import Button from '../elements/Button';
+import PaperText from '../elements/PaperText';
+import Sidebar from '../Sidebar';
+import Paper from '../Paper';
 
 export default {
   name: 'ZoneCreate',
@@ -35,27 +35,27 @@ export default {
     PaperText,
     Paper
   },
-  data () {
+  data() {
     return {
       zone: {
         Title: ''
       }
-    }
+    };
   },
   methods: {
-    create () {
-      let zone
+    create() {
+      let zone;
       this.$store.dispatch('createZone', this.zone)
       .then(z => {
-        zone = z
-        return this.$store.dispatch('selectZone', zone.ID)
+        zone = z;
+        return this.$store.dispatch('selectZone', zone.ID);
       })
       .then(() => {
-        this.$router.replace({ name: 'ZoneHome', params: { id: zone.ID } })
-      })
+        this.$router.replace({ name: 'ZoneHome', params: { id: zone.ID } });
+      });
     }
   }
-}
+};
 </script>
 
 

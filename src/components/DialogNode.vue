@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import DialogNode from './DialogNode'
+import DialogNode from './DialogNode';
 
 export default {
   name: 'dialog-node',
@@ -33,11 +33,11 @@ export default {
     DialogNode
   },
   computed: {
-    dialogs () {
-      return this.$store.state.dialogsMapped || {}
+    dialogs() {
+      return this.$store.state.dialogsMapped || {};
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

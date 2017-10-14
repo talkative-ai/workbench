@@ -1,12 +1,12 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-import localforage from 'localforage'
-import dcopy from 'deep-copy'
+import Vue from 'vue';
+import Vuex from 'vuex';
+import localforage from 'localforage';
+import dcopy from 'deep-copy';
 
-import router from '@/router'
-import API from '@/api'
+import router from '@/router';
+import API from '@/api';
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 const defaultDialog = {
   'IsRoot': true,
@@ -18,7 +18,7 @@ const defaultDialog = {
     'SetZone': 0,
     'ResetGame': false
   }
-}
+};
 
 const initialState = {
   initializing: true,
@@ -43,266 +43,272 @@ const initialState = {
   actorZones: {},
 
   createID: 0
+};
+
+let ready;
+export const initializer = new Promise((resolve, reject) => { ready = resolve; });
+
+localforage.setDriver(localforage.LOCALSTORAGE);
+
+function setProject(state) {
+  return project => {
+    Vue.set(state, 'selectedProject', project);
+    for (const a of project.Actors) {
+      Vue.set(state.actorsMapped, a.ID, a);
+    }
+    for (const z of project.Zones) {
+      Vue.set(state.zonesMapped, z.ID, z);
+    }
+    for (const za of project.ZoneActors) {
+      if (!state.zoneActors[za.ZoneID]) {
+        Vue.set(state.zoneActors, za.ZoneID, []);
+      }
+      if (!state.actorZones[za.ActorID]) {
+        Vue.set(state.actorZones, za.ActorID, []);
+      }
+      state.zoneActors[za.ZoneID].push(za.ActorID);
+      state.actorZones[za.ActorID].push(za.ZoneID);
+    }
+    return project;
+  };
 }
 
-let ready
-export const initializer = new Promise((resolve, reject) => { ready = resolve })
-
-localforage.setDriver(localforage.LOCALSTORAGE)
-
-function resetState ({ keepAuth = false, initial = false }) {
-  let freshState = dcopy(initialState)
+function resetState({ keepAuth = false, initial = false }) {
+  let freshState = dcopy(initialState);
   if (keepAuth) {
-    freshState.user = store.state.user
-    freshState.token = store.state.token
+    freshState.user = store.state.user;
+    freshState.token = store.state.token;
   }
 
-  store.replaceState(freshState)
+  store.replaceState(freshState);
 
   if (!initial) {
     for (let k in store.state) {
-      if (k === 'initializing') continue
-      localforage.setItem(`aum.state.v1.${k}`, store.state[k])
+      if (k === 'initializing') continue;
+      localforage.setItem(`aum.state.v1.${k}`, store.state[k]);
     }
   }
 
   localforage.iterate((v, k) => {
-    let key = k.split('aum.state.v1.')
+    let key = k.split('aum.state.v1.');
 
-    key = key.pop().split('.')
+    key = key.pop().split('.');
 
-    let s = store.state
+    let s = store.state;
     for (let i = 0; i < key.length - 1; i++) {
-      s = s[key[i]]
+      s = s[key[i]];
     }
-    Vue.set(s, key[key.length - 1], v)
+    Vue.set(s, key[key.length - 1], v);
   })
   .then(() => {
-    ready()
-    return initializer
+    ready();
+    return initializer;
   })
   .then(() => {
-    store.commit('initialized')
-  })
+    store.commit('initialized');
+  });
 }
 
 const actions = {
-  createProject ({ commit, state }) {
-    return state
-  },
 
-  createZone ({ commit, state }, zone) {
-    commit('incrCreate')
-    zone.CreateID = store.state.createID
+  createZone({ commit, state }, zone) {
+    commit('incrCreate');
+    zone.CreateID = store.state.createID;
     return API.CreateZone(zone)
     .then(newZone => {
-      commit('addZone', newZone)
-      commit('selectEntity', { type: 'zone', data: newZone, redirect: true })
-      return newZone
-    })
+      commit('addZone', newZone);
+      commit('selectEntity', { type: 'zone', data: newZone, redirect: true });
+      return newZone;
+    });
   },
 
-  createActor ({ commit, state }, actor) {
-    commit('incrCreate')
-    actor.CreateID = store.state.createID
+  createActor({ commit, state }, actor) {
+    commit('incrCreate');
+    actor.CreateID = store.state.createID;
     return API.CreateActor(actor)
     .then(newActor => {
-      commit('addActor', newActor)
-      commit('selectEntity', { type: 'actor', data: newActor, redirect: true })
-      return newActor
-    })
+      commit('addActor', newActor);
+      commit('selectEntity', { type: 'actor', data: newActor, redirect: true });
+      return newActor;
+    });
   },
 
-  authGoogle ({ commit, state }, googleUser) {
-    const profile = googleUser.getBasicProfile()
+  createProject({ commit, state }, project) {
+    return API.CreateProject(project)
+    .then(setProject(state));
+  },
+
+  authGoogle({ commit, state }, googleUser) {
+    const profile = googleUser.getBasicProfile();
     API.GetAuthGoogle({
       token: googleUser.getAuthResponse().id_token,
       givenName: profile.getGivenName(),
       familyName: profile.getFamilyName()
     })
     .then(result => {
-      return result.json()
+      return result.json();
     })
     .then(user => {
-      Vue.set(state, 'user', user)
-    })
+      Vue.set(state, 'user', user);
+    });
   },
 
-  selectProject ({ commit, state }, p) {
+  selectProject({ commit, state }, p) {
     return API.GetProject(p)
     .then(result => result.json())
-    .then(project => {
-      Vue.set(state, 'selectedProject', project)
-      for (const a of project.Actors) {
-        Vue.set(state.actorsMapped, a.ID, a)
-      }
-      for (const z of project.Zones) {
-        Vue.set(state.zonesMapped, z.ID, z)
-      }
-      for (const za of project.ZoneActors) {
-        if (!state.zoneActors[za.ZoneID]) {
-          Vue.set(state.zoneActors, za.ZoneID, [])
-        }
-        if (!state.actorZones[za.ActorID]) {
-          Vue.set(state.actorZones, za.ActorID, [])
-        }
-        state.zoneActors[za.ZoneID].push(za.ActorID)
-        state.actorZones[za.ActorID].push(za.ZoneID)
-      }
-      return project
-    })
+    .then(setProject(state));
   },
 
-  selectZone ({ commit, state }, zoneID) {
-    if (state.selectedEntity.data && state.selectedEntity.data.ID === zoneID) return
-    const zone = state.zonesMapped[zoneID]
+  selectZone({ commit, state }, zoneID) {
+    if (state.selectedEntity.data && state.selectedEntity.data.ID === zoneID) return;
+    const zone = state.zonesMapped[zoneID];
     return API.GetZone(zone)
     .then(zone => {
-      commit('updateZone', zone)
-      commit('selectEntity', { type: 'zone', data: zone })
-    })
+      commit('updateZone', zone);
+      commit('selectEntity', { type: 'zone', data: zone });
+    });
   },
 
-  selectActor ({ commit, state }, actorID) {
-    if (state.selectedEntity.data && state.selectedEntity.type === 'actor' && state.selectedEntity.data.ID === actorID) return
-    const actor = state.actorsMapped[actorID]
+  selectActor({ commit, state }, actorID) {
+    if (state.selectedEntity.data && state.selectedEntity.type === 'actor' && state.selectedEntity.data.ID === actorID) return;
+    const actor = state.actorsMapped[actorID];
     return API.GetActor(actor)
     .then(actor => {
-      commit('updateActor', { actor })
-      commit('selectEntity', { type: 'actor', data: actor })
-    })
+      commit('updateActor', { actor });
+      commit('selectEntity', { type: 'actor', data: actor });
+    });
   },
 
-  updateDialog ({ commit, state }) {
-    if (state.selectedEntity.type !== 'actor') return
-    API.PutActor(state.selectedEntity.data)
+  updateDialog({ commit, state }) {
+    if (state.selectedEntity.type !== 'actor') return;
+    API.PutActor(state.selectedEntity.data);
   },
 
-  publish ({ commit, state }) {
-    API.Publish()
+  publish({ commit, state }) {
+    API.Publish();
   },
 
-  createNewDialog ({ commit, state }, dialog) {
-    commit('incrCreate')
-    dialog.CreateID = store.state.createID
-    state.selectedEntity.data.Dialogs.push(dialog)
-    API.PutActor(state.selectedEntity.data)
+  createNewDialog({ commit, state }, dialog) {
+    commit('incrCreate');
+    dialog.CreateID = store.state.createID;
+    state.selectedEntity.data.Dialogs.push(dialog);
+    API.PutActor(state.selectedEntity.data);
   },
 
-  unauthorized ({ commit, state }) {
+  unauthorized({ commit, state }) {
     return resetState().then(() => {
-      router.push({ name: 'SignIn' })
-    })
+      router.push({ name: 'SignIn' });
+    });
   },
 
-  reset () {
-    return resetState({ keepAuth: true })
+  reset() {
+    return resetState({ keepAuth: true });
   }
-}
+};
 
 const mutations = {
 
-  initialized (state) {
-    state.initializing = false
+  initialized(state) {
+    state.initializing = false;
   },
 
-  incrCreate (state) {
-    state.createID++
+  incrCreate(state) {
+    state.createID++;
   },
 
-  addZone (state, zone) {
-    state.selectedProject.Zones.push(zone)
-    Vue.set(state.zonesMapped, zone.ID, zone)
+  addZone(state, zone) {
+    state.selectedProject.Zones.push(zone);
+    Vue.set(state.zonesMapped, zone.ID, zone);
   },
 
-  addActor (state, actor) {
-    state.selectedProject.Actors.push(actor)
-    Vue.set(state.actorsMapped, actor.ID, actor)
+  addActor(state, actor) {
+    state.selectedProject.Actors.push(actor);
+    Vue.set(state.actorsMapped, actor.ID, actor);
     if (actor.ZoneID) {
       if (!state.zoneActors[actor.ZoneID]) {
-        Vue.set(state.zoneActors, actor.ZoneID, [])
+        Vue.set(state.zoneActors, actor.ZoneID, []);
       }
-      state.zoneActors[actor.ZoneID].push(actor.ID)
+      state.zoneActors[actor.ZoneID].push(actor.ID);
     }
   },
 
-  updateActor (state, payload) {
-    payload.actor.Dialogs = payload.actor.Dialogs || []
-    payload.actor.DialogRelations = payload.actor.DialogRelations || []
-    let id = 0
+  updateActor(state, payload) {
+    payload.actor.Dialogs = payload.actor.Dialogs || [];
+    payload.actor.DialogRelations = payload.actor.DialogRelations || [];
+    let id = 0;
     for (let idx in state.selectedProject.Actors) {
       if (state.selectedProject.Actors[idx].ID === payload.actor.ID) {
-        id = idx
-        break
+        id = idx;
+        break;
       }
     }
-    Vue.set(state.selectedProject.Actors, id, payload.actor)
-    state.rootNodes = []
-    let rnodes = new Set()
+    Vue.set(state.selectedProject.Actors, id, payload.actor);
+    state.rootNodes = [];
+    let rnodes = new Set();
 
     for (const d of payload.actor.Dialogs) {
-      Vue.set(state.dialogsMapped, d.ID, d)
-      rnodes.add(d.ID.toString())
+      Vue.set(state.dialogsMapped, d.ID, d);
+      rnodes.add(d.ID.toString());
     }
 
     // Build dialog graph
     for (const r of payload.actor.DialogRelations) {
-      let prepend = state.dialogsMapped[r.ParentNodeID].ChildNodes || []
-      Vue.set(state.dialogsMapped[r.ParentNodeID], 'ChildNodes', [...prepend, r.ChildNodeID])
-      rnodes.delete(r.ChildNodeID.toString())
+      let prepend = state.dialogsMapped[r.ParentNodeID].ChildNodes || [];
+      Vue.set(state.dialogsMapped[r.ParentNodeID], 'ChildNodes', [...prepend, r.ChildNodeID]);
+      rnodes.delete(r.ChildNodeID.toString());
     }
 
-    Vue.set(state, 'rootNodes', [...rnodes])
+    Vue.set(state, 'rootNodes', [...rnodes]);
   },
 
-  updateZone (state, zone) {
-    Vue.set(state.zonesMapped, zone.ID, zone)
+  updateZone(state, zone) {
+    Vue.set(state.zonesMapped, zone.ID, zone);
   },
 
   // TODO: Add comments
-  selectEntity (state, entity) {
-    let redirect = entity.redirect
-    delete entity.redirect
-    state.selectedEntity = { ...state.selectedEntity, ...entity }
+  selectEntity(state, entity) {
+    let redirect = entity.redirect;
+    delete entity.redirect;
+    state.selectedEntity = { ...state.selectedEntity, ...entity };
     if (redirect) {
       if (entity.type === 'dialog') {
-        router.push({ name: 'DialogHome', params: { id: entity.data.ActorID, dialog_id: entity.data.ID } })
+        router.push({ name: 'DialogHome', params: { id: entity.data.ActorID, dialog_id: entity.data.ID } });
       } else {
-        router.push({ name: `${titlecase(entity.type)}Home`, params: { id: entity.data.ID } })
+        router.push({ name: `${titlecase(entity.type)}Home`, params: { id: entity.data.ID } });
       }
     }
   },
 
-  clearSelectedEntity (state, entity) {
-    state.selectedEntity = {}
+  clearSelectedEntity(state, entity) {
+    state.selectedEntity = {};
   },
 
-  newDialog (state, options = {}) {
-    state.newDialog = { ...defaultDialog, ...options }
+  newDialog(state, options = {}) {
+    state.newDialog = { ...defaultDialog, ...options };
   }
 
-}
+};
 
 const store = new Vuex.Store({
   state: dcopy(initialState),
   actions,
   mutations
-})
+});
 
-resetState({ initial: true })
+resetState({ initial: true });
 
 for (let k in store.state) {
-  if (k === 'initializing') continue
+  if (k === 'initializing') continue;
   store.watch(state => state[k], (value) => {
-    localforage.setItem(`aum.state.v1.${k}`, store.state[k])
+    localforage.setItem(`aum.state.v1.${k}`, store.state[k]);
   }, {
     immediate: true,
     deep: true
-  })
+  });
 }
 
-function titlecase (str) {
-  return `${str[0].toUpperCase()}${str.substr(1)}`
+function titlecase(str) {
+  return `${str[0].toUpperCase()}${str.substr(1)}`;
 }
 
-export default store
+export default store;
