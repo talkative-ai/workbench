@@ -166,6 +166,10 @@ const actions = {
   selectZone({ commit, state }, zoneID) {
     if (state.selectedEntity.data && state.selectedEntity.data.ID === zoneID) return;
     const zone = state.zonesMapped[zoneID];
+    if (!zone) {
+      router.push({ name: 'NotFound' });
+      return;
+    }
     return API.GetZone(zone)
     .then(zone => {
       commit('updateZone', zone);
@@ -207,6 +211,10 @@ const actions = {
     return resetState().then(() => {
       router.push({ name: 'SignIn' });
     });
+  },
+
+  NotFound() {
+    router.push({ name: 'NotFound' });
   },
 
   reset() {

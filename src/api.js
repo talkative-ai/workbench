@@ -89,6 +89,9 @@ function aumFetch(method, path, payload) {
       store.dispatch('unauthorized');
       throw new Error('Unauthorized');
     }
+    if (result.status === 404) {
+      store.dispatch('NotFound');
+    }
     return result;
   }).then(result => {
     Vue.set(store.state, 'token', result.headers.get('x-token'));
