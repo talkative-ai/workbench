@@ -57,10 +57,7 @@ export default {
 
   CreateProject(project) {
     return aumFetch('POST', `project`, project)
-    .then(p => {
-      console.log(p);
-      return p;
-    });
+    .then(result => result.json());
   },
 
   Publish() {
@@ -88,13 +85,13 @@ function aumFetch(method, path, payload) {
 
   let req = new Request(`${process.env.API_URL}${path}`, config);
   return fetch(req).then(result => {
-    Vue.set(store.state, 'token', result.headers.get('x-token'));
-    return result;
-  }).then(res => {
-    if (res.status === 401) {
+    if (result.status === 401) {
       store.dispatch('unauthorized');
       throw new Error('Unauthorized');
     }
-    return res;
+    return result;
+  }).then(result => {
+    Vue.set(store.state, 'token', result.headers.get('x-token'));
+    return result;
   });
 }

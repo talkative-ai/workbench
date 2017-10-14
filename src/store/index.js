@@ -52,6 +52,10 @@ localforage.setDriver(localforage.LOCALSTORAGE);
 
 function setProject(state) {
   return project => {
+    if (!project.Actors) project.Actors = [];
+    if (!project.Zones) project.Zones = [];
+    if (!project.ZoneActors) project.ZoneActors = [];
+
     Vue.set(state, 'selectedProject', project);
     for (const a of project.Actors) {
       Vue.set(state.actorsMapped, a.ID, a);

@@ -46,7 +46,10 @@ export default {
   methods: {
     createProject() {
       this.creating = true;
-      this.$store.dispatch('createProject', this.project);
+      this.$store.dispatch('createProject', this.project)
+      .then(() => {
+        this.$router.push({ name: 'ProjectHome' });
+      });
     },
     isDisabled() {
       if (this.project.Title.length < 3) {
