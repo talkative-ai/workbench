@@ -30,9 +30,8 @@ const router = new Router({
         title: 'Your projects'
       },
       beforeEnter(to, from, next) {
-        API.GetProjects().then(result => {
-          return result.json();
-        }).then(result => {
+        API.GetProjects()
+        .then(result => {
           Vue.set(store.state, 'projectsList', result);
           if (!result.length) {
             return next({ name: 'ProjectCreate' });

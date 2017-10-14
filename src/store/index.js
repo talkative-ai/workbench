@@ -73,7 +73,10 @@ function setProject(state) {
       state.zoneActors[za.ZoneID].push(za.ActorID);
       state.actorZones[za.ActorID].push(za.ZoneID);
     }
-    return project;
+
+    router.push({ name: 'ProjectHome' });
+
+    return state;
   };
 }
 
@@ -93,7 +96,7 @@ function resetState({ keepAuth = false, initial = false }) {
     }
   }
 
-  localforage.iterate((v, k) => {
+  let p = localforage.iterate((v, k) => {
     let key = k.split('aum.state.v1.');
 
     key = key.pop().split('.');
@@ -103,14 +106,17 @@ function resetState({ keepAuth = false, initial = false }) {
       s = s[key[i]];
     }
     Vue.set(s, key[key.length - 1], v);
-  })
-  .then(() => {
-    ready();
-    return initializer;
-  })
-  .then(() => {
-    store.commit('initialized');
   });
+
+  if (initial) {
+    return p.then(() => {
+      Vue.set(store.state, 'initializing', false);
+      ready(store.state);
+      return initializer;
+    });
+  } else {
+    return p.then(() => store.state);
+  }
 }
 
 const actions = {
@@ -158,9 +164,16 @@ const actions = {
   },
 
   selectProject({ commit, state }, p) {
-    return API.GetProject(p)
-    .then(result => result.json())
-    .then(setProject(state));
+    Vue.set(state, 'initializing', true);
+    return resetState({ keepAuth: true })
+    .then(newState => {
+      console.log('New state', newState);
+      return API.GetProject(p)
+      .then(setProject(newState))
+      .then(newState => {
+        Vue.set(newState, 'initializing', false);
+      });
+    });
   },
 
   selectZone({ commit, state }, zoneID) {
@@ -223,10 +236,6 @@ const actions = {
 };
 
 const mutations = {
-
-  initialized(state) {
-    state.initializing = false;
-  },
 
   incrCreate(state) {
     state.createID++;

@@ -8,11 +8,13 @@ export default {
   },
 
   GetProjects() {
-    return aumFetch('GET', 'projects');
+    return aumFetch('GET', 'projects')
+    .then(result => result.json());
   },
 
   GetProject({ ID }) {
-    return aumFetch('GET', `project/${ID}`);
+    return aumFetch('GET', `project/${ID}`)
+    .then(result => result.json());
   },
 
   GetActor({ ID }) {

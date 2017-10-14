@@ -37,10 +37,7 @@ export default {
       }
     },
     openProject() {
-      this.$store.dispatch('selectProject', this.selected)
-      .then(() => {
-        this.$router.push({ name: 'ProjectHome' });
-      });
+      this.$store.dispatch('selectProject', this.selected);
     },
 
     createProject() {

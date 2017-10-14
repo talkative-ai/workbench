@@ -5,7 +5,7 @@
         h1.Headline
           span.Headline--dark Imagine a place, and...
           br
-          | Name your game:
+          | Name your project:
 
         form.Form(@submit.prevent="createProject()")
           input.Headline.u-size1of2.u-marginR3(placeholder="Add name", v-model="project.Title", required)
@@ -46,10 +46,7 @@ export default {
   methods: {
     createProject() {
       this.creating = true;
-      this.$store.dispatch('createProject', this.project)
-      .then(() => {
-        this.$router.push({ name: 'ProjectHome' });
-      });
+      this.$store.dispatch('createProject', this.project);
     },
     isDisabled() {
       if (this.project.Title.length < 3) {
