@@ -167,7 +167,6 @@ const actions = {
     Vue.set(state, 'initializing', true);
     return resetState({ keepAuth: true })
     .then(newState => {
-      console.log('New state', newState);
       return API.GetProject(p)
       .then(setProject(newState))
       .then(newState => {
