@@ -7,11 +7,10 @@
           span.Headline--dark Everything happens in a Zone.
           br
           | Name your new Zone:
-        form.Form.u-flex(@submit.prevent="create")
+        form.Form.u-flex(@submit.prevent="create()")
           input.Headline.u-size1of2.u-marginR3(v-model="zone.Title", placeholder="Add name", required)
           .Headline.u-colorWhite
             w-button(
-              @click.native="create"
               lightOutline
               :class="`${!zone.Title.length ? 'hidden' : ''}`"
             )

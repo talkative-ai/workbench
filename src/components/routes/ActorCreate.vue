@@ -7,7 +7,7 @@
           span.Headline--dark You don't have any actors yet.
           br
           | Create a new actor:
-        form.Form(@submit.prevent="create")
+        form.Form(@submit.prevent="create()")
           grid(gutter)
             .Grid-cell.u-size1of3
               picture-input(
@@ -57,7 +57,6 @@
               .u-textRight.u-marginT4
                 w-button(
                   large
-                  @click.native="actor.Title.length && create()",
                   :class="`Headline ${!actor.Title.length ? 'disabled' : ''}`"
                 )
                   | Create actor

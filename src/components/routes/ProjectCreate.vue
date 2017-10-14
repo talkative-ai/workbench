@@ -2,19 +2,19 @@
   grid(gutter)#RouteProjectCreate
     paper
       paper-text
-        h1.Headline 
+        h1.Headline
           span.Headline--dark Imagine a place, and...
           br
           | Name your game:
-        
+
         form.Form(@submit.prevent="createProject()")
-          input.Headline.u-size1of2.u-marginR3(placeholder="Add name", v-model="projectName", required)
+          input.Headline.u-size1of2.u-marginR3(placeholder="Add name", v-model="project.Title", required)
           .input-hint
             | Must be 3 - 255 characters long, with no special characters like !@#$%^&*()
             br
             | You can change this later. Other people will see this name when you publish!
           br
-          w-button(outline @click.native="createProject()", :disabled="isDisabled()")
+          w-button(outline :disabled="isDisabled()")
             | Begin
             span.u-arrowEast
 </template>
@@ -37,21 +37,23 @@ export default {
   },
   data() {
     return {
-      projectName: '',
+      project: {
+        Title: ''
+      },
       creating: false
     };
   },
   methods: {
     createProject() {
       this.creating = true;
-      this.$store.dispatch('createProject', this.actor);
+      this.$store.dispatch('createProject', this.project);
     },
     isDisabled() {
-      if (this.projectName.length < 3) {
+      if (this.project.Title.length < 3) {
         return true;
       }
       const illegalChars = new RegExp('[!$\\#%^&*()_+|~=`{}\\[\\]:";\'<>?\\/]');
-      if (illegalChars.exec(this.projectName)) {
+      if (illegalChars.exec(this.project.Title)) {
         return true;
       }
     }
