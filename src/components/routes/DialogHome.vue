@@ -1,46 +1,55 @@
 <template lang="pug">
   #RouteDialogHome
     sidebar
-    paper
-      input.quoted(v-for="(entry, index) of node.EntryInput" :key="index" v-model="node.EntryInput[index]")
-      w-button(@click.native="addEntry") Add potential entry input
-      hr
-      .node-values(v-for="(sound, index) of node.AlwaysExec.PlaySounds" :key="`sound-${node.ID}-${index}`")
+    paper(:transparent="true")
+      paper-text
         .inner-values
-          input(placeholder="Enter speech text here!" v-model="sound.Val")
-          w-button(@click.native="deleteAction('PlaySounds', index)") Delete
-      w-button(@click.native="addActionSpeech()")
-        | Add Action
-      hr
-      div(
-        @click="$router.push({ name: 'DialogHome', params: { id: $route.params.id, dialog_id: nodeID }})"
-        v-for="nodeID of node.ChildNodes"
-        :key="nodeID"
-      )
-        div "{{ dialogs[nodeID].EntryInput[0] }}"
-      template(v-if="!this.isNew")
-        w-button(
-          @click.native="$router.push({ name: 'DialogCreate', params: { id: $route.params.id, dialog_id: $route.params.dialog_id, is_root: false }})"
-        )
-          | Add Response
-        w-button(
-          @click.native="$router.push({ name: 'ActorDialog', params: { id: $route.params.id, dialog_id: $route.params.dialog_id, linking_child: true }})"
-        )
-          | Connect Existing Dialog
-      w-button(@click.native="save()") Save Changes
+          input.quoted(v-for="(entry, index) of node.EntryInput" :key="index" v-model="node.EntryInput[index]")
+        w-button(@click.native="addEntry") Add potential entry input
+        hr
+        .node-values(v-for="(sound, index) of node.AlwaysExec.PlaySounds" :key="`sound-${node.ID}-${index}`")
+          .inner-values
+            input(placeholder="Enter speech text here!" v-model="sound.Val")
+            w-button(@click.native="deleteAction('PlaySounds', index)") Delete
+        w-button(@click.native="addActionSpeech()")
+          | Add Action
+        hr
+        .node-wrapper
+          div(
+            @click="$router.push({ name: 'DialogHome', params: { id: $route.params.id, dialog_id: nodeID }})"
+            v-for="nodeID of node.ChildNodes"
+            :key="nodeID"
+          )
+            dialog-node(:node='dialogs[nodeID]')
+        form.Form.button-grid(v-if="!this.isNew" @submit.prevent="")
+          w-button(
+            @click.native="$router.push({ name: 'DialogCreate', params: { id: $route.params.id, dialog_id: $route.params.dialog_id, is_root: false }})"
+          )
+            | Add Response
+          w-button(
+            @click.native="$router.push({ name: 'ActorDialog', params: { id: $route.params.id, dialog_id: $route.params.dialog_id, linking_child: true }})"
+          )
+            | Connect Existing Dialog
+          w-button(@click.native="save()") Save Changes
 </template>
 
 <script>
 import Sidebar from '../Sidebar';
 import Paper from '../Paper';
 import WButton from '../elements/Button';
+import DialogNode from '../DialogNode';
+import PaperText from '../elements/PaperText';
+import PaperPath from '../elements/PaperPath';
 
 export default {
   name: 'DialogHome',
   components: {
     Sidebar,
     Paper,
-    WButton
+    WButton,
+    DialogNode,
+    PaperText,
+    PaperPath
   },
   computed: {
     actor() {
@@ -51,6 +60,7 @@ export default {
     },
     node() {
       if (this.isNew) return this.$store.state.newDialog;
+      console.log(this.$store.state.dialogsMapped[this.$route.params.dialog_id]);
       return this.$store.state.dialogsMapped[this.$route.params.dialog_id];
     },
     dialogs() {
@@ -146,6 +156,9 @@ export default {
     &:before {
       content: '"';
     }
+  }
+  .node-wrapper {
+    display: flex;
   }
 }
 </style>

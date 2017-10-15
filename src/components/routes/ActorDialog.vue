@@ -6,6 +6,7 @@
       v-for='rootID of rootNodes'
       :key='rootID'
       :node='dialogs[rootID]'
+      recurse='true'
     )
     button.button(
       @click="$router.push({ name: 'DialogCreate', params: $route.params, is_root: true })"
@@ -23,7 +24,6 @@ export default {
   },
   computed: {
     rootNodes() {
-      console.log(this.$store.state.rootNodes);
       return this.$store.state.rootNodes || [];
     },
     dialogs() {

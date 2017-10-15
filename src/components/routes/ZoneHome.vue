@@ -22,7 +22,7 @@
                 | Add an Actor
                 span.u-arrowEast
 
-              .Headline.u-colorTextLight.u-marginT3.u-marginB3 Or choose an actor:
+              .Headline.u-colorTextLight.u-marginT3.u-marginB3 Or view an existing actor:
               div(v-for="ActorID of $store.state.zoneActors[$route.params.id]" :key="ActorID")
                 w-button(outline large @click.native="selectActor(ActorID)").Headline
                   | {{ actors[ActorID].Title }}
@@ -81,6 +81,7 @@ export default {
 
 <style scoped>
 .Paper-path-block {
-  height: 50vh;
+  background-size: contain;
+  background-color: black;
 }
 </style>

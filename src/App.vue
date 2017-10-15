@@ -75,4 +75,17 @@ export default {
 .Pointer {
   cursor: pointer;
 }
+
+
+.button-grid {
+  .Button {
+    margin: 0 5pt;
+    &:first-child {
+      margin-left: 0;
+    }
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
 </style>

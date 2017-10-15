@@ -10,20 +10,21 @@
         h1 link dialog
       .cover.opaque(v-else)
         h1 linking
-      .entry(v-for="(entry, index) in dialogs[node.ID].EntryInput" :class="childIteration ? 'child' : ''")
+      .entry(v-for="(entry, index) in dialogs[node.ID].EntryInput" :class="isChildIteration ? 'child' : ''")
         | "{{ entry }}"
         span(v-if="index < dialogs[node.ID].EntryInput.length-1")
           | ,
-      .ball(v-if="childIteration")
+      .ball(v-if="isChildIteration")
       .node-values
         .inner-values(v-for='(sound, index) of node.AlwaysExec.PlaySounds', :key='`sound-${node.ID}-${index}`')
           | {{ sound.Val }}
         .actions(v-if='node.ChildNodes')
           | await response
-    .after-values-space(v-if='node.ChildNodes' :style="{ width: calculateAfterValuesSpaceWidth(node.ChildNodes.length) }")
-    .child-nodes(v-if='node.ChildNodes')
-      div(v-for='(nodeID, idx) of node.ChildNodes', :key='nodeID')
-        dialog-node(:node='dialogs[nodeID]' childIteration="true")
+    template(v-if="recurse")
+      .after-values-space(v-if='node.ChildNodes' :style="{ width: calculateAfterValuesSpaceWidth(node.ChildNodes.length) }")
+      .child-nodes(v-if='node.ChildNodes')
+        div(v-for='(nodeID, idx) of node.ChildNodes', :key='nodeID')
+          dialog-node(:node='dialogs[nodeID]' isChildIteration="true" recurse='true')
 </template>
 
 <script>
@@ -31,7 +32,7 @@ import DialogNode from './DialogNode';
 
 export default {
   name: 'dialog-node',
-  props: ['node', 'childIteration'],
+  props: ['node', 'isChildIteration', 'recurse'],
   components: {
     DialogNode
   },

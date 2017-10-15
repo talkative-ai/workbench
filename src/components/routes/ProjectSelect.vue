@@ -9,15 +9,20 @@
     )
       | {{ project.Title }}
     hr
-    button.button.no-outline(@click='openProject()' v-if='selected' to='/project/create')
-      | Open Project
-    button.button.no-outline.preplus(@click='createProject()')
-      | Create New Project
+    .button-grid
+      w-button.no-outline(@click.native='openProject()' v-if='selected' to='/project/create')
+        | Open
+      w-button.no-outline(@click.native='createProject()')
+        | Create New
 </template>
 
 <script>
+import WButton from '../elements/Button';
 export default {
   name: 'ProjectSelect',
+  components: {
+    WButton
+  },
   data() {
     return {
       selected: false

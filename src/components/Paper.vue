@@ -1,5 +1,5 @@
 <template lang="pug">
-  column.Paper(main)
+  column.Paper(main :class='transparent ? "transparent" : ""')
     slot
 </template>
 
@@ -8,6 +8,7 @@ import Column from './elements/Column';
 
 export default {
   name: 'paper',
+  props: ['transparent'],
   components: {
     Column
   }
@@ -24,6 +25,11 @@ export default {
   min-height: 50vh;
   padding: 0;
   position: relative;
+}
+
+.transparent {
+  background-color: transparent;
+  box-shadow: none;
 }
 
 .theme-dark .Paper {

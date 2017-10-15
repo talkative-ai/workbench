@@ -216,7 +216,6 @@ const actions = {
     commit('incrCreate');
     dialog.CreateID = store.state.createID;
     state.selectedEntity.data.Dialogs.push(dialog);
-    console.log(state.selectedEntity.data);
     API.PutActor(state.selectedEntity.data);
   },
 
