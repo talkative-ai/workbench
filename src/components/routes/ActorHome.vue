@@ -31,7 +31,11 @@
               section.u-marginT3
                 h2.Text.u-colorTextLite(v-if="!actorZones[actor.ID] || !actorZones[actor.ID].length") {{ actor.Title }} hasn't appeared yet
                 h2.Text(v-else v-for="zoneID in actorZones[actor.ID]") {{ zones[zoneID].Title }}
-              //- button.button(@click="$router.push({ name: 'ActorDialog', id: actor.ID })") Dialog View
+
+          grid(gutter)
+            form.Form(@submit.prevent="")
+              .Grid-cell.u-size3of3
+                w-button(@click.native="$router.push({ name: 'ActorDialog', id: actor.ID })") View Dialogs
 </template>
 
 <script>
