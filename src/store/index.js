@@ -254,6 +254,10 @@ const mutations = {
         Vue.set(state.zoneActors, actor.ZoneID, []);
       }
       state.zoneActors[actor.ZoneID].push(actor.ID);
+      if (!state.actorZones[actor.ID]) {
+        Vue.set(state.actorZones, actor.ID, []);
+      }
+      state.actorZones[actor.ID].push(actor.ZoneID);
     }
   },
 

@@ -94,7 +94,9 @@ export default {
       if (!this.isNew) {
         this.$store.dispatch('updateDialog', this.node);
       } else {
-        this.$store.dispatch('createNewDialog', this.node);
+        this.$store.dispatch('createNewDialog', this.node).then(() => {
+          this.$router.push({ name: 'ActorDialog', params: { id: this.$route.params.id } });
+        });
       }
     },
     deleteAction(type, index) {
