@@ -1,8 +1,15 @@
 <template lang="pug">
   .DialogNode
-    .wrap(@click="$router.push({ name: 'DialogHome', params: { id: $route.params.id, dialog_id: node.ID }})")
-      .cover
+    .wrap(
+      @click="$router.push({ name: 'DialogHome', params: { id: $route.params.id, dialog_id: node.ID }})",
+      :class="$route.params.dialog_id !== node.ID ? 'selectable' : ''"
+    )
+      .cover(v-if="!$route.params.linking_child")
         h1 edit dialog
+      .cover(v-else-if="$route.params.dialog_id !== node.ID")
+        h1 link dialog
+      .cover.opaque(v-else)
+        h1 linking
       .entry(v-for="(entry, index) in dialogs[node.ID].EntryInput" :class="childIteration ? 'child' : ''")
         | "{{ entry }}"
         span(v-if="index < dialogs[node.ID].EntryInput.length-1")
@@ -68,6 +75,10 @@ export default {
   &:hover {
     opacity: 1;
   }
+  &.opaque {
+    opacity: 1;
+    border: 1px solid $purple;
+  }
 }
 .actions {
   cursor: default;
@@ -103,10 +114,10 @@ export default {
   padding-left: 10pt;
   border: 1px solid transparent;
   position: relative;
-  &:hover {
-    border: 1px solid $purple;
-    cursor: pointer;
-  }
+}
+.selectable:hover {
+  border: 1px solid $purple;
+  cursor: pointer;
 }
 .inner-values {
   padding: 0.25rem;

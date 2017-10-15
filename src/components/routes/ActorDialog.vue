@@ -1,6 +1,6 @@
 <template lang="pug">
   #RouteActorDialog
-    div(v-if="$route.params.linking_child") Select a dialog to link to
+    h1(v-if="$route.params.linking_child") Select a dialog to link to
     dialog-node(
       v-if='rootNodes.length > 0'
       v-for='rootID of rootNodes'
@@ -36,5 +36,6 @@ export default {
 <style scoped>
 h1 {
   text-align: center;
+  color: var(--color-brand);
 }
 </style>
