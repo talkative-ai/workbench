@@ -59,10 +59,10 @@ export default {
 }
 .cover {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  top: -1px;
+  bottom: -1px;
+  left: -1px;
+  right: -1px;
   background-color: var(--color-paper-low-opacity);
   z-index: 10;
   opacity: 0;
@@ -74,6 +74,7 @@ export default {
   }
   &:hover {
     opacity: 1;
+    border: 1px solid $purple;
   }
   &.opaque {
     opacity: 1;
