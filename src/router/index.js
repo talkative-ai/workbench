@@ -177,7 +177,7 @@ const router = new Router({
         titleLink: () => router.push({ name: 'ProjectHome' })
       },
       beforeEnter(to, from, next) {
-        store.commit('newDialog', { ParentID: Number(to.params.dialog_id) });
+        store.commit('newDialog', { ParentID: Number(to.params.dialog_id), IsRoot: to.params.is_root });
         to.params.isNew = true;
         store.dispatch('selectActor', to.params.id)
         .then(() => next());

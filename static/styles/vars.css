@@ -44,6 +44,7 @@
   --color-border: #e5e5e5;
   --color-grey: #F2F2F2;
   --color-paper: #f7f7f7;
+  --color-paper-low-opacity: rgba(247, 247, 247, 0.6);
   --color-bg: #fefefe;
 
   --theme-dark-color-bg: --color-text-mid;

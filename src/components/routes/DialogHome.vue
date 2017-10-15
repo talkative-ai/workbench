@@ -18,11 +18,15 @@
         :key="nodeID"
       )
         div "{{ dialogs[nodeID].EntryInput[0] }}"
-      w-button(
-        v-if="!this.isNew"
-        @click.native="$router.push({ name: 'DialogCreate', params: { id: $route.params.id, dialog_id: $route.params.dialog_id }})"
-      )
-        | Add Response
+      template(v-if="!this.isNew")
+        w-button(
+          @click.native="$router.push({ name: 'DialogCreate', params: { id: $route.params.id, dialog_id: $route.params.dialog_id, is_root: false }})"
+        )
+          | Add Response
+        w-button(
+          @click.native="$router.push({ name: 'ActorDialog', params: { id: $route.params.id, dialog_id: $route.params.dialog_id, linking_child: true }})"
+        )
+          | Connect Existing Dialog
       w-button(@click.native="save()") Save Changes
 </template>
 

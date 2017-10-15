@@ -1,5 +1,6 @@
 <template lang="pug">
   #RouteActorDialog
+    div(v-if="$route.params.linking_child") Select a dialog to link to
     dialog-node(
       v-if='rootNodes.length > 0'
       v-for='rootID of rootNodes'
@@ -7,7 +8,7 @@
       :node='dialogs[rootID]'
     )
     button.button(
-      @click="$router.push({ name: 'DialogCreate', params: $route.params })"
+      @click="$router.push({ name: 'DialogCreate', params: $route.params, is_root: true })"
       v-if='!rootNodes.length'
     ) Create the first dialog
 </template>
@@ -22,6 +23,7 @@ export default {
   },
   computed: {
     rootNodes() {
+      console.log(this.$store.state.rootNodes);
       return this.$store.state.rootNodes || [];
     },
     dialogs() {
