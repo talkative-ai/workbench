@@ -3,34 +3,48 @@
     sidebar
     paper(:transparent="true")
       paper-text
-        .inner-values
-          input.quoted(v-for="(entry, index) of node.EntryInput" :key="index" v-model="node.EntryInput[index]")
-        w-button(@click.native="addEntry") Add potential entry input
-        hr
-        .node-values(v-for="(sound, index) of node.AlwaysExec.PlaySounds" :key="`sound-${node.ID}-${index}`")
+        .Form
+          h1 User says
           .inner-values
-            input(placeholder="Enter speech text here!" v-model="sound.Val")
-            w-button(@click.native="deleteAction('PlaySounds', index)") Delete
-        w-button(@click.native="addActionSpeech()")
-          | Add Action
+            div.wide
+              input.quoted(v-for="(entry, index) of node.EntryInput" :key="index" v-model="node.EntryInput[index]")
+              w-button(@click.native="deleteAction('PlaySounds', index)") Delete
+          div.right
+            w-button(@click.native="addEntry") +
+
         hr
-        .node-wrapper
-          div(
-            @click="$router.push({ name: 'DialogHome', params: { id: $route.params.id, dialog_id: nodeID }})"
-            v-for="nodeID of node.ChildNodes"
-            :key="nodeID"
-          )
-            dialog-node(:node='dialogs[nodeID]')
-        form.Form.button-grid(v-if="!this.isNew" @submit.prevent="")
-          w-button(
-            @click.native="$router.push({ name: 'DialogCreate', params: { id: $route.params.id, dialog_id: $route.params.dialog_id, is_root: false }})"
-          )
-            | Add Response
-          w-button(
-            @click.native="$router.push({ name: 'ActorDialog', params: { id: $route.params.id, dialog_id: $route.params.dialog_id, linking_child: true }})"
-          )
-            | Connect Existing Dialog
-          w-button(@click.native="save()") Save Changes
+        .Form
+          h1 AI Replies
+          .node-values(v-for="(sound, index) of node.AlwaysExec.PlaySounds" :key="`sound-${node.ID}-${index}`")
+            .inner-values
+              | Synthesized Speech
+              div.wide
+                input(placeholder="Enter speech text here!" v-model="sound.Val")
+                w-button(@click.native="deleteAction('PlaySounds', index)") Delete
+          div.right
+            w-button(@click.native="addActionSpeech()")
+              | +
+        hr
+
+        .Form
+          h1 Followup dialogs
+          .node-wrapper
+            div(
+              @click="$router.push({ name: 'DialogHome', params: { id: $route.params.id, dialog_id: nodeID }})"
+              v-for="nodeID of node.ChildNodes"
+              :key="nodeID"
+            )
+              dialog-node(:node='dialogs[nodeID]')
+          .Form.button-grid(v-if="!this.isNew")
+            w-button(
+              @click.native="$router.push({ name: 'DialogCreate', params: { id: $route.params.id, dialog_id: $route.params.dialog_id, is_root: false }})"
+            )
+              | Create New Response Dialog
+            w-button(
+              @click.native="$router.push({ name: 'ActorDialog', params: { id: $route.params.id, dialog_id: $route.params.dialog_id, linking_child: true }})"
+            )
+              | Connect Existing Dialog
+            w-button(@click.native="save()") Save Changes
 </template>
 
 <script>
@@ -119,11 +133,17 @@ export default {
 <style lang="scss" scoped>
 #RouteDialogHome {
   display: flex;
-  h1 {
-    text-align: right;
+  h1, h2 {
+    margin-bottom: 20pt;
+    margin-left: -20pt;
+    font-size: 15pt;
   }
   .Canvas {
     padding: 3rem;
+  }
+
+  .right {
+    text-align: right;
   }
 
   .created-actions {
@@ -139,11 +159,23 @@ export default {
   .inner-values {
     font-size: 1rem;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    .Button {
+      opacity: 0;
+    }
+    &:hover {
+      .Button {
+        opacity: 1;
+      }
+    }
   }
 
   input {
     border: none;
+    font-size: 2rem;
+  }
+
+  .wide {
     width: 100%;
   }
 
@@ -159,6 +191,13 @@ export default {
   }
   .node-wrapper {
     display: flex;
+  }
+  h3 {
+    flex: 1;
+  }
+
+  hr {
+    color: $purple;
   }
 }
 </style>
