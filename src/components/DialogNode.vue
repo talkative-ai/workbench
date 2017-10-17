@@ -1,5 +1,5 @@
 <template lang="pug">
-  .DialogNode
+  .DialogNode(:style="{ width: `${calculateNodewidth()}pt` }")
     .wrap(
       @click="$router.push({ name: 'DialogHome', params: { id: $route.params.id, dialog_id: node.ID }})",
       :class="$route.params.dialog_id !== node.ID ? 'selectable' : ''"
@@ -25,7 +25,7 @@
         .actions(v-else)
           | end conversation
     template(v-if="recurse")
-      .after-values-space(v-if='node.ChildNodes' :style="{ width: calculateAfterValuesSpaceWidth(node.ChildNodes.length) }")
+      .after-values-space(v-if='node.ChildNodes' :style="{ width: `${calculateAfterValuesSpaceWidth()}pt` }")
       .child-nodes(v-if='node.ChildNodes')
         div(v-for='(nodeID, idx) of node.ChildNodes', :key='nodeID')
           dialog-node(:node='dialogs[nodeID]' isChildIteration="true" recurse='true')
@@ -46,9 +46,20 @@ export default {
     }
   },
   methods: {
-    calculateAfterValuesSpaceWidth(childCount) {
-      if (childCount === 1) return 0;
-      else return `${((childCount - 1) * 300) + 1}pt`;
+    calculateAfterValuesSpaceWidth() {
+      let width = 0;
+      if (!this.node.ChildNodes) return 0;
+
+      for (let i = 0; i < this.node.ChildNodes.length - 1; i++) {
+        width += this.calculateNodewidth(this.$store.state.dialogsMapped[this.node.ChildNodes[i]].ChildNodes || []);
+      }
+      return width + 1;
+    },
+    calculateNodewidth(_childNodes) {
+      let childNodes = _childNodes || this.node.ChildNodes;
+      let childCount = childNodes ? childNodes.length : 0;
+      if (childCount <= 1) return 300;
+      else return 300 * childCount;
     }
   }
 };
@@ -60,14 +71,13 @@ export default {
   flex-direction: column;
   user-select: none;
   margin-top: -1px;
-  width: 300pt;
 }
 .cover {
   position: absolute;
   top: -1px;
   bottom: -1px;
   left: -1px;
-  right: -1px;
+  width: 301pt;
   background-color: var(--color-paper-low-opacity);
   z-index: 10;
   opacity: 0;
@@ -80,9 +90,11 @@ export default {
   &:hover {
     opacity: 1;
     border: 1px solid $purple;
+    cursor: pointer;
   }
   &.opaque {
     opacity: 1;
+    cursor: default;
     border: 1px solid $purple;
   }
 }
@@ -130,10 +142,6 @@ export default {
   padding-left: 10pt;
   border: 1px solid transparent;
   position: relative;
-}
-.selectable:hover {
-  border: 1px solid $purple;
-  cursor: pointer;
 }
 .inner-values {
   padding: 0.25rem;
