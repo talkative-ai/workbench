@@ -7,7 +7,7 @@
           h1 user says
           .inner-values
             div.wide
-              input.quoted(v-for="(entry, index) of node.EntryInput" :key="index" v-model="node.EntryInput[index]")
+              input.quoted(v-for="(entry, index) of node.EntryInput" :key="index" v-model="node.EntryInput[index]" placeholder="Enter something here...")
               w-button(@click.native="deleteAction('PlaySounds', index)") Delete
           div.right
             w-button(@click.native="addEntry") +
@@ -44,7 +44,7 @@
               @click.native="$router.push({ name: 'ActorDialog', params: { id: $route.params.id, dialog_id: $route.params.dialog_id, linking_child: true }})"
             )
               | Connect Existing Dialog
-            w-button(@click.native="save()") Save Changes
+          w-button(@click.native="save()") Save Changes
 </template>
 
 <script>

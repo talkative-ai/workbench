@@ -10,16 +10,20 @@
         h1 link dialog
       .cover.opaque(v-else)
         h1 linking
-      .entry(v-for="(entry, index) in dialogs[node.ID].EntryInput" :class="isChildIteration ? 'child' : ''")
-        | "{{ entry }}"
-        span(v-if="index < dialogs[node.ID].EntryInput.length-1")
-          | ,
+      .spacer(v-if="isChildIteration")
       .ball(v-if="isChildIteration")
+      .entry-wrap
+        .entry(v-for="(entry, index) in dialogs[node.ID].EntryInput" :class="isChildIteration ? 'child' : ''")
+          | "{{ entry }}"
+          span(v-if="index < dialogs[node.ID].EntryInput.length-1")
+            | ,
       .node-values
-        .inner-values(v-for='(sound, index) of node.AlwaysExec.PlaySounds', :key='`sound-${node.ID}-${index}`')
-          | {{ sound.Val }}
+        .inner-values.actor-vals(v-for='(sound, index) of node.AlwaysExec.PlaySounds', :key='`sound-${node.ID}-${index}`')
+          | "{{ sound.Val }}"
         .actions(v-if='node.ChildNodes')
           | await response
+        .actions(v-else)
+          | end conversation
     template(v-if="recurse")
       .after-values-space(v-if='node.ChildNodes' :style="{ width: calculateAfterValuesSpaceWidth(node.ChildNodes.length) }")
       .child-nodes(v-if='node.ChildNodes')
@@ -82,14 +86,24 @@ export default {
     border: 1px solid $purple;
   }
 }
+.entry-wrap {
+  padding: 2.5pt 0;
+}
+.spacer {
+  height: 20pt;
+  border-left: 1px solid $purple;
+}
+.actor-vals {
+  color: $purple;
+  border-left: 1px solid $purple;
+}
 .actions {
   cursor: default;
   pointer-events: none;
-  border: 1px solid $purple;
   display: inline-block;
   padding: 0.25rem;
-  color: $purple;
-  border-left: 20pt solid $purple;
+  background-color: $purple;
+  color: white;
 }
 .after-values-space {
   height: 2rem;
@@ -124,8 +138,6 @@ export default {
 .inner-values {
   padding: 0.25rem;
   padding: 5pt 0.25rem 10pt 0.25rem;
-  position: relative;
-  left: -10pt;
 }
 .child-nodes {
   display: flex;
@@ -134,10 +146,8 @@ export default {
   border-top: 1px solid $purple;
 }
 .entry {
-  color: $purple;
-  &.child {
-    border-left: 1px solid $purple;
-  }
-  padding: 0.2rem;
+  position: relative;
+  left: -10pt;
+  padding: 5pt 0;
 }
 </style>

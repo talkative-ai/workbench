@@ -8,19 +8,21 @@
       :node='dialogs[rootID]'
       recurse='true'
     )
-    button.button(
-      @click="$router.push({ name: 'DialogCreate', params: $route.params, is_root: true })"
+    w-button(
+      @click.native="$router.push({ name: 'DialogCreate', params: $route.params, is_root: true })"
       v-if='!rootNodes.length'
     ) Create the first dialog
 </template>
 
 <script>
 import DialogNode from '../DialogNode';
+import WButton from '../elements/Button';
 
 export default {
   name: 'ActorDialog',
   components: {
-    DialogNode
+    DialogNode,
+    WButton
   },
   computed: {
     rootNodes() {
