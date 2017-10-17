@@ -4,7 +4,7 @@
     paper(:transparent="true")
       paper-text
         .Form
-          h1 User says
+          h1 user says
           .inner-values
             div.wide
               input.quoted(v-for="(entry, index) of node.EntryInput" :key="index" v-model="node.EntryInput[index]")
@@ -14,7 +14,7 @@
 
         hr
         .Form
-          h1 AI Replies
+          h1 ai replies
           .node-values(v-for="(sound, index) of node.AlwaysExec.PlaySounds" :key="`sound-${node.ID}-${index}`")
             .inner-values
               | Synthesized Speech
@@ -27,7 +27,7 @@
         hr
 
         .Form
-          h1 Followup dialogs
+          h1 followup dialogs
           .node-wrapper
             div(
               @click="$router.push({ name: 'DialogHome', params: { id: $route.params.id, dialog_id: nodeID }})"
