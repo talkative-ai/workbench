@@ -118,6 +118,7 @@ const router = new Router({
         titleLink: () => router.push({ name: 'ProjectHome' })
       },
       beforeEnter(to, from, next) {
+        store.dispatch('selectNode');
         store.dispatch('selectActor', to.params.id)
         .then(() => next());
       }

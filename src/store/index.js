@@ -42,6 +42,11 @@ const initialState = {
 
   actorZones: {},
 
+  // Map a selected DialogID to the ActorID
+  actorSelectedDialogID: {},
+
+  dialogSiblings: [],
+
   createID: 0
 };
 
@@ -231,6 +236,18 @@ const actions = {
 
   reset() {
     return resetState({ keepAuth: true });
+  },
+
+  selectNode({ state, commit }, { nodeID, isChild = false } = {}) {
+    if (!nodeID && !state.actorSelectedDialogID[state.selectedEntity.data.ID]) {
+      commit('setDialogSiblings', state.rootNodes);
+      commit('setSelectedDialog', state.rootNodes[0]);
+      return state;
+    }
+    if (isChild) {
+      commit('setDialogSiblings', state.dialogsMapped[state.actorSelectedDialogID[state.selectedEntity.data.ID]].ChildNodes);
+    }
+    commit('setSelectedDialog', nodeID);
   }
 };
 
@@ -238,6 +255,14 @@ const mutations = {
 
   incrCreate(state) {
     state.createID++;
+  },
+
+  setDialogSiblings(state, nodes) {
+    Vue.set(state, 'dialogSiblings', nodes);
+  },
+
+  setSelectedDialog(state, nodeID) {
+    Vue.set(state.actorSelectedDialogID, state.selectedEntity.data.ID, nodeID);
   },
 
   addZone(state, zone) {
@@ -276,14 +301,18 @@ const mutations = {
 
     for (const d of payload.actor.Dialogs) {
       Vue.set(state.dialogsMapped, d.ID, d);
-      rnodes.add(d.ID.toString());
+      if (d.IsRoot) {
+        rnodes.add(d.ID.toString());
+      }
     }
 
     // Build dialog graph
     for (const r of payload.actor.DialogRelations) {
       let prepend = state.dialogsMapped[r.ParentNodeID].ChildNodes || [];
       Vue.set(state.dialogsMapped[r.ParentNodeID], 'ChildNodes', [...prepend, r.ChildNodeID]);
-      rnodes.delete(r.ChildNodeID.toString());
+
+      prepend = state.dialogsMapped[r.ChildNodeID].ParentNodes || [];
+      Vue.set(state.dialogsMapped[r.ChildNodeID], 'ParentNodes', [...prepend, r.ParentNodeID]);
     }
 
     Vue.set(state, 'rootNodes', [...rnodes]);
@@ -314,7 +343,6 @@ const mutations = {
   newDialog(state, options = {}) {
     state.newDialog = { ...defaultDialog, ...options };
   }
-
 };
 
 const store = new Vuex.Store({

@@ -1,15 +1,19 @@
 <template lang="pug">
-  .DialogNode(:style="{ width: `${calculateNodewidth()}pt` }")
+  .DialogNode
     .wrap(
-      @click="$router.push({ name: 'DialogHome', params: { id: $route.params.id, dialog_id: node.ID }})",
-      :class="$route.params.dialog_id !== node.ID ? 'selectable' : ''"
+      @click="mainClick()",
+      :class="`${$route.params.dialog_id !== node.ID ? 'selectable' : ''}`"
+      :id="`dialog-node-${node.ID}`"
+      ref="node"
     )
       .cover(v-if="!$route.params.linking_child")
-        h1 edit dialog
+        h1(v-if="isChildIteration") zoom in
+        h1(v-else-if="isSelected") edit dialog
+        h1(v-else="isSelected") select dialog
       .cover(v-else-if="$route.params.dialog_id !== node.ID")
         h1 link dialog
       .cover.opaque(v-else)
-        h1 linking
+        h1 linkingˆ
       .spacer(v-if="isChildIteration")
       .ball(v-if="isChildIteration")
       .entry-wrap
@@ -22,13 +26,17 @@
           | "{{ sound.Val }}"
         .actions(v-if='node.ChildNodes')
           | await response
-        .actions(v-else)
+        .actions.black(v-else)
           | end conversation
     template(v-if="recurse")
-      .after-values-space(v-if='node.ChildNodes' :style="{ width: `${calculateAfterValuesSpaceWidth()}pt` }")
+      .after-values-space(v-if='node.ChildNodes' :style="{ width: `${calculateWidth()}pt`, height: `${tallest - height + 35}px` }")
       .child-nodes(v-if='node.ChildNodes')
         div(v-for='(nodeID, idx) of node.ChildNodes', :key='nodeID')
-          dialog-node(:node='dialogs[nodeID]' isChildIteration="true" recurse='true')
+          dialog-node(
+            :node='dialogs[nodeID]',
+            isChildIteration="true",
+            :recurse='false'
+          )
 </template>
 
 <script>
@@ -36,9 +44,21 @@ import DialogNode from './DialogNode';
 
 export default {
   name: 'dialog-node',
-  props: ['node', 'isChildIteration', 'recurse'],
+  props: ['node', 'isChildIteration', 'recurse', 'isSelected', 'resolve', 'tallest'],
   components: {
     DialogNode
+  },
+  data() {
+    return {
+      height: 0
+    };
+  },
+  mounted() {
+    const rect = this.$refs.node.getBoundingClientRect();
+    this.height = rect.height;
+    if (this.resolve) {
+      this.resolve(rect);
+    }
   },
   computed: {
     dialogs() {
@@ -46,20 +66,12 @@ export default {
     }
   },
   methods: {
-    calculateAfterValuesSpaceWidth() {
-      let width = 0;
+    calculateWidth() {
       if (!this.node.ChildNodes) return 0;
-
-      for (let i = 0; i < this.node.ChildNodes.length - 1; i++) {
-        width += this.calculateNodewidth(this.$store.state.dialogsMapped[this.node.ChildNodes[i]].ChildNodes || []);
-      }
-      return width + 1;
+      return ((this.node.ChildNodes.length - 1) * 300) + 1;
     },
-    calculateNodewidth(_childNodes) {
-      let childNodes = _childNodes || this.node.ChildNodes;
-      let childCount = childNodes ? childNodes.length : 0;
-      if (childCount <= 1) return 300;
-      else return 300 * childCount;
+    mainClick() {
+      this.$store.dispatch('selectNode', { nodeID: this.node.ID, isChild: this.isChildIteration });
     }
   }
 };
@@ -71,6 +83,7 @@ export default {
   flex-direction: column;
   user-select: none;
   margin-top: -1px;
+  width: 300pt;
 }
 .cover {
   position: absolute;
@@ -118,7 +131,6 @@ export default {
   color: white;
 }
 .after-values-space {
-  height: 2rem;
   border-left: 1px solid $purple;
   border-bottom: 1px solid $purple;
   margin-left: 10.5pt;
@@ -157,5 +169,8 @@ export default {
   position: relative;
   left: -10pt;
   padding: 5pt 0;
+}
+.black {
+  background-color: black;
 }
 </style>
