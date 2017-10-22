@@ -1,7 +1,7 @@
 <template lang="pug">
   .DialogNode
     .wrap(
-      @click="mainClick()",
+      @click="$emit('click')",
       :class="`${$route.params.dialog_id !== node.ID ? 'selectable' : ''}`"
       :id="`dialog-node-${node.ID}`"
       ref="node"
@@ -36,6 +36,8 @@
             :node='dialogs[nodeID]',
             isChildIteration="true",
             :recurse='false'
+            @click="$emit('click-child', { nodeID, isChild: true })"
+            @click-child="$emit('click-child', { nodeID, isChild: true })"
           )
 </template>
 
@@ -69,9 +71,6 @@ export default {
     calculateWidth() {
       if (!this.node.ChildNodes) return 0;
       return ((this.node.ChildNodes.length - 1) * 300) + 1;
-    },
-    mainClick() {
-      this.$store.dispatch('selectNode', { nodeID: this.node.ID, isChild: this.isChildIteration });
     }
   }
 };

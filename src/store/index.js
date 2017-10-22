@@ -47,6 +47,8 @@ const initialState = {
 
   dialogSiblings: [],
 
+  dialogChain: [],
+
   createID: 0
 };
 
@@ -238,16 +240,23 @@ const actions = {
     return resetState({ keepAuth: true });
   },
 
-  selectNode({ state, commit }, { nodeID, isChild = false } = {}) {
+  selectNode({ state, commit }, { nodeID, isChild = false, relativeParent } = {}) {
     if (!nodeID && !state.actorSelectedDialogID[state.selectedEntity.data.ID]) {
       commit('setDialogSiblings', state.rootNodes);
       commit('setSelectedDialog', state.rootNodes[0]);
       return state;
     }
     if (isChild) {
-      commit('setDialogSiblings', state.dialogsMapped[state.actorSelectedDialogID[state.selectedEntity.data.ID]].ChildNodes);
+      relativeParent = relativeParent || state.dialogsMapped[state.actorSelectedDialogID[state.selectedEntity.data.ID]];
+      commit('setDialogSiblings', relativeParent.ChildNodes);
+      state.dialogChain.push(relativeParent);
     }
     commit('setSelectedDialog', nodeID);
+  },
+
+  selectChain({ state, dispatch, commit }, index) {
+    dispatch('selectNode', { nodeID: state.dialogChain[index].ID, isChild: true, relativeParent: state.dialogChain[index - 1] });
+    commit('sliceChain', index);
   }
 };
 
@@ -255,6 +264,10 @@ const mutations = {
 
   incrCreate(state) {
     state.createID++;
+  },
+
+  sliceChain(state, index) {
+    state.dialogChain = state.dialogChain.slice(0, index);
   },
 
   setDialogSiblings(state, nodes) {
