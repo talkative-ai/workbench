@@ -255,6 +255,12 @@ const actions = {
   },
 
   selectChain({ state, dispatch, commit }, index) {
+    if (index === 0) {
+      commit('setSelectedDialog', null);
+      dispatch('selectNode');
+      commit('sliceChain', 0);
+      return;
+    }
     dispatch('selectNode', { nodeID: state.dialogChain[index].ID, isChild: true, relativeParent: state.dialogChain[index - 1] });
     commit('sliceChain', index);
   }

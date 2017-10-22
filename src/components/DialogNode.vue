@@ -69,7 +69,7 @@ export default {
   },
   methods: {
     calculateWidth() {
-      if (!this.node.ChildNodes) return 0;
+      if (!this.node.ChildNodes) return 1;
       return ((this.node.ChildNodes.length - 1) * 300) + 1;
     }
   }
@@ -116,6 +116,7 @@ export default {
 .spacer {
   height: 20pt;
   border-left: 1px solid $purple;
+  margin-top: -1px;
 }
 .actor-vals {
   color: $purple;
@@ -132,7 +133,7 @@ export default {
 .after-values-space {
   border-left: 1px solid $purple;
   border-bottom: 1px solid $purple;
-  margin-left: 10.5pt;
+  margin-left: 11pt;
   margin-top: -1pt;
 }
 .ball {

@@ -5,14 +5,17 @@
       h1(v-if="!$store.state.dialogChain.length") Select a conversation beginning
       .flex
         .chain(v-if="$store.state.dialogChain.length")
+          h1 Conversation
+          hr
           dialog-node(
             v-for='(node, idx) of $store.state.dialogChain'
             :key='node.ID'
             :node='dialogs[node.ID]'
             :recurse='false'
             @click="clickChain(idx)"
+            :isChildIteration='idx > 0'
           )
-        div
+        .nodes
           dialog-node(
             v-for='nodeID of $store.state.dialogSiblings'
             :key='nodeID'
@@ -96,10 +99,22 @@ h1 {
 }
 .flex {
   display: flex;
+  align-items: flex-start;
 }
 .chain {
-  width: 300pt;
-  border-right: 1px solid var(--color-brand);
+  width: 332pt;
   margin-right: 20pt;
+  -webkit-box-shadow: 0pt 0pt 5pt black;
+  box-shadow: 1pt 1pt 2pt rgba(0, 0, 0, 0.2);
+  padding: 16pt;
+  background-color: white;
+}
+.nodes {
+  width: 100%;
+  display: flex;
+}
+hr {
+  color: var(--color-brand);
+  opacity: 0.8;
 }
 </style>
