@@ -5,6 +5,18 @@ import GSignInButton from 'vue-google-signin-button';
 import Vue from 'vue';
 import App from './App';
 import * as svgicon from 'vue-svgicon';
+import Icon from 'vue-awesome/components/Icon';
+import 'vue-awesome/icons/pencil';
+import 'vue-awesome/icons/search';
+
+import DialogNode from './components/DialogNode';
+import WButton from './components/elements/Button';
+import IconButton from './components/elements/IconButton';
+
+Vue.component('DialogNode', DialogNode);
+Vue.component('WButton', WButton);
+Vue.component('IconButton', IconButton);
+
 import router from './router';
 import store, { initializer } from './store';
 
@@ -16,6 +28,8 @@ Vue.use(svgicon, {
 
 Vue.use(GSignInButton);
 
+Vue.component('fa-icon', Icon);
+
 initializer.then(() => {
   /* eslint-disable no-new */
   new Vue({
@@ -23,6 +37,8 @@ initializer.then(() => {
     router,
     store,
     template: '<App/>',
-    components: { App }
+    components: {
+      App
+    }
   });
 });

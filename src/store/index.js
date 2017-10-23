@@ -244,21 +244,33 @@ const actions = {
     if (!nodeID && !state.actorSelectedDialogID[state.selectedEntity.data.ID]) {
       commit('setDialogSiblings', state.rootNodes);
       commit('setSelectedDialog', state.rootNodes[0]);
-      return state;
+      Vue.set(state, 'dialogChain', []);
+      state.dialogChain.push(state.dialogsMapped[state.rootNodes[0]]);
+      return;
+    } else if (!nodeID) {
+      return;
     }
+
     if (isChild) {
       relativeParent = relativeParent || state.dialogsMapped[state.actorSelectedDialogID[state.selectedEntity.data.ID]];
       commit('setDialogSiblings', relativeParent.ChildNodes);
-      state.dialogChain.push(relativeParent);
+      state.dialogChain.push(state.dialogsMapped[nodeID]);
+    } else {
+      state.dialogChain.pop();
+      state.dialogChain.push(state.dialogsMapped[nodeID]);
     }
+
     commit('setSelectedDialog', nodeID);
   },
 
   selectChain({ state, dispatch, commit }, index) {
+    if (index === state.dialogChain.length - 1) {
+      return;
+    }
     if (index === 0) {
       commit('setSelectedDialog', null);
-      dispatch('selectNode');
       commit('sliceChain', 0);
+      dispatch('selectNode');
       return;
     }
     dispatch('selectNode', { nodeID: state.dialogChain[index].ID, isChild: true, relativeParent: state.dialogChain[index - 1] });

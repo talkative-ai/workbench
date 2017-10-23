@@ -7,16 +7,17 @@
         .chain(v-if="$store.state.dialogChain.length")
           h1 Conversation
           hr
-          dialog-node(
+          DialogNode(
             v-for='(node, idx) of $store.state.dialogChain'
             :key='node.ID'
             :node='dialogs[node.ID]'
             :recurse='false'
             @click="clickChain(idx)"
             :isChildIteration='idx > 0'
+            :isSelected='isSelected(node.ID)'
           )
         .nodes
-          dialog-node(
+          DialogNode(
             v-for='nodeID of $store.state.dialogSiblings'
             :key='nodeID'
             :node='dialogs[nodeID]'
@@ -34,15 +35,8 @@
 </template>
 
 <script>
-import DialogNode from '../DialogNode';
-import WButton from '../elements/Button';
-
 export default {
   name: 'ActorDialog',
-  components: {
-    DialogNode,
-    WButton
-  },
   data() {
     let readyPromises = [];
     let readyResolve = {};

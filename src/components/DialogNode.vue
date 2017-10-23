@@ -6,14 +6,17 @@
       :id="`dialog-node-${node.ID}`"
       ref="node"
     )
-      .cover(v-if="!$route.params.linking_child")
-        h1(v-if="isChildIteration") zoom in
-        h1(v-else-if="isSelected") edit dialog
-        h1(v-else="isSelected") select dialog
-      .cover(v-else-if="$route.params.dialog_id !== node.ID")
-        h1 link dialog
-      .cover.opaque(v-else)
-        h1 linkingˆ
+      .cover-wrap
+        .cover(v-if="!$route.params.linking_child" :class="isSelected ? 'selected' : ''")
+          h1(v-if="!isSelected")
+            IconButton(name="search")
+            | &nbsp;select
+        .cover(v-else-if="$route.params.dialog_id !== node.ID")
+          h1 link dialog
+        .cover.opaque(v-else)
+          h1 linking
+        .edit-bar
+          IconButton(name="pencil" label="edit")
       .spacer(v-if="isChildIteration")
       .ball(v-if="isChildIteration")
       .entry-wrap
@@ -29,10 +32,10 @@
         .actions.black(v-else)
           | end conversation
     template(v-if="recurse")
-      .after-values-space(v-if='node.ChildNodes' :style="{ width: `${calculateWidth()}pt`, height: `${tallest - height + 35}px` }")
+      .after-values-space(v-if='node.ChildNodes' :style="{ width: `${calculateWidth()}px`, height: `${tallest - height + 35}px` }")
       .child-nodes(v-if='node.ChildNodes')
         div(v-for='(nodeID, idx) of node.ChildNodes', :key='nodeID')
-          dialog-node(
+          DialogNode(
             :node='dialogs[nodeID]',
             isChildIteration="true",
             :recurse='false'
@@ -42,14 +45,9 @@
 </template>
 
 <script>
-import DialogNode from './DialogNode';
-
 export default {
-  name: 'dialog-node',
+  name: 'DialogNode',
   props: ['node', 'isChildIteration', 'recurse', 'isSelected', 'resolve', 'tallest'],
-  components: {
-    DialogNode
-  },
   data() {
     return {
       height: 0
@@ -70,7 +68,7 @@ export default {
   methods: {
     calculateWidth() {
       if (!this.node.ChildNodes) return 1;
-      return ((this.node.ChildNodes.length - 1) * 300) + 1;
+      return ((this.node.ChildNodes.length - 1) * 400) + 1;
     }
   }
 };
@@ -82,14 +80,14 @@ export default {
   flex-direction: column;
   user-select: none;
   margin-top: -1px;
-  width: 300pt;
+  width: 400px;
 }
 .cover {
   position: absolute;
   top: -1px;
   bottom: -1px;
   left: -1px;
-  width: 301pt;
+  width: 401px;
   background-color: var(--color-paper-low-opacity);
   z-index: 10;
   opacity: 0;
@@ -99,16 +97,47 @@ export default {
   h1 {
     color: $purple;
   }
-  &:hover {
-    opacity: 1;
-    border: 1px solid $purple;
-    cursor: pointer;
-  }
   &.opaque {
     opacity: 1;
     cursor: default;
     border: 1px solid $purple;
   }
+}
+.cover-wrap {
+  position: absolute;
+  top: -1px;
+  bottom: -1px;
+  left: -1px;
+  z-index: 10;
+  &:hover {
+    z-index: 20;
+    .cover {
+      opacity: 1;
+      border: 1px solid $purple;
+      cursor: pointer;
+      &.selected {
+        cursor: default;
+      }
+    }
+    .edit-bar {
+      opacity: 1;
+    }
+  }
+}
+.edit-bar {
+  bottom: -31pt;
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 400px;
+  opacity: 0;
+  height: 30pt;
+  display: flex;
+  align-items: center;
+  background-color: var(--color-paper);
+  box-shadow: 0 0 5pt rgba(0,0,0,0.2);
+  padding-left: 10pt;
+  z-index: 10;
 }
 .entry-wrap {
   padding: 2.5pt 0;
