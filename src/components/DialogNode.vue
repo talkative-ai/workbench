@@ -88,7 +88,6 @@ export default {
   bottom: -1px;
   left: -1px;
   width: 401px;
-  background-color: var(--color-paper-low-opacity);
   z-index: 10;
   opacity: 0;
   display: flex;
@@ -103,6 +102,10 @@ export default {
     border: 1px solid $purple;
   }
 }
+.selected {
+  border: 1px solid $purple;
+  opacity: 1;
+}
 .cover-wrap {
   position: absolute;
   top: -1px;
@@ -114,6 +117,7 @@ export default {
     .cover {
       opacity: 1;
       border: 1px solid $purple;
+      background-color: var(--color-paper-low-opacity);
       cursor: pointer;
       &.selected {
         cursor: default;

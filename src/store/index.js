@@ -274,7 +274,7 @@ const actions = {
       return;
     }
     dispatch('selectNode', { nodeID: state.dialogChain[index].ID, isChild: true, relativeParent: state.dialogChain[index - 1] });
-    commit('sliceChain', index);
+    commit('sliceChain', index + 1);
   }
 };
 
