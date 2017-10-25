@@ -49,7 +49,16 @@ const initialState = {
 
   dialogChain: [],
 
-  createID: 0
+  createID: 0,
+
+  // Tracking dialogs being edited
+  dialogEditMap: {},
+  dialogEditCount: 0
+};
+
+const getters = {
+  dialogEditMap: state => state.dialogEditMap,
+  dialogsMapped: state => state.dialogsMapped
 };
 
 let ready;
@@ -275,6 +284,18 @@ const actions = {
     }
     dispatch('selectNode', { nodeID: state.dialogChain[index].ID, isChild: true, relativeParent: state.dialogChain[index - 1] });
     commit('sliceChain', index + 1);
+  },
+
+  editDialog({ state, dispatch, commit }, nodeID) {
+    if (!state.dialogEditMap[nodeID]) {
+      commit('editDialog', nodeID);
+    }
+  },
+
+  cancelEditDialog({ state, dispatch, commit }, nodeID) {
+    if (state.dialogEditMap[nodeID]) {
+      commit('cancelEditDialog', nodeID);
+    }
   }
 };
 
@@ -282,6 +303,16 @@ const mutations = {
 
   incrCreate(state) {
     state.createID++;
+  },
+
+  editDialog(state, nodeID) {
+    Vue.set(state.dialogEditMap, nodeID, true);
+    state.dialogEditCount++;
+  },
+
+  cancelEditDialog(state, nodeID) {
+    Vue.set(state.dialogEditMap, nodeID, false);
+    state.dialogEditCount--;
   },
 
   sliceChain(state, index) {
@@ -379,7 +410,8 @@ const mutations = {
 const store = new Vuex.Store({
   state: dcopy(initialState),
   actions,
-  mutations
+  mutations,
+  getters
 });
 
 resetState({ initial: true });

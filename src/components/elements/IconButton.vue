@@ -1,12 +1,15 @@
 <template lang="pug">
   .icon-button
-    fa-icon(:name="name")
+    fa-icon(v-if="name" :name="name")
     .label(v-if="label") {{ label }}
 </template>
 
 
 
 <script scoped>
+import 'vue-awesome/icons/pencil';
+import 'vue-awesome/icons/search';
+import 'vue-awesome/icons/plus';
 export default {
   name: 'icon-button',
   props: ['name', 'label']

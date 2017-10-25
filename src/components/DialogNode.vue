@@ -1,27 +1,38 @@
 <template lang="pug">
   .DialogNode
     .wrap(
-      @click="$emit('click')",
       :class="`${$route.params.dialog_id !== node.ID ? 'selectable' : ''}`"
       :id="`dialog-node-${node.ID}`"
       ref="node"
     )
-      .cover-wrap
-        .cover(v-if="!$route.params.linking_child" :class="isSelected ? 'selected' : ''")
-          h1(v-if="!isSelected")
-            IconButton(name="search")
-            | &nbsp;select
-        .cover(v-else-if="$route.params.dialog_id !== node.ID")
-          h1 link dialog
-        .cover.opaque(v-else)
-          h1 linking
-        .edit-bar
-          IconButton(name="pencil" label="edit")
+      template(v-if="!isEditing")
+        .cover-wrap
+          .cover(
+            v-if="!$route.params.linking_child"
+            @click="$emit('click')"
+            :class="isSelected ? 'selected' : ''")
+            h1(v-if="!isSelected")
+              IconButton(name="search")
+              | &nbsp;select
+          .cover(
+            v-else-if="$route.params.dialog_id !== node.ID"
+            @click="$emit('click')")
+            h1 link dialog
+          .cover.opaque(v-else)
+            h1 linking
+          .button-grid-small.edit-bar
+            IconButton(name="pencil" label="edit" @click.native="beginEdit()")
+            IconButton(name="plus" label="add response")
+      template(v-else)
+        .cover.editing
       .spacer(v-if="isChildIteration")
       .ball(v-if="isChildIteration")
       .entry-wrap
         .entry(v-for="(entry, index) in dialogs[node.ID].EntryInput" :class="isChildIteration ? 'child' : ''")
-          | "{{ entry }}"
+          template(v-if="isEditing")
+            input(v-model="dialogs[node.ID].EntryInput[index]")
+          template(v-else)
+            | {{ dialogs[node.ID].EntryInput[index] }}
           span(v-if="index < dialogs[node.ID].EntryInput.length-1")
             | ,
       .node-values
@@ -31,6 +42,9 @@
           | await response
         .actions.black(v-else)
           | end conversation
+      .edit-bar.button-grid-small(v-if="isEditing")
+        IconButton(label="Save changes")
+        IconButton(@click.native="cancelEdit()" label="Cancel")
     template(v-if="recurse")
       .after-values-space(v-if='node.ChildNodes' :style="{ width: `${calculateWidth()}px`, height: `${tallest - height + 35}px` }")
       .child-nodes(v-if='node.ChildNodes')
@@ -50,7 +64,8 @@ export default {
   props: ['node', 'isChildIteration', 'recurse', 'isSelected', 'resolve', 'tallest'],
   data() {
     return {
-      height: 0
+      height: 0,
+      editedValues: {}
     };
   },
   mounted() {
@@ -63,12 +78,21 @@ export default {
   computed: {
     dialogs() {
       return this.$store.state.dialogsMapped || {};
+    },
+    isEditing() {
+      return this.$store.state.dialogEditMap[this.node.ID];
     }
   },
   methods: {
     calculateWidth() {
       if (!this.node.ChildNodes) return 1;
       return ((this.node.ChildNodes.length - 1) * 400) + 1;
+    },
+    beginEdit() {
+      this.$store.dispatch('editDialog', this.node.ID);
+    },
+    cancelEdit() {
+      this.$store.dispatch('cancelEditDialog', this.node.ID);
     }
   }
 };
@@ -82,6 +106,9 @@ export default {
   margin-top: -1px;
   width: 400px;
 }
+.button-grid {
+  padding: 10pt 0px;
+}
 .cover {
   position: absolute;
   top: -1px;
@@ -93,6 +120,11 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  &.editing {
+    opacity: 1;
+    border: 2px dashed $purple;
+    pointer-events: none;
+  }
   h1 {
     color: $purple;
   }
@@ -112,6 +144,9 @@ export default {
   bottom: -1px;
   left: -1px;
   z-index: 10;
+  .edit-bar {
+    opacity: 0;
+  }
   &:hover {
     z-index: 20;
     .cover {
@@ -134,7 +169,6 @@ export default {
   left: 0;
   right: 0;
   width: 400px;
-  opacity: 0;
   height: 30pt;
   display: flex;
   align-items: center;

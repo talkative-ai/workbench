@@ -37,6 +37,9 @@ export default {
 </script>
 
 <style lang="scss">
+input, select, textarea {
+  font-family: inherit;
+}
 #app {
   background-position: 50% 50%;
   background-repeat: no-repeat;
@@ -78,8 +81,19 @@ export default {
 
 
 .button-grid {
-  .Button {
+  > * {
     margin: 0 5pt;
+    &:first-child {
+      margin-left: 0;
+    }
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+.button-grid-small {
+  > * {
+    margin: 0 2.5pt;
     &:first-child {
       margin-left: 0;
     }

@@ -6,8 +6,6 @@ import Vue from 'vue';
 import App from './App';
 import * as svgicon from 'vue-svgicon';
 import Icon from 'vue-awesome/components/Icon';
-import 'vue-awesome/icons/pencil';
-import 'vue-awesome/icons/search';
 
 import DialogNode from './components/DialogNode';
 import WButton from './components/elements/Button';
