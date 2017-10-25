@@ -7,6 +7,8 @@
     )
       template(v-if="!isEditing")
         .cover-wrap
+
+          //- Hover cover
           .cover(
             v-if="!$route.params.linking_child"
             @click="$emit('click')"
@@ -20,6 +22,8 @@
             h1 link dialog
           .cover.opaque(v-else)
             h1 linking
+
+          //- Edit bar
           .button-grid-small.edit-bar
             IconButton(name="pencil" label="edit" @click.native="beginEdit()")
             IconButton(name="plus" label="add response")
@@ -28,13 +32,21 @@
       .spacer(v-if="isChildIteration")
       .ball(v-if="isChildIteration")
       .entry-wrap
-        .entry(v-for="(entry, index) in dialogs[node.ID].EntryInput" :class="isChildIteration ? 'child' : ''")
-          template(v-if="isEditing")
-            input(v-model="dialogs[node.ID].EntryInput[index]")
-          template(v-else)
+
+        //- Not editing
+        template(v-if="!isEditing")
+          .entry(v-for="(entry, index) in dialogs[node.ID].EntryInput" :class="isChildIteration ? 'child' : ''")
             | {{ dialogs[node.ID].EntryInput[index] }}
-          span(v-if="index < dialogs[node.ID].EntryInput.length-1")
-            | ,
+            span(v-if="index < dialogs[node.ID].EntryInput.length-1")
+              | ,
+
+        //- Editing
+        template(v-else)
+          .entry(v-for="(entry, index) in $store.state.dialogEditingCopy[node.ID].EntryInput" :class="isChildIteration ? 'child' : ''")
+            input(v-model="$store.state.dialogEditingCopy[node.ID].EntryInput[index]")
+            span(v-if="index < $store.state.dialogEditingCopy[node.ID].EntryInput.length-1")
+              | ,
+
       .node-values
         .inner-values.actor-vals(v-for='(sound, index) of node.AlwaysExec.PlaySounds', :key='`sound-${node.ID}-${index}`')
           | "{{ sound.Val }}"
@@ -43,7 +55,7 @@
         .actions.black(v-else)
           | end conversation
       .edit-bar.button-grid-small(v-if="isEditing")
-        IconButton(label="Save changes")
+        IconButton(@click.native="saveEdit()" label="Save changes")
         IconButton(@click.native="cancelEdit()" label="Cancel")
     template(v-if="recurse")
       .after-values-space(v-if='node.ChildNodes' :style="{ width: `${calculateWidth()}px`, height: `${tallest - height + 35}px` }")
@@ -64,8 +76,7 @@ export default {
   props: ['node', 'isChildIteration', 'recurse', 'isSelected', 'resolve', 'tallest'],
   data() {
     return {
-      height: 0,
-      editedValues: {}
+      height: 0
     };
   },
   mounted() {
@@ -93,6 +104,9 @@ export default {
     },
     cancelEdit() {
       this.$store.dispatch('cancelEditDialog', this.node.ID);
+    },
+    saveEdit() {
+      this.$store.dispatch('saveEditDialog', this.node.ID);
     }
   }
 };
@@ -175,7 +189,7 @@ export default {
   background-color: var(--color-paper);
   box-shadow: 0 0 5pt rgba(0,0,0,0.2);
   padding-left: 10pt;
-  z-index: 10;
+  z-index: 100;
 }
 .entry-wrap {
   padding: 2.5pt 0;

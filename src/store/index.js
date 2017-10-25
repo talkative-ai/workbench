@@ -53,7 +53,8 @@ const initialState = {
 
   // Tracking dialogs being edited
   dialogEditMap: {},
-  dialogEditCount: 0
+  dialogEditCount: 0,
+  dialogEditingCopy: {}
 };
 
 const getters = {
@@ -286,13 +287,19 @@ const actions = {
     commit('sliceChain', index + 1);
   },
 
-  editDialog({ state, dispatch, commit }, nodeID) {
+  editDialog({ state, commit }, nodeID) {
     if (!state.dialogEditMap[nodeID]) {
       commit('editDialog', nodeID);
     }
   },
 
-  cancelEditDialog({ state, dispatch, commit }, nodeID) {
+  saveEditDialog({ state, commit }, nodeID) {
+    if (state.dialogEditMap[nodeID]) {
+      commit('saveEditDialog', nodeID);
+    }
+  },
+
+  cancelEditDialog({ state, commit }, nodeID) {
     if (state.dialogEditMap[nodeID]) {
       commit('cancelEditDialog', nodeID);
     }
@@ -308,6 +315,13 @@ const mutations = {
   editDialog(state, nodeID) {
     Vue.set(state.dialogEditMap, nodeID, true);
     state.dialogEditCount++;
+    Vue.set(state.dialogEditingCopy, nodeID, dcopy(state.dialogsMapped[nodeID]));
+  },
+
+  saveEditDialog(state, nodeID) {
+    Vue.set(state.dialogEditMap, nodeID, false);
+    state.dialogEditCount--;
+    Vue.set(state.dialogsMapped, nodeID, dcopy(state.dialogEditingCopy[nodeID]));
   },
 
   cancelEditDialog(state, nodeID) {
