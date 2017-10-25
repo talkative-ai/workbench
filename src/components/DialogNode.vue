@@ -35,10 +35,17 @@
 
         //- Not editing
         template(v-if="!isEditing")
-          .entry(v-for="(entry, index) in dialogs[node.ID].EntryInput" :class="isChildIteration ? 'child' : ''")
-            | {{ dialogs[node.ID].EntryInput[index] }}
-            span(v-if="index < dialogs[node.ID].EntryInput.length-1")
+          .entry(v-for="(entry, index) in node.EntryInput" :class="isChildIteration ? 'child' : ''")
+            | {{ node.EntryInput[index] }}
+            span(v-if="index < node.EntryInput.length-1")
               | ,
+          .node-values
+            .inner-values.actor-vals(v-for='(sound, index) of node.AlwaysExec.PlaySounds', :key='`sound-${node.ID}-${index}`')
+              | "{{ sound.Val }}"
+            .actions(v-if='node.ChildNodes')
+              | await response
+            .actions.black(v-else)
+              | end conversation
 
         //- Editing
         template(v-else)
@@ -46,17 +53,19 @@
             input(v-model="$store.state.dialogEditingCopy[node.ID].EntryInput[index]")
             span(v-if="index < $store.state.dialogEditingCopy[node.ID].EntryInput.length-1")
               | ,
-
-      .node-values
-        .inner-values.actor-vals(v-for='(sound, index) of node.AlwaysExec.PlaySounds', :key='`sound-${node.ID}-${index}`')
-          | "{{ sound.Val }}"
-        .actions(v-if='node.ChildNodes')
-          | await response
-        .actions.black(v-else)
-          | end conversation
-      .edit-bar.button-grid-small(v-if="isEditing")
-        IconButton(@click.native="saveEdit()" label="Save changes")
-        IconButton(@click.native="cancelEdit()" label="Cancel")
+          .node-values
+            .inner-values.actor-vals(
+              v-for='(sound, index) of $store.state.dialogEditingCopy[node.ID].AlwaysExec.PlaySounds'
+              :key='`sound-${node.ID}-${index}`')
+              input(v-model="sound.Val")
+              IconButton(name="times" flat)
+            .actions(v-if='node.ChildNodes')
+              | await response
+            .actions.black(v-else)
+              | end conversation
+          .edit-bar.button-grid-small
+            IconButton(@click.native="saveEdit()" label="Save changes")
+            IconButton(@click.native="cancelEdit()" label="Cancel")
     template(v-if="recurse")
       .after-values-space(v-if='node.ChildNodes' :style="{ width: `${calculateWidth()}px`, height: `${tallest - height + 35}px` }")
       .child-nodes(v-if='node.ChildNodes')

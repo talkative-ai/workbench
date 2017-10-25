@@ -1,5 +1,5 @@
 <template lang="pug">
-  .icon-button
+  .icon-button(:class="classList")
     fa-icon(v-if="name" :name="name")
     .label(v-if="label") {{ label }}
 </template>
@@ -10,9 +10,19 @@
 import 'vue-awesome/icons/pencil';
 import 'vue-awesome/icons/search';
 import 'vue-awesome/icons/plus';
+import 'vue-awesome/icons/times';
 export default {
   name: 'icon-button',
-  props: ['name', 'label']
+  props: ['name', 'label', 'flat'],
+  data() {
+    let classList = [];
+    if (this.flat) {
+      classList.push('flat');
+    }
+    return {
+      classList: classList.join(' ')
+    };
+  }
 };
 </script>
 
@@ -30,6 +40,11 @@ export default {
   display: inline-flex;
   align-items: center;
   cursor: pointer;
+}
+
+.flat {
+  background-color: transparent;
+  color: $purple;
 }
 
 .label {
