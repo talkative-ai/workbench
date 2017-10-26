@@ -316,7 +316,19 @@ function validateNode(node) {
     return 'You need at least one entry into the dialog.';
   }
   if (node.AlwaysExec.PlaySounds.length <= 0) {
-    return 'INSUFFICIENT_ALWAYSEXEC';
+    return 'You must play at least one sound.';
+  }
+  for (let s of node.EntryInput) {
+    if (!s) {
+      // TODO: Better validation handling here
+      return 'Dialog entry cannot be blank.';
+    }
+  }
+  for (let s of node.AlwaysExec.PlaySounds) {
+    if (!s.Val) {
+      // TODO: Better validation handling here
+      return 'No empty speech allowed.';
+    }
   }
 }
 

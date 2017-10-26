@@ -56,7 +56,9 @@
               flat
               @click.native="$store.state.dialogEditingCopy[node.ID].EntryInput.splice(index, 1)")
             span(v-if="index < $store.state.dialogEditingCopy[node.ID].EntryInput.length-1")
-          IconButton(name="plus")
+          IconButton(
+            name="plus"
+            @click.native="addEntryInput()")
           br
           .node-values
             .inner-values.actor-vals(
@@ -68,7 +70,10 @@
                 flat
                 @click.native="$store.state.dialogEditingCopy[node.ID].AlwaysExec.PlaySounds.splice(index, 1)")
             .inner-values.actor-vals
-              IconButton(name="plus")
+              IconButton(
+                name="plus"
+                @click.native="addPlaySound()"
+                )
             .actions(v-if='node.ChildNodes')
               | await response
             .actions.black(v-else)
@@ -129,6 +134,15 @@ export default {
     },
     saveEdit() {
       this.$store.dispatch('saveEditDialog', this.node.ID);
+    },
+    addPlaySound() {
+      this.$store.state.dialogEditingCopy[this.node.ID].AlwaysExec.PlaySounds.push({
+        SoundType: 1,
+        Val: ''
+      });
+    },
+    addEntryInput() {
+      this.$store.state.dialogEditingCopy[this.node.ID].EntryInput.push('');
     }
   }
 };
