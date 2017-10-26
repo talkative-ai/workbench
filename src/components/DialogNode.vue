@@ -51,21 +51,34 @@
         template(v-else)
           .entry(v-for="(entry, index) in $store.state.dialogEditingCopy[node.ID].EntryInput" :class="isChildIteration ? 'child' : ''")
             input(v-model="$store.state.dialogEditingCopy[node.ID].EntryInput[index]")
+            IconButton(
+              name="times"
+              flat
+              @click.native="$store.state.dialogEditingCopy[node.ID].EntryInput.splice(index, 1)")
             span(v-if="index < $store.state.dialogEditingCopy[node.ID].EntryInput.length-1")
-              | ,
+          IconButton(name="plus")
+          br
           .node-values
             .inner-values.actor-vals(
               v-for='(sound, index) of $store.state.dialogEditingCopy[node.ID].AlwaysExec.PlaySounds'
               :key='`sound-${node.ID}-${index}`')
               input(v-model="sound.Val")
-              IconButton(name="times" flat)
+              IconButton(
+                name="times"
+                flat
+                @click.native="$store.state.dialogEditingCopy[node.ID].AlwaysExec.PlaySounds.splice(index, 1)")
+            .inner-values.actor-vals
+              IconButton(name="plus")
             .actions(v-if='node.ChildNodes')
               | await response
             .actions.black(v-else)
               | end conversation
-          .edit-bar.button-grid-small
-            IconButton(@click.native="saveEdit()" label="Save changes")
-            IconButton(@click.native="cancelEdit()" label="Cancel")
+          .edit-bar(:class="$store.state.dialogEditError[node.ID] ? 'with-error' : ''")
+            .button-grid-small
+              IconButton(@click.native="saveEdit()" label="save")
+              IconButton(@click.native="cancelEdit()" label="cancel")
+            .error(v-if="$store.state.dialogEditError[node.ID]")
+              | {{$store.state.dialogEditError[node.ID]}}
     template(v-if="recurse")
       .after-values-space(v-if='node.ChildNodes' :style="{ width: `${calculateWidth()}px`, height: `${tallest - height + 35}px` }")
       .child-nodes(v-if='node.ChildNodes')
@@ -147,6 +160,7 @@ export default {
     opacity: 1;
     border: 2px dashed $purple;
     pointer-events: none;
+    flex-direction: column;
   }
   h1 {
     color: $purple;
@@ -193,6 +207,23 @@ export default {
   right: 0;
   width: 400px;
   height: 30pt;
+  &.with-error {
+    height: 60pt;
+    bottom: -61pt;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 10pt;
+    flex-direction: column;
+  }
+  .error {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    background-color: pink;
+    color: black;
+    font-weight: bold;
+    padding: 0 5pt;
+  }
   display: flex;
   align-items: center;
   background-color: var(--color-paper);

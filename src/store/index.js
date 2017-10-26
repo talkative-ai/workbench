@@ -295,6 +295,11 @@ const actions = {
 
   saveEditDialog({ state, commit }, nodeID) {
     if (state.dialogEditMap[nodeID]) {
+      let error = validateNode(state.dialogEditingCopy[nodeID]);
+      if (error) {
+        commit('saveEditDialogError', { nodeID, error });
+        return;
+      }
       commit('saveEditDialog', nodeID);
     }
   },
@@ -306,19 +311,34 @@ const actions = {
   }
 };
 
+function validateNode(node) {
+  if (node.EntryInput.length <= 0) {
+    return 'You need at least one entry into the dialog.';
+  }
+  if (node.AlwaysExec.PlaySounds.length <= 0) {
+    return 'INSUFFICIENT_ALWAYSEXEC';
+  }
+}
+
 const mutations = {
 
   incrCreate(state) {
     state.createID++;
   },
 
+  saveEditDialogError(state, { nodeID, error }) {
+    Vue.set(state.dialogEditError, nodeID, error);
+  },
+
   editDialog(state, nodeID) {
+    Vue.set(state.dialogEditError, nodeID, false);
     Vue.set(state.dialogEditMap, nodeID, true);
     state.dialogEditCount++;
     Vue.set(state.dialogEditingCopy, nodeID, dcopy(state.dialogsMapped[nodeID]));
   },
 
   saveEditDialog(state, nodeID) {
+    Vue.set(state.dialogEditError, nodeID, false);
     Vue.set(state.dialogEditMap, nodeID, false);
     state.dialogEditCount--;
     Vue.set(state.dialogsMapped, nodeID, dcopy(state.dialogEditingCopy[nodeID]));
