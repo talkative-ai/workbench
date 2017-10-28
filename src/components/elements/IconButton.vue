@@ -11,6 +11,7 @@ import 'vue-awesome/icons/pencil';
 import 'vue-awesome/icons/search';
 import 'vue-awesome/icons/plus';
 import 'vue-awesome/icons/times';
+import 'vue-awesome/icons/link';
 export default {
   name: 'icon-button',
   props: ['name', 'label', 'flat'],

@@ -10,10 +10,13 @@ Vue.use(Vuex);
 
 const defaultDialog = {
   'IsRoot': true,
-  'EntryInput': [],
+  'EntryInput': [''],
   'AlwaysExec': {
     'SetGlobalVariables': null,
-    'PlaySounds': [],
+    'PlaySounds': [{
+      SoundType: 0,
+      Val: ''
+    }],
     'InitializeActorDialog': 0,
     'SetZone': 0,
     'ResetGame': false
@@ -33,7 +36,7 @@ const initialState = {
   selectedEntity: {},
 
   dialogsMapped: {},
-  rootNodes: [],
+  rootDialogs: [],
   newDialog: null,
 
   actorsMapped: {},
@@ -54,7 +57,8 @@ const initialState = {
   // Tracking dialogs being edited
   dialogEditMap: {},
   dialogEditCount: 0,
-  dialogEditingCopy: {}
+  dialogEditingCopy: {},
+  dialogEditError: {}
 };
 
 const getters = {
@@ -250,27 +254,27 @@ const actions = {
     return resetState({ keepAuth: true });
   },
 
-  selectNode({ state, commit }, { nodeID, isChild = false, relativeParent } = {}) {
-    if (!nodeID && !state.actorSelectedDialogID[state.selectedEntity.data.ID]) {
-      commit('setDialogSiblings', state.rootNodes);
-      commit('setSelectedDialog', state.rootNodes[0]);
+  selectDialog({ state, commit }, { dialogID, isChild = false, relativeParent } = {}) {
+    if (!dialogID && !state.actorSelectedDialogID[state.selectedEntity.data.ID]) {
+      commit('setDialogSiblings', state.rootDialogs);
+      commit('setSelectedDialog', state.rootDialogs[0]);
       Vue.set(state, 'dialogChain', []);
-      state.dialogChain.push(state.dialogsMapped[state.rootNodes[0]]);
+      state.dialogChain.push(state.dialogsMapped[state.rootDialogs[0]]);
       return;
-    } else if (!nodeID) {
+    } else if (!dialogID) {
       return;
     }
 
     if (isChild) {
       relativeParent = relativeParent || state.dialogsMapped[state.actorSelectedDialogID[state.selectedEntity.data.ID]];
       commit('setDialogSiblings', relativeParent.ChildNodes);
-      state.dialogChain.push(state.dialogsMapped[nodeID]);
+      state.dialogChain.push(state.dialogsMapped[dialogID]);
     } else {
       state.dialogChain.pop();
-      state.dialogChain.push(state.dialogsMapped[nodeID]);
+      state.dialogChain.push(state.dialogsMapped[dialogID]);
     }
 
-    commit('setSelectedDialog', nodeID);
+    commit('setSelectedDialog', dialogID);
   },
 
   selectChain({ state, dispatch, commit }, index) {
@@ -280,51 +284,75 @@ const actions = {
     if (index === 0) {
       commit('setSelectedDialog', null);
       commit('sliceChain', 0);
-      dispatch('selectNode');
+      dispatch('selectDialog');
       return;
     }
-    dispatch('selectNode', { nodeID: state.dialogChain[index].ID, isChild: true, relativeParent: state.dialogChain[index - 1] });
+    dispatch('selectDialog', { dialogID: state.dialogChain[index].ID, isChild: true, relativeParent: state.dialogChain[index - 1] });
     commit('sliceChain', index + 1);
   },
 
-  editDialog({ state, commit }, nodeID) {
-    if (!state.dialogEditMap[nodeID]) {
-      commit('editDialog', nodeID);
+  editDialog({ state, commit }, dialogID) {
+    if (!state.dialogEditMap[dialogID]) {
+      commit('editDialog', dialogID);
     }
   },
 
-  saveEditDialog({ state, commit }, nodeID) {
-    if (state.dialogEditMap[nodeID]) {
-      let error = validateNode(state.dialogEditingCopy[nodeID]);
+  saveEditDialog({ state, commit }, dialogID) {
+    if (state.dialogEditMap[dialogID]) {
+      let error = validateDialog(state.dialogEditingCopy[dialogID]);
       if (error) {
-        commit('saveEditDialogError', { nodeID, error });
+        commit('saveEditDialogError', { dialogID, error });
         return;
       }
-      commit('saveEditDialog', nodeID);
+      commit('saveEditDialog', dialogID);
     }
   },
 
-  cancelEditDialog({ state, commit }, nodeID) {
-    if (state.dialogEditMap[nodeID]) {
-      commit('cancelEditDialog', nodeID);
+  cancelEditDialog({ state, commit, dispatch }, dialogID) {
+    if (state.dialogEditMap[dialogID]) {
+      if (state.newDialog && state.newDialog.ID === dialogID) {
+        for (let i = 0; i < state.dialogChain.length; i++) {
+          if (state.dialogChain[i].ID !== dialogID) continue;
+
+          if (i === 0) {
+            commit('setSelectedDialog', null);
+            commit('sliceChain', 0);
+            dispatch('selectDialog');
+            break;
+          }
+          dispatch('selectChain', i - 1);
+          break;
+        }
+      }
+      commit('cancelEditDialog', dialogID);
     }
+  },
+
+  startNewConversation({ state, commit, dispatch }) {
+    let newDialog = dcopy(defaultDialog);
+    dispatch('selectChain', 0);
+    commit('incrCreate');
+    newDialog.ID = `N${state.createID}`;
+    commit('newRootDialog', newDialog);
+    dispatch('selectDialog', { dialogID: newDialog.ID });
+    dispatch('editDialog', newDialog.ID);
   }
 };
 
-function validateNode(node) {
-  if (node.EntryInput.length <= 0) {
+function validateDialog(dialog) {
+  if (dialog.EntryInput.length <= 0) {
     return 'You need at least one entry into the dialog.';
   }
-  if (node.AlwaysExec.PlaySounds.length <= 0) {
+  if (dialog.AlwaysExec.PlaySounds.length <= 0) {
     return 'You must play at least one sound.';
   }
-  for (let s of node.EntryInput) {
+  for (let s of dialog.EntryInput) {
     if (!s) {
       // TODO: Better validation handling here
       return 'Dialog entry cannot be blank.';
     }
   }
-  for (let s of node.AlwaysExec.PlaySounds) {
+  for (let s of dialog.AlwaysExec.PlaySounds) {
     if (!s.Val) {
       // TODO: Better validation handling here
       return 'No empty speech allowed.';
@@ -338,26 +366,32 @@ const mutations = {
     state.createID++;
   },
 
-  saveEditDialogError(state, { nodeID, error }) {
-    Vue.set(state.dialogEditError, nodeID, error);
+  saveEditDialogError(state, { dialogID, error }) {
+    Vue.set(state.dialogEditError, dialogID, error);
   },
 
-  editDialog(state, nodeID) {
-    Vue.set(state.dialogEditError, nodeID, false);
-    Vue.set(state.dialogEditMap, nodeID, true);
+  editDialog(state, dialogID) {
+    Vue.set(state.dialogEditError, dialogID, false);
+    Vue.set(state.dialogEditMap, dialogID, true);
     state.dialogEditCount++;
-    Vue.set(state.dialogEditingCopy, nodeID, dcopy(state.dialogsMapped[nodeID]));
+    Vue.set(state.dialogEditingCopy, dialogID, dcopy(state.dialogsMapped[dialogID]));
   },
 
-  saveEditDialog(state, nodeID) {
-    Vue.set(state.dialogEditError, nodeID, false);
-    Vue.set(state.dialogEditMap, nodeID, false);
+  saveEditDialog(state, dialogID) {
+    Vue.set(state.dialogEditError, dialogID, false);
+    Vue.set(state.dialogEditMap, dialogID, false);
     state.dialogEditCount--;
-    Vue.set(state.dialogsMapped, nodeID, dcopy(state.dialogEditingCopy[nodeID]));
+    Vue.set(state.dialogsMapped, dialogID, dcopy(state.dialogEditingCopy[dialogID]));
   },
 
-  cancelEditDialog(state, nodeID) {
-    Vue.set(state.dialogEditMap, nodeID, false);
+  cancelEditDialog(state, dialogID) {
+    if (state.newDialog && state.newDialog.ID === dialogID) {
+      state.rootDialogs.pop();
+      Vue.set(state.dialogsMapped, dialogID, null);
+      Vue.set(state, 'editDialog', null);
+      Vue.set(state, 'newDialog', null);
+    }
+    Vue.set(state.dialogEditMap, dialogID, false);
     state.dialogEditCount--;
   },
 
@@ -365,12 +399,12 @@ const mutations = {
     state.dialogChain = state.dialogChain.slice(0, index);
   },
 
-  setDialogSiblings(state, nodes) {
-    Vue.set(state, 'dialogSiblings', nodes);
+  setDialogSiblings(state, dialogs) {
+    Vue.set(state, 'dialogSiblings', dialogs);
   },
 
-  setSelectedDialog(state, nodeID) {
-    Vue.set(state.actorSelectedDialogID, state.selectedEntity.data.ID, nodeID);
+  setSelectedDialog(state, dialogID) {
+    Vue.set(state.actorSelectedDialogID, state.selectedEntity.data.ID, dialogID);
   },
 
   addZone(state, zone) {
@@ -404,13 +438,13 @@ const mutations = {
       }
     }
     Vue.set(state.selectedProject.Actors, id, payload.actor);
-    state.rootNodes = [];
-    let rnodes = new Set();
+    state.rootDialogs = [];
+    let rdialogs = new Set();
 
     for (const d of payload.actor.Dialogs) {
       Vue.set(state.dialogsMapped, d.ID, d);
       if (d.IsRoot) {
-        rnodes.add(d.ID.toString());
+        rdialogs.add(d.ID.toString());
       }
     }
 
@@ -423,7 +457,7 @@ const mutations = {
       Vue.set(state.dialogsMapped[r.ChildNodeID], 'ParentNodes', [...prepend, r.ParentNodeID]);
     }
 
-    Vue.set(state, 'rootNodes', [...rnodes]);
+    Vue.set(state, 'rootDialogs', [...rdialogs]);
   },
 
   updateZone(state, zone) {
@@ -450,6 +484,12 @@ const mutations = {
 
   newDialog(state, options = {}) {
     state.newDialog = { ...defaultDialog, ...options };
+  },
+
+  newRootDialog(state, newDialog) {
+    state.dialogsMapped[newDialog.ID] = newDialog;
+    state.rootDialogs.push(newDialog.ID);
+    state.newDialog = newDialog;
   }
 };
 

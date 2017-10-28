@@ -7,7 +7,7 @@
           h1 user says
           .inner-values
             div.wide
-              input.quoted(v-for="(entry, index) of node.EntryInput" :key="index" v-model="node.EntryInput[index]" placeholder="Enter something here...")
+              input.quoted(v-for="(entry, index) of dialog.EntryInput" :key="index" v-model="dialog.EntryInput[index]" placeholder="Enter something here...")
               w-button(@click.native="deleteAction('PlaySounds', index)") Delete
           div.right
             w-button(@click.native="addEntry") +
@@ -15,7 +15,7 @@
         hr
         .Form
           h1 ai replies
-          .node-values(v-for="(sound, index) of node.AlwaysExec.PlaySounds" :key="`sound-${node.ID}-${index}`")
+          .dialog-values(v-for="(sound, index) of dialog.AlwaysExec.PlaySounds" :key="`sound-${dialog.ID}-${index}`")
             .inner-values
               | Synthesized Speech
               div.wide
@@ -28,13 +28,13 @@
 
         .Form
           h1 followup dialogs
-          .node-wrapper
+          .dialog-wrapper
             div(
-              @click="$router.push({ name: 'DialogHome', params: { id: $route.params.id, dialog_id: nodeID }})"
-              v-for="nodeID of node.ChildNodes"
-              :key="nodeID"
+              @click="$router.push({ name: 'DialogHome', params: { id: $route.params.id, dialog_id: dialogID }})"
+              v-for="dialogID of dialog.ChildNodes"
+              :key="dialogID"
             )
-              dialog-node(:node='dialogs[nodeID]')
+              dialog-dialog(:dialog='dialogs[dialogID]')
           .Form.button-grid(v-if="!this.isNew")
             w-button(
               @click.native="$router.push({ name: 'DialogCreate', params: { id: $route.params.id, dialog_id: $route.params.dialog_id, is_root: false }})"
@@ -72,7 +72,7 @@ export default {
     isNew() {
       return this.$route.params.isNew;
     },
-    node() {
+    dialog() {
       if (this.isNew) return this.$store.state.newDialog;
       console.log(this.$store.state.dialogsMapped[this.$route.params.dialog_id]);
       return this.$store.state.dialogsMapped[this.$route.params.dialog_id];
@@ -82,13 +82,13 @@ export default {
     },
     actionSpeech: {
       get() {
-        return this.node.AlwaysExec.PlaySounds;
+        return this.dialog.AlwaysExec.PlaySounds;
       },
       set(value) {
         for (let v of value) {
           if (typeof v === 'string') return false;
         }
-        this.node.AlwaysExec.PlaySounds = value;
+        this.dialog.AlwaysExec.PlaySounds = value;
       }
     },
     actionTypes: {
@@ -106,25 +106,25 @@ export default {
         SoundType: 0,
         Val: ''
       };
-      this.node.AlwaysExec.PlaySounds.push(newDialog);
+      this.dialog.AlwaysExec.PlaySounds.push(newDialog);
     },
     addActionSetZone() {
-      this.node.AlwaysExec.SetZone = 1;
+      this.dialog.AlwaysExec.SetZone = 1;
     },
     addEntry() {
-      this.node.EntryInput.push('');
+      this.dialog.EntryInput.push('');
     },
     save() {
       if (!this.isNew) {
-        this.$store.dispatch('updateDialog', this.node);
+        this.$store.dispatch('updateDialog', this.dialog);
       } else {
-        this.$store.dispatch('createNewDialog', this.node).then(() => {
+        this.$store.dispatch('createNewDialog', this.dialog).then(() => {
           this.$router.push({ name: 'ActorDialog', params: { id: this.$route.params.id } });
         });
       }
     },
     deleteAction(type, index) {
-      this.node.AlwaysExec[type].splice(index, 1);
+      this.dialog.AlwaysExec[type].splice(index, 1);
     }
   }
 };
@@ -189,7 +189,7 @@ export default {
       content: '"';
     }
   }
-  .node-wrapper {
+  .dialog-wrapper {
     display: flex;
   }
   h3 {

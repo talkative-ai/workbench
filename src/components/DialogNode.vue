@@ -1,9 +1,9 @@
 <template lang="pug">
   .DialogNode
     .wrap(
-      :class="`${$route.params.dialog_id !== node.ID ? 'selectable' : ''}`"
-      :id="`dialog-node-${node.ID}`"
-      ref="node"
+      :class="`${$route.params.dialog_id !== dialog.ID ? 'selectable' : ''}`"
+      :id="`dialog-dialog-${dialog.ID}`"
+      ref="dialog"
     )
       template(v-if="!isEditing")
         .cover-wrap
@@ -17,7 +17,7 @@
               IconButton(name="search")
               | &nbsp;select
           .cover(
-            v-else-if="$route.params.dialog_id !== node.ID"
+            v-else-if="$route.params.dialog_id !== dialog.ID"
             @click="$emit('click')")
             h1 link dialog
           .cover.opaque(v-else)
@@ -26,88 +26,99 @@
           //- Edit bar
           .button-grid-small.edit-bar
             IconButton(name="pencil" label="edit" @click.native="beginEdit()")
-            IconButton(name="plus" label="add response")
+            IconButton(name="link" label="link")
       template(v-else)
         .cover.editing
-      .spacer(v-if="isChildIteration")
+      .vspacer(v-if="isChildIteration")
       .ball(v-if="isChildIteration")
       .entry-wrap
 
         //- Not editing
         template(v-if="!isEditing")
-          .entry(v-for="(entry, index) in node.EntryInput" :class="isChildIteration ? 'child' : ''")
-            | {{ node.EntryInput[index] }}
-            span(v-if="index < node.EntryInput.length-1")
+          .entry(v-for="(entry, index) in dialog.EntryInput" :class="isChildIteration ? 'child' : ''")
+            | {{ dialog.EntryInput[index] }}
+            span(v-if="index < dialog.EntryInput.length-1")
               | ,
-          .node-values
-            .inner-values.actor-vals(v-for='(sound, index) of node.AlwaysExec.PlaySounds', :key='`sound-${node.ID}-${index}`')
+          .dialog-values
+            .inner-values.actor-vals(v-for='(sound, index) of dialog.AlwaysExec.PlaySounds', :key='`sound-${dialog.ID}-${index}`')
               | "{{ sound.Val }}"
-            .actions(v-if='node.ChildNodes')
+            .actions(v-if='dialog.ChildNodes')
               | await response
             .actions.black(v-else)
               | end conversation
 
         //- Editing
         template(v-else)
-          .entry(v-for="(entry, index) in $store.state.dialogEditingCopy[node.ID].EntryInput" :class="isChildIteration ? 'child' : ''")
-            input(v-model="$store.state.dialogEditingCopy[node.ID].EntryInput[index]")
+          .entry(v-for="(entry, index) in $store.state.dialogEditingCopy[dialog.ID].EntryInput" :class="isChildIteration ? 'child' : ''")
+            input(v-model="$store.state.dialogEditingCopy[dialog.ID].EntryInput[index]")
             IconButton(
               name="times"
               flat
-              @click.native="$store.state.dialogEditingCopy[node.ID].EntryInput.splice(index, 1)")
-            span(v-if="index < $store.state.dialogEditingCopy[node.ID].EntryInput.length-1")
+              @click.native="$store.state.dialogEditingCopy[dialog.ID].EntryInput.splice(index, 1)")
+            span(v-if="index < $store.state.dialogEditingCopy[dialog.ID].EntryInput.length-1")
           IconButton(
             name="plus"
             @click.native="addEntryInput()")
           br
-          .node-values
+          .dialog-values
             .inner-values.actor-vals(
-              v-for='(sound, index) of $store.state.dialogEditingCopy[node.ID].AlwaysExec.PlaySounds'
-              :key='`sound-${node.ID}-${index}`')
+              v-for='(sound, index) of $store.state.dialogEditingCopy[dialog.ID].AlwaysExec.PlaySounds'
+              :key='`sound-${dialog.ID}-${index}`')
               input(v-model="sound.Val")
               IconButton(
                 name="times"
                 flat
-                @click.native="$store.state.dialogEditingCopy[node.ID].AlwaysExec.PlaySounds.splice(index, 1)")
+                @click.native="$store.state.dialogEditingCopy[dialog.ID].AlwaysExec.PlaySounds.splice(index, 1)")
             .inner-values.actor-vals
               IconButton(
                 name="plus"
                 @click.native="addPlaySound()"
                 )
-            .actions(v-if='node.ChildNodes')
+            .actions(v-if='dialog.ChildNodes')
               | await response
             .actions.black(v-else)
               | end conversation
-          .edit-bar(:class="$store.state.dialogEditError[node.ID] ? 'with-error' : ''")
+          .edit-bar(:class="$store.state.dialogEditError[dialog.ID] ? 'with-error' : ''")
             .button-grid-small
               IconButton(@click.native="saveEdit()" label="save")
               IconButton(@click.native="cancelEdit()" label="cancel")
-            .error(v-if="$store.state.dialogEditError[node.ID]")
-              | {{$store.state.dialogEditError[node.ID]}}
+            .error(v-if="$store.state.dialogEditError[dialog.ID]")
+              | {{$store.state.dialogEditError[dialog.ID]}}
     template(v-if="recurse")
-      .after-values-space(v-if='node.ChildNodes' :style="{ width: `${calculateWidth()}px`, height: `${tallest - height + 35}px` }")
-      .child-nodes(v-if='node.ChildNodes')
-        div(v-for='(nodeID, idx) of node.ChildNodes', :key='nodeID')
+      .after-values-space(v-if='dialog.ChildNodes' :style="{ width: `${calculateWidth()}px`, height: `${tallest - height + 35}px` }")
+      .child-dialogs(v-if='dialog.ChildNodes')
+        div(v-for='(dialogID, idx) of dialog.ChildNodes', :key='dialogID')
           DialogNode(
-            :node='dialogs[nodeID]',
+            :dialog='dialogs[dialogID]',
             isChildIteration="true",
             :recurse='false'
-            @click="$emit('click-child', { nodeID, isChild: true })"
-            @click-child="$emit('click-child', { nodeID, isChild: true })"
+            @click="$emit('click-child', { dialogID, isChild: true })"
+            @click-child="$emit('click-child', { dialogID, isChild: true })"
           )
+        DummyNode(isChildIteration="true")
+          IconButton(name="plus" flat)
+          | new
+          //- .new-dialog(v-if="newConversation")
+          //-   | New Conversation
+          //-   IconButton(name="plus")
+          //- .hspacer
 </template>
 
 <script>
+import DummyNode from './DummyNode';
 export default {
   name: 'DialogNode',
-  props: ['node', 'isChildIteration', 'recurse', 'isSelected', 'resolve', 'tallest'],
+  props: ['dialog', 'isChildIteration', 'recurse', 'isSelected', 'resolve', 'tallest', 'newConversation'],
+  components: {
+    DummyNode
+  },
   data() {
     return {
       height: 0
     };
   },
   mounted() {
-    const rect = this.$refs.node.getBoundingClientRect();
+    const rect = this.$refs.dialog.getBoundingClientRect();
     this.height = rect.height;
     if (this.resolve) {
       this.resolve(rect);
@@ -118,43 +129,44 @@ export default {
       return this.$store.state.dialogsMapped || {};
     },
     isEditing() {
-      return this.$store.state.dialogEditMap[this.node.ID];
+      return this.$store.state.dialogEditMap[this.dialog.ID];
     }
   },
   methods: {
     calculateWidth() {
-      if (!this.node.ChildNodes) return 1;
-      return ((this.node.ChildNodes.length - 1) * 400) + 1;
+      if (!this.dialog.ChildNodes) return 1;
+      return ((this.dialog.ChildNodes.length) * 400) + 1;
     },
     beginEdit() {
-      this.$store.dispatch('editDialog', this.node.ID);
+      this.$store.dispatch('editDialog', this.dialog.ID);
     },
     cancelEdit() {
-      this.$store.dispatch('cancelEditDialog', this.node.ID);
+      this.$store.dispatch('cancelEditDialog', this.dialog.ID);
     },
     saveEdit() {
-      this.$store.dispatch('saveEditDialog', this.node.ID);
+      this.$store.dispatch('saveEditDialog', this.dialog.ID);
     },
     addPlaySound() {
-      this.$store.state.dialogEditingCopy[this.node.ID].AlwaysExec.PlaySounds.push({
+      this.$store.state.dialogEditingCopy[this.dialog.ID].AlwaysExec.PlaySounds.push({
         SoundType: 1,
         Val: ''
       });
     },
     addEntryInput() {
-      this.$store.state.dialogEditingCopy[this.node.ID].EntryInput.push('');
+      this.$store.state.dialogEditingCopy[this.dialog.ID].EntryInput.push('');
     }
   }
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .DialogNode {
   display: inline-flex;
   flex-direction: column;
   user-select: none;
   margin-top: -1px;
-  width: 400px;
+  min-width: 400px;
+  max-width: 400px;
 }
 .button-grid {
   padding: 10pt 0px;
@@ -183,6 +195,7 @@ export default {
     opacity: 1;
     cursor: default;
     border: 1px solid $purple;
+    background-color: var(--color-paper-low-opacity);
   }
 }
 .selected {
@@ -191,7 +204,7 @@ export default {
 }
 .cover-wrap {
   position: absolute;
-  top: -1px;
+  top: 0px;
   bottom: -1px;
   left: -1px;
   z-index: 10;
@@ -245,10 +258,7 @@ export default {
   padding-left: 10pt;
   z-index: 100;
 }
-.entry-wrap {
-  padding: 2.5pt 0;
-}
-.spacer {
+.vspacer {
   height: 20pt;
   border-left: 1px solid $purple;
   margin-top: -1px;
@@ -281,7 +291,7 @@ export default {
   margin-left: -0.25rem;
   margin-top: -0.25rem;
 }
-.child-node-head {
+.child-dialog-head {
   position: relative;
   margin: 0 0 1rem 0.25rem;
 }
@@ -294,10 +304,10 @@ export default {
   padding: 0.25rem;
   padding: 5pt 0.25rem 10pt 0.25rem;
 }
-.child-nodes {
+.child-dialogs {
   display: flex;
 }
-.child-node-head-nth {
+.child-dialog-head-nth {
   border-top: 1px solid $purple;
 }
 .entry {

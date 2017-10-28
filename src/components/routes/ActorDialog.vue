@@ -4,30 +4,36 @@
       h1(v-if="$route.params.linking_child") Select a dialog to link to
       h1(v-if="!$store.state.dialogChain.length") Select a conversation beginning
       .flex
-        .chain(v-if="$store.state.dialogChain.length")
-          h1 Conversation
-          hr
+        .flex-column
+          .chain(v-if="$store.state.dialogChain.length")
+            h1 Conversation
+            hr
+            DialogNode(
+              v-for='(dialog, idx) of $store.state.dialogChain'
+              :key='dialog.ID'
+              :dialog='dialogs[dialog.ID]'
+              :recurse='false'
+              @click="clickChain(idx)"
+              :isChildIteration='idx > 0'
+              :isSelected='isSelected(dialog.ID)'
+            )
+          .space
+        .dialogs(:style="{ 'min-width': `${(($store.state.dialogSiblings.length + 1) * 400)}px` }")
           DialogNode(
-            v-for='(node, idx) of $store.state.dialogChain'
-            :key='node.ID'
-            :node='dialogs[node.ID]'
-            :recurse='false'
-            @click="clickChain(idx)"
-            :isChildIteration='idx > 0'
-            :isSelected='isSelected(node.ID)'
-          )
-        .nodes
-          DialogNode(
-            v-for='nodeID of $store.state.dialogSiblings'
-            :key='nodeID'
-            :node='dialogs[nodeID]'
-            :recurse='ready && isSelected(nodeID)'
-            :isSelected='isSelected(nodeID)'
-            :resolve='readyResolve[nodeID]'
+            v-for='dialogID of $store.state.dialogSiblings'
+            :key='dialogID'
+            :dialog='dialogs[dialogID]'
+            :recurse='ready && isSelected(dialogID)'
+            :isSelected='isSelected(dialogID)'
+            :resolve='readyResolve[dialogID]'
             :tallest='tallest'
-            @click="clickNode({ nodeID })"
-            @click-child="clickNode($event)"
+            @click="clickDialog({ dialogID })"
+            @click-child="clickDialog($event)"
+            :newConversation="true"
           )
+          DummyNode(v-if="!$store.state.newDialog" @click.native="$store.dispatch('startNewConversation')")
+            IconButton(name="plus" flat)
+            | new
     w-button(
       v-else
       @click.native="$router.push({ name: 'DialogCreate', params: $route.params, is_root: true })"
@@ -35,8 +41,12 @@
 </template>
 
 <script>
+import DummyNode from '../DummyNode';
 export default {
   name: 'ActorDialog',
+  components: {
+    DummyNode
+  },
   data() {
     let readyPromises = [];
     let readyResolve = {};
@@ -48,11 +58,11 @@ export default {
       tallest: 20
     };
 
-    let nodes = this.$store.state.dialogSiblings.length ? this.$store.state.dialogSiblings : this.$store.state.rootNodes;
+    let dialogs = this.$store.state.dialogSiblings.length ? this.$store.state.dialogSiblings : this.$store.state.rootDialogs;
 
-    for (let nodeID of nodes) {
+    for (let dialogID of dialogs) {
       readyPromises.push(new Promise(resolve => {
-        readyResolve[nodeID] = resolve;
+        readyResolve[dialogID] = resolve;
       }));
     }
 
@@ -65,19 +75,19 @@ export default {
     return data;
   },
   computed: {
-    rootNodes() {
-      return this.$store.state.rootNodes || [];
+    rootDialogs() {
+      return this.$store.state.rootDialogs || [];
     },
     dialogs() {
       return this.$store.state.dialogsMapped || {};
     }
   },
   methods: {
-    isSelected(nodeID = 0) {
-      return (this.$store.state.actorSelectedDialogID[this.$route.params.id] || '').toString() === nodeID.toString();
+    isSelected(dialogID = 0) {
+      return (this.$store.state.actorSelectedDialogID[this.$route.params.id] || '').toString() === dialogID.toString();
     },
-    clickNode(event) {
-      this.$store.dispatch('selectNode', event);
+    clickDialog(event) {
+      this.$store.dispatch('selectDialog', event);
     },
     clickChain(index) {
       this.$store.dispatch('selectChain', index);
@@ -86,7 +96,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 h1 {
   text-align: center;
   color: var(--color-brand);
@@ -94,6 +104,9 @@ h1 {
 .flex {
   display: flex;
   align-items: flex-start;
+}
+.flex-column {
+  flex-direction: column;
 }
 .chain {
   width: 332pt;
@@ -103,12 +116,15 @@ h1 {
   padding: 16pt;
   background-color: white;
 }
-.nodes {
+.dialogs {
   width: 100%;
   display: flex;
 }
 hr {
   color: var(--color-brand);
   opacity: 0.8;
+}
+.space {
+  height: 50pt;
 }
 </style>
