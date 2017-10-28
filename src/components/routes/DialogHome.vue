@@ -31,7 +31,7 @@
           .dialog-wrapper
             div(
               @click="$router.push({ name: 'DialogHome', params: { id: $route.params.id, dialog_id: dialogID }})"
-              v-for="dialogID of dialog.ChildNodes"
+              v-for="dialogID of dialog.ChildDialogIDs"
               :key="dialogID"
             )
               dialog-dialog(:dialog='dialogs[dialogID]')

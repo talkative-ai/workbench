@@ -26,7 +26,7 @@
           //- Edit bar
           .button-grid-small.edit-bar
             IconButton(name="pencil" label="edit" @click.native="beginEdit()")
-            IconButton(name="link" label="link")
+            IconButton(name="link" label="connect")
       template(v-else)
         .cover.editing
       .vspacer(v-if="isChildIteration")
@@ -42,7 +42,7 @@
           .dialog-values
             .inner-values.actor-vals(v-for='(sound, index) of dialog.AlwaysExec.PlaySounds', :key='`sound-${dialog.ID}-${index}`')
               | "{{ sound.Val }}"
-            .actions(v-if='dialog.ChildNodes')
+            .actions(v-if='dialog.ChildDialogIDs')
               | await response
             .actions.black(v-else)
               | end conversation
@@ -52,6 +52,7 @@
           .entry(v-for="(entry, index) in $store.state.dialogEditingCopy[dialog.ID].EntryInput" :class="isChildIteration ? 'child' : ''")
             input(v-model="$store.state.dialogEditingCopy[dialog.ID].EntryInput[index]")
             IconButton(
+              v-if="$store.state.dialogEditingCopy[dialog.ID].EntryInput.length > 1"
               name="times"
               flat
               @click.native="$store.state.dialogEditingCopy[dialog.ID].EntryInput.splice(index, 1)")
@@ -66,6 +67,7 @@
               :key='`sound-${dialog.ID}-${index}`')
               input(v-model="sound.Val")
               IconButton(
+                v-if="$store.state.dialogEditingCopy[dialog.ID].AlwaysExec.PlaySounds.length > 1"
                 name="times"
                 flat
                 @click.native="$store.state.dialogEditingCopy[dialog.ID].AlwaysExec.PlaySounds.splice(index, 1)")
@@ -74,7 +76,7 @@
                 name="plus"
                 @click.native="addPlaySound()"
                 )
-            .actions(v-if='dialog.ChildNodes')
+            .actions(v-if='dialog.ChildDialogIDs')
               | await response
             .actions.black(v-else)
               | end conversation
@@ -85,9 +87,9 @@
             .error(v-if="$store.state.dialogEditError[dialog.ID]")
               | {{$store.state.dialogEditError[dialog.ID]}}
     template(v-if="recurse")
-      .after-values-space(v-if='dialog.ChildNodes' :style="{ width: `${calculateWidth()}px`, height: `${tallest - height + 35}px` }")
-      .child-dialogs(v-if='dialog.ChildNodes')
-        div(v-for='(dialogID, idx) of dialog.ChildNodes', :key='dialogID')
+      .after-values-space(v-if='dialog.ChildDialogIDs' :style="{ width: `${calculateWidth()}px`, height: `${tallest - height + 35}px` }")
+      .child-dialogs(v-if='dialog.ChildDialogIDs')
+        div(v-for='(dialogID, idx) of dialog.ChildDialogIDs', :key='dialogID')
           DialogNode(
             :dialog='dialogs[dialogID]',
             isChildIteration="true",
@@ -133,8 +135,8 @@ export default {
   },
   methods: {
     calculateWidth() {
-      if (!this.dialog.ChildNodes) return 1;
-      return ((this.dialog.ChildNodes.length) * 400) + 1;
+      if (!this.dialog.ChildDialogIDs) return 1;
+      return ((this.dialog.ChildDialogIDs.length) * 400) + 1;
     },
     beginEdit() {
       this.$store.dispatch('editDialog', this.dialog.ID);

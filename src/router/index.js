@@ -171,23 +171,6 @@ const router = new Router({
       }
     },
     {
-      path: '/actor/:id/dialog/:dialog_id/create',
-      name: 'DialogCreate',
-      component: DialogHome,
-      meta: {
-        background: 'paper',
-        theme: 'light',
-        title: () => store.state.selectedProject.Title,
-        titleLink: () => router.push({ name: 'ProjectHome' })
-      },
-      beforeEnter(to, from, next) {
-        store.commit('newDialog', { ParentID: Number(to.params.dialog_id), IsRoot: to.params.is_root });
-        to.params.isNew = true;
-        store.dispatch('selectActor', to.params.id)
-        .then(() => next());
-      }
-    },
-    {
       path: '/actor/:id/dialog/:dialog_id',
       name: 'DialogHome',
       component: DialogHome,

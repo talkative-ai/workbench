@@ -21,8 +21,8 @@ const defaultDialog = {
     'SetZone': 0,
     'ResetGame': false
   },
-  'ChildNodes': [],
-  'ParentNodes': []
+  'ChildDialogIDs': [],
+  'ParentDialogIDs': []
 };
 
 const initialState = {
@@ -235,13 +235,6 @@ const actions = {
     API.Publish();
   },
 
-  createNewDialog({ commit, state }, dialog) {
-    commit('incrCreate');
-    dialog.CreateID = store.state.createID;
-    state.selectedEntity.data.Dialogs.push(dialog);
-    API.PutActor(state.selectedEntity.data);
-  },
-
   unauthorized({ commit, state }) {
     return resetState().then(() => {
       router.push({ name: 'SignIn' });
@@ -269,7 +262,7 @@ const actions = {
 
     if (isChild) {
       relativeParent = relativeParent || state.dialogMap[state.actorSelectedDialogID[state.selectedEntity.data.ID]];
-      commit('setDialogSiblings', relativeParent.ChildNodes);
+      commit('setDialogSiblings', relativeParent.ChildDialogIDs);
       state.dialogChain.push(state.dialogMap[dialogID]);
     } else {
       state.dialogChain.pop();
@@ -306,7 +299,31 @@ const actions = {
         commit('saveEditDialogError', { dialogID, error });
         return;
       }
+      if (state.newDialog && state.newDialog.ID === dialogID) {
+        state.newDialog = dcopy(state.dialogEditingCopy[dialogID]);
+        delete state.newDialog.ID;
+        state.selectedEntity.data.Dialogs.push(state.newDialog);
+        state.selectedEntity.data.DialogRelations.push({
+          ChildNodeID: state.newDialog.CreateID,
+          ParentNodeID: state.newDialog.ParentDialogIDs[0],
+          PatchAction: 0
+        });
+      } else {
+        for (let i = 0; i < state.selectedEntity.data.Dialogs.length; i++) {
+          if (state.selectedEntity.data.Dialogs[i].ID === dialogID) {
+            state.selectedEntity.data.Dialogs.splice(i, 1, state.dialogEditingCopy[dialogID]);
+            break;
+          }
+        }
+      }
       commit('saveEditDialog', dialogID);
+      let p = API.PutActor(state.selectedEntity.data);
+      if (state.newDialog && state.newDialog.ID) {
+        p.then(result => {
+          commit('replaceNewDialog', result);
+        });
+      }
+      return p;
     }
   },
 
@@ -325,6 +342,7 @@ const actions = {
           dispatch('selectChain', i - 1);
           break;
         }
+        Vue.set(state, 'newDialog', false);
       }
       commit('cancelEditDialog', dialogID);
     }
@@ -334,6 +352,7 @@ const actions = {
     let newDialog = dcopy(defaultDialog);
     commit('incrCreate');
     newDialog.ID = `N${state.createID}`;
+    newDialog.CreateID = `N${state.createID}`;
     if (!dialogID) {
       commit('newRootDialog', newDialog);
       dispatch('selectChain', 0);
@@ -392,12 +411,37 @@ const mutations = {
     Vue.set(state.dialogMap, dialogID, dcopy(state.dialogEditingCopy[dialogID]));
   },
 
+  replaceNewDialog(state, newIDMap) {
+    const oldID = state.newDialog.ID;
+    const dialog = dcopy(state.newDialog);
+
+    // Remove the old dialog from the map
+    Vue.set(state.dialogMap, state.newDialog.ID, null);
+
+    // Update the dialog with the backend generated ID
+    state.newDialog.ID = newIDMap[state.newDialog.ID];
+
+    // Add the official dialog to the map
+    Vue.set(state.dialogMap, dialog.ID, dialog);
+
+    // Replace the dialog in the actor entity
+    for (let i = 0; i < state.selectedEntity.data.Dialogs.length; i++) {
+      const d = state.selectedEntity.data.Dialogs[i];
+      if (d.ID === oldID) {
+        state.selectedEntity.data.Dialogs.splice(i, 1, dialog);
+        break;
+      }
+    }
+
+    Vue.set(state, 'newDialog', false);
+  },
+
   cancelEditDialog(state, dialogID) {
     if (state.newDialog && state.newDialog.ID === dialogID) {
       if (state.newDialog.IsRoot) {
         state.rootDialogs.pop();
       } else {
-        state.dialogMap[state.newDialog.ParentNodes[0]].ChildNodes.pop();
+        state.dialogMap[state.newDialog.ParentDialogIDs[0]].ChildDialogIDs.pop();
       }
       Vue.set(state.dialogMap, dialogID, null);
       Vue.set(state, 'newDialog', null);
@@ -461,11 +505,11 @@ const mutations = {
 
     // Build dialog graph
     for (const r of payload.actor.DialogRelations) {
-      let prepend = state.dialogMap[r.ParentNodeID].ChildNodes || [];
-      Vue.set(state.dialogMap[r.ParentNodeID], 'ChildNodes', [...prepend, r.ChildNodeID]);
+      let prepend = state.dialogMap[r.ParentNodeID].ChildDialogIDs || [];
+      Vue.set(state.dialogMap[r.ParentNodeID], 'ChildDialogIDs', [...prepend, r.ChildNodeID]);
 
-      prepend = state.dialogMap[r.ChildNodeID].ParentNodes || [];
-      Vue.set(state.dialogMap[r.ChildNodeID], 'ParentNodes', [...prepend, r.ParentNodeID]);
+      prepend = state.dialogMap[r.ChildNodeID].ParentDialogIDs || [];
+      Vue.set(state.dialogMap[r.ChildNodeID], 'ParentDialogIDs', [...prepend, r.ParentNodeID]);
     }
 
     Vue.set(state, 'rootDialogs', [...rdialogs]);
@@ -506,8 +550,8 @@ const mutations = {
   newChildDialog(state, { newDialog, parentID }) {
     newDialog.IsRoot = false;
     state.dialogMap[newDialog.ID] = newDialog;
-    state.dialogMap[parentID].ChildNodes.push(newDialog.ID);
-    state.dialogMap[newDialog.ID].ParentNodes.push(parentID);
+    state.dialogMap[parentID].ChildDialogIDs.push(newDialog.ID);
+    state.dialogMap[newDialog.ID].ParentDialogIDs.push(parentID);
     state.newDialog = newDialog;
   }
 };
