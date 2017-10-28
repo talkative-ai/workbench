@@ -318,9 +318,11 @@ const actions = {
       }
       commit('saveEditDialog', dialogID);
       let p = API.PutActor(state.selectedEntity.data);
-      if (state.newDialog && state.newDialog.ID) {
+      if (state.newDialog) {
         p.then(result => {
+          const newID = result[state.newDialog.ID];
           commit('replaceNewDialog', result);
+          commit('setSelectedDialog', newID);
         });
       }
       return p;
@@ -330,6 +332,9 @@ const actions = {
   cancelEditDialog({ state, commit, dispatch }, dialogID) {
     if (state.dialogEditMap[dialogID]) {
       if (state.newDialog && state.newDialog.ID === dialogID) {
+        if (state.newDialog.ParentDialogIDs.length) {
+          state.dialogMap[state.newDialog.ParentDialogIDs[0]].ChildDialogIDs.pop();
+        }
         for (let i = 0; i < state.dialogChain.length; i++) {
           if (state.dialogChain[i].ID !== dialogID) continue;
 

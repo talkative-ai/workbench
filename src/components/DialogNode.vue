@@ -42,7 +42,7 @@
           .dialog-values
             .inner-values.actor-vals(v-for='(sound, index) of dialog.AlwaysExec.PlaySounds', :key='`sound-${dialog.ID}-${index}`')
               | "{{ sound.Val }}"
-            .actions(v-if='dialog.ChildDialogIDs')
+            .actions(v-if='dialog.ChildDialogIDs && dialog.ChildDialogIDs.length')
               | await response
             .actions.black(v-else)
               | end conversation
@@ -76,7 +76,7 @@
                 name="plus"
                 @click.native="addPlaySound()"
                 )
-            .actions(v-if='dialog.ChildDialogIDs')
+            .actions(v-if='dialog.ChildDialogIDs && dialog.ChildDialogIDs.length')
               | await response
             .actions.black(v-else)
               | end conversation
@@ -87,8 +87,8 @@
             .error(v-if="$store.state.dialogEditError[dialog.ID]")
               | {{$store.state.dialogEditError[dialog.ID]}}
     template(v-if="recurse")
-      .after-values-space(v-if='dialog.ChildDialogIDs' :style="{ width: `${calculateWidth()}px`, height: `${tallest - height + 35}px` }")
-      .child-dialogs(v-if='dialog.ChildDialogIDs')
+      .after-values-space(v-if='dialog.ChildDialogIDs && dialog.ChildDialogIDs.length' :style="{ width: `${calculateWidth()}px`, height: `${tallest - height + 35}px` }")
+      .child-dialogs(v-if='dialog.ChildDialogIDs && dialog.ChildDialogIDs.length')
         div(v-for='(dialogID, idx) of dialog.ChildDialogIDs', :key='dialogID')
           DialogNode(
             :dialog='dialogs[dialogID]',
