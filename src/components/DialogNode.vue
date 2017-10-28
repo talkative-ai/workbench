@@ -103,6 +103,12 @@
           isChildIteration="true")
           IconButton(name="plus" flat)
           | new
+      DummyNode(
+        v-else-if="!$store.state.newDialog"
+        @click.native="$store.dispatch('startNewConversation', dialog.ID)"
+        isChildIteration="true")
+        IconButton(name="plus" flat)
+        | new
 </template>
 
 <script>

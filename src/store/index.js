@@ -550,6 +550,7 @@ const mutations = {
   newChildDialog(state, { newDialog, parentID }) {
     newDialog.IsRoot = false;
     state.dialogMap[newDialog.ID] = newDialog;
+    state.dialogMap[parentID].ChildDialogIDs = state.dialogMap[parentID].ChildDialogIDs || [];
     state.dialogMap[parentID].ChildDialogIDs.push(newDialog.ID);
     state.dialogMap[newDialog.ID].ParentDialogIDs.push(parentID);
     state.newDialog = newDialog;
