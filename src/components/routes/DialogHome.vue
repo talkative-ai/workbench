@@ -74,11 +74,11 @@ export default {
     },
     dialog() {
       if (this.isNew) return this.$store.state.newDialog;
-      console.log(this.$store.state.dialogsMapped[this.$route.params.dialog_id]);
-      return this.$store.state.dialogsMapped[this.$route.params.dialog_id];
+      console.log(this.$store.state.dialogMap[this.$route.params.dialog_id]);
+      return this.$store.state.dialogMap[this.$route.params.dialog_id];
     },
     dialogs() {
-      return this.$store.state.dialogsMapped;
+      return this.$store.state.dialogMap;
     },
     actionSpeech: {
       get() {

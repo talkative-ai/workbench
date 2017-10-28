@@ -17,6 +17,12 @@
               :isChildIteration='idx > 0'
               :isSelected='isSelected(dialog.ID)'
             )
+            DummyNode(
+              v-if="!$store.state.newDialog"
+              @click.native="$store.dispatch('startNewConversation', $store.state.dialogChain[$store.state.dialogChain.length-1].ID)"
+              isChildIteration="true")
+              IconButton(name="plus" flat)
+              | new
           .space
         .dialogs(:style="{ 'min-width': `${(($store.state.dialogSiblings.length + 1) * 400)}px` }")
           DialogNode(
@@ -31,7 +37,9 @@
             @click-child="clickDialog($event)"
             :newConversation="true"
           )
-          DummyNode(v-if="!$store.state.newDialog" @click.native="$store.dispatch('startNewConversation')")
+          DummyNode(
+            v-if="!$store.state.newDialog"
+            @click.native="topNewConversation()")
             IconButton(name="plus" flat)
             | new
     w-button(
@@ -79,7 +87,7 @@ export default {
       return this.$store.state.rootDialogs || [];
     },
     dialogs() {
-      return this.$store.state.dialogsMapped || {};
+      return this.$store.state.dialogMap || {};
     }
   },
   methods: {
@@ -91,6 +99,13 @@ export default {
     },
     clickChain(index) {
       this.$store.dispatch('selectChain', index);
+    },
+    topNewConversation() {
+      if (this.$store.state.dialogChain.length <= 1) {
+        this.$store.dispatch('startNewConversation');
+      } else {
+        this.$store.dispatch('startNewConversation', this.$store.state.dialogChain[this.$store.state.dialogChain.length - 2].ID);
+      }
     }
   }
 };

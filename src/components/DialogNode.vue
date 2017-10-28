@@ -95,13 +95,12 @@
             @click="$emit('click-child', { dialogID, isChild: true })"
             @click-child="$emit('click-child', { dialogID, isChild: true })"
           )
-        DummyNode(isChildIteration="true")
+        DummyNode(
+          v-if="!$store.state.newDialog"
+          @click.native="$store.dispatch('startNewConversation', dialog.ID)"
+          isChildIteration="true")
           IconButton(name="plus" flat)
           | new
-          //- .new-dialog(v-if="newConversation")
-          //-   | New Conversation
-          //-   IconButton(name="plus")
-          //- .hspacer
 </template>
 
 <script>
@@ -126,7 +125,7 @@ export default {
   },
   computed: {
     dialogs() {
-      return this.$store.state.dialogsMapped || {};
+      return this.$store.state.dialogMap || {};
     },
     isEditing() {
       return this.$store.state.dialogEditMap[this.dialog.ID];
