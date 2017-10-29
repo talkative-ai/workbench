@@ -28,7 +28,8 @@ export default {
   },
 
   PutActor(actor) {
-    return aumFetch('PUT', `actor/${actor.ID}`, actor);
+    return aumFetch('PUT', `actor/${actor.ID}`, actor)
+    .then(result => result.json());
   },
 
   CreateZone({ CreateID, Title }) {

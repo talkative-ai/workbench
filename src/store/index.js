@@ -57,14 +57,14 @@ const initialState = {
   createID: 0,
 
   // Tracking dialogs being edited
-  dialogEditMap: {},
+  dialogIsEditing: {},
   dialogEditCount: 0,
   dialogEditingCopy: {},
   dialogEditError: {}
 };
 
 const getters = {
-  dialogEditMap: state => state.dialogEditMap,
+  dialogIsEditing: state => state.dialogIsEditing,
   dialogMap: state => state.dialogMap
 };
 
@@ -287,13 +287,13 @@ const actions = {
   },
 
   editDialog({ state, commit }, dialogID) {
-    if (!state.dialogEditMap[dialogID]) {
+    if (!state.dialogIsEditing[dialogID]) {
       commit('editDialog', dialogID);
     }
   },
 
-  saveEditDialog({ state, commit }, dialogID) {
-    if (state.dialogEditMap[dialogID]) {
+  saveEditDialog({ state, commit, dispatch }, dialogID) {
+    if (state.dialogIsEditing[dialogID]) {
       let error = validateDialog(state.dialogEditingCopy[dialogID]);
       if (error) {
         commit('saveEditDialogError', { dialogID, error });
@@ -320,9 +320,11 @@ const actions = {
       let p = API.PutActor(state.selectedEntity.data);
       if (state.newDialog) {
         p.then(result => {
-          const newID = result[state.newDialog.ID];
+          console.log('Result', result);
+          const newID = result[state.newDialog.CreateID];
+          state.dialogChain.pop();
           commit('replaceNewDialog', result);
-          commit('setSelectedDialog', newID);
+          dispatch('selectDialog', { dialogID: newID, isChild: !state.dialogMap[newID].IsRoot });
         });
       }
       return p;
@@ -330,7 +332,7 @@ const actions = {
   },
 
   cancelEditDialog({ state, commit, dispatch }, dialogID) {
-    if (state.dialogEditMap[dialogID]) {
+    if (state.dialogIsEditing[dialogID]) {
       if (state.newDialog && state.newDialog.ID === dialogID) {
         if (state.newDialog.ParentDialogIDs.length) {
           state.dialogMap[state.newDialog.ParentDialogIDs[0]].ChildDialogIDs.pop();
@@ -403,42 +405,50 @@ const mutations = {
   },
 
   editDialog(state, dialogID) {
-    Vue.set(state.dialogEditError, dialogID, false);
-    Vue.set(state.dialogEditMap, dialogID, true);
+    Vue.delete(state.dialogEditError, dialogID, false);
+    Vue.set(state.dialogIsEditing, dialogID, true);
+    Vue.delete(state.dialogEditingCopy, dialogID);
     state.dialogEditCount++;
     Vue.set(state.dialogEditingCopy, dialogID, dcopy(state.dialogMap[dialogID]));
   },
 
   saveEditDialog(state, dialogID) {
     Vue.set(state.dialogEditError, dialogID, false);
-    Vue.set(state.dialogEditMap, dialogID, false);
+    Vue.set(state.dialogIsEditing, dialogID, false);
     state.dialogEditCount--;
     Vue.set(state.dialogMap, dialogID, dcopy(state.dialogEditingCopy[dialogID]));
   },
 
   replaceNewDialog(state, newIDMap) {
-    const oldID = state.newDialog.ID;
     const dialog = dcopy(state.newDialog);
 
-    // Remove the old dialog from the map
-    Vue.set(state.dialogMap, state.newDialog.ID, null);
-
     // Update the dialog with the backend generated ID
-    state.newDialog.ID = newIDMap[state.newDialog.ID];
+    dialog.ID = newIDMap[state.newDialog.CreateID];
 
     // Add the official dialog to the map
     Vue.set(state.dialogMap, dialog.ID, dialog);
 
     // Replace the dialog in the actor entity
-    for (let i = 0; i < state.selectedEntity.data.Dialogs.length; i++) {
-      const d = state.selectedEntity.data.Dialogs[i];
-      if (d.ID === oldID) {
-        state.selectedEntity.data.Dialogs.splice(i, 1, dialog);
-        break;
-      }
+    state.selectedEntity.data.Dialogs.pop();
+    state.selectedEntity.data.Dialogs.push(dialog);
+
+    if (!dialog.IsRoot) {
+      state.selectedEntity.data.DialogRelations.pop();
+      state.selectedEntity.data.DialogRelations.push({
+        ChildNodeID: dialog.ID,
+        ParentNodeID: dialog.ParentDialogIDs[0]
+      });
     }
 
-    Vue.set(state, 'newDialog', false);
+    state.dialogMap[dialog.ParentDialogIDs[0]].ChildDialogIDs.pop();
+    state.dialogMap[dialog.ParentDialogIDs[0]].ChildDialogIDs.push(dialog.ID);
+
+    // Remove the old dialog from the map
+    Vue.delete(state.dialogMap, state.newDialog.CreateID);
+
+    Vue.delete(state, 'newDialog');
+
+    delete dialog.CreateID;
   },
 
   cancelEditDialog(state, dialogID) {
@@ -448,10 +458,10 @@ const mutations = {
       } else {
         state.dialogMap[state.newDialog.ParentDialogIDs[0]].ChildDialogIDs.pop();
       }
-      Vue.set(state.dialogMap, dialogID, null);
-      Vue.set(state, 'newDialog', null);
+      Vue.delete(state.dialogMap, dialogID);
+      Vue.delete(state, 'newDialog');
     }
-    Vue.set(state.dialogEditMap, dialogID, false);
+    Vue.set(state.dialogIsEditing, dialogID, false);
     state.dialogEditCount--;
   },
 

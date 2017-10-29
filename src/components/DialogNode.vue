@@ -136,7 +136,7 @@ export default {
       return this.$store.state.dialogMap || {};
     },
     isEditing() {
-      return this.$store.state.dialogEditMap[this.dialog.ID];
+      return this.$store.state.dialogIsEditing[this.dialog.ID];
     }
   },
   methods: {
