@@ -9,17 +9,17 @@
             h1 Conversation
             hr
             DialogNode(
-              v-for='(dialog, idx) of $store.state.dialogChain'
-              :key='dialog.ID'
-              :dialog='dialogs[dialog.ID]'
+              v-for='(dialogID, idx) of $store.state.dialogChain'
+              :key='dialogID'
+              :dialog='dialogs[dialogID]'
               :recurse='false'
               @click="clickChain(idx)"
               :isChildIteration='idx > 0'
-              :isSelected='isSelected(dialog.ID)'
+              :isSelected='isSelected(dialogID)'
             )
             DummyNode(
               v-if="!$store.state.newDialog"
-              @click.native="$store.dispatch('startNewConversation', $store.state.dialogChain[$store.state.dialogChain.length-1].ID)"
+              @click.native="$store.dispatch('startNewConversation', $store.state.dialogChain[$store.state.dialogChain.length-1])"
               isChildIteration="true")
               IconButton(name="plus" flat)
               | new
@@ -104,7 +104,7 @@ export default {
       if (this.$store.state.dialogChain.length <= 1) {
         this.$store.dispatch('startNewConversation');
       } else {
-        this.$store.dispatch('startNewConversation', this.$store.state.dialogChain[this.$store.state.dialogChain.length - 2].ID);
+        this.$store.dispatch('startNewConversation', this.$store.state.dialogChain[this.$store.state.dialogChain.length - 2]);
       }
     }
   }

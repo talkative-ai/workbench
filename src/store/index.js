@@ -254,7 +254,7 @@ const actions = {
       commit('setDialogSiblings', state.rootDialogs);
       commit('setSelectedDialog', state.rootDialogs[0]);
       Vue.set(state, 'dialogChain', []);
-      state.dialogChain.push(state.dialogMap[state.rootDialogs[0]]);
+      state.dialogChain.push(state.rootDialogs[0]);
       commit('updateDialogChain', state.dialogChain);
       return;
     } else if (!dialogID) {
@@ -264,11 +264,11 @@ const actions = {
     if (isChild) {
       relativeParent = relativeParent || state.dialogMap[state.actorSelectedDialogID[state.selectedEntity.data.ID]];
       commit('setDialogSiblings', relativeParent.ChildDialogIDs);
-      state.dialogChain.push(state.dialogMap[dialogID]);
+      state.dialogChain.push(dialogID);
       commit('updateDialogChain', state.dialogChain);
     } else {
       state.dialogChain.pop();
-      state.dialogChain.push(state.dialogMap[dialogID]);
+      state.dialogChain.push(dialogID);
       commit('updateDialogChain', state.dialogChain);
     }
 
@@ -285,7 +285,11 @@ const actions = {
       dispatch('selectDialog');
       return;
     }
-    dispatch('selectDialog', { dialogID: state.dialogChain[index].ID, isChild: true, relativeParent: state.dialogChain[index - 1] });
+    dispatch('selectDialog', {
+      dialogID: state.dialogChain[index],
+      isChild: true,
+      relativeParent: state.dialogMap[state.dialogChain[index - 1]]
+    });
     commit('sliceChain', index + 1);
   },
 
@@ -306,11 +310,13 @@ const actions = {
         state.newDialog = dcopy(state.dialogEditingCopy[dialogID]);
         delete state.newDialog.ID;
         state.selectedEntity.data.Dialogs.push(state.newDialog);
-        state.selectedEntity.data.DialogRelations.push({
-          ChildNodeID: state.newDialog.CreateID,
-          ParentNodeID: state.newDialog.ParentDialogIDs[0],
-          PatchAction: 0
-        });
+        if (!state.newDialog.IsRoot) {
+          state.selectedEntity.data.DialogRelations.push({
+            ChildNodeID: state.newDialog.CreateID,
+            ParentNodeID: state.newDialog.ParentDialogIDs[0],
+            PatchAction: 0
+          });
+        }
       } else {
         for (let i = 0; i < state.selectedEntity.data.Dialogs.length; i++) {
           if (state.selectedEntity.data.Dialogs[i].ID === dialogID) {
@@ -338,25 +344,17 @@ const actions = {
   cancelEditDialog({ state, commit, dispatch }, dialogID) {
     if (state.dialogIsEditing[dialogID]) {
       if (state.newDialog && state.newDialog.ID === dialogID) {
-        if (state.newDialog.ParentDialogIDs.length) {
-          state.dialogMap[state.newDialog.ParentDialogIDs[0]].ChildDialogIDs.pop();
-        }
-        for (let i = 0; i < state.dialogChain.length; i++) {
-          if (state.dialogChain[i].ID !== dialogID) continue;
-
-          if (i === 0) {
-            commit('setSelectedDialog', null);
-            commit('sliceChain', 0);
-            dispatch('selectDialog');
-            break;
-          }
-          dispatch('selectChain', i - 1);
-          break;
+        if (state.newDialog.IsRoot) {
+          commit('setSelectedDialog', null);
+          commit('sliceChain', 0);
+          dispatch('selectDialog');
+        } else {
+          dispatch('selectChain', state.dialogChain.length - 2);
         }
       }
-      commit('cancelEditDialog', dialogID);
-      Vue.set(state, 'newDialog', false);
     }
+    commit('cancelEditDialog', dialogID);
+    Vue.set(state, 'newDialog', false);
   },
 
   startNewConversation({ state, commit, dispatch }, dialogID) {
@@ -369,8 +367,8 @@ const actions = {
       dispatch('selectChain', 0);
     } else {
       commit('newChildDialog', { newDialog: newDialog, parentID: dialogID });
-      if (state.dialogChain[state.dialogChain.length - 1].ID === dialogID) {
-        state.dialogChain.push(newDialog);
+      if (state.dialogChain[state.dialogChain.length - 1] === dialogID) {
+        state.dialogChain.push(newDialog.ID);
         commit('updateDialogChain', state.dialogChain);
       }
     }
@@ -447,10 +445,13 @@ const mutations = {
         ChildNodeID: dialog.ID,
         ParentNodeID: dialog.ParentDialogIDs[0]
       });
-    }
 
-    state.dialogMap[dialog.ParentDialogIDs[0]].ChildDialogIDs.pop();
-    state.dialogMap[dialog.ParentDialogIDs[0]].ChildDialogIDs.push(dialog.ID);
+      state.dialogMap[dialog.ParentDialogIDs[0]].ChildDialogIDs.pop();
+      state.dialogMap[dialog.ParentDialogIDs[0]].ChildDialogIDs.push(dialog.ID);
+    } else {
+      state.rootDialogs.pop();
+      state.rootDialogs.push(dialog.ID);
+    }
 
     // Remove the old dialog from the map
     Vue.delete(state.dialogMap, state.newDialog.CreateID);
