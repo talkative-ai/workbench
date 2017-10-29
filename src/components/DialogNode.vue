@@ -140,13 +140,14 @@ export default {
       return this.$store.state.dialogMap || {};
     },
     isEditing() {
-      return this.$store.state.dialogIsEditing[this.dialog.ID];
+      return this.$store.state.dialogIsEditing === this.dialog.ID;
     }
   },
   methods: {
     calculateWidth() {
       if (!this.dialog.ChildDialogIDs) return 1;
-      return ((this.dialog.ChildDialogIDs.length) * 400) + 1;
+      let newDialogOffset = this.$store.state.newDialog ? 1 : 0;
+      return ((this.dialog.ChildDialogIDs.length - newDialogOffset) * 400) + 1;
     },
     beginEdit() {
       this.$store.dispatch('editDialog', this.dialog.ID);

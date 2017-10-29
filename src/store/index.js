@@ -57,15 +57,9 @@ const initialState = {
   createID: 0,
 
   // Tracking dialogs being edited
-  dialogIsEditing: {},
-  dialogEditCount: 0,
+  dialogIsEditing: null,
   dialogEditingCopy: {},
   dialogEditError: {}
-};
-
-const getters = {
-  dialogIsEditing: state => state.dialogIsEditing,
-  dialogMap: state => state.dialogMap
 };
 
 let ready;
@@ -78,6 +72,8 @@ function setProject(state) {
     if (!project.Actors) project.Actors = [];
     if (!project.Zones) project.Zones = [];
     if (!project.ZoneActors) project.ZoneActors = [];
+    if (!project.Dialogs) project.Dialogs = [];
+    if (!project.DialogRelations) project.DialogRelations = [];
 
     Vue.set(state, 'selectedProject', project);
     for (const a of project.Actors) {
@@ -138,7 +134,10 @@ function resetState({ keepAuth = false, initial = false }) {
       return initializer;
     });
   } else {
-    return p.then(() => store.state);
+    return p.then(() => {
+      Vue.set(store.state, 'initializing', false);
+      return store.state;
+    });
   }
 }
 
@@ -296,14 +295,13 @@ const actions = {
     commit('sliceChain', index + 1);
   },
 
-  editDialog({ state, commit }, dialogID) {
-    if (!state.dialogIsEditing[dialogID]) {
-      commit('editDialog', dialogID);
-    }
+  editDialog({ state, commit, dispatch }, dialogID) {
+    dispatch('cancelEditDialog');
+    commit('editDialog', dialogID);
   },
 
   saveEditDialog({ state, commit, dispatch }, dialogID) {
-    if (state.dialogIsEditing[dialogID]) {
+    if (state.dialogIsEditing === dialogID) {
       let error = validateDialog(state.dialogEditingCopy[dialogID]);
       if (error) {
         commit('saveEditDialogError', { dialogID, error });
@@ -344,24 +342,22 @@ const actions = {
     }
   },
 
-  cancelEditDialog({ state, commit, dispatch }, dialogID) {
-    if (state.dialogIsEditing[dialogID]) {
-      if (state.newDialog && state.newDialog.ID === dialogID) {
-        if (state.newDialog.IsRoot) {
-          commit('setSelectedDialog', null);
-          if (state.rootDialogs.length > 1) {
-            commit('sliceChain', 0);
-            dispatch('selectDialog');
-          } else {
-            state.dialogChain.pop();
-            commit('updateDialogChain', state.dialogChain);
-          }
+  cancelEditDialog({ state, commit, dispatch }) {
+    if (state.newDialog && state.newDialog.ID === state.dialogIsEditing) {
+      if (state.newDialog.IsRoot) {
+        commit('setSelectedDialog', null);
+        if (state.rootDialogs.length > 1) {
+          commit('sliceChain', 0);
+          dispatch('selectDialog');
         } else {
-          dispatch('selectChain', state.dialogChain.length - 2);
+          state.dialogChain.pop();
+          commit('updateDialogChain', state.dialogChain);
         }
+      } else {
+        dispatch('selectChain', state.dialogChain.length - 2);
       }
     }
-    commit('cancelEditDialog', dialogID);
+    commit('cancelEditDialog');
     Vue.set(state, 'newDialog', false);
   },
 
@@ -380,7 +376,7 @@ const actions = {
         commit('updateDialogChain', state.dialogChain);
       }
     }
-    dispatch('editDialog', newDialog.ID);
+    commit('editDialog', newDialog.ID);
   }
 };
 
@@ -421,16 +417,14 @@ const mutations = {
 
   editDialog(state, dialogID) {
     Vue.delete(state.dialogEditError, dialogID, false);
-    Vue.set(state.dialogIsEditing, dialogID, true);
+    Vue.set(state, 'dialogIsEditing', dialogID);
     Vue.delete(state.dialogEditingCopy, dialogID);
-    state.dialogEditCount++;
     Vue.set(state.dialogEditingCopy, dialogID, dcopy(state.dialogMap[dialogID]));
   },
 
   saveEditDialog(state, dialogID) {
     Vue.set(state.dialogEditError, dialogID, false);
-    Vue.set(state.dialogIsEditing, dialogID, false);
-    state.dialogEditCount--;
+    Vue.set(state, 'dialogIsEditing', false);
     Vue.set(state.dialogMap, dialogID, dcopy(state.dialogEditingCopy[dialogID]));
   },
 
@@ -469,18 +463,17 @@ const mutations = {
     delete dialog.CreateID;
   },
 
-  cancelEditDialog(state, dialogID) {
-    if (state.newDialog && state.newDialog.ID === dialogID) {
+  cancelEditDialog(state) {
+    if (state.newDialog && state.newDialog.ID === state.dialogIsEditing) {
       if (state.newDialog.IsRoot) {
         state.rootDialogs.pop();
       } else {
         state.dialogMap[state.newDialog.ParentDialogIDs[0]].ChildDialogIDs.pop();
       }
-      Vue.delete(state.dialogMap, dialogID);
+      Vue.delete(state.dialogMap, state.dialogIsEditing);
       Vue.delete(state, 'newDialog');
     }
-    Vue.set(state.dialogIsEditing, dialogID, false);
-    state.dialogEditCount--;
+    Vue.set(state, 'dialogIsEditing', false);
   },
 
   sliceChain(state, index) {
@@ -593,8 +586,7 @@ const mutations = {
 const store = new Vuex.Store({
   state: dcopy(initialState),
   actions,
-  mutations,
-  getters
+  mutations
 });
 
 resetState({ initial: true });

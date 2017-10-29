@@ -118,9 +118,7 @@ const router = new Router({
         titleLink: () => router.push({ name: 'ProjectHome' })
       },
       beforeEnter(to, from, next) {
-        for (let idx in store.state.dialogIsEditing) {
-          store.dispatch('cancelEditDialog', idx);
-        }
+        store.dispatch('cancelEditDialog');
         store.dispatch('selectDialog');
         store.dispatch('selectActor', to.params.id)
         .then(() => next());
