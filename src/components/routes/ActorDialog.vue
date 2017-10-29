@@ -1,51 +1,50 @@
 <template lang="pug">
   #RouteActorDialog
-    template(v-if="$store.state.dialogSiblings.length")
-      h1(v-if="$route.params.linking_child") Select a dialog to link to
-      h1(v-if="!$store.state.dialogChain.length") Select a conversation beginning
-      .flex
-        .flex-column
-          .chain(v-if="$store.state.dialogChain.length")
-            h1 Conversation
-            hr
-            DialogNode(
-              v-for='(dialogID, idx) of $store.state.dialogChain'
-              :key='dialogID'
-              :dialog='dialogs[dialogID]'
-              :recurse='false'
-              @click="clickChain(idx)"
-              :isChildIteration='idx > 0'
-              :isSelected='isSelected(dialogID)'
-            )
-            DummyNode(
-              v-if="!$store.state.newDialog"
-              @click.native="$store.dispatch('startNewConversation', $store.state.dialogChain[$store.state.dialogChain.length-1])"
-              isChildIteration="true")
-              IconButton(name="plus" flat)
-              | new
-          .space
-        .dialogs(:style="{ 'min-width': `${(($store.state.dialogSiblings.length + 1) * 400)}px` }")
+    h1(v-if="$route.params.linking_child") Select a dialog to link to
+    .flex
+      .flex-column
+        .chain
+          h1 Conversation
+          hr
           DialogNode(
-            v-for='dialogID of $store.state.dialogSiblings'
+            v-for='(dialogID, idx) of $store.state.dialogChain'
             :key='dialogID'
             :dialog='dialogs[dialogID]'
-            :recurse='ready && isSelected(dialogID)'
+            :recurse='false'
+            @click="clickChain(idx)"
+            :isChildIteration='idx > 0'
             :isSelected='isSelected(dialogID)'
-            :resolve='readyResolve[dialogID]'
-            :tallest='tallest'
-            @click="clickDialog({ dialogID })"
-            @click-child="clickDialog($event)"
-            :newConversation="true"
           )
           DummyNode(
             v-if="!$store.state.newDialog"
-            @click.native="topNewConversation()")
+            @click.native="$store.dispatch('startNewConversation', $store.state.dialogChain[$store.state.dialogChain.length-1])"
+            isChildIteration="true")
             IconButton(name="plus" flat)
-            | new
-    w-button(
-      v-else
-      @click.native="$router.push({ name: 'DialogCreate', params: $route.params, is_root: true })"
-    ) Create the first dialog
+            template(v-if="$store.state.rootDialogs.length")
+              | new
+            template(v-else)
+              | start first conversation
+        .space
+      .dialogs(
+        v-if="$store.state.dialogSiblings.length"
+        :style="{ 'min-width': `${(($store.state.dialogSiblings.length + 1) * 400)}px` }")
+        DialogNode(
+          v-for='dialogID of $store.state.dialogSiblings'
+          :key='dialogID'
+          :dialog='dialogs[dialogID]'
+          :recurse='ready && isSelected(dialogID)'
+          :isSelected='isSelected(dialogID)'
+          :resolve='readyResolve[dialogID]'
+          :tallest='tallest'
+          @click="clickDialog({ dialogID })"
+          @click-child="clickDialog($event)"
+          :newConversation="true"
+        )
+        DummyNode(
+          v-if="!$store.state.newDialog"
+          @click.native="topNewConversation()")
+          IconButton(name="plus" flat)
+          | new
 </template>
 
 <script>

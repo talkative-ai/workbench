@@ -35,7 +35,7 @@
           grid(gutter)
             form.Form(@submit.prevent="")
               .Grid-cell.u-size3of3
-                w-button(@click.native="$router.push({ name: 'ActorDialog', id: actor.ID })") View Dialogs
+                w-button(@click.native="$router.push({ name: 'ActorDialog', id: actor.ID })") View Conversations
 </template>
 
 <script>

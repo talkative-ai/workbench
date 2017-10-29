@@ -144,9 +144,13 @@ function resetState({ keepAuth = false, initial = false }) {
 
 const actions = {
 
-  createZone({ commit, state }, zone) {
+  generateID({ commit, state }) {
     commit('incrCreate');
-    zone.CreateID = store.state.createID;
+    return `harihara-${state.createID}`;
+  },
+
+  async createZone({ commit, state, dispatch }, zone) {
+    zone.CreateID = await dispatch('generateID');
     return API.CreateZone(zone)
     .then(newZone => {
       commit('addZone', newZone);
@@ -155,9 +159,8 @@ const actions = {
     });
   },
 
-  createActor({ commit, state }, actor) {
-    commit('incrCreate');
-    actor.CreateID = store.state.createID;
+  async createActor({ commit, state, dispatch }, actor) {
+    actor.CreateID = await dispatch('generateID');
     return API.CreateActor(actor)
     .then(newActor => {
       commit('addActor', newActor);
@@ -250,7 +253,7 @@ const actions = {
   },
 
   selectDialog({ state, commit }, { dialogID, isChild = false, relativeParent } = {}) {
-    if (!dialogID && !state.actorSelectedDialogID[state.selectedEntity.data.ID]) {
+    if (!dialogID && !state.actorSelectedDialogID[state.selectedEntity.data.ID] && state.rootDialogs.length > 0) {
       commit('setDialogSiblings', state.rootDialogs);
       commit('setSelectedDialog', state.rootDialogs[0]);
       Vue.set(state, 'dialogChain', []);
@@ -346,8 +349,13 @@ const actions = {
       if (state.newDialog && state.newDialog.ID === dialogID) {
         if (state.newDialog.IsRoot) {
           commit('setSelectedDialog', null);
-          commit('sliceChain', 0);
-          dispatch('selectDialog');
+          if (state.rootDialogs.length > 1) {
+            commit('sliceChain', 0);
+            dispatch('selectDialog');
+          } else {
+            state.dialogChain.pop();
+            commit('updateDialogChain', state.dialogChain);
+          }
         } else {
           dispatch('selectChain', state.dialogChain.length - 2);
         }
@@ -357,11 +365,11 @@ const actions = {
     Vue.set(state, 'newDialog', false);
   },
 
-  startNewConversation({ state, commit, dispatch }, dialogID) {
+  async startNewConversation({ state, commit, dispatch }, dialogID) {
     let newDialog = dcopy(defaultDialog);
-    commit('incrCreate');
-    newDialog.ID = `N${state.createID}`;
-    newDialog.CreateID = `N${state.createID}`;
+    let newID = await dispatch('generateID');
+    newDialog.ID = newID;
+    newDialog.CreateID = newID;
     if (!dialogID) {
       commit('newRootDialog', newDialog);
       dispatch('selectChain', 0);
