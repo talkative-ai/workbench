@@ -255,6 +255,7 @@ const actions = {
       commit('setSelectedDialog', state.rootDialogs[0]);
       Vue.set(state, 'dialogChain', []);
       state.dialogChain.push(state.dialogMap[state.rootDialogs[0]]);
+      commit('updateDialogChain', state.dialogChain);
       return;
     } else if (!dialogID) {
       return;
@@ -264,9 +265,11 @@ const actions = {
       relativeParent = relativeParent || state.dialogMap[state.actorSelectedDialogID[state.selectedEntity.data.ID]];
       commit('setDialogSiblings', relativeParent.ChildDialogIDs);
       state.dialogChain.push(state.dialogMap[dialogID]);
+      commit('updateDialogChain', state.dialogChain);
     } else {
       state.dialogChain.pop();
       state.dialogChain.push(state.dialogMap[dialogID]);
+      commit('updateDialogChain', state.dialogChain);
     }
 
     commit('setSelectedDialog', dialogID);
@@ -323,6 +326,7 @@ const actions = {
           console.log('Result', result);
           const newID = result[state.newDialog.CreateID];
           state.dialogChain.pop();
+          commit('updateDialogChain', state.dialogChain);
           commit('replaceNewDialog', result);
           dispatch('selectDialog', { dialogID: newID, isChild: !state.dialogMap[newID].IsRoot });
         });
@@ -349,9 +353,9 @@ const actions = {
           dispatch('selectChain', i - 1);
           break;
         }
-        Vue.set(state, 'newDialog', false);
       }
       commit('cancelEditDialog', dialogID);
+      Vue.set(state, 'newDialog', false);
     }
   },
 
@@ -367,6 +371,7 @@ const actions = {
       commit('newChildDialog', { newDialog: newDialog, parentID: dialogID });
       if (state.dialogChain[state.dialogChain.length - 1].ID === dialogID) {
         state.dialogChain.push(newDialog);
+        commit('updateDialogChain', state.dialogChain);
       }
     }
     dispatch('editDialog', newDialog.ID);
@@ -395,6 +400,10 @@ function validateDialog(dialog) {
 }
 
 const mutations = {
+
+  updateDialogChain(state, value) {
+    state.dialogChain = value;
+  },
 
   incrCreate(state) {
     state.createID++;
