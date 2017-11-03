@@ -117,11 +117,11 @@ const router = new Router({
         title: () => store.state.selectedProject.Title,
         titleLink: () => router.push({ name: 'ProjectHome' })
       },
-      beforeEnter(to, from, next) {
-        store.dispatch('cancelEditDialog');
-        store.dispatch('selectDialog');
-        store.dispatch('selectActor', to.params.id)
-        .then(() => next());
+      async beforeEnter(to, from, next) {
+        await store.dispatch('cancelEditDialog');
+        await store.dispatch('selectActor', to.params.id);
+        await store.dispatch('selectDialog');
+        next();
       }
     },
     {
@@ -129,8 +129,8 @@ const router = new Router({
       name: 'ZoneCreate',
       component: ZoneCreate,
       meta: {
-        background: 'space',
-        theme: 'dark',
+        background: 'paper',
+        theme: 'light',
         title: () => store.state.selectedProject.Title,
         titleLink: () => router.push({ name: 'ProjectHome' })
       },

@@ -4,14 +4,13 @@
     paper
       paper-text(full)
         h1.Headline
-          span.Headline--dark Everything happens in a Zone.
+          span.Headline Everything happens in a Zone.
           br
           | Name your new Zone:
         form.Form.u-flex(@submit.prevent="create()")
-          input.Headline.u-size1of2.u-marginR3(v-model="zone.Title", placeholder="Add name", required)
-          .Headline.u-colorWhite
+          input.Headline.u-size1of2.u-marginR3(v-model="zone.Title", placeholder="Enter name", required)
+          .Headline
             w-button(
-              lightOutline
               :class="`${!zone.Title.length ? 'hidden' : ''}`"
             )
               | Enter

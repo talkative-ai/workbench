@@ -47,7 +47,7 @@ export default {
   vertical-align: middle;
 
   &:hover {
-    box-shadow: inset 0 0 0 999px color(#6e00dd blackness(20%));
+    box-shadow: inset 0 0 0 999px color(var(--color-brand) blackness(20%));
   }
 
   &:focus {
@@ -57,16 +57,17 @@ export default {
 
   &:active {
     background-color: var(--color-bg);
-    box-shadow: inset 0 0 8px color(#6e00dd blackness(20%));
+    box-shadow: inset 0 0 8px var(--color-brand);
+    color: var(--color-brand) !important;
   }
 
   &:disabled {
     opacity: 0.25;
   }
 
-  // 
+  //
   // outline variation
-  // 
+  //
 
   &.outline {
     background-color: transparent;
@@ -84,7 +85,7 @@ export default {
 
     &:active {
       background-color: var(--color-brand);
-      box-shadow: inset 0 0 0 1px var(--color-brand), inset 0 0 8px color(#6e00dd blackness(20%));
+      box-shadow: inset 0 0 0 1px var(--color-brand), inset 0 0 8px color(var(--color-brand) blackness(20%));
       color: var(--color-bg);
     }
   }
@@ -105,15 +106,10 @@ export default {
 
     &:active {
       background-color: currentColor;
-      box-shadow: inset 0 0 0 1px currentColor, inset 0 0 8px color(#6e00dd blackness(20%));
+      box-shadow: inset 0 0 0 1px currentColor, inset 0 0 8px color(var(--color-brand) blackness(20%));
       color: var(--color-bg);
     }
   }
-
-  
-
-
-  
 
 
 
@@ -126,11 +122,11 @@ export default {
     color: var(--color-bg);
     padding: 0.4em 0.75em 0.5em 0.8em;
     transform: translateX(0);
-    transition: all 250ms ease-out;
+    transition: all 250ms ease;
 
     &:hover {
       transform: translateX(5px);
-      transition: all 250ms ease-out;
+      transition: all 250ms ease;
     }
   }
 
@@ -140,7 +136,7 @@ export default {
     height: auto;
   }
 
-  
+
 
   &.wide {
     width: 100%;
@@ -152,7 +148,7 @@ export default {
     pointer-events: none;
   }
 
-  
+
 }
 
 

@@ -11,16 +11,22 @@
 }
 
 .u-arrowEast {
-  /*border-top: .3125em solid transparent;
-  border-bottom: .3125em solid transparent;
-  border-left: .4375em solid;*/
   border-top: .175em solid transparent;
   border-bottom: .175em solid transparent;
   border-left: .25em solid;
   display: inline-block;
   height: 0;
   margin-left: .375em;
-  /*margin-bottom: .125em;*/
+  vertical-align: baseline;
+  width: 0;
+}
+.u-arrowWest {
+  border-top: .175em solid transparent;
+  border-bottom: .175em solid transparent;
+  border-right: .25em solid;
+  display: inline-block;
+  height: 0;
+  margin-right: .375em;
   vertical-align: baseline;
   width: 0;
 }

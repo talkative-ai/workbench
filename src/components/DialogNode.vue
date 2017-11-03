@@ -103,13 +103,13 @@
           )
         DummyNode(
           v-if="!$store.state.newDialog"
-          @click.native="$store.dispatch('startNewConversation', $store.state.dialogChain[$store.state.dialogChain.length-1])"
+          @click.native="$store.dispatch('startNewConversation', dialogChain.slice(-1).pop())"
           isChildIteration="true")
           IconButton(name="plus" flat)
           | new
       DummyNode(
         v-else-if="!$store.state.newDialog"
-        @click.native="$store.dispatch('startNewConversation', $store.state.dialogChain[$store.state.dialogChain.length-1])"
+        @click.native="$store.dispatch('startNewConversation', dialogChain.slice(-1).pop())"
         isChildIteration="true")
         IconButton(name="plus" flat)
         | new
@@ -141,6 +141,9 @@ export default {
     },
     isEditing() {
       return this.$store.state.dialogIsEditing === this.dialog.ID;
+    },
+    dialogChain() {
+      return this.$store.state.dialogChain[this.$store.state.selectedEntity.data.ID] || [];
     }
   },
   methods: {

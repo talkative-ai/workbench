@@ -8,11 +8,6 @@
 
         form.Form(@submit.prevent="create")
           grid(gutter)
-            .Grid-cell.u-size1of3
-              .picture-input(
-                :style="`background-image: url(${BGActor})`"
-              )
-
             .Grid-cell.u-size2of3
               .Headline.Headline--dark(v-if="actor.Sex")
                 span {{ actor.Sex }}

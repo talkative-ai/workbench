@@ -6,35 +6,21 @@
         h1.Headline
           span.Headline--dark You're in the zone.
           br
-          | What do you want to happen?
-          br
           | Actors say and do what you wish.
-          br
-          | Triggers create interactions.
-
       paper-path
         grid(gutterSm fit)
           .Grid-cell
-            .Paper-text.Paper-path-block.CoverImage.CoverImage--dark.u-borderRadius-BL(
-              :style="`background-image: url(${BGActors})`"
-            )
-              w-button(outline large @click.native="$router.push({ name: 'ActorCreate', params: { zoneid: $route.params.id } })").Headline
+            .Paper-text
+              w-button(large @click.native="$router.push({ name: 'ActorCreate', params: { zoneid: $route.params.id } })").Headline
                 | Add an Actor
                 span.u-arrowEast
 
-              .Headline.u-colorTextLight.u-marginT3.u-marginB3 Or view an existing actor:
-              div(v-for="ActorID of $store.state.zoneActors[$route.params.id]" :key="ActorID")
-                w-button(outline large @click.native="selectActor(ActorID)").Headline
-                  | {{ actors[ActorID].Title }}
-                  span.u-arrowEast
-
-          .Grid-cell
-            .Paper-text.Paper-path-block.CoverImage.CoverImage--dark.u-borderRadius-BR(
-              :style="`background-image: url(${BGTriggers})`"
-            )
-              w-button(outline large).Headline
-                | Add a Trigger
-                span.u-arrowEast
+              template(v-if="$store.state.zoneActors[$route.params.id] && $store.state.zoneActors[$route.params.id].length")
+                .Headline.u-marginT3.u-marginB3 Or view an existing actor:
+                div(v-for="ActorID of $store.state.zoneActors[$route.params.id]" :key="ActorID")
+                  w-button(large @click.native="selectActor(ActorID)").Headline
+                    | {{ actors[ActorID].Title }}
+                    span.u-arrowEast
 </template>
 
 <script>
@@ -80,8 +66,4 @@ export default {
 </script>
 
 <style scoped>
-.Paper-path-block {
-  background-size: contain;
-  background-color: black;
-}
 </style>

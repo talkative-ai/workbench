@@ -7,7 +7,7 @@
           h1 Conversation
           hr
           DialogNode(
-            v-for='(dialogID, idx) of $store.state.dialogChain'
+            v-for='(dialogID, idx) of dialogChain'
             :key='dialogID'
             :dialog='dialogs[dialogID]'
             :recurse='false'
@@ -17,13 +17,18 @@
           )
           DummyNode(
             v-if="!$store.state.newDialog"
-            @click.native="$store.dispatch('startNewConversation', $store.state.dialogChain[$store.state.dialogChain.length-1])"
+            @click.native="$store.dispatch('startNewConversation', dialogChain.slice(-1).pop())"
             isChildIteration="true")
             IconButton(name="plus" flat)
             template(v-if="$store.state.rootDialogs.length")
               | new
             template(v-else)
               | start first conversation
+        w-button.Headline(
+          large
+          @click.native="$router.push({ name: 'ActorHome', params: { zoneid: $route.params.id } })")
+          span.u-arrowWest
+          | Return
         .space
       .dialogs(
         v-if="$store.state.dialogSiblings.length"
@@ -87,6 +92,9 @@ export default {
     },
     dialogs() {
       return this.$store.state.dialogMap || {};
+    },
+    dialogChain() {
+      return this.$store.state.dialogChain[this.$store.state.selectedEntity.data.ID] || [];
     }
   },
   methods: {
@@ -100,10 +108,10 @@ export default {
       this.$store.dispatch('selectChain', index);
     },
     topNewConversation() {
-      if (this.$store.state.dialogChain.length <= 1) {
+      if (this.$store.state.dialogChain[this.$store.state.selectedEntity.data.ID].length <= 1) {
         this.$store.dispatch('startNewConversation');
       } else {
-        this.$store.dispatch('startNewConversation', this.$store.state.dialogChain[this.$store.state.dialogChain.length - 2]);
+        this.$store.dispatch('startNewConversation', this.$store.state.dialogChain[this.$store.state.selectedEntity.data.ID].slice(-2, -1).pop());
       }
     }
   }
@@ -129,6 +137,7 @@ h1 {
   box-shadow: 1pt 1pt 2pt rgba(0, 0, 0, 0.2);
   padding: 16pt;
   background-color: white;
+  margin-bottom: 30pt;
 }
 .dialogs {
   width: 100%;

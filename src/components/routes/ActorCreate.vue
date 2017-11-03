@@ -4,29 +4,17 @@
     paper
       paper-text
         h1.Headline
-          span.Headline--dark You don't have any actors yet.
+          span.Headline--dark(
+            v-if="$store.state.zoneActors[zoneid] && !$store.state.zoneActors[zoneid].length")
+            | You don't have any actors yet.
           br
           | Create a new actor:
         form.Form(@submit.prevent="create()")
           grid(gutter)
-            .Grid-cell.u-size1of3
-              picture-input(
-                :style="`background-image: url(${BGActor})`"
-                ref="pictureInput"
-                @change="onChange"
-                width="100%"
-                height="600"
-                margin="16"
-                accept="image/jpeg,image/png"
-                size="10"
-                buttonClass="btn"
-              )
             .Grid-cell.u-size2of3
               label
                 | Name (required):
-                .PlaceholderWrapper
-                  input.Headline.u-colorTextDark(v-model="actor.Title")
-                  .Placeholder.Headline What's their name?
+                input.Headline.u-colorTextDark(v-model="actor.Title" placeholder="What's their name?")
               //- label
               //-   | Sex:
               //-   .PlaceholderWrapper

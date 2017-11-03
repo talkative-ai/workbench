@@ -80,7 +80,7 @@ a {
  */
 
 .Headline {
-  color: var(--color-text-lite);
+  color: var(--color-text-dark);
   font-family: "HeroNew-Light";
   font-size: var(--header-s3);
   font-weight: normal;
@@ -92,7 +92,7 @@ a {
 }
 
 .Subheadline {
-  color: var(--color-text-lite);
+  color: var(--color-text);
   font-family: "HeroNew-Light";
   font-size: var(--smallheader-s3);
   font-weight: normal;
