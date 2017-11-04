@@ -135,23 +135,30 @@ export default {
       })
     };
   },
+  activated() {
+    const rect = this.$refs.dialog.getBoundingClientRect();
+    this.height = rect.height;
+    this.$emit('change-height', rect.height);
+  },
   mounted() {
     const rect = this.$refs.dialog.getBoundingClientRect();
     this.height = rect.height;
     this.$emit('change-height', rect.height);
+  },
+  updated() {
+    Vue.nextTick(() => {
+      if (!this.$refs.dialog) return;
+      const rect = this.$refs.dialog.getBoundingClientRect();
+      this.height = rect.height;
+      this.$emit('change-height', rect.height);
+    });
   },
   computed: {
     dialogs() {
       return this.$store.state.dialogMap || {};
     },
     isEditing() {
-      let editing = this.$store.state.dialogIsEditing === this.dialog.ID;
-      Vue.nextTick(() => {
-        const rect = this.$refs.dialog.getBoundingClientRect();
-        this.height = rect.height;
-        this.$emit('change-height', rect.height);
-      });
-      return editing;
+      return this.$store.state.dialogIsEditing === this.dialog.ID;
     },
     dialogChain() {
       return this.$store.state.dialogChain[this.$store.state.selectedEntity.data.ID] || [];

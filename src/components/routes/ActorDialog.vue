@@ -53,6 +53,8 @@
 
 <script>
 import DummyNode from '../DummyNode';
+import Vue from 'vue';
+
 export default {
   name: 'ActorDialog',
   components: {
@@ -80,6 +82,7 @@ export default {
       this.heightMap[id] = value;
       this.tallest = 0;
       for (let k in this.heightMap) {
+        if (!this.heightMap[k]) continue;
         this.tallest = Math.max(this.tallest, this.heightMap[k]);
       }
     },
@@ -88,9 +91,31 @@ export default {
     },
     clickDialog(event, e) {
       this.$store.dispatch('selectDialog', event);
+      Vue.nextTick(() => {
+        this.tallest = 0;
+        for (let k in this.heightMap) {
+          if (!this.heightMap[k]) continue;
+          if (!this.$store.state.dialogSiblings.find(v => Number(v) === Number(k))) {
+            this.heightMap[k] = undefined;
+            continue;
+          }
+          this.tallest = Math.max(this.tallest, this.heightMap[k]);
+        }
+      });
     },
     clickChain(index) {
       this.$store.dispatch('selectChain', index);
+      Vue.nextTick(() => {
+        this.tallest = 0;
+        for (let k in this.heightMap) {
+          if (!this.heightMap[k]) continue;
+          if (!this.$store.state.dialogSiblings.find(v => Number(v) === Number(k))) {
+            this.heightMap[k] = undefined;
+            continue;
+          }
+          this.tallest = Math.max(this.tallest, this.heightMap[k]);
+        }
+      });
     },
     topNewConversation() {
       if (this.$store.state.dialogChain[this.$store.state.selectedEntity.data.ID].length <= 1) {
