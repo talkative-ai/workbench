@@ -63,7 +63,8 @@ const initialState = {
 
   // Connecting dialog
   connectingDialogID: false,
-  previewConnect: false
+  previewConnect: false,
+  conversationCycle: false
 };
 
 let ready;
@@ -325,6 +326,7 @@ const actions = {
 
     if (state.connectingDialogID && dialogID !== state.connectingDialogID) {
       Vue.set(state, 'previewConnect', dialogID);
+      Vue.set(state, 'conversationCycle', true);
       state.dialogMap[state.connectingDialogID].ChildDialogIDs.push(dialogID);
     }
 
@@ -346,7 +348,11 @@ const actions = {
       if (state.previewConnect) {
         state.dialogMap[state.connectingDialogID].ChildDialogIDs.pop();
       }
+      if (!state.conversationCycle) {
+        state.dialogChain[state.selectedEntity.data.ID];
+      }
       Vue.set(state, 'previewConnect', state.dialogChain[state.selectedEntity.data.ID][index]);
+      Vue.set(state, 'conversationCycle', true);
       state.dialogMap[state.connectingDialogID].ChildDialogIDs.push(state.dialogChain[state.selectedEntity.data.ID][index]);
       return;
     }
@@ -457,11 +463,17 @@ const actions = {
   },
 
   cancelConnectDialog({ state, dispatch }) {
-    if (state.previewConnect) {
-      dispatch('selectChain', -2);
-    }
+    let oldID = state.connectingDialogID;
     Vue.set(state, 'connectingDialogID', false);
-    Vue.set(state, 'previewConnect', false);
+    if (state.previewConnect) {
+      Vue.set(state, 'previewConnect', false);
+      state.dialogMap[oldID].ChildDialogIDs.pop();
+      if (!state.conversationCycle) {
+        dispatch('selectChain', -2);
+      } else {
+        Vue.set(state, 'conversationCycle', false);
+      }
+    }
   }
 };
 
