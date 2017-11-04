@@ -170,7 +170,12 @@ const actions = {
 
   createProject({ commit, state }, project) {
     return API.CreateProject(project)
-    .then(setProject(state));
+    .then(res => {
+      if (res.status !== 201) {
+        throw res.message;
+      }
+      setProject(state);
+    });
   },
 
   authGoogle({ commit, state }, googleUser) {

@@ -2,7 +2,7 @@
   .DialogNode
     .wrap(
       :class="`${$route.params.dialog_id !== dialog.ID ? 'selectable' : ''}`"
-      :id="`dialog-dialog-${dialog.ID}`"
+      :id="`dialog-${dialog.ID}`"
       ref="dialog"
     )
       template(v-if="!isEditing")
