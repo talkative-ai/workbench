@@ -37,13 +37,12 @@
           v-for='dialogID of $store.state.dialogSiblings'
           :key='dialogID'
           :dialog='dialogs[dialogID]'
-          :recurse='ready && isSelected(dialogID)'
+          :recurse='isSelected(dialogID)'
           :isSelected='isSelected(dialogID)'
-          :resolve='readyResolve[dialogID]'
           :tallest='tallest'
+          @change-height='changeNodeHeight(dialogID, $event)'
           @click="clickDialog({ dialogID })"
           @click-child="clickDialog($event)"
-          :newConversation="true"
         )
         DummyNode(
           v-if="!$store.state.newDialog"
@@ -60,31 +59,10 @@ export default {
     DummyNode
   },
   data() {
-    let readyPromises = [];
-    let readyResolve = {};
-
-    let data = {
-      ready: false,
-      readyPromises,
-      readyResolve,
-      tallest: 20
+    return {
+      tallest: 0,
+      heightMap: {}
     };
-
-    let dialogs = this.$store.state.dialogSiblings.length ? this.$store.state.dialogSiblings : this.$store.state.rootDialogs;
-
-    for (let dialogID of dialogs) {
-      readyPromises.push(new Promise(resolve => {
-        readyResolve[dialogID] = resolve;
-      }));
-    }
-
-    Promise.all(readyPromises).then(results => {
-      let tallest = results.reduce((total, rect) => Math.max(total, rect.height), 0);
-      this.$set(data, 'tallest', tallest);
-      this.$set(data, 'ready', true);
-    });
-
-    return data;
   },
   computed: {
     rootDialogs() {
@@ -98,10 +76,17 @@ export default {
     }
   },
   methods: {
+    changeNodeHeight(id, value) {
+      this.heightMap[id] = value;
+      this.tallest = 0;
+      for (let k in this.heightMap) {
+        this.tallest = Math.max(this.tallest, this.heightMap[k]);
+      }
+    },
     isSelected(dialogID = 0) {
       return (this.$store.state.actorSelectedDialogID[this.$route.params.id] || '').toString() === dialogID.toString();
     },
-    clickDialog(event) {
+    clickDialog(event, e) {
       this.$store.dispatch('selectDialog', event);
     },
     clickChain(index) {

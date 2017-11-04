@@ -1,7 +1,7 @@
 <template lang="pug">
   .DialogNode
     .wrap(
-      :class="`${$route.params.dialog_id !== dialog.ID ? 'selectable' : ''}`"
+      :class="nodeClass"
       :id="`dialog-${dialog.ID}`"
       ref="dialog"
     )
@@ -116,31 +116,40 @@
 </template>
 
 <script>
+import Vue from 'vue';
 import DummyNode from './DummyNode';
+import classNames from 'classNames';
+
 export default {
   name: 'DialogNode',
-  props: ['dialog', 'isChildIteration', 'recurse', 'isSelected', 'resolve', 'tallest', 'newConversation'],
+  props: ['dialog', 'isChildIteration', 'recurse', 'isSelected', 'tallest'],
   components: {
     DummyNode
   },
   data() {
     return {
-      height: 0
+      height: 0,
+      nodeClass: classNames('dialog-node', {
+        'selectable': this.$route.params.dialog_id !== this.dialog.ID,
+        'selected-node': this.isSelected || this.$store.state.dialogIsEditing === this.dialog.ID
+      })
     };
   },
   mounted() {
     const rect = this.$refs.dialog.getBoundingClientRect();
-    this.height = rect.height;
-    if (this.resolve) {
-      this.resolve(rect);
-    }
+    this.$emit('change-height', rect.height);
   },
   computed: {
     dialogs() {
       return this.$store.state.dialogMap || {};
     },
     isEditing() {
-      return this.$store.state.dialogIsEditing === this.dialog.ID;
+      let editing = this.$store.state.dialogIsEditing === this.dialog.ID;
+      Vue.nextTick(() => {
+        const rect = this.$refs.dialog.getBoundingClientRect();
+        this.$emit('change-height', rect.height);
+      });
+      return editing;
     },
     dialogChain() {
       return this.$store.state.dialogChain[this.$store.state.selectedEntity.data.ID] || [];
@@ -156,6 +165,11 @@ export default {
       this.$store.dispatch('editDialog', this.dialog.ID);
     },
     cancelEdit() {
+      if (this.$store.state.newDialog.ID === this.dialog.ID) {
+        Vue.nextTick(() => {
+          this.$emit('change-height', 0);
+        });
+      }
       this.$store.dispatch('cancelEditDialog', this.dialog.ID);
     },
     saveEdit() {
