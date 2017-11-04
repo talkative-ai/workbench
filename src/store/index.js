@@ -239,7 +239,27 @@ const actions = {
 
   updateDialog({ commit, state }) {
     if (state.selectedEntity.type !== 'actor') return;
+    for (const d of state.selectedEntity.data.Dialogs) {
+      if (!d.ID) continue;
+      d.ID = Number(d.ID);
+    }
+    for (const r of state.selectedEntity.data.DialogRelations) {
+      if (!isNaN(r.ChildNodeID)) {
+        r.ChildNodeID = Number(r.ChildNodeID);
+      }
+      if (!isNaN(r.ParentNodeID)) {
+        r.ParentNodeID = Number(r.ParentNodeID);
+      }
+    }
     API.PutActor(state.selectedEntity.data);
+    for (const d of state.selectedEntity.data.Dialogs) {
+      if (!d.ID) continue;
+      d.ID = d.ID.toString();
+    }
+    for (const r of state.selectedEntity.data.DialogRelations) {
+      r.ChildNodeID = Number(r.ChildNodeID).toString();
+      r.ParentNodeID = Number(r.ParentNodeID).toString();
+    }
   },
 
   publish({ commit, state }) {
@@ -319,8 +339,13 @@ const actions = {
       commit('updateDialogChain', state.dialogChain);
     }
 
+    if (state.previewConnect) {
+      state.dialogMap[state.connectingDialogID].ChildDialogIDs.pop();
+    }
+
     if (state.connectingDialogID && dialogID !== state.connectingDialogID) {
       Vue.set(state, 'previewConnect', dialogID);
+      state.dialogMap[state.connectingDialogID].ChildDialogIDs.push(dialogID);
     }
 
     commit('setSelectedDialog', dialogID);
@@ -500,7 +525,7 @@ const mutations = {
     const dialog = dcopy(state.newDialog);
 
     // Update the dialog with the backend generated ID
-    dialog.ID = newIDMap[state.newDialog.CreateID];
+    dialog.ID = newIDMap[state.newDialog.CreateID].toString();
 
     // Add the official dialog to the map
     Vue.set(state.dialogMap, dialog.ID, dialog);
@@ -598,9 +623,12 @@ const mutations = {
 
     // Prepare the dialog map and root dialogs
     for (const d of payload.actor.Dialogs) {
+      d.ID = d.ID.toString();
+      d.ParentDialogIDs = d.ParentDialogIDs || [];
+      d.ChildDialogIDs = d.ChildDialogIDs || [];
       Vue.set(state.dialogMap, d.ID, d);
       if (d.IsRoot) {
-        rdialogs.add(d.ID.toString());
+        rdialogs.add(d.ID);
       }
     }
 
@@ -608,10 +636,10 @@ const mutations = {
     // In other words, construct dialog relations
     for (const r of payload.actor.DialogRelations) {
       let prepend = state.dialogMap[r.ParentNodeID].ChildDialogIDs || [];
-      Vue.set(state.dialogMap[r.ParentNodeID], 'ChildDialogIDs', [...prepend, r.ChildNodeID]);
+      Vue.set(state.dialogMap[r.ParentNodeID], 'ChildDialogIDs', [...prepend, r.ChildNodeID.toString()]);
 
       prepend = state.dialogMap[r.ChildNodeID].ParentDialogIDs || [];
-      Vue.set(state.dialogMap[r.ChildNodeID], 'ParentDialogIDs', [...prepend, r.ParentNodeID]);
+      Vue.set(state.dialogMap[r.ChildNodeID], 'ParentDialogIDs', [...prepend, r.ParentNodeID.toString()]);
     }
 
     state.rootDialogs = [...rdialogs];

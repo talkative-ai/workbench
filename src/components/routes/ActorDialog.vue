@@ -87,7 +87,7 @@ export default {
       }
     },
     isSelected(dialogID = 0) {
-      return (this.$store.state.actorSelectedDialogID[this.$route.params.id] || '').toString() === dialogID.toString();
+      return (this.$store.state.actorSelectedDialogID[this.$route.params.id] || '') === dialogID;
     },
     clickDialog(event, e) {
       this.$store.dispatch('selectDialog', event);
