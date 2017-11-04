@@ -658,11 +658,6 @@ const mutations = {
   },
 
   newChildDialog(state, { newDialog, parentID }) {
-    // Vue converts integers to strings unfortunately.
-    // The server requires integer IDs for existing parents.
-    if (!isNaN(parentID)) {
-      parentID = parentID * 1;
-    }
     newDialog.IsRoot = false;
     state.dialogMap[newDialog.ID] = newDialog;
     state.dialogMap[parentID].ChildDialogIDs = state.dialogMap[parentID].ChildDialogIDs || [];
