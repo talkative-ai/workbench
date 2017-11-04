@@ -119,6 +119,7 @@ const router = new Router({
       },
       async beforeEnter(to, from, next) {
         await store.dispatch('cancelEditDialog');
+        await store.dispatch('cancelConnectDialog');
         await store.dispatch('selectActor', to.params.id);
         await store.dispatch('selectDialog');
         next();

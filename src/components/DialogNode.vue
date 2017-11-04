@@ -13,10 +13,12 @@
           //- Hover cover
           .cover.opaque(v-if="$store.state.connectingDialogID === dialog.ID")
             h1 connecting
+          .cover.opaque(v-else-if="$store.state.previewConnect === dialog.ID")
+            h1 previewing connect
           .cover(
             v-else-if="$store.state.connectingDialogID"
             @click="$emit('click')")
-            h1
+            h1(v-if="!isSelected")
               IconButton(name="link")
               | preview connect
           .cover(
@@ -34,7 +36,7 @@
                 IconButton(
                   :style="{ width: '100%' }"
                   name="link"
-                  label="connect"
+                  label="confirm connect"
                   @click.native="beginConnect()")
           template(v-else)
             .edit-bar(:class="$store.state.dialogEditError[dialog.ID] ? 'with-error' : ''")
@@ -185,6 +187,7 @@ export default {
   },
   methods: {
     beginConnect() {
+      this.$emit('click');
       this.$store.dispatch('beginConnectDialog', this.dialog.ID);
     },
     calculateChildrenWidth() {

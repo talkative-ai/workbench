@@ -62,7 +62,8 @@ const initialState = {
   dialogEditError: {},
 
   // Connecting dialog
-  connectingDialogID: false
+  connectingDialogID: false,
+  previewConnect: false
 };
 
 let ready;
@@ -259,7 +260,12 @@ const actions = {
     return resetState({ keepAuth: true });
   },
 
+  // selectDialog manages the state of the currently selected dialog
+  // and all previously selected parent dialogs within the dialogChain
   selectDialog({ state, commit }, { dialogID, isChild = false, relativeParent } = {}) {
+    // If no dialog is specified
+    // and there is no default selected dialog
+    // and there exist root dialogs
     if (!dialogID &&
         !state.actorSelectedDialogID[state.selectedEntity.data.ID] &&
         state.rootDialogs.length > 0) {
@@ -269,34 +275,62 @@ const actions = {
       state.dialogChain[state.selectedEntity.data.ID].push(state.rootDialogs[0]);
       commit('updateDialogChain', state.dialogChain);
       return;
+      // Otherwise if no dialog is specified
+      // and there is a default selected node
     } else if (!dialogID && state.actorSelectedDialogID[state.selectedEntity.data.ID]) {
-      // TODO: dialogChain should be actor specific to fetch sibling nodes of relative parent
+      // If the dialogChain length is one, then this is a root dialog selected by default
+      // Set the sibling dialogs accordingly
       if (state.dialogChain[state.selectedEntity.data.ID].length === 1) {
         commit('setDialogSiblings', state.rootDialogs);
       } else {
+        // Otherwise this isn't a root dialog selected
+        // Therefore we get the siblings of the current dialog relative to the currently selected parent in the chain
+        // The reason it's important to get siblings from the relative parent is because a single dialog can have
+        // multiple parents, and each parent can have different children.
+        // In other words, a signle dialog can have multiple sibling sets depending on the selected dialog.
         commit('setDialogSiblings', state.dialogMap[state.dialogChain[state.selectedEntity.data.ID].slice(-2, -1).pop()].ChildDialogIDs);
       }
       commit('setSelectedDialog', state.actorSelectedDialogID[state.selectedEntity.data.ID]);
       return;
     } else if (!dialogID) {
+      // Otherwise this is a no-op
       return;
     }
 
+    // A specific dialog is being selected
+    // If it's a child
     if (isChild) {
       relativeParent = relativeParent || state.dialogMap[state.actorSelectedDialogID[state.selectedEntity.data.ID]];
       commit('setDialogSiblings', relativeParent.ChildDialogIDs);
+      if (state.previewConnect) {
+        state.dialogChain[state.selectedEntity.data.ID].pop();
+      }
       state.dialogChain[state.selectedEntity.data.ID].push(dialogID);
       commit('updateDialogChain', state.dialogChain);
+
+      // Otherwise it's a sibling
     } else {
-      state.dialogChain[state.selectedEntity.data.ID].pop();
+      // If we're not previewing a dialog connection and we're not connecting a dialog
+      // Or we are previewing an existing connection and we are connecting a dialog
+      if ((!state.previewConnect && !state.connectingDialogID) || (state.previewConnect && state.connectingDialogID)) {
+        state.dialogChain[state.selectedEntity.data.ID].pop();
+      }
       state.dialogChain[state.selectedEntity.data.ID].push(dialogID);
       commit('updateDialogChain', state.dialogChain);
+    }
+
+    if (state.connectingDialogID && dialogID !== state.connectingDialogID) {
+      Vue.set(state, 'previewConnect', dialogID);
     }
 
     commit('setSelectedDialog', dialogID);
   },
 
+  // selectChain is similar to selectDialog except that it's always going to be a parent dialog
   selectChain({ state, dispatch, commit }, index) {
+    if (index < 0) {
+      index = state.dialogChain[state.selectedEntity.data.ID].length + index;
+    }
     if (index === state.dialogChain[state.selectedEntity.data.ID].length - 1) {
       return;
     }
@@ -372,7 +406,7 @@ const actions = {
           commit('updateDialogChain', state.dialogChain);
         }
       } else {
-        dispatch('selectChain', state.dialogChain[state.selectedEntity.data.ID].length - 2);
+        dispatch('selectChain', -2);
       }
     }
     commit('cancelEditDialog');
@@ -405,8 +439,12 @@ const actions = {
 
   },
 
-  cancelConnectDialog({ state }) {
-
+  cancelConnectDialog({ state, dispatch }) {
+    if (state.previewConnect) {
+      dispatch('selectChain', -2);
+    }
+    Vue.set(state, 'connectingDialogID', false);
+    Vue.set(state, 'previewConnect', false);
   }
 };
 
