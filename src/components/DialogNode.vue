@@ -91,7 +91,7 @@
             .error(v-if="$store.state.dialogEditError[dialog.ID]")
               | {{$store.state.dialogEditError[dialog.ID]}}
     template(v-if="recurse")
-      .after-values-space(v-if='dialog.ChildDialogIDs && dialog.ChildDialogIDs.length' :style="{ width: `${calculateWidth()}px`, height: `${tallest - height + 35}px` }")
+      .after-values-space(v-if='dialog.ChildDialogIDs && dialog.ChildDialogIDs.length' :style="{ width: `${calculateWidth()}px`, height: `${tallest - height + 50}px` }")
       .child-dialogs(v-if='dialog.ChildDialogIDs && dialog.ChildDialogIDs.length')
         div(v-for='(dialogID, idx) of dialog.ChildDialogIDs', :key='dialogID')
           DialogNode(
@@ -137,6 +137,7 @@ export default {
   },
   mounted() {
     const rect = this.$refs.dialog.getBoundingClientRect();
+    this.height = rect.height;
     this.$emit('change-height', rect.height);
   },
   computed: {
@@ -147,6 +148,7 @@ export default {
       let editing = this.$store.state.dialogIsEditing === this.dialog.ID;
       Vue.nextTick(() => {
         const rect = this.$refs.dialog.getBoundingClientRect();
+        this.height = rect.height;
         this.$emit('change-height', rect.height);
       });
       return editing;
