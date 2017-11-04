@@ -63,6 +63,7 @@ export default {
 // .Game-title {}
 // .theme-light #Header {
 .Navbar {
+  margin: 0 !important;
 }
 
 .Navbar-cell {

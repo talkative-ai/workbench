@@ -59,7 +59,10 @@ const initialState = {
   // Tracking dialogs being edited
   dialogIsEditing: null,
   dialogEditingCopy: {},
-  dialogEditError: {}
+  dialogEditError: {},
+
+  // Connecting dialog
+  connectingDialogID: false
 };
 
 let ready;
@@ -392,6 +395,18 @@ const actions = {
       }
     }
     commit('editDialog', newDialog.ID);
+  },
+
+  beginConnectDialog({ state }, dialogID) {
+    Vue.set(state, 'connectingDialogID', dialogID);
+  },
+
+  saveConnectDialog({ state }, dialogID) {
+
+  },
+
+  cancelConnectDialog({ state }) {
+
   }
 };
 

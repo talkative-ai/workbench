@@ -5,30 +5,47 @@
       :id="`dialog-${dialog.ID}`"
       ref="dialog"
     )
+
+      //- Not editing
       template(v-if="!isEditing")
         .cover-wrap
 
           //- Hover cover
+          .cover.opaque(v-if="$store.state.connectingDialogID === dialog.ID")
+            h1 connecting
           .cover(
-            v-if="!$route.params.linking_child"
+            v-else-if="$store.state.connectingDialogID"
+            @click="$emit('click')")
+            h1
+              IconButton(name="link")
+              | preview connect
+          .cover(
+            v-else
             @click="$emit('click')"
             :class="isSelected ? 'selected' : ''")
             h1(v-if="!isSelected")
               IconButton(name="search")
               | &nbsp;select
-          .cover(
-            v-else-if="$route.params.dialog_id !== dialog.ID"
-            @click="$emit('click')")
-            h1 link dialog
-          .cover.opaque(v-else)
-            h1 linking
-
           //- Edit bar
-          .button-grid-small.edit-bar
-            IconButton(name="pencil" label="edit" @click.native="beginEdit()")
-            IconButton(name="link" label="connect")
+          template(v-if="$store.state.connectingDialogID === dialog.ID")
+          template(v-else-if="$store.state.connectingDialogID")
+            .edit-bar(:class="$store.state.dialogEditError[dialog.ID] ? 'with-error' : ''")
+              .button-grid-small
+                IconButton(
+                  :style="{ width: '100%' }"
+                  name="link"
+                  label="connect"
+                  @click.native="beginConnect()")
+          template(v-else)
+            .edit-bar(:class="$store.state.dialogEditError[dialog.ID] ? 'with-error' : ''")
+              .button-grid-small
+                IconButton(name="pencil" label="edit" @click.native="beginEdit()")
+                IconButton(name="link" label="connect" @click.native="beginConnect()")
+
+      //- Editing
       template(v-else)
         .cover.editing
+
       .vspacer(v-if="isChildIteration")
       .ball(v-if="isChildIteration")
       .entry-wrap
@@ -91,7 +108,9 @@
             .error(v-if="$store.state.dialogEditError[dialog.ID]")
               | {{$store.state.dialogEditError[dialog.ID]}}
     template(v-if="recurse")
-      .after-values-space(v-if='dialog.ChildDialogIDs && dialog.ChildDialogIDs.length' :style="{ width: `${calculateWidth()}px`, height: `${tallest - height + 50}px` }")
+      .after-values-space(
+        v-if='dialog.ChildDialogIDs && dialog.ChildDialogIDs.length'
+        :style="{ width: `${calculateChildrenWidth()}px`, height: `${tallest - height + 50}px` }")
       .child-dialogs(v-if='dialog.ChildDialogIDs && dialog.ChildDialogIDs.length')
         div(v-for='(dialogID, idx) of dialog.ChildDialogIDs', :key='dialogID')
           DialogNode(
@@ -165,7 +184,10 @@ export default {
     }
   },
   methods: {
-    calculateWidth() {
+    beginConnect() {
+      this.$store.dispatch('beginConnectDialog', this.dialog.ID);
+    },
+    calculateChildrenWidth() {
       if (!this.dialog.ChildDialogIDs) return 1;
       let newDialogOffset = this.$store.state.newDialog ? 1 : 0;
       return ((this.dialog.ChildDialogIDs.length - newDialogOffset) * 400) + 1;
