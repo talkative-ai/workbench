@@ -339,6 +339,18 @@ const actions = {
     if (index === state.dialogChain[state.selectedEntity.data.ID].length - 1) {
       return;
     }
+
+    // If linking a dialog, then the chain doesn't navigate
+    // But rather previews a conversation cycle
+    if (state.connectingDialogID) {
+      if (state.previewConnect) {
+        state.dialogMap[state.connectingDialogID].ChildDialogIDs.pop();
+      }
+      Vue.set(state, 'previewConnect', state.dialogChain[state.selectedEntity.data.ID][index]);
+      state.dialogMap[state.connectingDialogID].ChildDialogIDs.push(state.dialogChain[state.selectedEntity.data.ID][index]);
+      return;
+    }
+
     if (index === 0) {
       commit('sliceChain', 1);
       commit('setDialogSiblings', state.rootDialogs);
