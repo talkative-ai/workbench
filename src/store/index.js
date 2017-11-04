@@ -239,27 +239,7 @@ const actions = {
 
   updateDialog({ commit, state }) {
     if (state.selectedEntity.type !== 'actor') return;
-    for (const d of state.selectedEntity.data.Dialogs) {
-      if (!d.ID) continue;
-      d.ID = Number(d.ID);
-    }
-    for (const r of state.selectedEntity.data.DialogRelations) {
-      if (!isNaN(r.ChildNodeID)) {
-        r.ChildNodeID = Number(r.ChildNodeID);
-      }
-      if (!isNaN(r.ParentNodeID)) {
-        r.ParentNodeID = Number(r.ParentNodeID);
-      }
-    }
     API.PutActor(state.selectedEntity.data);
-    for (const d of state.selectedEntity.data.Dialogs) {
-      if (!d.ID) continue;
-      d.ID = d.ID.toString();
-    }
-    for (const r of state.selectedEntity.data.DialogRelations) {
-      r.ChildNodeID = Number(r.ChildNodeID).toString();
-      r.ParentNodeID = Number(r.ParentNodeID).toString();
-    }
   },
 
   publish({ commit, state }) {
@@ -360,9 +340,9 @@ const actions = {
       return;
     }
     if (index === 0) {
-      commit('setSelectedDialog', null);
-      commit('sliceChain', 0);
-      dispatch('selectDialog');
+      commit('sliceChain', 1);
+      commit('setDialogSiblings', state.rootDialogs);
+      commit('setSelectedDialog', state.dialogChain[state.selectedEntity.data.ID][0]);
       return;
     }
     dispatch('selectDialog', {
