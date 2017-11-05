@@ -7,20 +7,34 @@
           span.Headline--dark You're in the zone.
           br
           | Actors say and do what you wish.
-      paper-path
-        grid(gutterSm fit)
-          .Grid-cell
-            .Paper-text
-              w-button(large @click.native="$router.push({ name: 'ActorCreate', params: { zoneid: $route.params.id } })").Headline
-                | Add an Actor
-                span.u-arrowEast
-
-              template(v-if="$store.state.zoneActors[$route.params.id] && $store.state.zoneActors[$route.params.id].length")
-                .Headline.u-marginT3.u-marginB3 Or view an existing actor:
-                div(v-for="ActorID of $store.state.zoneActors[$route.params.id]" :key="ActorID")
-                  w-button(large @click.native="selectActor(ActorID)").Headline
-                    | {{ actors[ActorID].Title }}
-                    span.u-arrowEast
+      .Grid-cell
+        .Paper-text
+          w-button(large outline @click.native="$router.push({ name: 'ActorCreate', params: { zoneid: $route.params.id } })").Headline
+            | create an actor
+          .actor-wrap
+            .actor-item(
+              v-for="(actor, id) in $store.state.actorsMapped"
+              :class="!$store.state.zoneActors[$route.params.id] || !$store.state.zoneActors[$route.params.id][id] ? 'blank' : ''"
+              :key="id")
+              h1.Headline {{ actors[id].Title }}
+              .button-grid
+                w-button(
+                  class="add-button"
+                  v-if="!$store.state.zoneActors[$route.params.id] || !$store.state.zoneActors[$route.params.id][id]"
+                  @click.native="selectActor(id)"
+                )
+                  fa-icon(name="plus")
+                  | Add
+                w-button(
+                  outline
+                  v-if="$store.state.zoneActors[$route.params.id] && $store.state.zoneActors[$route.params.id][id]"
+                  @click.native="selectActor(id)"
+                )
+                  fa-icon(name="times")
+                  | Remove
+                w-button(@click.native="selectActor(id)")
+                  fa-icon(name="pencil")
+                  | Edit
 </template>
 
 <script>
@@ -65,5 +79,33 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.actor-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  div {
+    margin: 10pt 20pt 10pt 0;
+  }
+}
+.actor-item {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--color-brand);
+  padding: 5pt 5pt 0 5pt;
+  box-shadow: 0 0 5pt rgba(0,0,0,0.4);
+
+  &.blank {
+    box-shadow: none;
+    border-color: grey;
+    background-color: rgba(0,0,0,0.05);
+    h1 {
+      opacity: 0.5;
+    }
+  }
+}
+.Button {
+  svg {
+    margin-right: 5pt;
+  }
+}
 </style>

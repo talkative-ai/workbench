@@ -45,6 +45,8 @@ export default {
   padding: 8px 16px;
   // transition: background-color 0.1s, color 0.1s, opacity 0.2s ease-out;
   vertical-align: middle;
+  display: inline-flex;
+  align-items: center;
 
   &:hover {
     box-shadow: inset 0 0 0 999px color(var(--color-brand) blackness(20%));
@@ -72,11 +74,11 @@ export default {
   &.outline {
     background-color: transparent;
     box-shadow: inset 0 0 0 1px;
-    color: var(--color-brand);
+    color: var(--color-brand) !important;
 
     &:hover {
       background-color: var(--color-brand);
-      color: var(--color-bg);
+      color: var(--color-bg) !important;
     }
 
     &:focus {

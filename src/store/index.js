@@ -89,13 +89,13 @@ function setProject(state) {
     }
     for (const za of project.ZoneActors) {
       if (!state.zoneActors[za.ZoneID]) {
-        Vue.set(state.zoneActors, za.ZoneID, []);
+        Vue.set(state.zoneActors, za.ZoneID, {});
       }
       if (!state.actorZones[za.ActorID]) {
         Vue.set(state.actorZones, za.ActorID, []);
       }
-      state.zoneActors[za.ZoneID].push(za.ActorID);
-      state.actorZones[za.ActorID].push(za.ZoneID);
+      Vue.set(state.zoneActors[za.ZoneID], za.ActorID.toString(), true);
+      state.actorZones[za.ActorID].push(za.ZoneID.toString());
     }
 
     router.push({ name: 'ProjectHome' });
@@ -602,9 +602,9 @@ const mutations = {
     if (actor.ZoneIDs) {
       for (let zoneID of actor.ZoneIDs) {
         if (!state.zoneActors[zoneID]) {
-          Vue.set(state.zoneActors, zoneID, []);
+          Vue.set(state.zoneActors, zoneID, {});
         }
-        state.zoneActors[zoneID].push(actor.ID);
+        Vue.set(state.zoneActors[zoneID], actor.ID, true);
         if (!state.actorZones[actor.ID]) {
           Vue.set(state.actorZones, actor.ID, []);
         }
@@ -621,7 +621,7 @@ const mutations = {
     }
     Vue.set(state, 'rootDialogs', []);
     Vue.set(state, 'dialogMap', {});
-    Vue.set(state, 'dialogSiblings', {});
+    Vue.set(state, 'dialogSiblings', []);
 
     let id = 0;
     for (let idx in state.selectedProject.Actors) {
