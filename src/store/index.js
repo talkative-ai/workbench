@@ -167,6 +167,9 @@ const actions = {
     actor.CreateID = await dispatch('generateID');
     return API.CreateActor(actor)
     .then(newActor => {
+      Vue.set(state.dialogChain, newActor.ID, []);
+      newActor.Dialogs = newActor.Dialogs || [];
+      newActor.DialogRelations = newActor.DialogRelations || [];
       commit('addActor', newActor);
       commit('selectEntity', { type: 'actor', data: newActor, redirect: true });
       return newActor;
@@ -403,7 +406,7 @@ const actions = {
       let p = API.PutActor(state.selectedEntity.data);
       if (state.newDialog) {
         p.then(result => {
-          const newID = result[state.newDialog.CreateID];
+          const newID = result[state.newDialog.CreateID].toString();
           state.dialogChain[state.selectedEntity.data.ID].pop();
           commit('updateDialogChain', state.dialogChain);
           commit('replaceNewDialog', result);
@@ -590,15 +593,17 @@ const mutations = {
   addActor(state, actor) {
     state.selectedProject.Actors.push(actor);
     Vue.set(state.actorsMapped, actor.ID, actor);
-    if (actor.ZoneID) {
-      if (!state.zoneActors[actor.ZoneID]) {
-        Vue.set(state.zoneActors, actor.ZoneID, []);
+    if (actor.ZoneIDs) {
+      for (let zoneID of actor.ZoneIDs) {
+        if (!state.zoneActors[zoneID]) {
+          Vue.set(state.zoneActors, zoneID, []);
+        }
+        state.zoneActors[zoneID].push(actor.ID);
+        if (!state.actorZones[actor.ID]) {
+          Vue.set(state.actorZones, actor.ID, []);
+        }
+        state.actorZones[actor.ID].push(zoneID);
       }
-      state.zoneActors[actor.ZoneID].push(actor.ID);
-      if (!state.actorZones[actor.ID]) {
-        Vue.set(state.actorZones, actor.ID, []);
-      }
-      state.actorZones[actor.ID].push(actor.ZoneID);
     }
   },
 

@@ -82,7 +82,7 @@ export default {
   methods: {
     create() {
       if (this.zoneid) {
-        this.actor.ZoneID = this.zoneid;
+        this.actor.ZoneIDs = [ this.zoneid ];
       }
       this.$store.dispatch('createActor', this.actor);
     },
