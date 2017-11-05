@@ -263,7 +263,7 @@ const actions = {
 
   // selectDialog manages the state of the currently selected dialog
   // and all previously selected parent dialogs within the dialogChain
-  selectDialog({ state, commit }, { dialogID, isChild = false, relativeParent } = {}) {
+  selectDialog({ state, dispatch, commit }, { dialogID, isChild = false, relativeParent } = {}) {
     // If no dialog is specified
     // and there is no default selected dialog
     // and there exist root dialogs
@@ -410,6 +410,9 @@ const actions = {
           state.dialogChain[state.selectedEntity.data.ID].pop();
           commit('updateDialogChain', state.dialogChain);
           commit('replaceNewDialog', result);
+          if (!state.dialogSiblings.length) {
+            state.dialogSiblings.push(newID);
+          }
           dispatch('selectDialog', { dialogID: newID, isChild: !state.dialogMap[newID].IsRoot });
         });
       }
@@ -443,6 +446,9 @@ const actions = {
     newDialog.CreateID = newID;
     if (!dialogID) {
       commit('newRootDialog', newDialog);
+      if (state.rootDialogs.length === 1) {
+        state.dialogChain[state.selectedEntity.data.ID].push(newDialog.ID);
+      }
       dispatch('selectChain', 0);
     } else {
       commit('newChildDialog', { newDialog: newDialog, parentID: dialogID });

@@ -18,7 +18,8 @@
           DummyNode(
             v-if="!$store.state.newDialog"
             @click.native="$store.dispatch('startNewConversation', dialogChain.slice(-1).pop())"
-            isChildIteration="true")
+            isChildIteration="true"
+            )
             IconButton(name="plus" flat)
             template(v-if="$store.state.rootDialogs.length")
               | new
@@ -90,6 +91,7 @@ export default {
       return (this.$store.state.actorSelectedDialogID[this.$route.params.id] || '') === dialogID;
     },
     clickDialog(event, e) {
+      this.$store.dispatch('cancelEditDialog');
       this.$store.dispatch('selectDialog', event);
       Vue.nextTick(() => {
         this.tallest = 0;
@@ -104,6 +106,7 @@ export default {
       });
     },
     clickChain(index) {
+      this.$store.dispatch('cancelEditDialog');
       this.$store.dispatch('selectChain', index);
       Vue.nextTick(() => {
         this.tallest = 0;
