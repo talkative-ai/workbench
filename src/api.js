@@ -62,7 +62,14 @@ export default {
         Title
       }]
     })
-    .then(idMap => idMap.json())
+    .then(idMap => {
+      if (idMap.status !== 201) {
+        return idMap.json().then(result => {
+          throw result;
+        });
+      }
+      return idMap.json();
+    })
     .then(idMap => ({
       ID: idMap[CreateID],
       Title
@@ -73,7 +80,14 @@ export default {
     return aumFetch('PATCH', `project/${store.state.selectedProject.ID}`, {
       Actors: [actor]
     })
-    .then(idMap => idMap.json())
+    .then(idMap => {
+      if (idMap.status !== 201) {
+        return idMap.json().then(result => {
+          throw result;
+        });
+      }
+      return idMap.json();
+    })
     .then(idMap => {
       actor.ID = idMap[actor.CreateID];
       delete actor.CreateID;
@@ -83,7 +97,14 @@ export default {
 
   CreateProject(project) {
     return aumFetch('POST', `project`, project)
-    .then(result => result.json());
+    .then(result => {
+      if (result.status !== 201) {
+        return result.json().then(result => {
+          throw result;
+        });
+      }
+      return result.json();
+    });
   },
 
   Publish() {

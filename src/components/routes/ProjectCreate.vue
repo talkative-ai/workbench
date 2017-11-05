@@ -52,7 +52,7 @@ export default {
       this.creating = true;
       this.$store.dispatch('createProject', this.project)
       .catch(err => {
-        switch (err) {
+        switch (err.message) {
           case 'project_exists':
             this.createError = `A project with the title "${this.project.Title}" already exists.`;
             break;
