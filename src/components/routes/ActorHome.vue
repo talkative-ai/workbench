@@ -9,23 +9,10 @@
         form.Form(@submit.prevent="create")
           grid(gutter)
             .Grid-cell.u-size2of3
-              .Headline.Headline--dark(v-if="actor.Sex")
-                span {{ actor.Sex }}
-                span(v-if="actor.Age") ,&nbsp;{{ actor.Age }}
-              .Headline.Headline--dark(v-if="actor.Relationships")
-                span {{ actor.Relationships.type }}
-                | to
-                span {{ actor.Relationships }}
-              section(v-if="actor.Story")
-                p.u-colorTextDark Background Story:
-                p {{ actor.Story }}
-              section(v-if="actor.Character")
-                p.u-colorTextDark Character:
-                p {{ actor.Character }}
               p.u-colorTextDark Where this actor appears:
               section.u-marginT3
-                h2.Text.u-colorTextLite(v-if="!actorZones[actor.ID] || !actorZones[actor.ID].length") {{ actor.Title }} hasn't appeared yet
-                h2.Text(v-else v-for="zoneID in actorZones[actor.ID]") {{ zones[zoneID].Title }}
+                h2.Text.u-colorTextLite(v-if="!actor.ZoneIDs || !actor.ZoneIDs.length") {{ actor.Title }} hasn't appeared yet
+                h2.Text(v-else v-for="zoneID in actor.ZoneIDs") {{ zones[zoneID].Title }}
 
           grid(gutter)
             form.Form(@submit.prevent="")
@@ -66,7 +53,7 @@ export default {
     },
 
     zones() {
-      return this.$store.state.zonesMapped;
+      return this.$store.state.zoneMap;
     }
   }
 };

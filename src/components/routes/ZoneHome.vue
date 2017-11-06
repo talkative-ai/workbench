@@ -13,7 +13,7 @@
             | create an actor
           .actor-wrap
             .actor-item(
-              v-for="(actor, id) in $store.state.actorsMapped"
+              v-for="(actor, id) in $store.state.actorMap"
               :class="!$store.state.zoneActors[$route.params.id] || !$store.state.zoneActors[$route.params.id][id] ? 'blank' : ''"
               :key="id")
               h1.Headline {{ actors[id].Title }}
@@ -21,14 +21,14 @@
                 w-button(
                   class="add-button"
                   v-if="!$store.state.zoneActors[$route.params.id] || !$store.state.zoneActors[$route.params.id][id]"
-                  @click.native="selectActor(id)"
+                  @click.native="addActor(id)"
                 )
                   fa-icon(name="plus")
                   | Add
                 w-button(
                   outline
                   v-if="$store.state.zoneActors[$route.params.id] && $store.state.zoneActors[$route.params.id][id]"
-                  @click.native="selectActor(id)"
+                  @click.native="removeActor(id)"
                 )
                   fa-icon(name="times")
                   | Remove
@@ -65,7 +65,7 @@ export default {
   },
   computed: {
     actors() {
-      return this.$store.state.actorsMapped;
+      return this.$store.state.actorMap;
     }
   },
   methods: {
@@ -74,6 +74,12 @@ export default {
       .then(() => {
         this.$router.push({ name: 'ActorHome', params: { id: ID } });
       });
+    },
+    removeActor(ID) {
+      this.$store.dispatch('removeActorFromZone', { actorID: ID, zoneID: this.$route.params.id });
+    },
+    addActor(ID) {
+      this.$store.dispatch('addActorToZone', { actorID: ID, zoneID: this.$route.params.id });
     }
   }
 };

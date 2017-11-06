@@ -28,11 +28,14 @@ export default {
   },
 
   PutActor(actor) {
-    for (const d of actor.Dialogs) {
+    for (const d of actor.Dialogs || []) {
       if (!d.ID) continue;
       d.ID = Number(d.ID);
     }
-    for (const r of actor.DialogRelations) {
+    for (const id in actor.ZoneIDs || []) {
+      actor.ZoneIDs[id] = Number(actor.ZoneIDs[id]);
+    }
+    for (const r of actor.DialogRelations || []) {
       if (!isNaN(r.ChildNodeID)) {
         r.ChildNodeID = Number(r.ChildNodeID);
       }
@@ -42,17 +45,25 @@ export default {
     }
     return aumFetch('PUT', `actor/${actor.ID}`, actor)
     .then(result => {
-      for (const d of actor.Dialogs) {
+      for (const d of actor.Dialogs || []) {
         if (!d.ID) continue;
         d.ID = d.ID.toString();
       }
-      for (const r of actor.DialogRelations) {
+      for (const id in actor.ZoneIDs || []) {
+        actor.ZoneIDs[id] = actor.ZoneIDs[id].toString();
+      }
+      for (const r of actor.DialogRelations || []) {
         r.ChildNodeID = r.ChildNodeID.toString();
         r.ParentNodeID = r.ParentNodeID.toString();
       }
 
       return result.json();
     });
+  },
+
+  PutZone(zone) {
+    return aumFetch('PUT', `zone/${zone.ID}`, zone)
+    .then(result => result.json());
   },
 
   CreateZone({ CreateID, Title }) {

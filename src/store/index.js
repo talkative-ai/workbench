@@ -8,6 +8,17 @@ import API from '@/api';
 
 Vue.use(Vuex);
 
+class SelectedEntity {
+  constructor({ kind, data } = {}) {
+    this.kind = kind;
+    this._data = data;
+  }
+
+  get data() {
+    return this._data;
+  }
+}
+
 const defaultDialog = {
   'IsRoot': true,
   'EntryInput': [''],
@@ -35,17 +46,15 @@ const initialState = {
 
   projectsList: null,
   selectedProject: null,
-  selectedEntity: {},
+  selectedEntity: new SelectedEntity(),
 
   dialogMap: {},
   rootDialogs: [],
   newDialog: null,
 
-  actorsMapped: {},
-  zonesMapped: {},
+  actorMap: {},
+  zoneMap: {},
   zoneActors: {},
-
-  actorZones: {},
 
   // Map a selected DialogID to the ActorID
   actorSelectedDialogID: {},
@@ -82,20 +91,20 @@ function setProject(state) {
 
     Vue.set(state, 'selectedProject', project);
     for (const a of project.Actors) {
-      Vue.set(state.actorsMapped, a.ID, a);
+      Vue.set(state.actorMap, a.ID, a);
     }
     for (const z of project.Zones) {
-      Vue.set(state.zonesMapped, z.ID, z);
+      Vue.set(state.zoneMap, z.ID, z);
     }
     for (const za of project.ZoneActors) {
       if (!state.zoneActors[za.ZoneID]) {
         Vue.set(state.zoneActors, za.ZoneID, {});
       }
-      if (!state.actorZones[za.ActorID]) {
-        Vue.set(state.actorZones, za.ActorID, []);
+      if (!state.actorMap[za.ActorID].ZoneIDs) {
+        Vue.set(state.actorMap[za.ActorID], 'ZoneIDs', []);
       }
       Vue.set(state.zoneActors[za.ZoneID], za.ActorID.toString(), true);
-      state.actorZones[za.ActorID].push(za.ZoneID.toString());
+      state.actorMap[za.ActorID].ZoneIDs.push(za.ZoneID.toString());
     }
 
     router.push({ name: 'ProjectHome' });
@@ -158,7 +167,7 @@ const actions = {
     return API.CreateZone(zone)
     .then(newZone => {
       commit('addZone', newZone);
-      commit('selectEntity', { type: 'zone', data: newZone, redirect: true });
+      commit('selectEntity', { kind: 'zone', data: newZone, redirect: true });
       return newZone;
     });
   },
@@ -171,7 +180,7 @@ const actions = {
       newActor.Dialogs = newActor.Dialogs || [];
       newActor.DialogRelations = newActor.DialogRelations || [];
       commit('addActor', newActor);
-      commit('selectEntity', { type: 'actor', data: newActor, redirect: true });
+      commit('selectEntity', { kind: 'actor', data: newActor, redirect: true });
       return newActor;
     });
   },
@@ -212,7 +221,7 @@ const actions = {
 
   selectZone({ commit, state }, zoneID) {
     if (state.selectedEntity.data && state.selectedEntity.data.ID === zoneID) return;
-    const zone = state.zonesMapped[zoneID];
+    const zone = state.zoneMap[zoneID];
     if (!zone) {
       router.push({ name: 'NotFound' });
       return;
@@ -220,13 +229,13 @@ const actions = {
     return API.GetZone(zone)
     .then(zone => {
       commit('updateZone', zone);
-      commit('selectEntity', { type: 'zone', data: zone });
+      commit('selectEntity', { kind: 'zone', data: zone });
     });
   },
 
   selectActor({ commit, state }, actorID) {
-    if (state.selectedEntity.data && state.selectedEntity.type === 'actor' && state.selectedEntity.data.ID === actorID) return;
-    const actor = state.actorsMapped[actorID];
+    if (state.selectedEntity.data && state.selectedEntity.kind === 'actor' && state.selectedEntity.data.ID === actorID) return;
+    const actor = state.actorMap[actorID];
     if (!actor) {
       router.push({ name: 'NotFound' });
       return;
@@ -234,12 +243,12 @@ const actions = {
     return API.GetActor(actor)
     .then(actor => {
       commit('updateActor', { actor });
-      commit('selectEntity', { type: 'actor', data: actor });
+      commit('selectEntity', { kind: 'actor', data: actor });
     });
   },
 
   updateDialog({ commit, state }) {
-    if (state.selectedEntity.type !== 'actor') return;
+    if (state.selectedEntity.kind !== 'actor') return;
     API.PutActor(state.selectedEntity.data);
   },
 
@@ -480,6 +489,23 @@ const actions = {
         Vue.set(state, 'conversationCycle', false);
       }
     }
+  },
+
+  removeActorFromZone({ state }, { actorID, zoneID }) {
+    Vue.set(state.zoneActors[zoneID], actorID, false);
+    for (let z of state.actorMap[actorID].ZoneIDs) {
+      if (z.toString() === zoneID.toString()) {
+        state.actorMap[actorID].ZoneIDs.splice(z, 1);
+        break;
+      }
+    }
+    API.PutActor(state.actorMap[actorID]);
+  },
+
+  addActorToZone({ state }, { actorID, zoneID }) {
+    Vue.set(state.zoneActors[zoneID], actorID, true);
+    state.actorMap[actorID].ZoneIDs.push(zoneID);
+    API.PutActor(state.actorMap[actorID]);
   }
 };
 
@@ -593,22 +619,19 @@ const mutations = {
 
   addZone(state, zone) {
     state.selectedProject.Zones.push(zone);
-    Vue.set(state.zonesMapped, zone.ID, zone);
+    Vue.set(state.zoneMap, zone.ID, zone);
+    Vue.set(state.zoneActors, zone.ID, {});
   },
 
   addActor(state, actor) {
     state.selectedProject.Actors.push(actor);
-    Vue.set(state.actorsMapped, actor.ID, actor);
+    Vue.set(state.actorMap, actor.ID, actor);
     if (actor.ZoneIDs) {
       for (let zoneID of actor.ZoneIDs) {
         if (!state.zoneActors[zoneID]) {
           Vue.set(state.zoneActors, zoneID, {});
         }
         Vue.set(state.zoneActors[zoneID], actor.ID, true);
-        if (!state.actorZones[actor.ID]) {
-          Vue.set(state.actorZones, actor.ID, []);
-        }
-        state.actorZones[actor.ID].push(zoneID);
       }
     }
   },
@@ -658,25 +681,28 @@ const mutations = {
   },
 
   updateZone(state, zone) {
-    Vue.set(state.zonesMapped, zone.ID, zone);
+    Vue.set(state.zoneMap, zone.ID, zone);
+    if (!state.zoneActors[zone.ID]) {
+      Vue.set(state.zoneActors, zone.ID, {});
+    }
   },
 
   // TODO: Add comments
   selectEntity(state, entity) {
     let redirect = entity.redirect;
     delete entity.redirect;
-    state.selectedEntity = { ...state.selectedEntity, ...entity };
+    state.selectedEntity = new SelectedEntity(entity);
     if (redirect) {
-      if (entity.type === 'dialog') {
+      if (entity.kind === 'dialog') {
         router.push({ name: 'DialogHome', params: { id: entity.data.ActorID, dialog_id: entity.data.ID } });
       } else {
-        router.push({ name: `${titlecase(entity.type)}Home`, params: { id: entity.data.ID } });
+        router.push({ name: `${titlecase(entity.kind)}Home`, params: { id: entity.data.ID } });
       }
     }
   },
 
   clearSelectedEntity(state, entity) {
-    state.selectedEntity = {};
+    state.selectedEntity = new SelectedEntity();
   },
 
   newDialog(state, options = {}) {
