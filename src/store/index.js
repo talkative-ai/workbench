@@ -511,9 +511,9 @@ const actions = {
     if (!state.actorMap[ActorID].zoneIDs) {
       Vue.set(state.actorMap[ActorID], 'zoneIDs', []);
     }
-    for (let z of state.actorMap[ActorID].zoneIDs) {
-      if (z.toString() === ZoneID.toString()) {
-        state.actorMap[ActorID].zoneIDs.splice(z, 1);
+    for (let id in state.actorMap[ActorID].zoneIDs) {
+      if (state.actorMap[ActorID].zoneIDs[id].toString() === ZoneID.toString()) {
+        state.actorMap[ActorID].zoneIDs.splice(id, 1);
         break;
       }
     }

@@ -45,11 +45,7 @@ export default {
   },
   computed: {
     actor() {
-      return this.$store.state.selectedEntity ? this.$store.state.selectedEntity.data : {};
-    },
-
-    actorZones() {
-      return this.$store.state.actorZones;
+      return this.$store.state.selectedEntity ? this.$store.state.actorMap[this.$store.state.selectedEntity.data.ID] : {};
     },
 
     zones() {
