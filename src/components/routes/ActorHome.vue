@@ -11,8 +11,8 @@
             .Grid-cell.u-size2of3
               p.u-colorTextDark Where this actor appears:
               section.u-marginT3
-                h2.Text.u-colorTextLite(v-if="!actor.ZoneIDs || !actor.ZoneIDs.length") {{ actor.Title }} hasn't appeared yet
-                h2.Text(v-else v-for="zoneID in actor.ZoneIDs") {{ zones[zoneID].Title }}
+                h2.Text.u-colorTextLite(v-if="!actor.zoneIDs || !actor.zoneIDs.length") {{ actor.Title }} hasn't appeared yet
+                h2.Text(v-else v-for="zoneID in actor.zoneIDs") {{ zones[zoneID].Title }}
 
           grid(gutter)
             form.Form(@submit.prevent="")

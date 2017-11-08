@@ -1,5 +1,3 @@
-import Vue from 'vue';
-
 import store from './store';
 
 export default {
@@ -32,9 +30,6 @@ export default {
       if (!d.ID) continue;
       d.ID = Number(d.ID);
     }
-    for (const id in actor.ZoneIDs || []) {
-      actor.ZoneIDs[id] = Number(actor.ZoneIDs[id]);
-    }
     for (const r of actor.DialogRelations || []) {
       if (!isNaN(r.ChildNodeID)) {
         r.ChildNodeID = Number(r.ChildNodeID);
@@ -48,9 +43,6 @@ export default {
       for (const d of actor.Dialogs || []) {
         if (!d.ID) continue;
         d.ID = d.ID.toString();
-      }
-      for (const id in actor.ZoneIDs || []) {
-        actor.ZoneIDs[id] = actor.ZoneIDs[id].toString();
       }
       for (const r of actor.DialogRelations || []) {
         r.ChildNodeID = r.ChildNodeID.toString();
@@ -87,9 +79,10 @@ export default {
     }));
   },
 
-  CreateActor(actor) {
+  CreateActor({ Actor, ZoneActors = [] }) {
     return aumFetch('PATCH', `project/${store.state.selectedProject.ID}`, {
-      Actors: [actor]
+      Actors: [ Actor ],
+      ZoneActors
     })
     .then(idMap => {
       if (idMap.status !== 201) {
@@ -98,11 +91,32 @@ export default {
         });
       }
       return idMap.json();
+    });
+  },
+
+  PatchProject(params) {
+    return aumFetch('PATCH', `project/${store.state.selectedProject.ID}`, params)
+    .then(idMap => {
+      if (idMap.status < 200 || idMap.status > 299) {
+        return idMap.json().then(result => {
+          throw result;
+        });
+      }
+      return idMap.json();
+    });
+  },
+
+  UpdateActorZones(ActorZones) {
+    return aumFetch('PATCH', `project/${store.state.selectedProject.ID}`, {
+      ActorZones
     })
     .then(idMap => {
-      actor.ID = idMap[actor.CreateID];
-      delete actor.CreateID;
-      return actor;
+      if (idMap.status !== 201) {
+        return idMap.json().then(result => {
+          throw result;
+        });
+      }
+      return idMap.json();
     });
   },
 
@@ -152,7 +166,7 @@ function aumFetch(method, path, payload) {
     }
     return result;
   }).then(result => {
-    Vue.set(store.state, 'token', result.headers.get('x-token'));
+    store.commit('updateToken', result.headers.get('x-token'));
     return result;
   });
 }

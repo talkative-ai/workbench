@@ -5,6 +5,7 @@ import dcopy from 'deep-copy';
 
 import router from '@/router';
 import API from '@/api';
+import { PATCH_ACTION } from '@/const';
 
 Vue.use(Vuex);
 
@@ -100,11 +101,11 @@ function setProject(state) {
       if (!state.zoneActors[za.ZoneID]) {
         Vue.set(state.zoneActors, za.ZoneID, {});
       }
-      if (!state.actorMap[za.ActorID].ZoneIDs) {
-        Vue.set(state.actorMap[za.ActorID], 'ZoneIDs', []);
+      if (!state.actorMap[za.ActorID].zoneIDs) {
+        Vue.set(state.actorMap[za.ActorID], 'zoneIDs', []);
       }
       Vue.set(state.zoneActors[za.ZoneID], za.ActorID.toString(), true);
-      state.actorMap[za.ActorID].ZoneIDs.push(za.ZoneID.toString());
+      state.actorMap[za.ActorID].zoneIDs.push(za.ZoneID.toString());
     }
 
     router.push({ name: 'ProjectHome' });
@@ -172,16 +173,30 @@ const actions = {
     });
   },
 
-  async createActor({ commit, state, dispatch }, actor) {
-    actor.CreateID = await dispatch('generateID');
-    return API.CreateActor(actor)
-    .then(newActor => {
-      Vue.set(state.dialogChain, newActor.ID, []);
-      newActor.Dialogs = newActor.Dialogs || [];
-      newActor.DialogRelations = newActor.DialogRelations || [];
-      commit('addActor', newActor);
-      commit('selectEntity', { kind: 'actor', data: newActor, redirect: true });
-      return newActor;
+  async createActor({ commit, state, dispatch }, Actor) {
+    Actor.CreateID = await dispatch('generateID');
+    let ZoneActors = [];
+    let zoneActor;
+    if (Actor.ZoneID) {
+      zoneActor = {
+        ZoneID: Actor.ZoneID,
+        ActorID: Actor.CreateID,
+        PatchAction: PATCH_ACTION.CREATE
+      };
+      ZoneActors.push(zoneActor);
+    }
+    return API.CreateActor({ Actor, ZoneActors })
+    .then(idMap => {
+      Actor.ID = idMap[Actor.CreateID];
+      zoneActor.ActorID = idMap[Actor.CreateID];
+      delete Actor.CreateID;
+
+      Vue.set(state.dialogChain, Actor.ID, []);
+      Actor.Dialogs = Actor.Dialogs || [];
+      Actor.DialogRelations = Actor.DialogRelations || [];
+      commit('addActor', Actor);
+      commit('selectEntity', { kind: 'actor', data: Actor, redirect: true });
+      return Actor;
     });
   },
 
@@ -400,7 +415,7 @@ const actions = {
           state.selectedEntity.data.DialogRelations.push({
             ChildNodeID: state.newDialog.CreateID,
             ParentNodeID: state.newDialog.ParentDialogIDs[0],
-            PatchAction: 0
+            PatchAction: PATCH_ACTION.CREATE
           });
         }
       } else {
@@ -491,21 +506,39 @@ const actions = {
     }
   },
 
-  removeActorFromZone({ state }, { actorID, zoneID }) {
-    Vue.set(state.zoneActors[zoneID], actorID, false);
-    for (let z of state.actorMap[actorID].ZoneIDs) {
-      if (z.toString() === zoneID.toString()) {
-        state.actorMap[actorID].ZoneIDs.splice(z, 1);
+  removeActorFromZone({ state }, { ActorID, ZoneID }) {
+    Vue.set(state.zoneActors[ZoneID], ActorID, false);
+    if (!state.actorMap[ActorID].zoneIDs) {
+      Vue.set(state.actorMap[ActorID], 'zoneIDs', []);
+    }
+    for (let z of state.actorMap[ActorID].zoneIDs) {
+      if (z.toString() === ZoneID.toString()) {
+        state.actorMap[ActorID].zoneIDs.splice(z, 1);
         break;
       }
     }
-    API.PutActor(state.actorMap[actorID]);
+    API.PatchProject({
+      ZoneActors: [{
+        ZoneID: Number(ZoneID),
+        ActorID: Number(ActorID),
+        PatchAction: PATCH_ACTION.DELETE
+      }]
+    });
   },
 
-  addActorToZone({ state }, { actorID, zoneID }) {
-    Vue.set(state.zoneActors[zoneID], actorID, true);
-    state.actorMap[actorID].ZoneIDs.push(zoneID);
-    API.PutActor(state.actorMap[actorID]);
+  addActorToZone({ state }, { ActorID, ZoneID }) {
+    Vue.set(state.zoneActors[ZoneID], ActorID, true);
+    if (!state.actorMap[ActorID].zoneIDs) {
+      Vue.set(state.actorMap[ActorID], 'zoneIDs', []);
+    }
+    state.actorMap[ActorID].zoneIDs.push(ZoneID);
+    API.PatchProject({
+      ZoneActors: [{
+        ZoneID: Number(ZoneID),
+        ActorID: Number(ActorID),
+        PatchAction: PATCH_ACTION.CREATE
+      }]
+    });
   }
 };
 
@@ -531,6 +564,10 @@ function validateDialog(dialog) {
 }
 
 const mutations = {
+
+  updateToken(state, value) {
+    store.state.token = value;
+  },
 
   updateDialogChain(state, value) {
     state.dialogChain = value;
@@ -626,8 +663,8 @@ const mutations = {
   addActor(state, actor) {
     state.selectedProject.Actors.push(actor);
     Vue.set(state.actorMap, actor.ID, actor);
-    if (actor.ZoneIDs) {
-      for (let zoneID of actor.ZoneIDs) {
+    if (actor.zoneIDs) {
+      for (let zoneID of actor.zoneIDs) {
         if (!state.zoneActors[zoneID]) {
           Vue.set(state.zoneActors, zoneID, {});
         }

@@ -76,10 +76,10 @@ export default {
       });
     },
     removeActor(ID) {
-      this.$store.dispatch('removeActorFromZone', { actorID: ID, zoneID: this.$route.params.id });
+      this.$store.dispatch('removeActorFromZone', { ActorID: ID, ZoneID: this.$route.params.id });
     },
     addActor(ID) {
-      this.$store.dispatch('addActorToZone', { actorID: ID, zoneID: this.$route.params.id });
+      this.$store.dispatch('addActorToZone', { ActorID: ID, ZoneID: this.$route.params.id });
     }
   }
 };
