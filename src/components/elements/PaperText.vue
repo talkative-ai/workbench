@@ -26,7 +26,7 @@ export default {
 <style scoped>
 .Paper-text {
   padding-top: calc(1.5 * var(--grid-gutter));
-  padding-bottom: calc(2 * var(--grid-gutter));
+  padding-bottom: 0;
   padding-left: calc(3 * var(--grid-gutter));
   padding-right: calc(2 * var(--grid-gutter));
 }

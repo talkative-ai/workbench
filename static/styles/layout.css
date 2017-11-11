@@ -67,7 +67,7 @@
 /* Dupe fro now while I play w/ scoped components */
 .Paper-text {
   padding-top: calc(1.5 * var(--grid-gutter));
-  padding-bottom: calc(2 * var(--grid-gutter));
+  padding-bottom: calc(var(--grid-gutter));
   padding-left: calc(3 * var(--grid-gutter));
   padding-right: calc(2 * var(--grid-gutter));
 }

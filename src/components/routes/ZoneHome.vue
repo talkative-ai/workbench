@@ -5,10 +5,25 @@
       paper-text
         h1.Headline
           span.Headline--dark You're in the zone.
-          br
-          | Actors say and do what you wish.
       .Grid-cell
         .Paper-text
+          .info-box
+            w-button(large outline v-if="!introMessageExists" @click.native="createIntroMessage()").Headline add an introduction
+            template(v-else)
+              h1.Headline A message to play when they first enter
+              textarea(v-model="newIntroMessage")
+              .button-grid
+                w-button(v-if="introMessageChanged")
+                  | Save Changes
+                w-button(
+                  v-if="introMessageChanged"
+                  @click.native="revertIntroMessage()"
+                  )
+                  | Cancel
+                w-button(@click.native="removeIntroMessage()")
+                  | Remove
+          hr
+          h1.Headline Actors say and do what you wish.
           w-button(large outline @click.native="$router.push({ name: 'ActorCreate', params: { zoneid: $route.params.id } })").Headline
             | create an actor
           .actor-wrap
@@ -44,8 +59,7 @@ import PaperText from '../elements/PaperText';
 import PaperPath from '../elements/PaperPath';
 import Sidebar from '../Sidebar';
 import Paper from '../Paper';
-import BGActors from '@/assets/images/milky-way.jpg';
-import BGTriggers from '@/assets/images/door.jpg';
+import { PATCH_ACTION, TRIGGER_TYPES } from '@/const';
 
 export default {
   name: 'ZoneHome',
@@ -58,14 +72,26 @@ export default {
     Paper
   },
   data() {
+    let newIntroMessage = '';
+    if (this.$store.state.zoneMap[this.$route.params.id].Triggers[TRIGGER_TYPES.InitializeZone]) {
+      newIntroMessage = this.$store.state.zoneMap[this.$route.params.id].Triggers[TRIGGER_TYPES.InitializeZone].AlwaysExec.PlaySounds[0].Val;
+    }
     return {
-      BGActors,
-      BGTriggers
+      newIntroMessage
     };
   },
   computed: {
     actors() {
       return this.$store.state.actorMap;
+    },
+    zone() {
+      return this.$store.state.zoneMap[this.$route.params.id];
+    },
+    introMessageExists() {
+      return this.zone.Triggers[TRIGGER_TYPES.InitializeZone] && this.zone.Triggers[TRIGGER_TYPES.InitializeZone].PatchAction !== PATCH_ACTION.DELETE;
+    },
+    introMessageChanged() {
+      return this.newIntroMessage !== this.zone.Triggers[TRIGGER_TYPES.InitializeZone].AlwaysExec.PlaySounds[0].Val;
     }
   },
   methods: {
@@ -80,6 +106,18 @@ export default {
     },
     addActor(ID) {
       this.$store.dispatch('addActorToZone', { ActorID: ID, ZoneID: this.$route.params.id });
+    },
+    createIntroMessage() {
+      this.$store.dispatch('createIntroMessage', this.$route.params.id);
+    },
+    saveIntroMessage() {
+      this.$store.dispatch('saveIntroMessage', { ZoneID: this.$route.param.id, message: this.newIntroMessage });
+    },
+    revertIntroMessage() {
+      this.newIntroMessage = this.$store.state.zoneMap[this.$route.params.id].Triggers[TRIGGER_TYPES.InitializeZone].AlwaysExec.PlaySounds[0].Val;
+    },
+    removeIntroMessage() {
+      this.$store.dispatch('removeIntroMessage', this.$route.params.id);
     }
   }
 };
@@ -112,6 +150,16 @@ export default {
 .Button {
   svg {
     margin-right: 5pt;
+  }
+}
+.info-box {
+  display: inline-flex;
+  flex-direction: column;
+  textarea {
+    width: 100%;
+  }
+  > * {
+    margin: 2pt 0;
   }
 }
 </style>

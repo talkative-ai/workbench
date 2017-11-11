@@ -5,7 +5,7 @@ import dcopy from 'deep-copy';
 
 import router from '@/router';
 import API from '@/api';
-import { PATCH_ACTION } from '@/const';
+import { PATCH_ACTION, TRIGGER_TYPES } from '@/const';
 
 Vue.use(Vuex);
 
@@ -20,19 +20,21 @@ class SelectedEntity {
   }
 }
 
+const defaultActionSet = {
+  'SetGlobalVariables': null,
+  'PlaySounds': [{
+    SoundType: 0,
+    Val: ''
+  }],
+  'InitializeActorDialog': 0,
+  'SetZone': 0,
+  'ResetGame': false
+};
+
 const defaultDialog = {
   'IsRoot': true,
   'EntryInput': [''],
-  'AlwaysExec': {
-    'SetGlobalVariables': null,
-    'PlaySounds': [{
-      SoundType: 0,
-      Val: ''
-    }],
-    'InitializeActorDialog': 0,
-    'SetZone': 0,
-    'ResetGame': false
-  },
+  'AlwaysExec': dcopy(defaultActionSet),
   'ChildDialogIDs': [],
   'ParentDialogIDs': []
 };
@@ -283,6 +285,27 @@ const actions = {
 
   reset() {
     return resetState({ keepAuth: true });
+  },
+
+  createIntroMessage({ state }, ZoneID) {
+    let zone = state.zoneMap[ZoneID];
+    if (!zone.Triggers[TRIGGER_TYPES.InitializeZone]) {
+      Vue.set(zone.Triggers, TRIGGER_TYPES.InitializeZone, {
+        'AlwaysExec': dcopy(defaultActionSet)
+      });
+    }
+    Vue.set(zone.Triggers[TRIGGER_TYPES.InitializeZone], 'PatchAction', PATCH_ACTION.CREATE);
+  },
+
+  saveIntroMessage({ state }, { ZoneID, message }) {
+    let zone = state.zoneMap[ZoneID];
+    Vue.set(zone.Triggers[TRIGGER_TYPES.InitializeZone].AlwaysExec.PlaySounds[0], 'Val', message);
+  },
+
+  removeIntroMessage({ state }, ZoneID) {
+    let zone = state.zoneMap[ZoneID];
+    if (!zone.Triggers[TRIGGER_TYPES.InitializeZone]) return;
+    Vue.set(zone.Triggers[TRIGGER_TYPES.InitializeZone], 'PatchAction', PATCH_ACTION.DELETE);
   },
 
   // selectDialog manages the state of the currently selected dialog
