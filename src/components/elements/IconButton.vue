@@ -4,8 +4,6 @@
     .label(v-if="label") {{ label }}
 </template>
 
-
-
 <script scoped>
 import 'vue-awesome/icons/pencil';
 import 'vue-awesome/icons/search';
@@ -26,8 +24,6 @@ export default {
   }
 };
 </script>
-
-
 
 <style lang="scss" scoped>
 .icon-button {

@@ -3,8 +3,6 @@
     slot
 </template>
 
-
-
 <script scoped>
 export default {
   name: 'grid',
@@ -26,9 +24,3 @@ export default {
   }
 };
 </script>
-
-
-
-<style >
-
-</style>

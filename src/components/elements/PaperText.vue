@@ -3,8 +3,6 @@
     slot
 </template>
 
-
-
 <script scoped>
 export default {
   name: 'paper-text',
@@ -20,8 +18,6 @@ export default {
   }
 };
 </script>
-
-
 
 <style scoped>
 .Paper-text {

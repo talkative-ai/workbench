@@ -3,8 +3,6 @@
     slot
 </template>
 
-
-
 <script scoped>
 export default {
   name: 'column',
@@ -28,8 +26,6 @@ export default {
   }
 };
 </script>
-
-
 
 <style scoped>
 .u-sizeMenu {

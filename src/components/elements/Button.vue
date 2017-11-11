@@ -3,8 +3,6 @@
     slot
 </template>
 
-
-
 <script scoped>
 export default {
   name: 'button',
@@ -28,8 +26,6 @@ export default {
   }
 };
 </script>
-
-
 
 <style lang="scss" scoped>
 .Button {

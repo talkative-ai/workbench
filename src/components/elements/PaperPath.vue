@@ -3,8 +3,6 @@
     slot
 </template>
 
-
-
 <script scoped>
 export default {
   name: 'paper-path',
@@ -13,8 +11,6 @@ export default {
   }
 };
 </script>
-
-
 
 <style scoped>
 .Paper-path {
