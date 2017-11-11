@@ -72,11 +72,7 @@ export default {
         });
       }
       return idMap.json();
-    })
-    .then(idMap => ({
-      ID: idMap[CreateID],
-      Title
-    }));
+    });
   },
 
   CreateActor({ Actor, ZoneActors = [] }) {

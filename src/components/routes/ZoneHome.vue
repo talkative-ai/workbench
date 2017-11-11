@@ -71,6 +71,15 @@ export default {
     Sidebar,
     Paper
   },
+  watch: {
+    '$route.params.id'(id) {
+      let newIntroMessage = '';
+      if (this.$store.state.zoneMap[this.$route.params.id].Triggers[TRIGGER_TYPES.InitializeZone]) {
+        newIntroMessage = this.$store.state.zoneMap[this.$route.params.id].Triggers[TRIGGER_TYPES.InitializeZone].AlwaysExec.PlaySounds[0].Val;
+      }
+      this.newIntroMessage = newIntroMessage;
+    }
+  },
   data() {
     let newIntroMessage = '';
     if (this.$store.state.zoneMap[this.$route.params.id].Triggers[TRIGGER_TYPES.InitializeZone]) {

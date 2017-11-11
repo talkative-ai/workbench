@@ -39,6 +39,11 @@ const defaultDialog = {
   'ParentDialogIDs': []
 };
 
+const defaultZone = {
+  'Title': '',
+  'Triggers': {}
+};
+
 const initialState = {
   initializing: true,
 
@@ -168,7 +173,11 @@ const actions = {
   async createZone({ commit, state, dispatch }, zone) {
     zone.CreateID = await dispatch('generateID');
     return API.CreateZone(zone)
-    .then(newZone => {
+    .then(idMap => {
+      let newZone = dcopy(defaultZone);
+      newZone.ID = idMap[zone.CreateID];
+      newZone.Title = zone.Title;
+
       commit('addZone', newZone);
       commit('selectEntity', { kind: 'zone', data: newZone, redirect: true });
       return newZone;
