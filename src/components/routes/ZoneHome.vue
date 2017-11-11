@@ -11,7 +11,10 @@
             w-button(large outline v-if="!introMessageExists" @click.native="createIntroMessage()").Headline add an introduction
             template(v-else)
               h1.Headline A message to play when they first enter
-              textarea(v-model="newIntroMessage")
+              textarea(
+                v-model="newIntroMessage"
+                :placeholder="`e.g. Welcome to ${zone.Title}! Try saying \"Hello\"`"
+                )
               .button-grid
                 w-button(v-if="introMessageChanged")
                   | Save Changes
