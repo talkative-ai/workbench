@@ -3,7 +3,10 @@
     h1 Choose a project:
     div(
       @click='toggleSelected(project)'
-      :class="`project ${selected.ID === project.ID ? 'selected' : ''}`"
+      :class=`{
+        project: true,
+        selected: selected.ID === project.ID,
+      }`
       v-for='project in projects'
       :key='project.ID'
     )

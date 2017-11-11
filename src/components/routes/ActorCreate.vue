@@ -45,7 +45,10 @@
               .u-textRight.u-marginT4
                 w-button(
                   large
-                  :class="`Headline ${!actor.Title.length ? 'disabled' : ''}`"
+                  :class=`{
+                    disabled: !actor.Title.length,
+                    Headline: true
+                  }`
                 )
                   | Create actor
                   span.u-arrowEast

@@ -1,5 +1,5 @@
 <template lang="pug">
-  div(:class="['Paper-path']")
+  div(class="Paper-path")
     slot
 </template>
 

@@ -1,7 +1,11 @@
 <template lang="pug">
   .DialogNode
     .wrap(
-      :class="nodeClass"
+      :class=`{
+        'dialog-node': true,
+        'selectable': $route.params.dialog_id !== dialog.ID,
+        'selected-node': isSelected || $store.state.dialogIsEditing === dialog.ID
+      }`
       :id="`dialog-${dialog.ID}`"
       ref="dialog"
     )
@@ -24,14 +28,19 @@
           .cover(
             v-else
             @click="$emit('click')"
-            :class="isSelected ? 'selected' : ''")
+            :class=`{
+              selected: isSelected
+            }`)
             h1(v-if="!isSelected")
               IconButton(name="search")
               | &nbsp;select
           //- Edit bar
           template(v-if="$store.state.connectingDialogID === dialog.ID")
           template(v-else-if="$store.state.connectingDialogID")
-            .edit-bar(:class="$store.state.dialogEditError[dialog.ID] ? 'with-error' : ''")
+            .edit-bar(
+              :class=`{
+                'with-error': $store.state.dialogEditError[dialog.ID]
+              }`)
               .button-grid-small
                 IconButton(
                   :style="{ width: '100%' }"
@@ -39,7 +48,10 @@
                   label="confirm connect"
                   @click.native="beginConnect()")
           template(v-else)
-            .edit-bar(:class="$store.state.dialogEditError[dialog.ID] ? 'with-error' : ''")
+            .edit-bar(
+              :class=`{
+                'with-error': $store.state.dialogEditError[dialog.ID]
+              }`)
               .button-grid-small
                 IconButton(name="pencil" label="edit" @click.native="beginEdit()")
                 IconButton(name="link" label="connect" @click.native="beginConnect()")
@@ -54,7 +66,7 @@
 
         //- Not editing
         template(v-if="!isEditing")
-          .entry(v-for="(entry, index) in dialog.EntryInput" :class="isChildIteration ? 'child' : ''")
+          .entry(v-for="(entry, index) in dialog.EntryInput" :class="{ 'child': isChildIteration }")
             | {{ dialog.EntryInput[index] }}
             span(v-if="index < dialog.EntryInput.length-1")
               | ,
@@ -69,7 +81,7 @@
         //- Editing
         template(v-else)
           h3 The user should say one of the following:
-          .entry(v-for="(entry, index) in $store.state.dialogEditingCopy[dialog.ID].EntryInput" :class="isChildIteration ? 'child' : ''")
+          .entry(v-for="(entry, index) in $store.state.dialogEditingCopy[dialog.ID].EntryInput" :class="{ 'child': isChildIteration }")
             input(v-model="$store.state.dialogEditingCopy[dialog.ID].EntryInput[index]")
             IconButton(
               v-if="$store.state.dialogEditingCopy[dialog.ID].EntryInput.length > 1"
@@ -103,7 +115,10 @@
                 | await response
               .actions.black(v-else)
                 | end conversation
-          .edit-bar(:class="$store.state.dialogEditError[dialog.ID] ? 'with-error' : ''")
+          .edit-bar(
+            :class=`{
+              'with-error': $store.state.dialogEditError[dialog.ID]
+            }`)
             .button-grid-small
               IconButton(@click.native="saveEdit()" label="save")
               IconButton(@click.native="cancelEdit()" label="cancel")
@@ -139,7 +154,6 @@
 <script>
 import Vue from 'vue';
 import DummyNode from './DummyNode';
-import classNames from 'classNames';
 
 export default {
   name: 'DialogNode',
@@ -149,11 +163,7 @@ export default {
   },
   data() {
     return {
-      height: 0,
-      nodeClass: classNames('dialog-node', {
-        'selectable': this.$route.params.dialog_id !== this.dialog.ID,
-        'selected-node': this.isSelected || this.$store.state.dialogIsEditing === this.dialog.ID
-      })
+      height: 0
     };
   },
   activated() {

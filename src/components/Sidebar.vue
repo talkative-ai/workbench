@@ -5,13 +5,17 @@
         v-for="zone in $store.state.selectedProject.Zones"
         :key="zone.ID"
         @click="selectZone(zone)"
-        :class="selectedZoneID === zone.ID ? 'is-selected' : ''"
+        :class=`{
+          'is-selected': selectedZoneID === zone.ID
+        }`
       )
         span
           small Zone
           | {{ zone.Title }}
       .Sidebar-item.Text--sm(
-        :class="$router.currentRoute.name === 'ZoneCreate' ? 'is-selected' : ''"
+        :class=`{
+          'is-selected': $router.currentRoute.name === 'ZoneCreate'
+        }`
         @click="$router.push({ name: 'ZoneCreate' })"
       )
         span

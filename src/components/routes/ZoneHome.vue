@@ -32,7 +32,9 @@
           .actor-wrap
             .actor-item(
               v-for="(actor, id) in $store.state.actorMap"
-              :class="!$store.state.zoneActors[$route.params.id] || !$store.state.zoneActors[$route.params.id][id] ? 'blank' : ''"
+              :class=`{
+                blank: !$store.state.zoneActors[$route.params.id] || !$store.state.zoneActors[$route.params.id][id]
+              }`
               :key="id")
               h1.Headline {{ actors[id].Title }}
               .button-grid

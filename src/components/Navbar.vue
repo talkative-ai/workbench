@@ -8,7 +8,9 @@
     column(main)
       .Navbar-cell.Text--sm.u-flexJustifyBetween
         .Paper-align(
-          :class="`${$route.meta.titleLink ? 'u-clickable' : ''}`"
+          :class=`{
+            'u-clickable': $route.meta.titleLink
+          }`
           @click="$route.meta.titleLink ? $route.meta.titleLink() : () => {}"
         )
           | {{ title }}

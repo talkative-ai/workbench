@@ -11,7 +11,9 @@
           input.Headline.u-size1of2.u-marginR3(v-model="zone.Title", placeholder="Enter name", required)
           .Headline
             w-button(
-              :class="`${!zone.Title.length ? 'hidden' : ''}`"
+              :class=`{
+                hidden: !zone.Title.length
+              }`
             )
               | Enter
               span.u-arrowEast

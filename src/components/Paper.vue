@@ -1,5 +1,5 @@
 <template lang="pug">
-  column.Paper(main :class='transparent ? "transparent" : ""')
+  column.Paper(main :class=`{ transparent }`)
     slot
 </template>
 
