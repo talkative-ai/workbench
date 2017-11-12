@@ -309,12 +309,29 @@ const actions = {
   saveIntroMessage({ state }, { ZoneID, message }) {
     let zone = state.zoneMap[ZoneID];
     Vue.set(zone.Triggers[TRIGGER_TYPES.InitializeZone].AlwaysExec.PlaySounds[0], 'Val', message);
+    API.PatchProject({
+      Zones: [{
+        ID: zone.ID,
+        Triggers: zone.Triggers
+      }]
+    });
   },
 
   removeIntroMessage({ state }, ZoneID) {
     let zone = state.zoneMap[ZoneID];
-    if (!zone.Triggers[TRIGGER_TYPES.InitializeZone]) return;
+    if (!zone.Triggers[TRIGGER_TYPES.InitializeZone] ||
+      zone.Triggers[TRIGGER_TYPES.InitializeZone].PATCH_ACTION === PATCH_ACTION.CREATE) return;
     Vue.set(zone.Triggers[TRIGGER_TYPES.InitializeZone], 'PatchAction', PATCH_ACTION.DELETE);
+    API.PatchProject({
+      Zones: [{
+        ID: zone.ID,
+        Triggers: {
+          [TRIGGER_TYPES.InitializeZone]: {
+            PatchAction: PATCH_ACTION.DELETE
+          }
+        }
+      }]
+    });
   },
 
   // selectDialog manages the state of the currently selected dialog

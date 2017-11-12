@@ -16,7 +16,9 @@
                 :placeholder="`e.g. Welcome to ${zone.Title}! Try saying \"Hello\"`"
                 )
               .button-grid
-                w-button(v-if="introMessageChanged")
+                w-button(
+                  v-if="introMessageChanged && newIntroMessage"
+                  @click.native="saveIntroMessage()")
                   | Save Changes
                 w-button(
                   v-if="introMessageChanged"
@@ -125,7 +127,7 @@ export default {
       this.$store.dispatch('createIntroMessage', this.$route.params.id);
     },
     saveIntroMessage() {
-      this.$store.dispatch('saveIntroMessage', { ZoneID: this.$route.param.id, message: this.newIntroMessage });
+      this.$store.dispatch('saveIntroMessage', { ZoneID: this.$route.params.id, message: this.newIntroMessage });
     },
     revertIntroMessage() {
       this.newIntroMessage = this.$store.state.zoneMap[this.$route.params.id].Triggers[TRIGGER_TYPES.InitializeZone].AlwaysExec.PlaySounds[0].Val;
