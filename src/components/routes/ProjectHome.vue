@@ -11,6 +11,7 @@ import Grid from '../elements/Grid';
 import Sidebar from '../Sidebar';
 import Paper from '../Paper';
 import PaperText from '../elements/PaperText';
+import Preview from '../Preview';
 
 export default {
   name: 'ProjectHome',
@@ -18,7 +19,8 @@ export default {
     Grid,
     Sidebar,
     Paper,
-    PaperText
+    PaperText,
+    Preview
   }
 };
 </script>

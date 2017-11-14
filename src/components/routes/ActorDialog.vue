@@ -46,7 +46,7 @@
           @click-child="clickDialog($event)"
         )
         DummyNode(
-          v-if="!$store.state.newDialog"
+          v-if="!$store.state.newDialog && !$store.state.connectingDialogID"
           @click.native="topNewConversation()")
           IconButton(name="plus" flat)
           | new

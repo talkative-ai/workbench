@@ -15,7 +15,10 @@
         .cover-wrap
 
           //- Hover cover
-          .cover.opaque(v-if="$store.state.connectingDialogID === dialog.ID")
+          .cover.opaque(
+            v-if="$store.state.connectingDialogID === dialog.ID"
+            @click="$emit('click', { connecting: true })"
+            )
             h1 connecting
           .cover.opaque(v-else-if="$store.state.previewConnect === dialog.ID")
             h1 previewing connect
@@ -138,13 +141,13 @@
             @click-child="$emit('click-child', { dialogID, isChild: true })"
           )
         DummyNode(
-          v-if="!$store.state.newDialog"
+          v-if="!$store.state.newDialog && !$store.state.connectingDialogID"
           @click.native="$store.dispatch('startNewConversation', dialogChain.slice(-1).pop())"
           isChildIteration="true")
           IconButton(name="plus" flat)
           | new
       DummyNode(
-        v-else-if="!$store.state.newDialog"
+        v-else-if="!$store.state.newDialog && !$store.state.connectingDialogID"
         @click.native="$store.dispatch('startNewConversation', dialogChain.slice(-1).pop())"
         isChildIteration="true")
         IconButton(name="plus" flat)
@@ -202,8 +205,8 @@ export default {
     },
     calculateChildrenWidth() {
       if (!this.dialog.ChildDialogIDs) return 1;
-      let newDialogOffset = this.$store.state.newDialog ? 1 : 0;
-      return ((this.dialog.ChildDialogIDs.length - newDialogOffset) * 400) + 1;
+      let newDialogOffset = this.$store.state.newDialog || this.$store.state.connectingDialogID ? 1 : 0;
+      return ((this.dialog.ChildDialogIDs.length - newDialogOffset) * 400);
     },
     beginEdit() {
       this.$store.dispatch('editDialog', this.dialog.ID);
