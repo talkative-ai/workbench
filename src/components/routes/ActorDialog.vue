@@ -42,7 +42,7 @@
           :isSelected='isSelected(dialogID)'
           :tallest='tallest'
           @change-height='changeNodeHeight(dialogID, $event)'
-          @click="clickDialog({ dialogID })"
+          @click="clickDialog($event)"
           @click-child="clickDialog($event)"
         )
         DummyNode(
@@ -90,7 +90,11 @@ export default {
     isSelected(dialogID = 0) {
       return (this.$store.state.actorSelectedDialogID[this.$route.params.id] || '') === dialogID;
     },
-    clickDialog(event, e) {
+    clickDialog(event) {
+      if (this.$store.state.connectingDialogID === event.dialogID) {
+        this.$store.dispatch('cancelPreviewConnectDialog');
+        return;
+      }
       this.$store.dispatch('cancelEditDialog');
       this.$store.dispatch('selectDialog', event);
       Vue.nextTick(() => {
@@ -106,6 +110,10 @@ export default {
       });
     },
     clickChain(index) {
+      if (this.$store.state.connectingDialogID === this.$store.state.dialogMap[this.dialogChain[index]].ID) {
+        this.$store.dispatch('cancelPreviewConnectDialog');
+        return;
+      }
       this.$store.dispatch('cancelEditDialog');
       this.$store.dispatch('selectChain', index);
       Vue.nextTick(() => {

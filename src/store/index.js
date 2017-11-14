@@ -397,9 +397,9 @@ const actions = {
       state.dialogMap[state.connectingDialogID].ChildDialogIDs.pop();
     }
 
-    if (state.connectingDialogID && dialogID !== state.connectingDialogID) {
+    if (state.connectingDialogID && dialogID !== state.connectingDialogID && !state.dialogMap[state.connectingDialogID].ChildDialogIDs.includes(dialogID)) {
+      dispatch('cancelPreviewConnectDialog');
       Vue.set(state, 'previewConnect', dialogID);
-      Vue.set(state, 'conversationCycle', true);
       state.dialogMap[state.connectingDialogID].ChildDialogIDs.push(dialogID);
     }
 
@@ -414,15 +414,11 @@ const actions = {
     if (index === state.dialogChain[state.selectedEntity.data.ID].length - 1) {
       return;
     }
-
     // If linking a dialog, then the chain doesn't navigate
     // But rather previews a conversation cycle
-    if (state.connectingDialogID) {
+    if (state.connectingDialogID && state.connectingDialogID !== state.dialogChain[state.selectedEntity.data.ID][index]) {
       if (state.previewConnect) {
         state.dialogMap[state.connectingDialogID].ChildDialogIDs.pop();
-      }
-      if (!state.conversationCycle) {
-        state.dialogChain[state.selectedEntity.data.ID];
       }
       Vue.set(state, 'previewConnect', state.dialogChain[state.selectedEntity.data.ID][index]);
       Vue.set(state, 'conversationCycle', true);
@@ -547,11 +543,18 @@ const actions = {
     if (state.previewConnect) {
       Vue.set(state, 'previewConnect', false);
       state.dialogMap[oldID].ChildDialogIDs.pop();
-      if (!state.conversationCycle) {
-        dispatch('selectChain', -2);
-      } else {
-        Vue.set(state, 'conversationCycle', false);
-      }
+      Vue.set(state, 'conversationCycle', false);
+      dispatch('selectChain', -2);
+    }
+  },
+
+  cancelPreviewConnectDialog({ state, dispatch }) {
+    if (state.previewConnect) {
+      console.log('Cancel');
+      Vue.set(state, 'previewConnect', false);
+      state.dialogMap[state.connectingDialogID].ChildDialogIDs.pop();
+      Vue.set(state, 'conversationCycle', false);
+      dispatch('selectChain', -2);
     }
   },
 

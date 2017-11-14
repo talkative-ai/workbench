@@ -17,20 +17,20 @@
           //- Hover cover
           .cover.opaque(
             v-if="$store.state.connectingDialogID === dialog.ID"
-            @click="$emit('click', { connecting: true })"
+            @click="$emit('click', { dialogID: dialog.ID })"
             )
             h1 connecting
           .cover.opaque(v-else-if="$store.state.previewConnect === dialog.ID")
             h1 previewing connect
           .cover(
-            v-else-if="$store.state.connectingDialogID"
-            @click="$emit('click')")
+            v-else-if="$store.state.connectingDialogID && !$store.state.dialogMap[$store.state.connectingDialogID].ChildDialogIDs.includes(dialog.ID)"
+            @click="$emit('click', { dialogID: dialog.ID })")
             h1(v-if="!isSelected")
               IconButton(name="link")
               | preview connect
           .cover(
             v-else
-            @click="$emit('click')"
+            @click="$emit('click', { dialogID: dialog.ID })"
             :class=`{
               selected: isSelected
             }`)
@@ -38,7 +38,7 @@
               IconButton(name="search")
               | &nbsp;select
           //- Edit bar
-          template(v-if="$store.state.connectingDialogID === dialog.ID")
+          template(v-if="$store.state.connectingDialogID === dialog.ID || $store.state.dialogMap[$store.state.connectingDialogID].ChildDialogIDs.includes(dialog.ID)")
           template(v-else-if="$store.state.connectingDialogID")
             .edit-bar(
               :class=`{
@@ -63,13 +63,13 @@
       template(v-else)
         .cover.editing
 
-      .vspacer(v-if="isChildIteration")
-      .ball(v-if="isChildIteration")
+      .vspacer(v-if="parentNode")
+      .ball(v-if="parentNode")
       .entry-wrap
 
         //- Not editing
         template(v-if="!isEditing")
-          .entry(v-for="(entry, index) in dialog.EntryInput" :class="{ 'child': isChildIteration }")
+          .entry(v-for="(entry, index) in dialog.EntryInput" :class="{ 'child': parentNode }")
             | {{ dialog.EntryInput[index] }}
             span(v-if="index < dialog.EntryInput.length-1")
               | ,
@@ -84,7 +84,7 @@
         //- Editing
         template(v-else)
           h3 The user should say one of the following:
-          .entry(v-for="(entry, index) in $store.state.dialogEditingCopy[dialog.ID].EntryInput" :class="{ 'child': isChildIteration }")
+          .entry(v-for="(entry, index) in $store.state.dialogEditingCopy[dialog.ID].EntryInput" :class="{ 'child': parentNode }")
             input(v-model="$store.state.dialogEditingCopy[dialog.ID].EntryInput[index]")
             IconButton(
               v-if="$store.state.dialogEditingCopy[dialog.ID].EntryInput.length > 1"
@@ -135,7 +135,7 @@
         div(v-for='(dialogID, idx) of dialog.ChildDialogIDs', :key='dialogID')
           DialogNode(
             :dialog='dialogs[dialogID]',
-            isChildIteration="true",
+            :parentNode="dialog.ID",
             :recurse='false'
             @click="$emit('click-child', { dialogID, isChild: true })"
             @click-child="$emit('click-child', { dialogID, isChild: true })"
@@ -143,13 +143,13 @@
         DummyNode(
           v-if="!$store.state.newDialog && !$store.state.connectingDialogID"
           @click.native="$store.dispatch('startNewConversation', dialogChain.slice(-1).pop())"
-          isChildIteration="true")
+          :parentNode="dialog.ID")
           IconButton(name="plus" flat)
           | new
       DummyNode(
         v-else-if="!$store.state.newDialog && !$store.state.connectingDialogID"
         @click.native="$store.dispatch('startNewConversation', dialogChain.slice(-1).pop())"
-        isChildIteration="true")
+        :parentNode="dialog.ID")
         IconButton(name="plus" flat)
         | new
 </template>
@@ -160,7 +160,7 @@ import DummyNode from './DummyNode';
 
 export default {
   name: 'DialogNode',
-  props: ['dialog', 'isChildIteration', 'recurse', 'isSelected', 'tallest'],
+  props: ['dialog', 'parentNode', 'recurse', 'isSelected', 'tallest'],
   components: {
     DummyNode
   },
@@ -200,7 +200,7 @@ export default {
   },
   methods: {
     beginConnect() {
-      this.$emit('click');
+      this.$emit('click', { dialogID: this.dialog.ID });
       this.$store.dispatch('beginConnectDialog', this.dialog.ID);
     },
     calculateChildrenWidth() {
