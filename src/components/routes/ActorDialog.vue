@@ -91,10 +91,6 @@ export default {
       return (this.$store.state.actorSelectedDialogID[this.$route.params.id] || '') === dialogID;
     },
     clickDialog(event) {
-      if (this.$store.state.connectingDialogID === event.dialogID) {
-        this.$store.dispatch('cancelPreviewConnectDialog');
-        return;
-      }
       this.$store.dispatch('cancelEditDialog');
       if (this.$store.state.connectingDialogID) {
         this.$store.dispatch('selectDialogPreviewConnect', event);
@@ -114,10 +110,6 @@ export default {
       });
     },
     clickChain(index) {
-      if (this.$store.state.connectingDialogID === this.$store.state.dialogMap[this.dialogChain[index]].ID) {
-        this.$store.dispatch('cancelPreviewConnectDialog');
-        return;
-      }
       this.$store.dispatch('cancelEditDialog');
       if (this.$store.state.connectingDialogID) {
         this.$store.dispatch('selectChainPreviewConnect', index);

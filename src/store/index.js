@@ -336,10 +336,14 @@ const actions = {
 
   selectDialogPreviewConnect({ state, dispatch, commit }, { dialogID, isChild = false, relativeParent }) {
     let isChildOfConnecting = state.dialogMap[state.connectingDialogID].ChildDialogIDs.includes(dialogID);
-    if (state.connectingDialogID && state.previewConnect !== dialogID && !isChildOfConnecting) {
+    if (state.connectingDialogID &&
+        state.previewConnect !== dialogID &&
+        !isChildOfConnecting) {
       dispatch('cancelPreviewConnectDialog');
-      Vue.set(state, 'previewConnect', dialogID);
-      state.dialogMap[state.connectingDialogID].ChildDialogIDs.push(dialogID);
+      if (state.connectingDialogID !== dialogID) {
+        Vue.set(state, 'previewConnect', dialogID);
+        state.dialogMap[state.connectingDialogID].ChildDialogIDs.push(dialogID);
+      }
     }
 
     // A specific dialog is being selected
@@ -354,7 +358,7 @@ const actions = {
       commit('updateDialogChain', state.dialogChain);
     }
 
-    if (!isChildOfConnecting) {
+    if (!isChildOfConnecting && state.connectingDialogID !== dialogID) {
       state.dialogChain[state.selectedEntity.data.ID].push(dialogID);
     }
 
