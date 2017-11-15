@@ -572,7 +572,7 @@ const actions = {
       Vue.set(state, 'previewConnect', false);
       state.dialogMap[state.connectingDialogID].ChildDialogIDs.pop();
       if (state.dialogChain[state.selectedEntity.data.ID].slice(-1).pop() !== state.connectingDialogID) {
-        dispatch('selectChain', -2);
+        state.dialogChain[state.selectedEntity.data.ID].pop();
       }
       Vue.set(state, 'conversationCycle', false);
     }
