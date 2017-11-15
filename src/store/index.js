@@ -334,6 +334,49 @@ const actions = {
     });
   },
 
+  selectDialogPreviewConnect({ state, dispatch, commit }, { dialogID, isChild = false, relativeParent }) {
+    let isChildOfConnecting = state.dialogMap[state.connectingDialogID].ChildDialogIDs.includes(dialogID);
+    if (state.connectingDialogID && state.previewConnect !== dialogID && !isChildOfConnecting) {
+      dispatch('cancelPreviewConnectDialog');
+      Vue.set(state, 'previewConnect', dialogID);
+      state.dialogMap[state.connectingDialogID].ChildDialogIDs.push(dialogID);
+    }
+
+    // A specific dialog is being selected
+    // If it's a child
+    if (isChild) {
+      relativeParent = relativeParent || state.dialogMap[state.actorSelectedDialogID[state.selectedEntity.data.ID]];
+      commit('setDialogSiblings', relativeParent.ChildDialogIDs);
+      commit('updateDialogChain', state.dialogChain);
+
+      // Otherwise it's a sibling
+    } else {
+      commit('updateDialogChain', state.dialogChain);
+    }
+
+    if (!isChildOfConnecting) {
+      state.dialogChain[state.selectedEntity.data.ID].push(dialogID);
+    }
+
+    commit('setSelectedDialog', dialogID);
+  },
+
+  selectChainPreviewConnect({ state, dispatch }, index) {
+    dispatch('cancelPreviewConnectDialog');
+    // If linking a dialog, then the chain doesn't navigate
+    // But rather previews a conversation cycle
+    if (state.connectingDialogID && state.connectingDialogID !== state.dialogChain[state.selectedEntity.data.ID][index]) {
+      Vue.set(state, 'previewConnect', state.dialogChain[state.selectedEntity.data.ID][index]);
+      Vue.set(state, 'conversationCycle', true);
+    }
+
+    dispatch('selectDialogPreviewConnect', {
+      dialogID: state.dialogChain[state.selectedEntity.data.ID][index],
+      isChild: true,
+      relativeParent: state.dialogMap[state.dialogChain[state.selectedEntity.data.ID][index - 1]]
+    });
+  },
+
   // selectDialog manages the state of the currently selected dialog
   // and all previously selected parent dialogs within the dialogChain
   selectDialog({ state, dispatch, commit }, { dialogID, isChild = false, relativeParent } = {}) {
@@ -376,31 +419,14 @@ const actions = {
     if (isChild) {
       relativeParent = relativeParent || state.dialogMap[state.actorSelectedDialogID[state.selectedEntity.data.ID]];
       commit('setDialogSiblings', relativeParent.ChildDialogIDs);
-      if (state.previewConnect) {
-        state.dialogChain[state.selectedEntity.data.ID].pop();
-      }
       state.dialogChain[state.selectedEntity.data.ID].push(dialogID);
       commit('updateDialogChain', state.dialogChain);
 
       // Otherwise it's a sibling
     } else {
-      // If we're not previewing a dialog connection and we're not connecting a dialog
-      // Or we are previewing an existing connection and we are connecting a dialog
-      if ((!state.previewConnect && !state.connectingDialogID) || (state.previewConnect && state.connectingDialogID)) {
-        state.dialogChain[state.selectedEntity.data.ID].pop();
-      }
+      state.dialogChain[state.selectedEntity.data.ID].pop();
       state.dialogChain[state.selectedEntity.data.ID].push(dialogID);
       commit('updateDialogChain', state.dialogChain);
-    }
-
-    if (state.previewConnect) {
-      state.dialogMap[state.connectingDialogID].ChildDialogIDs.pop();
-    }
-
-    if (state.connectingDialogID && dialogID !== state.connectingDialogID && !state.dialogMap[state.connectingDialogID].ChildDialogIDs.includes(dialogID)) {
-      dispatch('cancelPreviewConnectDialog');
-      Vue.set(state, 'previewConnect', dialogID);
-      state.dialogMap[state.connectingDialogID].ChildDialogIDs.push(dialogID);
     }
 
     commit('setSelectedDialog', dialogID);
@@ -412,17 +438,6 @@ const actions = {
       index = state.dialogChain[state.selectedEntity.data.ID].length + index;
     }
     if (index === state.dialogChain[state.selectedEntity.data.ID].length - 1) {
-      return;
-    }
-    // If linking a dialog, then the chain doesn't navigate
-    // But rather previews a conversation cycle
-    if (state.connectingDialogID && state.connectingDialogID !== state.dialogChain[state.selectedEntity.data.ID][index]) {
-      if (state.previewConnect) {
-        state.dialogMap[state.connectingDialogID].ChildDialogIDs.pop();
-      }
-      Vue.set(state, 'previewConnect', state.dialogChain[state.selectedEntity.data.ID][index]);
-      Vue.set(state, 'conversationCycle', true);
-      state.dialogMap[state.connectingDialogID].ChildDialogIDs.push(state.dialogChain[state.selectedEntity.data.ID][index]);
       return;
     }
 
@@ -550,11 +565,12 @@ const actions = {
 
   cancelPreviewConnectDialog({ state, dispatch }) {
     if (state.previewConnect) {
-      console.log('Cancel');
       Vue.set(state, 'previewConnect', false);
       state.dialogMap[state.connectingDialogID].ChildDialogIDs.pop();
+      if (state.dialogChain[state.selectedEntity.data.ID].slice(-1).pop() !== state.connectingDialogID) {
+        dispatch('selectChain', -2);
+      }
       Vue.set(state, 'conversationCycle', false);
-      dispatch('selectChain', -2);
     }
   },
 

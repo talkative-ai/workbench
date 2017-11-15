@@ -38,18 +38,7 @@
               IconButton(name="search")
               | &nbsp;select
           //- Edit bar
-          template(v-if="$store.state.connectingDialogID === dialog.ID || $store.state.dialogMap[$store.state.connectingDialogID].ChildDialogIDs.includes(dialog.ID)")
-          template(v-else-if="$store.state.connectingDialogID")
-            .edit-bar(
-              :class=`{
-                'with-error': $store.state.dialogEditError[dialog.ID]
-              }`)
-              .button-grid-small
-                IconButton(
-                  :style="{ width: '100%' }"
-                  name="link"
-                  label="confirm connect"
-                  @click.native="beginConnect()")
+          template(v-if="$store.state.connectingDialogID")
           template(v-else)
             .edit-bar(
               :class=`{

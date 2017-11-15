@@ -16,7 +16,7 @@
             :isSelected='isSelected(dialogID)'
           )
           DummyNode(
-            v-if="!$store.state.newDialog"
+            v-if="!$store.state.newDialog && !$store.state.connectingDialogID"
             @click.native="$store.dispatch('startNewConversation', dialogChain.slice(-1).pop())"
             isChildIteration="true"
             )
@@ -96,7 +96,11 @@ export default {
         return;
       }
       this.$store.dispatch('cancelEditDialog');
-      this.$store.dispatch('selectDialog', event);
+      if (this.$store.state.connectingDialogID) {
+        this.$store.dispatch('selectDialogPreviewConnect', event);
+      } else {
+        this.$store.dispatch('selectDialog', event);
+      }
       Vue.nextTick(() => {
         this.tallest = 0;
         for (let k in this.heightMap) {
@@ -115,7 +119,11 @@ export default {
         return;
       }
       this.$store.dispatch('cancelEditDialog');
-      this.$store.dispatch('selectChain', index);
+      if (this.$store.state.connectingDialogID) {
+        this.$store.dispatch('selectChainPreviewConnect', index);
+      } else {
+        this.$store.dispatch('selectChain', index);
+      }
       Vue.nextTick(() => {
         this.tallest = 0;
         for (let k in this.heightMap) {
