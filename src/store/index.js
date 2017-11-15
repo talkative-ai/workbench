@@ -361,7 +361,7 @@ const actions = {
     commit('setSelectedDialog', dialogID);
   },
 
-  selectChainPreviewConnect({ state, dispatch }, index) {
+  selectChainPreviewConnect({ state, dispatch, commit }, index) {
     dispatch('cancelPreviewConnectDialog');
     // If linking a dialog, then the chain doesn't navigate
     // But rather previews a conversation cycle
@@ -370,9 +370,13 @@ const actions = {
       Vue.set(state, 'conversationCycle', true);
     }
 
+    if (index === 0) {
+      commit('setDialogSiblings', state.rootDialogs);
+    }
+
     dispatch('selectDialogPreviewConnect', {
       dialogID: state.dialogChain[state.selectedEntity.data.ID][index],
-      isChild: true,
+      isChild: index > 0,
       relativeParent: state.dialogMap[state.dialogChain[state.selectedEntity.data.ID][index - 1]]
     });
   },
