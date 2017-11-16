@@ -557,18 +557,26 @@ const actions = {
     Vue.set(state, 'connectingDialogID', dialogID);
   },
 
-  saveConnectDialog({ state }, dialogID) {
-
+  saveConnectDialog({ state, dispatch }, dialogID) {
+    state.selectedEntity.data.DialogRelations.push({
+      ChildNodeID: state.previewConnect,
+      ParentNodeID: state.connectingDialogID,
+      PatchAction: PATCH_ACTION.CREATE
+    });
+    API.PutActor(state.selectedEntity.data);
+    dispatch('cancelConnectDialog', true);
   },
 
-  cancelConnectDialog({ state, dispatch }) {
+  cancelConnectDialog({ state, dispatch }, keep) {
     let oldID = state.connectingDialogID;
     Vue.set(state, 'connectingDialogID', false);
     if (state.previewConnect) {
       Vue.set(state, 'previewConnect', false);
-      state.dialogMap[oldID].ChildDialogIDs.pop();
       Vue.set(state, 'conversationCycle', false);
-      dispatch('selectChain', -2);
+      if (!keep) {
+        state.dialogMap[oldID].ChildDialogIDs.pop();
+        dispatch('selectChain', -2);
+      }
     }
   },
 

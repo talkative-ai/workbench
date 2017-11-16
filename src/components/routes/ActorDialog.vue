@@ -30,6 +30,10 @@
           @click.native="$router.push({ name: 'ActorHome', params: { zoneid: $route.params.id } })")
           span.u-arrowWest
           | Return
+        w-button.Headline(
+          large
+          @click.native="saveConnect")
+          | Connect
         .space
       .dialogs(
         v-if="$store.state.dialogSiblings.length"
@@ -134,6 +138,9 @@ export default {
       } else {
         this.$store.dispatch('startNewConversation', this.$store.state.dialogChain[this.$store.state.selectedEntity.data.ID].slice(-2, -1).pop());
       }
+    },
+    saveConnect() {
+      this.$store.dispatch('saveConnectDialog');
     }
   }
 };
