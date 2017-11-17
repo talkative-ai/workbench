@@ -148,6 +148,10 @@ input, select, textarea {
     opacity: 1;
     cursor: default;
     background-color: var(--color-paper-low-opacity);
+    border: 1px solid $purple;
+  }
+  &.no-border {
+    border: 0;
   }
 }
 .selected {
@@ -221,7 +225,7 @@ input, select, textarea {
 }
 .actions {
   cursor: default;
-  pointer-events: none;
+  pointer-events: auto;
   display: inline-block;
   padding: 0.25rem;
   background-color: $purple;
@@ -269,5 +273,22 @@ input, select, textarea {
 }
 .black {
   background-color: black;
+}
+.flex {
+  display: flex;
+  align-items: flex-start;
+}
+.flex-column {
+  flex-direction: column;
+}
+.dialog-action {
+  &.go-to-zone {
+    background-color: green;
+    color: white;
+  }
+  &.end-conversation {
+    background-color: black;
+    color: white;
+  }
 }
 </style>

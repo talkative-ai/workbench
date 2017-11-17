@@ -650,6 +650,14 @@ function validateDialog(dialog) {
 
 const mutations = {
 
+  setDialogAction(state, { dialogID, action }) {
+    Vue.set(state.dialogEditingCopy[dialogID], 'action', action);
+  },
+
+  setDialogZone(state, { dialogID, zoneID }) {
+    Vue.set(state.dialogEditingCopy[dialogID].AlwaysExec, 'SetZone', Number(zoneID));
+  },
+
   updateToken(state, value) {
     store.state.token = value;
   },

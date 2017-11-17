@@ -178,11 +178,6 @@ export default {
     width: 100%;
   }
 
-  .flex-columns {
-    display: flex;
-    flex-direction: columns;
-  }
-
   .quoted {
     &:before {
       content: '"';

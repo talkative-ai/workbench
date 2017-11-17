@@ -4,7 +4,7 @@
       .vspacer(v-if="isChildIteration")
       .ball(v-if="isChildIteration")
       .cover-wrap
-        .cover.opaque
+        .cover.opaque.no-border
           h1
             slot
 </template>

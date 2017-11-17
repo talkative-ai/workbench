@@ -67,8 +67,10 @@
               | "{{ sound.Val }}"
             .actions(v-if='dialog.ChildDialogIDs && dialog.ChildDialogIDs.length')
               | await response
-            .actions.black(v-else)
-              | end conversation
+            .actions.dialog-action(
+              v-else
+              :class="{ [dialogAction]: true }")
+              | {{ dialogActionFriendly }}
 
         //- Editing
         template(v-else)
@@ -98,15 +100,31 @@
                   flat
                   @click.native="$store.state.dialogEditingCopy[dialog.ID].AlwaysExec.PlaySounds.splice(index, 1)")
               .inner-values.actor-vals
-                IconButton(
-                  name="plus"
-                  label="ai says"
-                  @click.native="addPlaySound()"
-                  )
+                .flex.flex-column
+                  IconButton(
+                    name="plus"
+                    label="ai says"
+                    @click.native="addPlaySound()"
+                    )
               .actions(v-if='dialog.ChildDialogIDs && dialog.ChildDialogIDs.length')
                 | await response
-              .actions.black(v-else)
-                | end conversation
+              select.actions.dialog-action(
+                v-else
+                :class="{ [dialogAction]: true }"
+                :value="dialogAction"
+                @change="updateAction")
+                option(value="end-conversation") end conversation
+                option(value="go-to-zone") go to zone
+              select(
+                v-if="dialogAction === 'go-to-zone'"
+                :value="$store.state.dialogEditingCopy[dialog.ID].AlwaysExec.SetZone"
+                @change="updateZone"
+                )
+                option(
+                  v-for="(value, index) of $store.state.zoneMap"
+                  :value="value.ID"
+                  )
+                  | {{value.Title}}
           .edit-bar(
             :class=`{
               'with-error': $store.state.dialogEditError[dialog.ID]
@@ -185,6 +203,22 @@ export default {
     },
     dialogChain() {
       return this.$store.state.dialogChain[this.$store.state.selectedEntity.data.ID] || [];
+    },
+    dialogAction() {
+      if (!this.$store.state.dialogEditingCopy[this.dialog.ID]) return 'end-conversation';
+
+      if (this.$store.state.dialogEditingCopy[this.dialog.ID].action) {
+        return this.$store.state.dialogEditingCopy[this.dialog.ID].action;
+      }
+
+      if (this.$store.state.dialogEditingCopy[this.dialog.ID].AlwaysExec.SetZone > 0) {
+        return 'go-to-zone';
+      }
+
+      return 'end-conversation';
+    },
+    dialogActionFriendly() {
+      return this.dialogAction.replace(/-/g, ' ');
     }
   },
   methods: {
@@ -219,6 +253,15 @@ export default {
     },
     addEntryInput() {
       this.$store.state.dialogEditingCopy[this.dialog.ID].EntryInput.push('');
+    },
+    updateAction(action) {
+      this.$store.commit('setDialogAction', { dialogID: this.dialog.ID, action: action.target.value });
+      if (action.target.value === 'end-conversation') {
+        this.$store.commit('setDialogZone', { dialogID: this.dialog.ID, zoneID: 0 });
+      }
+    },
+    updateZone(action) {
+      this.$store.commit('setDialogZone', { dialogID: this.dialog.ID, zoneID: action.target.value });
     }
   }
 };

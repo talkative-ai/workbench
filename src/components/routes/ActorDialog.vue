@@ -25,15 +25,20 @@
               | new
             template(v-else)
               | start first conversation
+          div(v-if="$store.state.connectingDialogID")
+            hr
+            .button-grid
+              w-button(
+                @click.native="saveConnect")
+                | Connect
+              w-button(
+                @click.native="saveConnect")
+                | Cancel
         w-button.Headline(
           large
           @click.native="$router.push({ name: 'ActorHome', params: { zoneid: $route.params.id } })")
           span.u-arrowWest
           | Return
-        w-button.Headline(
-          large
-          @click.native="saveConnect")
-          | Connect
         .space
       .dialogs(
         v-if="$store.state.dialogSiblings.length"
@@ -150,13 +155,6 @@ export default {
 h1 {
   text-align: center;
   color: var(--color-brand);
-}
-.flex {
-  display: flex;
-  align-items: flex-start;
-}
-.flex-column {
-  flex-direction: column;
 }
 .chain {
   width: 332pt;
