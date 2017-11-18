@@ -162,7 +162,7 @@ function aumFetch(method, path, payload) {
     }
     return result;
   }).then(result => {
-    store.commit('updateToken', result.headers.get('x-token'));
+    store.commit('project/updateToken', result.headers.get('x-token'));
     return result;
   });
 }

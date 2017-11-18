@@ -69,6 +69,10 @@ const mutations = {
     }
   },
 
+  actorInMap(state, actor) {
+    state.actorMap[actor.ID] = actor;
+  },
+
   updateActor(state, payload) {
     payload.actor.Dialogs = payload.actor.Dialogs || [];
     payload.actor.DialogRelations = payload.actor.DialogRelations || [];
@@ -111,6 +115,13 @@ const mutations = {
     }
 
     state.rootDialogs = [...rdialogs];
+  },
+
+  addToZone(state, { zoneID, actorID }) {
+    if (!state.actorMap[actorID].zoneIDs) {
+      state.actorMap[actorID].zoneIDs = [];
+    }
+    state.actorMap[actorID].zoneIDs.push(zoneID.toString());
   }
 };
 

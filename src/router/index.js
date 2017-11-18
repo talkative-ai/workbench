@@ -215,11 +215,11 @@ initializer.then(() => {
   const initialPath = router.currentRoute.name;
 
   if (initialPath && (initialPath === 'ProjectHome' || initialPath === 'SignIn')) {
-    return router.replace({ name: store.state.path });
+    return router.replace({ name: store.state.project.path });
   }
 
   if (initialPath) {
-    Vue.set(store.state, 'path', initialPath);
+    store.commit('project/path', initialPath);
   }
 });
 

@@ -1,42 +1,7 @@
-import Vue from 'vue';
-
 import router from '@/router';
 import API from '@/api';
 import { SelectedEntity } from '@/store/models';
 import { titleCase } from '@/utilities';
-
-function setProject(state) {
-  return project => {
-    if (!project.Actors) project.Actors = [];
-    if (!project.Zones) project.Zones = [];
-    if (!project.ZoneActors) project.ZoneActors = [];
-    if (!project.Dialogs) project.Dialogs = [];
-    if (!project.DialogRelations) project.DialogRelations = [];
-
-    Vue.set(state, 'selectedProject', project);
-    for (const a of project.Actors) {
-      Vue.set(state.actorMap, a.ID, a);
-    }
-    for (const z of project.Zones) {
-      Vue.set(state.zoneMap, z.ID, z);
-    }
-    for (const za of project.ZoneActors) {
-      if (!state.zoneActors[za.ZoneID]) {
-        Vue.set(state.zoneActors, za.ZoneID, {});
-      }
-      if (!state.actorMap[za.ActorID].zoneIDs) {
-        Vue.set(state.actorMap[za.ActorID], 'zoneIDs', []);
-      }
-      Vue.set(state.zoneActors[za.ZoneID], za.ActorID.toString(), true);
-      state.actorMap[za.ActorID].zoneIDs.push(za.ZoneID.toString());
-    }
-    console.log('The state', state);
-
-    router.push({ name: 'ProjectHome' });
-
-    return state;
-  };
-}
 
 const state = {
   initializing: true,
@@ -60,11 +25,9 @@ const actions = {
     return `harihara-${state.createID}`;
   },
 
-  createProject({ commit, state }, project) {
+  createProject({ dispatch, state }, project) {
     return API.CreateProject(project)
-      .then(res => {
-        setProject(state);
-      });
+      .then(res => dispatch('setProject', res));
   },
 
   authGoogle({ commit, state }, googleUser) {
@@ -78,18 +41,19 @@ const actions = {
         return result.json();
       })
       .then(user => {
-        Vue.set(state, 'user', user);
+        commit('user', user);
+        router.push({ name: 'ProjectSelect' });
       });
   },
 
-  selectProject({ dispatch, state }, p) {
-    Vue.set(state, 'initializing', true);
+  selectProject({ dispatch, commit, state }, p) {
+    commit('initializing', true);
     return dispatch('resetState', { keepAuth: true })
       .then(newState => {
         return API.GetProject(p)
-        .then(setProject(newState))
+        .then(newState => dispatch('setProject', newState))
         .then(newState => {
-          Vue.set(newState, 'initializing', false);
+          commit('initializing', false);
         });
       });
   },
@@ -110,6 +74,41 @@ const actions = {
 
   reset({ dispatch }) {
     return dispatch('resetState', { keepAuth: true });
+  },
+
+  setProject({ state, commit }, project) {
+    if (!project.Actors) project.Actors = [];
+    if (!project.Zones) project.Zones = [];
+    if (!project.ZoneActors) project.ZoneActors = [];
+    if (!project.Dialogs) project.Dialogs = [];
+    if (!project.DialogRelations) project.DialogRelations = [];
+
+    commit('selectedProject', project);
+    for (const a of project.Actors) {
+      commit('actors/actorInMap', a, { root: true });
+    }
+    for (const z of project.Zones) {
+      commit('zones/zoneInMap', z, { root: true });
+    }
+    for (const za of project.ZoneActors) {
+      commit('zones/addActor', { zoneID: za.ZoneID, actorID: za.ActorID }, { root: true });
+      commit('actors/addToZone', { zoneID: za.ZoneID, actorID: za.ActorID }, { root: true });
+    }
+
+    router.push({ name: 'ProjectHome' });
+  },
+
+  selectEntity({ state, commit }, entity) {
+    let redirect = entity.redirect;
+    delete entity.redirect;
+    commit('selectedEntity', entity);
+    if (redirect) {
+      if (entity.kind === 'dialog') {
+        router.push({ name: 'DialogHome', params: { id: entity.data.ActorID, dialog_id: entity.data.ID } });
+      } else {
+        router.push({ name: `${titleCase(entity.kind)}Home`, params: { id: entity.data.ID } });
+      }
+    }
   }
 };
 
@@ -123,22 +122,28 @@ const mutations = {
     state.createID++;
   },
 
-    // TODO: Add comments
-  selectEntity(state, entity) {
-    let redirect = entity.redirect;
-    delete entity.redirect;
-    state.selectedEntity = new SelectedEntity(entity);
-    if (redirect) {
-      if (entity.kind === 'dialog') {
-        router.push({ name: 'DialogHome', params: { id: entity.data.ActorID, dialog_id: entity.data.ID } });
-      } else {
-        router.push({ name: `${titleCase(entity.kind)}Home`, params: { id: entity.data.ID } });
-      }
-    }
+  clearSelectedEntity(state) {
+    state.selectedEntity = new SelectedEntity();
   },
 
-  clearSelectedEntity(state, entity) {
-    state.selectedEntity = new SelectedEntity();
+  initializing(state, bool) {
+    state.initializing = bool;
+  },
+
+  selectedProject(state, project) {
+    state.selectedProject = project;
+  },
+
+  selectedEntity(state, entity) {
+    state.selectedEntity = new SelectedEntity(entity);
+  },
+
+  user(state, user) {
+    state.user = user;
+  },
+
+  path(state, path) {
+    state.path = path;
   }
 };
 

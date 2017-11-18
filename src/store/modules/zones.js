@@ -126,6 +126,21 @@ const mutations = {
     if (!state.zoneActors[zone.ID]) {
       Vue.set(state.zoneActors, zone.ID, {});
     }
+  },
+
+  zoneInMap(state, zone) {
+    state.zoneMap[zone.ID] = zone;
+  },
+
+  zoneActors(state, { id, value }) {
+    state.zoneActors[id] = value;
+  },
+
+  addActor(state, { zoneID, actorID }) {
+    if (!state.zoneActors[zoneID]) {
+      state.zoneActors[zoneID] = {};
+    }
+    state.zoneActors[zoneID][actorID] = true;
   }
 };
 
