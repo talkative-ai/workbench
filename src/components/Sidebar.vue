@@ -33,7 +33,7 @@ export default {
       selectedZoneID: 'selectedEntityID'
     }),
 
-    ...mapState('master', {
+    ...mapState('project', {
       Zones: state => state.selectedProject.Zones
     })
   },

@@ -73,7 +73,7 @@ const router = new Router({
       meta: {
         background: 'paper',
         theme: 'light',
-        title: () => store.state.master.selectedProject.Title,
+        title: () => store.state.project.selectedProject.Title,
         titleLink: () => router.push({ name: 'ProjectHome' })
       }
     },
@@ -85,7 +85,7 @@ const router = new Router({
       meta: {
         background: 'paper',
         theme: 'light',
-        title: () => store.state.master.selectedProject.Title,
+        title: () => store.state.project.selectedProject.Title,
         titleLink: () => router.push({ name: 'ProjectHome' })
       }
     },
@@ -96,7 +96,7 @@ const router = new Router({
       meta: {
         background: 'paper',
         theme: 'light',
-        title: () => store.state.master.selectedProject.Title,
+        title: () => store.state.project.selectedProject.Title,
         titleLink: () => router.push({ name: 'ProjectHome' })
       },
       beforeEnter(to, from, next) {
@@ -114,7 +114,7 @@ const router = new Router({
       meta: {
         background: 'paper',
         theme: 'light',
-        title: () => store.state.master.selectedProject.Title,
+        title: () => store.state.project.selectedProject.Title,
         titleLink: () => router.push({ name: 'ProjectHome' })
       },
       async beforeEnter(to, from, next) {
@@ -132,7 +132,7 @@ const router = new Router({
       meta: {
         background: 'paper',
         theme: 'light',
-        title: () => store.state.master.selectedProject.Title,
+        title: () => store.state.project.selectedProject.Title,
         titleLink: () => router.push({ name: 'ProjectHome' })
       },
       beforeEnter(to, from, next) {
@@ -147,7 +147,7 @@ const router = new Router({
       meta: {
         background: 'paper',
         theme: 'light',
-        title: () => store.state.master.selectedProject.Title,
+        title: () => store.state.project.selectedProject.Title,
         titleLink: () => router.push({ name: 'ProjectHome' })
       },
       beforeEnter(to, from, next) {
@@ -162,7 +162,7 @@ const router = new Router({
       meta: {
         background: 'paper',
         theme: 'light',
-        title: () => store.state.master.selectedProject.Title
+        title: () => store.state.project.selectedProject.Title
       },
       beforeEnter(to, from, next) {
         store.commit('master/clearSelectedEntity');
@@ -176,7 +176,7 @@ const router = new Router({
       meta: {
         background: 'paper',
         theme: 'light',
-        title: () => store.state.master.selectedProject.Title,
+        title: () => store.state.project.selectedProject.Title,
         titleLink: () => router.push({ name: 'ProjectHome' })
       },
       beforeEnter(to, from, next) {
@@ -201,7 +201,7 @@ router.beforeEach((to, from, next) => {
     return next({ name: 'SignIn' });
   }
 
-  if (!store.state.master.selectedProject &&
+  if (!store.state.project.selectedProject &&
     store.state.master.user &&
     to.name !== 'ProjectSelect' &&
     to.name !== 'ProjectCreate') {

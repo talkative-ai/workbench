@@ -112,19 +112,19 @@ const mutations = {
     state.rootDialogs = [...rdialogs];
   },
 
-  addToZone(state, { zoneID, actorID }) {
-    if (!state.actorMap[actorID].zoneIDs) {
-      state.actorMap[actorID].zoneIDs = {};
+  addToZone(state, { ZoneID, ActorID }) {
+    if (!state.actorMap[ActorID].zoneIDs) {
+      state.actorMap[ActorID].zoneIDs = {};
     }
-    state.actorMap[actorID].zoneIDs[zoneID] = true;
+    state.actorMap[ActorID].zoneIDs[ZoneID] = true;
   },
 
-  removeFromZone(state, { zoneID, actorID }) {
-    if (!state.actorMap[actorID].zoneIDs) {
-      state.actorMap[actorID].zoneIDs = {};
+  removeFromZone(state, { ZoneID, ActorID }) {
+    if (!state.actorMap[ActorID].zoneIDs) {
+      state.actorMap[ActorID].zoneIDs = {};
     }
-    if (state.actorMap[actorID].zoneIDs[zoneID]) {
-      state.actorMap[actorID].zoneIDs[zoneID] = false;
+    if (state.actorMap[ActorID].zoneIDs[ZoneID]) {
+      state.actorMap[ActorID].zoneIDs[ZoneID] = false;
     }
   }
 };
