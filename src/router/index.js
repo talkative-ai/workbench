@@ -151,7 +151,7 @@ const router = new Router({
         titleLink: () => router.push({ name: 'ProjectHome' })
       },
       beforeEnter(to, from, next) {
-        store.dispatch('selectZone', to.params.id)
+        store.dispatch('zones/selectZone', to.params.id)
         .then(() => next());
       }
     },

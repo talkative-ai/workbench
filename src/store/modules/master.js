@@ -96,8 +96,8 @@ const actions = {
       commit('zones/zoneInMap', z, { root: true });
     }
     for (const za of project.ZoneActors) {
-      commit('zones/addActor', { zoneID: za.ZoneID, actorID: za.ActorID }, { root: true });
-      commit('actors/addToZone', { zoneID: za.ZoneID, actorID: za.ActorID }, { root: true });
+      commit('zones/addActor', { ZoneID: za.ZoneID, ActorID: za.ActorID }, { root: true });
+      commit('actors/addToZone', { ZoneID: za.ZoneID, ActorID: za.ActorID }, { root: true });
     }
 
     router.push({ name: 'ProjectHome' });
@@ -153,6 +153,10 @@ const mutations = {
 
   projectsList(state, list) {
     state.projectsList = list;
+  },
+
+  addZone(state, zone) {
+    state.selectedProject.Zones.push(zone);
   }
 };
 

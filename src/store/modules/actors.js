@@ -119,9 +119,18 @@ const mutations = {
 
   addToZone(state, { zoneID, actorID }) {
     if (!state.actorMap[actorID].zoneIDs) {
-      state.actorMap[actorID].zoneIDs = [];
+      state.actorMap[actorID].zoneIDs = {};
     }
-    state.actorMap[actorID].zoneIDs.push(zoneID.toString());
+    state.actorMap[actorID].zoneIDs[zoneID] = true;
+  },
+
+  removeFromZone(state, { zoneID, actorID }) {
+    if (!state.actorMap[actorID].zoneIDs) {
+      state.actorMap[actorID].zoneIDs = {};
+    }
+    if (state.actorMap[actorID].zoneIDs[zoneID]) {
+      state.actorMap[actorID].zoneIDs[zoneID] = false;
+    }
   }
 };
 

@@ -50,7 +50,7 @@ export default {
       this.$store.dispatch('createZone', this.zone)
       .then(z => {
         zone = z;
-        return this.$store.dispatch('selectZone', zone.ID);
+        return this.$store.dispatch('zones/selectZone', zone.ID);
       })
       .then(() => {
         this.$router.replace({ name: 'ZoneHome', params: { id: zone.ID } });

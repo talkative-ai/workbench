@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import dcopy from 'deep-copy';
 
 import router from '@/router';
@@ -21,24 +20,19 @@ const actions = {
       newZone.Title = zone.Title;
 
       commit('addZone', newZone);
+      commit('master/addZone', newZone);
       commit('selectEntity', { kind: 'zone', data: newZone, redirect: true });
       return newZone;
     });
   },
 
-  createIntroMessage({ state }, ZoneID) {
-    let zone = state.zoneMap[ZoneID];
-    if (!zone.Triggers[TRIGGER_TYPES.InitializeZone]) {
-      Vue.set(zone.Triggers, TRIGGER_TYPES.InitializeZone, {
-        'AlwaysExec': dcopy(defaultActionSet)
-      });
-    }
-    Vue.set(zone.Triggers[TRIGGER_TYPES.InitializeZone], 'PatchAction', PATCH_ACTION.CREATE);
+  createIntroMessage({ state, commit }, ZoneID) {
+    commit('stageCreateZoneIntroTrigger', ZoneID);
   },
 
-  saveIntroMessage({ state }, { ZoneID, message }) {
+  saveIntroMessage({ state, commit }, { ZoneID, message }) {
     let zone = state.zoneMap[ZoneID];
-    Vue.set(zone.Triggers[TRIGGER_TYPES.InitializeZone].AlwaysExec.PlaySounds[0], 'Val', message);
+    commit('introMessage', { zoneID: ZoneID, message });
     API.PatchProject({
       Zones: [{
         ID: zone.ID,
@@ -47,11 +41,11 @@ const actions = {
     });
   },
 
-  removeIntroMessage({ state }, ZoneID) {
+  removeIntroMessage({ state, commit }, ZoneID) {
     let zone = state.zoneMap[ZoneID];
     if (!zone.Triggers[TRIGGER_TYPES.InitializeZone] ||
       zone.Triggers[TRIGGER_TYPES.InitializeZone].PATCH_ACTION === PATCH_ACTION.CREATE) return;
-    Vue.set(zone.Triggers[TRIGGER_TYPES.InitializeZone], 'PatchAction', PATCH_ACTION.DELETE);
+    commit('stageDeleteZoneIntroTrigger', ZoneID);
     API.PatchProject({
       Zones: [{
         ID: zone.ID,
@@ -64,17 +58,9 @@ const actions = {
     });
   },
 
-  removeActorFromZone({ state }, { ActorID, ZoneID }) {
-    Vue.set(state.zoneActors[ZoneID], ActorID, false);
-    if (!state.actorMap[ActorID].zoneIDs) {
-      Vue.set(state.actorMap[ActorID], 'zoneIDs', []);
-    }
-    for (let id in state.actorMap[ActorID].zoneIDs) {
-      if (state.actorMap[ActorID].zoneIDs[id].toString() === ZoneID.toString()) {
-        state.actorMap[ActorID].zoneIDs.splice(id, 1);
-        break;
-      }
-    }
+  removeActorFromZone({ state, commit }, { ActorID, ZoneID }) {
+    commit('removeActor', { ZoneID, ActorID });
+    commit('actors/removeFromZone', { ActorID, ZoneID }, { root: true });
     API.PatchProject({
       ZoneActors: [{
         ZoneID: Number(ZoneID),
@@ -84,12 +70,9 @@ const actions = {
     });
   },
 
-  addActorToZone({ state }, { ActorID, ZoneID }) {
-    Vue.set(state.zoneActors[ZoneID], ActorID, true);
-    if (!state.actorMap[ActorID].zoneIDs) {
-      Vue.set(state.actorMap[ActorID], 'zoneIDs', []);
-    }
-    state.actorMap[ActorID].zoneIDs.push(ZoneID);
+  addActorToZone({ state, commit }, { ActorID, ZoneID }) {
+    commit('addActor', { ZoneID, ActorID });
+    commit('actors/addToZone', { ActorID, ZoneID }, { root: true });
     API.PatchProject({
       ZoneActors: [{
         ZoneID: Number(ZoneID),
@@ -99,8 +82,8 @@ const actions = {
     });
   },
 
-  selectZone({ commit, state }, zoneID) {
-    if (state.selectedEntity.data && state.selectedEntity.data.ID === zoneID) return;
+  selectZone({ commit, state, rootState }, zoneID) {
+    if (rootState.master.selectedEntity.data && rootState.master.selectedEntity.data.ID === zoneID) return;
     const zone = state.zoneMap[zoneID];
     if (!zone) {
       router.push({ name: 'NotFound' });
@@ -116,15 +99,14 @@ const actions = {
 
 const mutations = {
   addZone(state, zone) {
-    state.selectedProject.Zones.push(zone);
-    Vue.set(state.zoneMap, zone.ID, zone);
-    Vue.set(state.zoneActors, zone.ID, {});
+    state.zoneMap[zone.ID] = zone;
+    state.zoneActors[zone.ID] = zone;
   },
 
   updateZone(state, zone) {
-    Vue.set(state.zoneMap, zone.ID, zone);
+    state.zoneMap[zone.ID] = zone;
     if (!state.zoneActors[zone.ID]) {
-      Vue.set(state.zoneActors, zone.ID, {});
+      state.zoneActors[zone.ID] = {};
     }
   },
 
@@ -136,11 +118,35 @@ const mutations = {
     state.zoneActors[id] = value;
   },
 
-  addActor(state, { zoneID, actorID }) {
-    if (!state.zoneActors[zoneID]) {
-      state.zoneActors[zoneID] = {};
+  addActor(state, { ZoneID, ActorID }) {
+    if (!state.zoneActors[ZoneID]) {
+      state.zoneActors[ZoneID] = {};
     }
-    state.zoneActors[zoneID][actorID] = true;
+    state.zoneActors[ZoneID][ActorID] = true;
+  },
+
+  removeActor(state, { ZoneID, ActorID }) {
+    if (!state.zoneActors[ZoneID]) {
+      state.zoneActors[ZoneID] = {};
+    }
+    state.zoneActors[ZoneID][ActorID] = false;
+  },
+
+  stageCreateZoneIntroTrigger(state, ZoneID) {
+    if (!state.zoneMap[ZoneID].Triggers[TRIGGER_TYPES.InitializeZone]) {
+      state.zoneMap[ZoneID].Triggers[TRIGGER_TYPES.InitializeZone] = {
+        'AlwaysExec': dcopy(defaultActionSet)
+      };
+    }
+    state.zoneMap[ZoneID].Triggers[TRIGGER_TYPES.InitializeZone]['PatchAction'] = PATCH_ACTION.CREATE;
+  },
+
+  stageDeleteZoneIntroTrigger(state, { ZoneID }) {
+    state.zoneMap[ZoneID].Triggers[TRIGGER_TYPES.InitializeZone]['PatchAction'] = PATCH_ACTION.DELETE;
+  },
+
+  introMessage(state, { ZoneID, message }) {
+    state.zoneMap[ZoneID].Triggers[TRIGGER_TYPES.InitializeZone].AlwaysExec.PlaySounds[0]['Val'] = message;
   }
 };
 
