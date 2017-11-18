@@ -19,7 +19,7 @@ export const initializer = new Promise((resolve, reject) => { ready = resolve; }
 localforage.setDriver(localforage.LOCALSTORAGE);
 
 const actions = {
-  resetState({ state }, { keepAuth = false, initial = false }) {
+  resetState({ state, commit }, { keepAuth = false, initial = false }) {
     if (initial) {
       cleanState = dcopy(state);
     }
@@ -53,13 +53,13 @@ const actions = {
 
     if (initial) {
       return p.then(() => {
-        Vue.set(store.state, 'initializing', false);
+        commit('project/initializing', false, { root: true });
         ready(store.state);
         return initializer;
       });
     } else {
       return p.then(() => {
-        Vue.set(store.state, 'initializing', false);
+        commit('project/initializing', false, { root: true });
         return store.state;
       });
     }
