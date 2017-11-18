@@ -16,7 +16,7 @@
             <w-button @click.native="addEntry">+</w-button>
           </div>
         </div>
-        <hr/>
+        <hr>
         <div class="Form">
           <h1>ai replies</h1>
           <div class="dialog-values" v-for="(sound, index) of dialog.AlwaysExec.PlaySounds" :key="`sound-${dialog.ID}-${index}`">
@@ -31,7 +31,7 @@
             <w-button @click.native="addActionSpeech()">+</w-button>
           </div>
         </div>
-        <hr/>
+        <hr>
         <div class="Form">
           <h1>followup dialogs</h1>
           <div class="dialog-wrapper">

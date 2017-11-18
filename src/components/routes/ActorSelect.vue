@@ -1,4 +1,4 @@
-<template lang="pug">
+<template>
   <grid gutter="gutter" id="RouteActorSelect">
     <sidebar></sidebar>
     <paper>

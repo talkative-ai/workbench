@@ -5,7 +5,7 @@
       <div class="flex-column">
         <div class="chain">
           <h1>Conversation</h1>
-          <hr/>
+          <hr>
           <DialogNode v-for="(dialogID, idx) of dialogChain" :key="dialogID" :dialog="dialogs[dialogID]" :recurse="false" @click="clickChain(idx)"
             :isChildIteration="idx &gt; 0" :isSelected="isSelected(dialogID)"></DialogNode>
           <DummyNode v-if="!$store.state.newDialog && !$store.state.connectingDialogID" @click.native="$store.dispatch('startNewConversation', dialogChain.slice(-1).pop())"
@@ -15,7 +15,7 @@
             <template v-else>start first conversation</template>
           </DummyNode>
           <div v-if="$store.state.connectingDialogID">
-            <hr/>
+            <hr>
             <div class="button-grid">
               <w-button @click.native="saveConnect">Connect</w-button>
               <w-button @click.native="saveConnect">Cancel</w-button>

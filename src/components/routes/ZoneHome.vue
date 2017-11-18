@@ -21,7 +21,7 @@
               </div>
             </template>
           </div>
-          <hr/>
+          <hr>
           <h1 class="Headline">Actors say and do what you wish.</h1>
           <w-button class="Headline" large="large" outline="outline" @click.native="$router.push({ name: 'ActorCreate', params: { zoneid: $route.params.id } })">create an actor</w-button>
           <div class="actor-wrap">
