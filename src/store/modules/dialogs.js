@@ -311,6 +311,18 @@ const actions = {
 };
 
 const mutations = {
+
+  dialogInMap(state, dialog) {
+    state.dialogMap[dialog.ID] = dialog;
+  },
+
+  relation(state, { parentID, childID }) {
+    state.dialogMap[parentID]['ChildDialogIDs'] = state.dialogMap[parentID]['ChildDialogIDs'] || [];
+    state.dialogMap[childID]['ParentDialogIDs'] = state.dialogMap[childID]['ParentDialogIDs'] || [];
+    state.dialogMap[parentID]['ChildDialogIDs'].push(childID.toString());
+    state.dialogMap[childID]['ParentDialogIDs'].push(parentID.toString());
+  },
+
   setDialogAction(state, { dialogID, action }) {
     Vue.set(state.dialogEditingCopy[dialogID], 'action', action);
   },
@@ -322,6 +334,7 @@ const mutations = {
   updateDialogChain(state, value) {
     state.dialogChain = value;
   },
+
   editDialog(state, dialogID) {
     Vue.delete(state.dialogEditError, dialogID, false);
     Vue.set(state, 'dialogIsEditing', dialogID);

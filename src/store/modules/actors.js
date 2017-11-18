@@ -1,5 +1,3 @@
-import Vue from 'vue';
-
 import API from '@/api';
 import router from '@/router';
 import { PATCH_ACTION } from '@/const';
@@ -54,7 +52,33 @@ const actions = {
     return API.GetActor(actor)
     .then(actor => {
       commit('dialogs/clearView', ActorID, { root: true });
-      commit('updateActor', { actor });
+
+      // Set default values because the API may return nil
+      actor.Dialogs = actor.Dialogs || [];
+      actor.DialogRelations = actor.DialogRelations || [];
+
+      commit('project/updateActor', actor, { root: true });
+
+      let rdialogs = new Set();
+
+      // Prepare the dialog map and root dialogs
+      for (const d of actor.Dialogs) {
+        d.ID = d.ID.toString();
+        d.ParentDialogIDs = d.ParentDialogIDs || [];
+        d.ChildDialogIDs = d.ChildDialogIDs || [];
+        commit('dialog/dialogInMap', d, { root: true });
+        if (d.IsRoot) {
+          rdialogs.add(d.ID);
+        }
+      }
+
+      // Build dialog graph
+      // In other words, construct dialog relations
+      for (const r of actor.DialogRelations) {
+        commit('dialogs/relation', { parentID: r.ParentNodeID, childID: r.ChildNodeID });
+      }
+
+      commit('dialogs/rootDialogs', [...rdialogs]);
       commit('selectEntity', { kind: 'actor', data: actor });
     });
   }
@@ -69,47 +93,6 @@ const mutations = {
 
   actorInMap(state, actor) {
     state.actorMap[actor.ID] = actor;
-  },
-
-  updateActor(state, payload) {
-    payload.actor.Dialogs = payload.actor.Dialogs || [];
-    payload.actor.DialogRelations = payload.actor.DialogRelations || [];
-    if (!state.dialogChain[payload.actor.ID]) {
-      Vue.set(state.dialogChain, payload.actor.ID, []);
-    }
-
-    let id = 0;
-    for (let idx in state.selectedProject.Actors) {
-      if (state.selectedProject.Actors[idx].ID === payload.actor.ID) {
-        id = idx;
-        break;
-      }
-    }
-    Vue.set(state.selectedProject.Actors, id, payload.actor);
-    let rdialogs = new Set();
-
-    // Prepare the dialog map and root dialogs
-    for (const d of payload.actor.Dialogs) {
-      d.ID = d.ID.toString();
-      d.ParentDialogIDs = d.ParentDialogIDs || [];
-      d.ChildDialogIDs = d.ChildDialogIDs || [];
-      Vue.set(state.dialogMap, d.ID, d);
-      if (d.IsRoot) {
-        rdialogs.add(d.ID);
-      }
-    }
-
-    // Build dialog graph
-    // In other words, construct dialog relations
-    for (const r of payload.actor.DialogRelations) {
-      let prepend = state.dialogMap[r.ParentNodeID].ChildDialogIDs || [];
-      Vue.set(state.dialogMap[r.ParentNodeID], 'ChildDialogIDs', [...prepend, r.ChildNodeID.toString()]);
-
-      prepend = state.dialogMap[r.ChildNodeID].ParentDialogIDs || [];
-      Vue.set(state.dialogMap[r.ChildNodeID], 'ParentDialogIDs', [...prepend, r.ParentNodeID.toString()]);
-    }
-
-    state.rootDialogs = [...rdialogs];
   },
 
   addToZone(state, { ZoneID, ActorID }) {

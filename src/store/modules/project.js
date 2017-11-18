@@ -55,6 +55,19 @@ const mutations = {
 
   initializing(state, bool) {
     state.initializing = bool;
+  },
+
+  setActor(state, actor) {
+    let id = -1;
+    for (let idx in state.selectedProject.Actors) {
+      if (state.selectedProject.Actors[idx].ID === actor.ID) {
+        id = idx;
+        break;
+      }
+    }
+    if (id > -1) {
+      state.selectedProject.Actors[id] = actor;
+    }
   }
 };
 
