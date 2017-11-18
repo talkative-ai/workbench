@@ -59,7 +59,7 @@ export default {
   },
 
   CreateZone({ CreateID, Title }) {
-    return aumFetch('PATCH', `project/${store.state.selectedProject.ID}`, {
+    return aumFetch('PATCH', `project/${store.state.project.selectedProject.ID}`, {
       Zones: [{
         CreateID,
         Title
@@ -76,7 +76,7 @@ export default {
   },
 
   CreateActor({ Actor, ZoneActors = [] }) {
-    return aumFetch('PATCH', `project/${store.state.selectedProject.ID}`, {
+    return aumFetch('PATCH', `project/${store.state.project.selectedProject.ID}`, {
       Actors: [ Actor ],
       ZoneActors
     })
@@ -91,7 +91,7 @@ export default {
   },
 
   PatchProject(params) {
-    return aumFetch('PATCH', `project/${store.state.selectedProject.ID}`, params)
+    return aumFetch('PATCH', `project/${store.state.project.selectedProject.ID}`, params)
     .then(idMap => {
       if (idMap.status < 200 || idMap.status > 299) {
         return idMap.json().then(result => {
@@ -103,7 +103,7 @@ export default {
   },
 
   UpdateActorZones(ActorZones) {
-    return aumFetch('PATCH', `project/${store.state.selectedProject.ID}`, {
+    return aumFetch('PATCH', `project/${store.state.project.selectedProject.ID}`, {
       ActorZones
     })
     .then(idMap => {
@@ -129,15 +129,15 @@ export default {
   },
 
   Publish() {
-    return aumFetch('POST', `publish/${store.state.selectedProject.ID}`);
+    return aumFetch('POST', `publish/${store.state.project.selectedProject.ID}`);
   }
 };
 
 function generateHeaders() {
   var myHeaders = new Headers();
   myHeaders.append('content-type', 'application/json');
-  if (store.state.token) {
-    myHeaders.append('x-token', store.state.token);
+  if (store.state.project.token) {
+    myHeaders.append('x-token', store.state.project.token);
   }
   return myHeaders;
 }
