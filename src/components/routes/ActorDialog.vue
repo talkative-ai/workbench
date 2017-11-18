@@ -7,7 +7,7 @@
           <h1>Conversation</h1>
           <hr>
           <DialogNode v-for="(dialogID, idx) of dialogChain" :key="dialogID" :dialog="dialogs[dialogID]" :recurse="false" @click="clickChain(idx)"
-            :isChildIteration="idx &gt; 0" :isSelected="isSelected(dialogID)"></DialogNode>
+            :isChildIteration="idx > 0" :isSelected="isSelected(dialogID)"></DialogNode>
           <DummyNode v-if="!$store.state.newDialog && !$store.state.connectingDialogID" @click.native="$store.dispatch('startNewConversation', dialogChain.slice(-1).pop())"
             isChildIteration="true">
             <IconButton name="plus" flat="flat"></IconButton>

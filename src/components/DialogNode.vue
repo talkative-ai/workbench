@@ -45,7 +45,7 @@
       <div class="entry-wrap">
         <template v-if="!isEditing">
           <div class="entry" v-for="(entry, index) in dialog.EntryInput" :class="{ 'child': parentNode }">{{ dialog.EntryInput[index] }}
-            <span v-if="index &lt; dialog.EntryInput.length-1">,</span>
+            <span v-if="index < dialog.EntryInput.length-1">,</span>
           </div>
           <div class="dialog-values">
             <div class="inner-values actor-vals" v-for="(sound, index) of dialog.AlwaysExec.PlaySounds" :key="`sound-${dialog.ID}-${index}`">"{{ sound.Val }}"</div>
@@ -57,8 +57,8 @@
           <h3>The user should say one of the following:</h3>
           <div class="entry" v-for="(entry, index) in $store.state.dialogEditingCopy[dialog.ID].EntryInput" :class="{ 'child': parentNode }">
             <input v-model="$store.state.dialogEditingCopy[dialog.ID].EntryInput[index]" />
-            <IconButton v-if="$store.state.dialogEditingCopy[dialog.ID].EntryInput.length &gt; 1" name="times" flat="flat" @click.native="$store.state.dialogEditingCopy[dialog.ID].EntryInput.splice(index, 1)"></IconButton>
-            <span v-if="index &lt; $store.state.dialogEditingCopy[dialog.ID].EntryInput.length-1"></span>
+            <IconButton v-if="$store.state.dialogEditingCopy[dialog.ID].EntryInput.length > 1" name="times" flat="flat" @click.native="$store.state.dialogEditingCopy[dialog.ID].EntryInput.splice(index, 1)"></IconButton>
+            <span v-if="index < $store.state.dialogEditingCopy[dialog.ID].EntryInput.length-1"></span>
           </div>
           <IconButton label="user should say" name="plus" @click.native="addEntryInput()"></IconButton>
           <div class="ai-wrap">
@@ -67,7 +67,7 @@
               <div class="inner-values actor-vals" v-for="(sound, index) of $store.state.dialogEditingCopy[dialog.ID].AlwaysExec.PlaySounds"
                 :key="`sound-${dialog.ID}-${index}`">
                 <input v-model="sound.Val" />
-                <IconButton v-if="$store.state.dialogEditingCopy[dialog.ID].AlwaysExec.PlaySounds.length &gt; 1" name="times" flat="flat"
+                <IconButton v-if="$store.state.dialogEditingCopy[dialog.ID].AlwaysExec.PlaySounds.length > 1" name="times" flat="flat"
                   @click.native="$store.state.dialogEditingCopy[dialog.ID].AlwaysExec.PlaySounds.splice(index, 1)"></IconButton>
               </div>
               <div class="inner-values actor-vals">

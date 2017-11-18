@@ -8,7 +8,7 @@
       <div class="Navbar-cell Text--sm u-flexJustifyBetween">
         <div class="Paper-align" :class="{
             'u-clickable': $route.meta.titleLink
-          }" @click="$route.meta.titleLink ? $route.meta.titleLink() : () =&gt; {}">{{ title }}
+          }" @click="$route.meta.titleLink ? $route.meta.titleLink() : () => {}">{{ title }}
           <icon class="u-marginL1" name="settings" width="24" height="24"></icon>
         </div>
         <w-button lightOutline="lightOutline" v-if="user && project" @click.native="publish()">
