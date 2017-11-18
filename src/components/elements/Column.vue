@@ -1,6 +1,7 @@
-<template lang="pug">
-  div(:class="columnClass")
-    slot
+<template>
+  <div :class="columnClass">
+    <slot></slot>
+  </div>
 </template>
 
 <script scoped>

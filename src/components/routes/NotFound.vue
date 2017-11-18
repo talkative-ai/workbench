@@ -1,11 +1,15 @@
-<template lang="pug">
-  grid(gutter)#RouteNotFound
-    sidebar
-    paper-text
-      h1.Headline
-        span.Headline--dark Oops!
-      grid(gutter)
-        span Can't find that. Sorry!
+<template>
+  <grid gutter="gutter" id="RouteNotFound">
+    <sidebar></sidebar>
+    <paper-text>
+      <h1 class="Headline">
+        <span class="Headline--dark">Oops!</span>
+      </h1>
+      <grid gutter="gutter">
+        <span>Can't find that. Sorry!</span>
+      </grid>
+    </paper-text>
+  </grid>
 </template>
 
 <script>

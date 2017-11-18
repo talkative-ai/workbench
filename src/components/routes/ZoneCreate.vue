@@ -1,22 +1,24 @@
-<template lang="pug">
-  grid#RouteZoneCreate(gutter)
-    sidebar
-    paper
-      paper-text(full)
-        h1.Headline
-          span.Headline Everything happens in a Zone.
-          br
-          | Name your new Zone:
-        form.Form.u-flex(@submit.prevent="create()")
-          input.Headline.u-size1of2.u-marginR3(v-model="zone.Title", placeholder="Enter name", required)
-          .Headline
-            w-button(
-              :class=`{
+<template>
+  <grid id="RouteZoneCreate" gutter="gutter">
+    <sidebar></sidebar>
+    <paper>
+      <paper-text full="full">
+        <h1 class="Headline">
+          <span class="Headline">Everything happens in a Zone.</span>
+          <br/>Name your new Zone:</h1>
+        <form class="Form u-flex" @submit.prevent="create()">
+          <input class="Headline u-size1of2 u-marginR3" v-model="zone.Title" placeholder="Enter name" required="required" />
+          <div class="Headline">
+            <w-button :class="{
                 hidden: !zone.Title.length
-              }`
-            )
-              | Enter
-              span.u-arrowEast
+              }">Enter
+              <span class="u-arrowEast"></span>
+            </w-button>
+          </div>
+        </form>
+      </paper-text>
+    </paper>
+  </grid>
 </template>
 
 <script>

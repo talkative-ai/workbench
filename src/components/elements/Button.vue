@@ -1,6 +1,7 @@
-<template lang="pug">
-  button(:class="buttonClass")
-    slot
+<template>
+  <button :class="buttonClass">
+    <slot></slot>
+  </button>
 </template>
 
 <script scoped>

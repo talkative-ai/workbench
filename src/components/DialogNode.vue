@@ -1,164 +1,118 @@
-<template lang="pug">
-  .DialogNode
-    .wrap(
-      :class=`{
-        'dialog-node': true,
-        'selectable': $route.params.dialog_id !== dialog.ID,
-        'selected-node': isSelected || $store.state.dialogIsEditing === dialog.ID
-      }`
-      :id="`dialog-${dialog.ID}`"
-      ref="dialog"
-    )
-
-      //- Not editing
-      template(v-if="!isEditing")
-        .cover-wrap
-
-          //- Hover cover
-          .cover.opaque(
-            v-if="$store.state.connectingDialogID === dialog.ID"
-            @click="$emit('click', { dialogID: dialog.ID })"
-            )
-            h1 connecting
-          .cover.opaque(v-else-if="$store.state.previewConnect === dialog.ID")
-            h1 previewing connect
-          .cover(
-            v-else-if="$store.state.connectingDialogID && !$store.state.dialogMap[$store.state.connectingDialogID].ChildDialogIDs.includes(dialog.ID)"
-            @click="$emit('click', { dialogID: dialog.ID })")
-            h1(v-if="!isSelected")
-              IconButton(name="link")
-              | preview connect
-          .cover(
-            v-else
-            @click="$emit('click', { dialogID: dialog.ID })"
-            :class=`{
-              selected: isSelected
-            }`)
-            h1(v-if="!isSelected")
-              IconButton(name="search")
-              | &nbsp;select
-          //- Edit bar
-          template(v-if="$store.state.connectingDialogID")
-          template(v-else)
-            .edit-bar(
-              :class=`{
+<template>
+  <div class="DialogNode">
+    <div class="wrap" :class="{
+          'dialog-node': true,
+          'selectable': $route.params.dialog_id !== dialog.ID,
+          'selected-node': isSelected || $store.state.dialogIsEditing === dialog.ID
+        }" :id="`dialog-${dialog.ID}`" ref="dialog">
+      <template v-if="!isEditing">
+        <div class="cover-wrap">
+          <div class="cover opaque" v-if="$store.state.connectingDialogID === dialog.ID" @click="$emit('click', { dialogID: dialog.ID })">
+            <h1>connecting</h1>
+          </div>
+          <div class="cover opaque" v-else-if="$store.state.previewConnect === dialog.ID">
+            <h1>previewing connect</h1>
+          </div>
+          <div class="cover" v-else-if="$store.state.connectingDialogID && !$store.state.dialogMap[$store.state.connectingDialogID].ChildDialogIDs.includes(dialog.ID)"
+            @click="$emit('click', { dialogID: dialog.ID })">
+            <h1 v-if="!isSelected">
+              <IconButton name="link"></IconButton>preview connect</h1>
+          </div>
+          <div class="cover" v-else @click="$emit('click', { dialogID: dialog.ID })" :class="{
+                selected: isSelected
+              }">
+            <h1 v-if="!isSelected">
+              <IconButton name="search"></IconButton>&nbsp;select</h1>
+          </div>
+          <template v-if="$store.state.connectingDialogID"></template>
+          <template v-else>
+            <div class="edit-bar" :class="{
+                  'with-error': $store.state.dialogEditError[dialog.ID]
+                }">
+              <div class="button-grid-small">
+                <IconButton name="pencil" label="edit" @click.native="beginEdit()"></IconButton>
+                <IconButton name="link" label="connect" @click.native="beginConnect()"></IconButton>
+              </div>
+            </div>
+          </template>
+        </div>
+      </template>
+      <template v-else>
+        <div class="cover editing"></div>
+      </template>
+      <div class="vspacer" v-if="parentNode"></div>
+      <div class="ball" v-if="parentNode"></div>
+      <div class="entry-wrap">
+        <template v-if="!isEditing">
+          <div class="entry" v-for="(entry, index) in dialog.EntryInput" :class="{ 'child': parentNode }">{{ dialog.EntryInput[index] }}
+            <span v-if="index &lt; dialog.EntryInput.length-1">,</span>
+          </div>
+          <div class="dialog-values">
+            <div class="inner-values actor-vals" v-for="(sound, index) of dialog.AlwaysExec.PlaySounds" :key="`sound-${dialog.ID}-${index}`">"{{ sound.Val }}"</div>
+            <div class="actions" v-if="dialog.ChildDialogIDs && dialog.ChildDialogIDs.length">await response</div>
+            <div class="actions dialog-action" v-else :class="{ [dialogAction]: true }">{{ dialogActionFriendly }}</div>
+          </div>
+        </template>
+        <template v-else>
+          <h3>The user should say one of the following:</h3>
+          <div class="entry" v-for="(entry, index) in $store.state.dialogEditingCopy[dialog.ID].EntryInput" :class="{ 'child': parentNode }">
+            <input v-model="$store.state.dialogEditingCopy[dialog.ID].EntryInput[index]" />
+            <IconButton v-if="$store.state.dialogEditingCopy[dialog.ID].EntryInput.length &gt; 1" name="times" flat="flat" @click.native="$store.state.dialogEditingCopy[dialog.ID].EntryInput.splice(index, 1)"></IconButton>
+            <span v-if="index &lt; $store.state.dialogEditingCopy[dialog.ID].EntryInput.length-1"></span>
+          </div>
+          <IconButton label="user should say" name="plus" @click.native="addEntryInput()"></IconButton>
+          <div class="ai-wrap">
+            <h3>Your AI replies with all of the following:</h3>
+            <div class="dialog-values">
+              <div class="inner-values actor-vals" v-for="(sound, index) of $store.state.dialogEditingCopy[dialog.ID].AlwaysExec.PlaySounds"
+                :key="`sound-${dialog.ID}-${index}`">
+                <input v-model="sound.Val" />
+                <IconButton v-if="$store.state.dialogEditingCopy[dialog.ID].AlwaysExec.PlaySounds.length &gt; 1" name="times" flat="flat"
+                  @click.native="$store.state.dialogEditingCopy[dialog.ID].AlwaysExec.PlaySounds.splice(index, 1)"></IconButton>
+              </div>
+              <div class="inner-values actor-vals">
+                <div class="flex flex-column">
+                  <IconButton name="plus" label="ai says" @click.native="addPlaySound()"></IconButton>
+                </div>
+              </div>
+              <div class="actions" v-if="dialog.ChildDialogIDs && dialog.ChildDialogIDs.length">await response</div>
+              <select class="actions dialog-action" v-else :class="{ [dialogAction]: true }" :value="dialogAction" @change="updateAction">
+                <option value="end-conversation">end conversation</option>
+                <option value="go-to-zone">go to zone</option>
+              </select>
+              <select v-if="dialogAction === 'go-to-zone'" :value="$store.state.dialogEditingCopy[dialog.ID].AlwaysExec.SetZone" @change="updateZone">
+                <option v-for="(value, index) of $store.state.zoneMap" :value="value.ID">{{value.Title}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="edit-bar" :class="{
                 'with-error': $store.state.dialogEditError[dialog.ID]
-              }`)
-              .button-grid-small
-                IconButton(name="pencil" label="edit" @click.native="beginEdit()")
-                IconButton(name="link" label="connect" @click.native="beginConnect()")
-
-      //- Editing
-      template(v-else)
-        .cover.editing
-
-      .vspacer(v-if="parentNode")
-      .ball(v-if="parentNode")
-      .entry-wrap
-
-        //- Not editing
-        template(v-if="!isEditing")
-          .entry(v-for="(entry, index) in dialog.EntryInput" :class="{ 'child': parentNode }")
-            | {{ dialog.EntryInput[index] }}
-            span(v-if="index < dialog.EntryInput.length-1")
-              | ,
-          .dialog-values
-            .inner-values.actor-vals(v-for='(sound, index) of dialog.AlwaysExec.PlaySounds', :key='`sound-${dialog.ID}-${index}`')
-              | "{{ sound.Val }}"
-            .actions(v-if='dialog.ChildDialogIDs && dialog.ChildDialogIDs.length')
-              | await response
-            .actions.dialog-action(
-              v-else
-              :class="{ [dialogAction]: true }")
-              | {{ dialogActionFriendly }}
-
-        //- Editing
-        template(v-else)
-          h3 The user should say one of the following:
-          .entry(v-for="(entry, index) in $store.state.dialogEditingCopy[dialog.ID].EntryInput" :class="{ 'child': parentNode }")
-            input(v-model="$store.state.dialogEditingCopy[dialog.ID].EntryInput[index]")
-            IconButton(
-              v-if="$store.state.dialogEditingCopy[dialog.ID].EntryInput.length > 1"
-              name="times"
-              flat
-              @click.native="$store.state.dialogEditingCopy[dialog.ID].EntryInput.splice(index, 1)")
-            span(v-if="index < $store.state.dialogEditingCopy[dialog.ID].EntryInput.length-1")
-          IconButton(
-            label="user should say"
-            name="plus"
-            @click.native="addEntryInput()")
-          .ai-wrap
-            h3 Your AI replies with all of the following:
-            .dialog-values
-              .inner-values.actor-vals(
-                v-for='(sound, index) of $store.state.dialogEditingCopy[dialog.ID].AlwaysExec.PlaySounds'
-                :key='`sound-${dialog.ID}-${index}`')
-                input(v-model="sound.Val")
-                IconButton(
-                  v-if="$store.state.dialogEditingCopy[dialog.ID].AlwaysExec.PlaySounds.length > 1"
-                  name="times"
-                  flat
-                  @click.native="$store.state.dialogEditingCopy[dialog.ID].AlwaysExec.PlaySounds.splice(index, 1)")
-              .inner-values.actor-vals
-                .flex.flex-column
-                  IconButton(
-                    name="plus"
-                    label="ai says"
-                    @click.native="addPlaySound()"
-                    )
-              .actions(v-if='dialog.ChildDialogIDs && dialog.ChildDialogIDs.length')
-                | await response
-              select.actions.dialog-action(
-                v-else
-                :class="{ [dialogAction]: true }"
-                :value="dialogAction"
-                @change="updateAction")
-                option(value="end-conversation") end conversation
-                option(value="go-to-zone") go to zone
-              select(
-                v-if="dialogAction === 'go-to-zone'"
-                :value="$store.state.dialogEditingCopy[dialog.ID].AlwaysExec.SetZone"
-                @change="updateZone"
-                )
-                option(
-                  v-for="(value, index) of $store.state.zoneMap"
-                  :value="value.ID"
-                  )
-                  | {{value.Title}}
-          .edit-bar(
-            :class=`{
-              'with-error': $store.state.dialogEditError[dialog.ID]
-            }`)
-            .button-grid-small
-              IconButton(@click.native="saveEdit()" label="save")
-              IconButton(@click.native="cancelEdit()" label="cancel")
-            .error(v-if="$store.state.dialogEditError[dialog.ID]")
-              | {{$store.state.dialogEditError[dialog.ID]}}
-    template(v-if="recurse")
-      .after-values-space(
-        v-if='dialog.ChildDialogIDs && dialog.ChildDialogIDs.length'
-        :style="{ width: `${calculateChildrenWidth()}px`, height: `${tallest - height + 50}px` }")
-      .child-dialogs(v-if='dialog.ChildDialogIDs && dialog.ChildDialogIDs.length')
-        div(v-for='(dialogID, idx) of dialog.ChildDialogIDs', :key='dialogID')
-          DialogNode(
-            :dialog='dialogs[dialogID]',
-            :parentNode="dialog.ID",
-            :recurse='false'
-            @click="$emit('click-child', { dialogID, isChild: true })"
-            @click-child="$emit('click-child', { dialogID, isChild: true })"
-          )
-        DummyNode(
-          v-if="!$store.state.newDialog && !$store.state.connectingDialogID"
-          @click.native="$store.dispatch('startNewConversation', dialogChain.slice(-1).pop())"
-          :parentNode="dialog.ID")
-          IconButton(name="plus" flat)
-          | new
-      DummyNode(
-        v-else-if="!$store.state.newDialog && !$store.state.connectingDialogID"
-        @click.native="$store.dispatch('startNewConversation', dialogChain.slice(-1).pop())"
-        :parentNode="dialog.ID")
-        IconButton(name="plus" flat)
-        | new
+              }">
+            <div class="button-grid-small">
+              <IconButton @click.native="saveEdit()" label="save"></IconButton>
+              <IconButton @click.native="cancelEdit()" label="cancel"></IconButton>
+            </div>
+            <div class="error" v-if="$store.state.dialogEditError[dialog.ID]">{{$store.state.dialogEditError[dialog.ID]}}</div>
+          </div>
+        </template>
+      </div>
+    </div>
+    <template v-if="recurse">
+      <div class="after-values-space" v-if="dialog.ChildDialogIDs && dialog.ChildDialogIDs.length" :style="{ width: `${calculateChildrenWidth()}px`, height: `${tallest - height + 50}px` }"></div>
+      <div class="child-dialogs" v-if="dialog.ChildDialogIDs && dialog.ChildDialogIDs.length">
+        <div v-for="(dialogID, idx) of dialog.ChildDialogIDs" :key="dialogID">
+          <DialogNode :dialog="dialogs[dialogID]" :parentNode="dialog.ID" :recurse="false" @click="$emit('click-child', { dialogID, isChild: true })"
+            @click-child="$emit('click-child', { dialogID, isChild: true })"></DialogNode>
+        </div>
+        <DummyNode v-if="!$store.state.newDialog && !$store.state.connectingDialogID" @click.native="$store.dispatch('startNewConversation', dialogChain.slice(-1).pop())"
+          :parentNode="dialog.ID">
+          <IconButton name="plus" flat="flat"></IconButton>new</DummyNode>
+      </div>
+      <DummyNode v-else-if="!$store.state.newDialog && !$store.state.connectingDialogID" @click.native="$store.dispatch('startNewConversation', dialogChain.slice(-1).pop())"
+        :parentNode="dialog.ID">
+        <IconButton name="plus" flat="flat"></IconButton>new</DummyNode>
+    </template>
+  </div>
 </template>
 
 <script>

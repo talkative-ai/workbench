@@ -1,6 +1,7 @@
-<template lang="pug">
-  div(:class="paperTextClass")
-    slot
+<template>
+  <div :class="paperTextClass">
+    <slot></slot>
+  </div>
 </template>
 
 <script scoped>

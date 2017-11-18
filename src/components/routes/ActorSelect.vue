@@ -1,12 +1,17 @@
 <template lang="pug">
-  grid(gutter)#RouteActorSelect
-    sidebar
-    paper
-      paper-text
-        h1.Headline
-          span.Headline--dark Select an actor
-        grid(gutter)
-          span Hello
+  <grid gutter="gutter" id="RouteActorSelect">
+    <sidebar></sidebar>
+    <paper>
+      <paper-text>
+        <h1 class="Headline">
+          <span class="Headline--dark">Select an actor</span>
+        </h1>
+        <grid gutter="gutter">
+          <span>Hello</span>
+        </grid>
+      </paper-text>
+    </paper>
+  </grid>
 </template>
 
 <script>

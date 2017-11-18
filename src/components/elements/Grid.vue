@@ -1,6 +1,7 @@
-<template lang="pug">
-  div(:class="gridClass")
-    slot
+<template>
+  <div :class="gridClass">
+    <slot></slot>
+  </div>
 </template>
 
 <script scoped>

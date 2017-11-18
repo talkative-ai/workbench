@@ -1,26 +1,21 @@
-<template lang="pug">
-  column(menu id="Sidebar")
-    nav.Sidebar
-      .Sidebar-item.Text--sm(
-        v-for="zone in $store.state.selectedProject.Zones"
-        :key="zone.ID"
-        @click="selectZone(zone)"
-        :class=`{
+<template>
+  <column menu="menu" id="Sidebar">
+    <nav class="Sidebar">
+      <div class="Sidebar-item Text--sm" v-for="zone in $store.state.selectedProject.Zones" :key="zone.ID" @click="selectZone(zone)"
+        :class="{
           'is-selected': selectedZoneID === zone.ID
-        }`
-      )
-        span
-          small Zone
-          | {{ zone.Title }}
-      .Sidebar-item.Text--sm(
-        :class=`{
+        }">
+        <span>
+          <small>Zone</small>{{ zone.Title }}</span>
+      </div>
+      <div class="Sidebar-item Text--sm" :class="{
           'is-selected': $router.currentRoute.name === 'ZoneCreate'
-        }`
-        @click="$router.push({ name: 'ZoneCreate' })"
-      )
-        span
-          icon(name="add" width="24" height="24")
-          | New zone
+        }" @click="$router.push({ name: 'ZoneCreate' })">
+        <span>
+          <icon name="add" width="24" height="24"></icon>New zone</span>
+      </div>
+    </nav>
+  </column>
 </template>
 
 <script>

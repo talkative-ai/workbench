@@ -1,7 +1,8 @@
-<template lang="pug">
-  .icon-button(:class="classList")
-    fa-icon(v-if="name" :name="name")
-    .label(v-if="label") {{ label }}
+<template>
+  <div class="icon-button" :class="classList">
+      <fa-icon v-if="name" :name="name"></fa-icon>
+      <div class="label" v-if="label">{{ label }}</div>
+    </div>
 </template>
 
 <script scoped>

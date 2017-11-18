@@ -1,50 +1,54 @@
-<template lang="pug">
-  #RouteDialogHome
-    sidebar
-    paper(:transparent="true")
-      paper-text
-        .Form
-          h1 user says
-          .inner-values
-            div.wide
-              input.quoted(v-for="(entry, index) of dialog.EntryInput" :key="index" v-model="dialog.EntryInput[index]" placeholder="Enter something here...")
-              w-button(@click.native="deleteAction('PlaySounds', index)") Delete
-          div.right
-            w-button(@click.native="addEntry") +
-
-        hr
-        .Form
-          h1 ai replies
-          .dialog-values(v-for="(sound, index) of dialog.AlwaysExec.PlaySounds" :key="`sound-${dialog.ID}-${index}`")
-            .inner-values
-              | Synthesized Speech
-              div.wide
-                input(placeholder="Enter speech text here!" v-model="sound.Val")
-                w-button(@click.native="deleteAction('PlaySounds', index)") Delete
-          div.right
-            w-button(@click.native="addActionSpeech()")
-              | +
-        hr
-
-        .Form
-          h1 followup dialogs
-          .dialog-wrapper
-            div(
-              @click="$router.push({ name: 'DialogHome', params: { id: $route.params.id, dialog_id: dialogID }})"
-              v-for="dialogID of dialog.ChildDialogIDs"
-              :key="dialogID"
-            )
-              dialog-dialog(:dialog='dialogs[dialogID]')
-          .Form.button-grid(v-if="!this.isNew")
-            w-button(
-              @click.native="$router.push({ name: 'DialogCreate', params: { id: $route.params.id, dialog_id: $route.params.dialog_id, is_root: false }})"
-            )
-              | Create New Response Dialog
-            w-button(
-              @click.native="$router.push({ name: 'ActorDialog', params: { id: $route.params.id, dialog_id: $route.params.dialog_id, linking_child: true }})"
-            )
-              | Connect Existing Dialog
-          w-button(@click.native="save()") Save Changes
+<template>
+  <div id="RouteDialogHome">
+    <sidebar></sidebar>
+    <paper :transparent="true">
+      <paper-text>
+        <div class="Form">
+          <h1>user says</h1>
+          <div class="inner-values">
+            <div class="wide">
+              <input class="quoted" v-for="(entry, index) of dialog.EntryInput" :key="index" v-model="dialog.EntryInput[index]" placeholder="Enter something here..."
+              />
+              <w-button @click.native="deleteAction('PlaySounds', index)">Delete</w-button>
+            </div>
+          </div>
+          <div class="right">
+            <w-button @click.native="addEntry">+</w-button>
+          </div>
+        </div>
+        <hr/>
+        <div class="Form">
+          <h1>ai replies</h1>
+          <div class="dialog-values" v-for="(sound, index) of dialog.AlwaysExec.PlaySounds" :key="`sound-${dialog.ID}-${index}`">
+            <div class="inner-values">Synthesized Speech
+              <div class="wide">
+                <input placeholder="Enter speech text here!" v-model="sound.Val" />
+                <w-button @click.native="deleteAction('PlaySounds', index)">Delete</w-button>
+              </div>
+            </div>
+          </div>
+          <div class="right">
+            <w-button @click.native="addActionSpeech()">+</w-button>
+          </div>
+        </div>
+        <hr/>
+        <div class="Form">
+          <h1>followup dialogs</h1>
+          <div class="dialog-wrapper">
+            <div @click="$router.push({ name: 'DialogHome', params: { id: $route.params.id, dialog_id: dialogID }})" v-for="dialogID of dialog.ChildDialogIDs"
+              :key="dialogID">
+              <dialog-dialog :dialog="dialogs[dialogID]"></dialog-dialog>
+            </div>
+          </div>
+          <div class="Form button-grid" v-if="!this.isNew">
+            <w-button @click.native="$router.push({ name: 'DialogCreate', params: { id: $route.params.id, dialog_id: $route.params.dialog_id, is_root: false }})">Create New Response Dialog</w-button>
+            <w-button @click.native="$router.push({ name: 'ActorDialog', params: { id: $route.params.id, dialog_id: $route.params.dialog_id, linking_child: true }})">Connect Existing Dialog</w-button>
+          </div>
+          <w-button @click.native="save()">Save Changes</w-button>
+        </div>
+      </paper-text>
+    </paper>
+  </div>
 </template>
 
 <script>

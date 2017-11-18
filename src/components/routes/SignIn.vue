@@ -1,19 +1,13 @@
-<template lang="pug">
-  grid(gutter)#RouteSignIn
-    column(menu)
-      | &nbsp;
-    paper
-      paper-text
-        //- w-button.Headline(
-        g-signin-button(
-          class="Headline Button large"
-          :params="googleSignInParams"
-          @success="onSignInSuccess"
-          @error="onSignInError"
-        )
-          | Sign in with Google
-        p.u-marginT3.u-colorTextLight
-          | Currently only sign in with Google is supported.
+<template>
+  <grid gutter="gutter" id="RouteSignIn">
+    <column menu="menu">&nbsp;</column>
+    <paper>
+      <paper-text>
+        <g-signin-button class="Headline Button large" :params="googleSignInParams" @success="onSignInSuccess" @error="onSignInError">Sign in with Google</g-signin-button>
+        <p class="u-marginT3 u-colorTextLight">Currently only sign in with Google is supported.</p>
+      </paper-text>
+    </paper>
+  </grid>
 </template>
 
 

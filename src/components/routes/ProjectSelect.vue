@@ -1,22 +1,16 @@
-<template lang="pug">
-  #RouteProjectSelect
-    h1 Choose a project:
-    div(
-      @click='toggleSelected(project)'
-      :class=`{
+<template>
+  <div id="RouteProjectSelect">
+    <h1>Choose a project:</h1>
+    <div @click="toggleSelected(project)" :class="{
         project: true,
         selected: selected.ID === project.ID,
-      }`
-      v-for='project in projects'
-      :key='project.ID'
-    )
-      | {{ project.Title }}
-    hr
-    .button-grid
-      w-button.no-outline(@click.native='openProject()' v-if='selected' to='/project/create')
-        | Open
-      w-button.no-outline(@click.native='createProject()')
-        | Create New
+      }" v-for="project in projects" :key="project.ID">{{ project.Title }}</div>
+    <hr/>
+    <div class="button-grid">
+      <w-button class="no-outline" @click.native="openProject()" v-if="selected" to="/project/create">Open</w-button>
+      <w-button class="no-outline" @click.native="createProject()">Create New</w-button>
+    </div>
+  </div>
 </template>
 
 <script>

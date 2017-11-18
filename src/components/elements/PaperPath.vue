@@ -1,6 +1,7 @@
-<template lang="pug">
-  div(class="Paper-path")
-    slot
+<template>
+  <div class="Paper-path">
+    <slot></slot>
+  </div>
 </template>
 
 <script scoped>

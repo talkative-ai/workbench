@@ -11,7 +11,7 @@
     "svg": "vsvg -s ./static/svg -t ./src/assets/icons2",
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
     "test": "npm run unit",
-    "lint": "eslint --ext .js,.vue src test/unit/specs"
+    "lint": "eslint --ext .js,.vue src test/unit/specs && pug-lint-vue src/components"
   },
   "dependencies": {
     "deep-copy": "^1.4.0",

@@ -1,25 +1,26 @@
-<template lang="pug">
-  grid(gutter)#RouteProjectCreate
-    paper
-      paper-text
-        h1.Headline
-          span.Headline--dark Name your project:
-
-        form.Form(@submit.prevent="createProject()" :disabled="isDisabled()")
-          input.Headline.u-size1of2.u-marginR3(placeholder="Add name", v-model="project.Title", required)
-          .error(v-if="createError")
-            | {{ createError }}
-          .input-hint
-            | Must be 3 - 255 characters long, with no special characters like !@#$%^&*()
-            br
-            | You can change this later. Other people will see this name when you publish!
-          br
-          w-button(outline)
-            | Begin
-            span.u-arrowEast
-          w-button(outline @click.native="$router.push({ name: 'ProjectHome' })")
-            | Cancel
-            span.u-arrowEast
+<template>
+  <grid gutter="gutter" id="RouteProjectCreate">
+    <paper>
+      <paper-text>
+        <h1 class="Headline">
+          <span class="Headline--dark">Name your project:</span>
+        </h1>
+        <form class="Form" @submit.prevent="createProject()" :disabled="isDisabled()">
+          <input class="Headline u-size1of2 u-marginR3" placeholder="Add name" v-model="project.Title" required="required" />
+          <div class="error" v-if="createError">{{ createError }}</div>
+          <div class="input-hint">Must be 3 - 255 characters long, with no special characters like !@#$%^&*()
+            <br/>You can change this later. Other people will see this name when you publish!</div>
+          <br/>
+          <w-button outline="outline">Begin
+            <span class="u-arrowEast"></span>
+          </w-button>
+          <w-button outline="outline" @click.native="$router.push({ name: 'ProjectHome' })">Cancel
+            <span class="u-arrowEast"></span>
+          </w-button>
+        </form>
+      </paper-text>
+    </paper>
+  </grid>
 </template>
 
 <script>

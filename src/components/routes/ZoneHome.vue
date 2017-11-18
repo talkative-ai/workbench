@@ -1,62 +1,50 @@
-<template lang="pug">
-  grid(gutter id="RouteZoneHome")
-    sidebar
-    paper
-      paper-text
-        h1.Headline
-          span.Headline--dark You're in the zone.
-      .Grid-cell
-        .Paper-text
-          .info-box
-            w-button(large outline v-if="!introMessageExists" @click.native="createIntroMessage()").Headline add an introduction
-            template(v-else)
-              h1.Headline A message to play when they first enter
-              textarea(
-                v-model="newIntroMessage"
-                :placeholder="`e.g. Welcome to ${zone.Title}! Try saying \"Hello\"`"
-                )
-              .button-grid
-                w-button(
-                  v-if="introMessageChanged && newIntroMessage"
-                  @click.native="saveIntroMessage()")
-                  | Save Changes
-                w-button(
-                  v-if="introMessageChanged"
-                  @click.native="revertIntroMessage()"
-                  )
-                  | Cancel
-                w-button(@click.native="removeIntroMessage()")
-                  | Remove
-          hr
-          h1.Headline Actors say and do what you wish.
-          w-button(large outline @click.native="$router.push({ name: 'ActorCreate', params: { zoneid: $route.params.id } })").Headline
-            | create an actor
-          .actor-wrap
-            .actor-item(
-              v-for="(actor, id) in $store.state.actorMap"
-              :class=`{
+<template>
+  <grid gutter="gutter" id="RouteZoneHome">
+    <sidebar></sidebar>
+    <paper>
+      <paper-text>
+        <h1 class="Headline">
+          <span class="Headline--dark">You're in the zone.</span>
+        </h1>
+      </paper-text>
+      <div class="Grid-cell">
+        <div class="Paper-text">
+          <div class="info-box">
+            <w-button class="Headline" large="large" outline="outline" v-if="!introMessageExists" @click.native="createIntroMessage()">add an introduction</w-button>
+            <template v-else>
+              <h1 class="Headline">A message to play when they first enter</h1>
+              <textarea v-model="newIntroMessage" :placeholder="`e.g. Welcome to ${zone.Title}! Try saying &quot;Hello&quot;`"></textarea>
+              <div class="button-grid">
+                <w-button v-if="introMessageChanged && newIntroMessage" @click.native="saveIntroMessage()">Save Changes</w-button>
+                <w-button v-if="introMessageChanged" @click.native="revertIntroMessage()">Cancel</w-button>
+                <w-button @click.native="removeIntroMessage()">Remove</w-button>
+              </div>
+            </template>
+          </div>
+          <hr/>
+          <h1 class="Headline">Actors say and do what you wish.</h1>
+          <w-button class="Headline" large="large" outline="outline" @click.native="$router.push({ name: 'ActorCreate', params: { zoneid: $route.params.id } })">create an actor</w-button>
+          <div class="actor-wrap">
+            <div class="actor-item" v-for="(actor, id) in $store.state.actorMap" :class="{
                 blank: !$store.state.zoneActors[$route.params.id] || !$store.state.zoneActors[$route.params.id][id]
-              }`
-              :key="id")
-              h1.Headline {{ actors[id].Title }}
-              .button-grid
-                w-button(
-                  class="add-button"
-                  v-if="!$store.state.zoneActors[$route.params.id] || !$store.state.zoneActors[$route.params.id][id]"
-                  @click.native="addActor(id)"
-                )
-                  fa-icon(name="plus")
-                  | Add
-                w-button(
-                  outline
-                  v-if="$store.state.zoneActors[$route.params.id] && $store.state.zoneActors[$route.params.id][id]"
-                  @click.native="removeActor(id)"
-                )
-                  fa-icon(name="times")
-                  | Remove
-                w-button(@click.native="selectActor(id)")
-                  fa-icon(name="pencil")
-                  | Edit
+              }" :key="id">
+              <h1 class="Headline">{{ actors[id].Title }}</h1>
+              <div class="button-grid">
+                <w-button class="add-button" v-if="!$store.state.zoneActors[$route.params.id] || !$store.state.zoneActors[$route.params.id][id]"
+                  @click.native="addActor(id)">
+                  <fa-icon name="plus"></fa-icon>Add</w-button>
+                <w-button outline="outline" v-if="$store.state.zoneActors[$route.params.id] && $store.state.zoneActors[$route.params.id][id]"
+                  @click.native="removeActor(id)">
+                  <fa-icon name="times"></fa-icon>Remove</w-button>
+                <w-button @click.native="selectActor(id)">
+                  <fa-icon name="pencil"></fa-icon>Edit</w-button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </paper>
+  </grid>
 </template>
 
 <script>

@@ -1,6 +1,7 @@
-<template lang="pug">
-  column.Paper(main :class=`{ transparent }`)
-    slot
+<template>
+  <column class="Paper" main="main" :class="{ transparent }">
+    <slot></slot>
+  </column>
 </template>
 
 <script>

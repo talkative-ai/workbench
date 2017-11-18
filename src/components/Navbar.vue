@@ -1,32 +1,26 @@
-<template lang="pug">
-  header#Header.Navbar.Block.Grid.Grid--withGutter
-    column(menu)
-      .Navbar-cell.Text--sm.Pointer(v-if="user" @click="$router.push({ name: 'ProjectSelect' })")
-        icon(name="author" width="32" height="32")
-        | {{ user.GivenName }}
-
-    column(main)
-      .Navbar-cell.Text--sm.u-flexJustifyBetween
-        .Paper-align(
-          :class=`{
+<template>
+  <header class="Navbar Block Grid Grid--withGutter" id="Header">
+    <column menu="menu">
+      <div class="Navbar-cell Text--sm Pointer" v-if="user" @click="$router.push({ name: 'ProjectSelect' })">
+        <icon name="author" width="32" height="32"></icon>{{ user.GivenName }}</div>
+    </column>
+    <column main="main">
+      <div class="Navbar-cell Text--sm u-flexJustifyBetween">
+        <div class="Paper-align" :class="{
             'u-clickable': $route.meta.titleLink
-          }`
-          @click="$route.meta.titleLink ? $route.meta.titleLink() : () => {}"
-        )
-          | {{ title }}
-          icon.u-marginL1(name="settings" width="24" height="24")
-
-        w-button(
-          lightOutline
-          v-if="user && project"
-          @click.native="publish()"
-        )
-          icon(name="google-home" width="32" height="32")
-          | Publish to the Multiverse
-
-    column(logo)
-      a.Navbar-cell.Navbar-logo(href="#")
-        icon(name="logo" width="32" height="32")
+          }" @click="$route.meta.titleLink ? $route.meta.titleLink() : () =&gt; {}">{{ title }}
+          <icon class="u-marginL1" name="settings" width="24" height="24"></icon>
+        </div>
+        <w-button lightOutline="lightOutline" v-if="user && project" @click.native="publish()">
+          <icon name="google-home" width="32" height="32"></icon>Publish to the Multiverse</w-button>
+      </div>
+    </column>
+    <column logo="logo">
+      <a class="Navbar-cell Navbar-logo" href="#">
+        <icon name="logo" width="32" height="32"></icon>
+      </a>
+    </column>
+  </header>
 </template>
 
 <script>

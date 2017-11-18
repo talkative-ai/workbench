@@ -1,9 +1,12 @@
-<template lang="pug">
-  grid#RouteProjectHome(gutter)
-    sidebar
-    paper
-      paper-text
-        h1.Headline Dashboard
+<template>
+  <grid id="RouteProjectHome" gutter="gutter">
+    <sidebar></sidebar>
+    <paper>
+      <paper-text>
+        <h1 class="Headline">Dashboard</h1>
+      </paper-text>
+    </paper>
+  </grid>
 </template>
 
 <script>

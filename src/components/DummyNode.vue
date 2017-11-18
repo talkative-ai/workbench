@@ -1,12 +1,17 @@
-<template lang="pug">
-  .DialogNode
-    .wrap(style="height: 100px")
-      .vspacer(v-if="isChildIteration")
-      .ball(v-if="isChildIteration")
-      .cover-wrap
-        .cover.opaque.no-border
-          h1
-            slot
+<template>
+  <div class="DialogNode">
+    <div class="wrap" style="height: 100px;">
+      <div class="vspacer" v-if="isChildIteration"></div>
+      <div class="ball" v-if="isChildIteration"></div>
+      <div class="cover-wrap">
+        <div class="cover opaque no-border">
+          <h1>
+            <slot></slot>
+          </h1>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>

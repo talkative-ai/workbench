@@ -9,6 +9,9 @@ module.exports = {
       : config.dev.cssSourceMap,
     extract: isProduction
   }),
+  template: {
+    doctype: 'html'
+  },
   transformToRequire: {
     video: 'src',
     source: 'src',

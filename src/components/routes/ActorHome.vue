@@ -1,23 +1,32 @@
-<template lang="pug">
-  grid(gutter)#RouteActorHome
-    sidebar
-    paper
-      paper-text
-        h1.Headline
-          span.Headline--dark {{ actor.Title }}
-
-        form.Form(@submit.prevent="create")
-          grid(gutter)
-            .Grid-cell.u-size2of3
-              p.u-colorTextDark Where this actor appears:
-              section.u-marginT3
-                h2.Text.u-colorTextLite(v-if="!actor.zoneIDs || !actor.zoneIDs.length") {{ actor.Title }} hasn't appeared yet
-                h2.Text(v-else v-for="zoneID in actor.zoneIDs") {{ zones[zoneID].Title }}
-
-          grid(gutter)
-            form.Form(@submit.prevent="")
-              .Grid-cell.u-size3of3
-                w-button(@click.native="$router.push({ name: 'ActorDialog', id: actor.ID })") View Conversations
+<template>
+  <grid gutter="gutter" id="RouteActorHome">
+    <sidebar></sidebar>
+    <paper>
+      <paper-text>
+        <h1 class="Headline">
+          <span class="Headline--dark">{{ actor.Title }}</span>
+        </h1>
+        <form class="Form" @submit.prevent="create">
+          <grid gutter="gutter">
+            <div class="Grid-cell u-size2of3">
+              <p class="u-colorTextDark">Where this actor appears:</p>
+              <section class="u-marginT3">
+                <h2 class="Text u-colorTextLite" v-if="!actor.zoneIDs || !actor.zoneIDs.length">{{ actor.Title }} hasn't appeared yet</h2>
+                <h2 class="Text" v-else v-for="zoneID in actor.zoneIDs">{{ zones[zoneID].Title }}</h2>
+              </section>
+            </div>
+          </grid>
+          <grid gutter="gutter">
+            <form class="Form" @submit.prevent="">
+              <div class="Grid-cell u-size3of3">
+                <w-button @click.native="$router.push({ name: 'ActorDialog', id: actor.ID })">View Conversations</w-button>
+              </div>
+            </form>
+          </grid>
+        </form>
+      </paper-text>
+    </paper>
+  </grid>
 </template>
 
 <script>
