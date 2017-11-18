@@ -144,6 +144,10 @@ const mutations = {
 
   path(state, path) {
     state.path = path;
+  },
+
+  projectsList(state, list) {
+    state.projectsList = list;
   }
 };
 

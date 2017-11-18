@@ -32,7 +32,7 @@ const router = new Router({
       beforeEnter(to, from, next) {
         API.GetProjects()
         .then(result => {
-          Vue.set(store.state, 'projectsList', result);
+          store.commit('project/projectsList', result);
           if (!result.length) {
             return next({ name: 'ProjectCreate' });
           }
@@ -73,7 +73,7 @@ const router = new Router({
       meta: {
         background: 'paper',
         theme: 'light',
-        title: () => store.state.selectedProject.Title,
+        title: () => store.state.project.selectedProject.Title,
         titleLink: () => router.push({ name: 'ProjectHome' })
       }
     },
@@ -85,7 +85,7 @@ const router = new Router({
       meta: {
         background: 'paper',
         theme: 'light',
-        title: () => store.state.selectedProject.Title,
+        title: () => store.state.project.selectedProject.Title,
         titleLink: () => router.push({ name: 'ProjectHome' })
       }
     },
@@ -96,7 +96,7 @@ const router = new Router({
       meta: {
         background: 'paper',
         theme: 'light',
-        title: () => store.state.selectedProject.Title,
+        title: () => store.state.project.selectedProject.Title,
         titleLink: () => router.push({ name: 'ProjectHome' })
       },
       beforeEnter(to, from, next) {
@@ -114,7 +114,7 @@ const router = new Router({
       meta: {
         background: 'paper',
         theme: 'light',
-        title: () => store.state.selectedProject.Title,
+        title: () => store.state.project.selectedProject.Title,
         titleLink: () => router.push({ name: 'ProjectHome' })
       },
       async beforeEnter(to, from, next) {
@@ -132,7 +132,7 @@ const router = new Router({
       meta: {
         background: 'paper',
         theme: 'light',
-        title: () => store.state.selectedProject.Title,
+        title: () => store.state.project.selectedProject.Title,
         titleLink: () => router.push({ name: 'ProjectHome' })
       },
       beforeEnter(to, from, next) {
@@ -147,7 +147,7 @@ const router = new Router({
       meta: {
         background: 'paper',
         theme: 'light',
-        title: () => store.state.selectedProject.Title,
+        title: () => store.state.project.selectedProject.Title,
         titleLink: () => router.push({ name: 'ProjectHome' })
       },
       beforeEnter(to, from, next) {
@@ -162,7 +162,7 @@ const router = new Router({
       meta: {
         background: 'paper',
         theme: 'light',
-        title: () => store.state.selectedProject.Title
+        title: () => store.state.project.selectedProject.Title
       },
       beforeEnter(to, from, next) {
         store.commit('clearSelectedEntity');
@@ -176,7 +176,7 @@ const router = new Router({
       meta: {
         background: 'paper',
         theme: 'light',
-        title: () => store.state.selectedProject.Title,
+        title: () => store.state.project.selectedProject.Title,
         titleLink: () => router.push({ name: 'ProjectHome' })
       },
       beforeEnter(to, from, next) {
@@ -194,15 +194,15 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   if (to.name !== 'SignIn') {
-    Vue.set(store.state, 'path', to.name);
+    store.commit('project/path', to.name);
   }
 
-  if (!store.state.user && to.name !== 'SignIn') {
+  if (!store.state.project.user && to.name !== 'SignIn') {
     return next({ name: 'SignIn' });
   }
 
-  if (!store.state.selectedProject &&
-    store.state.user &&
+  if (!store.state.project.selectedProject &&
+    store.state.project.user &&
     to.name !== 'ProjectSelect' &&
     to.name !== 'ProjectCreate') {
     return next({ name: 'ProjectSelect' });
