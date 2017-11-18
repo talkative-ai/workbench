@@ -18,6 +18,11 @@ const state = {
   createID: 0
 };
 
+const getters = {
+  selectedEntity: state => state.selectedEntity.data,
+  selectedEntityID: state => state.selectedEntity.data ? state.selectedEntity.data.ID : null
+};
+
 const actions = {
 
   generateID({ commit, state }) {
@@ -154,6 +159,7 @@ const mutations = {
 export default {
   namespaced: true,
   state,
+  getters,
   actions,
   mutations
 };

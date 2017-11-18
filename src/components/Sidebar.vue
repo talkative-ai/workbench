@@ -1,7 +1,7 @@
 <template>
   <column menu="menu" id="Sidebar">
     <nav class="Sidebar">
-      <div class="Sidebar-item Text--sm" v-for="zone in $store.state.selectedProject.Zones" :key="zone.ID" @click="selectZone(zone)"
+      <div class="Sidebar-item Text--sm" v-for="zone in Zones" :key="zone.ID" @click="selectZone(zone)"
         :class="{
           'is-selected': selectedZoneID === zone.ID
         }">
@@ -21,6 +21,7 @@
 <script>
 import '../assets/icons2';
 import Column from './elements/Column';
+import { mapGetters, mapState } from 'vuex';
 
 export default {
   name: 'sidebar',
@@ -28,15 +29,17 @@ export default {
     Column
   },
   computed: {
-    selectedZoneID() {
-      if (!this.$store.state.selectedEntity.data) return false;
+    ...mapGetters('project', {
+      selectedZoneID: 'selectedEntityID'
+    }),
 
-      return this.$store.state.selectedEntity.data.ID;
-    }
+    ...mapState('project', {
+      Zones: state => state.selectedProject.Zones
+    })
   },
   methods: {
     selectZone(zone) {
-      this.$store.dispatch('selectZone', zone.ID)
+      this.$store.dispatch('zones/selectZone', zone.ID)
       .then(() => {
         this.$router.push({ name: 'ZoneHome', params: { id: zone.ID } });
       });

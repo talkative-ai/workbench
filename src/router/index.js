@@ -136,7 +136,7 @@ const router = new Router({
         titleLink: () => router.push({ name: 'ProjectHome' })
       },
       beforeEnter(to, from, next) {
-        store.commit('clearSelectedEntity');
+        store.commit('project/clearSelectedEntity');
         next();
       }
     },
@@ -165,7 +165,7 @@ const router = new Router({
         title: () => store.state.project.selectedProject.Title
       },
       beforeEnter(to, from, next) {
-        store.commit('clearSelectedEntity');
+        store.commit('project/clearSelectedEntity');
         next();
       }
     },
