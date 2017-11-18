@@ -29,11 +29,11 @@ export default {
     Column
   },
   computed: {
-    ...mapGetters('project', {
+    ...mapGetters('master', {
       selectedZoneID: 'selectedEntityID'
     }),
 
-    ...mapState('project', {
+    ...mapState('master', {
       Zones: state => state.selectedProject.Zones
     })
   },

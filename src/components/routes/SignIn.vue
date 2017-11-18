@@ -48,7 +48,7 @@ export default {
   },
   methods: {
     onSignInSuccess(googleUser) {
-      this.$store.dispatch('project/authGoogle', googleUser);
+      this.$store.dispatch('master/authGoogle', googleUser);
     },
     onSignInError(error) {
       console.log('OH NOES', error);

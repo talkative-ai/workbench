@@ -32,7 +32,7 @@ const router = new Router({
       beforeEnter(to, from, next) {
         API.GetProjects()
         .then(result => {
-          store.commit('project/projectsList', result);
+          store.commit('master/projectsList', result);
           if (!result.length) {
             return next({ name: 'ProjectCreate' });
           }
@@ -73,7 +73,7 @@ const router = new Router({
       meta: {
         background: 'paper',
         theme: 'light',
-        title: () => store.state.project.selectedProject.Title,
+        title: () => store.state.master.selectedProject.Title,
         titleLink: () => router.push({ name: 'ProjectHome' })
       }
     },
@@ -85,7 +85,7 @@ const router = new Router({
       meta: {
         background: 'paper',
         theme: 'light',
-        title: () => store.state.project.selectedProject.Title,
+        title: () => store.state.master.selectedProject.Title,
         titleLink: () => router.push({ name: 'ProjectHome' })
       }
     },
@@ -96,7 +96,7 @@ const router = new Router({
       meta: {
         background: 'paper',
         theme: 'light',
-        title: () => store.state.project.selectedProject.Title,
+        title: () => store.state.master.selectedProject.Title,
         titleLink: () => router.push({ name: 'ProjectHome' })
       },
       beforeEnter(to, from, next) {
@@ -114,7 +114,7 @@ const router = new Router({
       meta: {
         background: 'paper',
         theme: 'light',
-        title: () => store.state.project.selectedProject.Title,
+        title: () => store.state.master.selectedProject.Title,
         titleLink: () => router.push({ name: 'ProjectHome' })
       },
       async beforeEnter(to, from, next) {
@@ -132,11 +132,11 @@ const router = new Router({
       meta: {
         background: 'paper',
         theme: 'light',
-        title: () => store.state.project.selectedProject.Title,
+        title: () => store.state.master.selectedProject.Title,
         titleLink: () => router.push({ name: 'ProjectHome' })
       },
       beforeEnter(to, from, next) {
-        store.commit('project/clearSelectedEntity');
+        store.commit('master/clearSelectedEntity');
         next();
       }
     },
@@ -147,7 +147,7 @@ const router = new Router({
       meta: {
         background: 'paper',
         theme: 'light',
-        title: () => store.state.project.selectedProject.Title,
+        title: () => store.state.master.selectedProject.Title,
         titleLink: () => router.push({ name: 'ProjectHome' })
       },
       beforeEnter(to, from, next) {
@@ -162,10 +162,10 @@ const router = new Router({
       meta: {
         background: 'paper',
         theme: 'light',
-        title: () => store.state.project.selectedProject.Title
+        title: () => store.state.master.selectedProject.Title
       },
       beforeEnter(to, from, next) {
-        store.commit('project/clearSelectedEntity');
+        store.commit('master/clearSelectedEntity');
         next();
       }
     },
@@ -176,7 +176,7 @@ const router = new Router({
       meta: {
         background: 'paper',
         theme: 'light',
-        title: () => store.state.project.selectedProject.Title,
+        title: () => store.state.master.selectedProject.Title,
         titleLink: () => router.push({ name: 'ProjectHome' })
       },
       beforeEnter(to, from, next) {
@@ -194,15 +194,15 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   if (to.name !== 'SignIn') {
-    store.commit('project/path', to.name);
+    store.commit('master/path', to.name);
   }
 
-  if (!store.state.project.user && to.name !== 'SignIn') {
+  if (!store.state.master.user && to.name !== 'SignIn') {
     return next({ name: 'SignIn' });
   }
 
-  if (!store.state.project.selectedProject &&
-    store.state.project.user &&
+  if (!store.state.master.selectedProject &&
+    store.state.master.user &&
     to.name !== 'ProjectSelect' &&
     to.name !== 'ProjectCreate') {
     return next({ name: 'ProjectSelect' });
@@ -215,11 +215,11 @@ initializer.then(() => {
   const initialPath = router.currentRoute.name;
 
   if (initialPath && (initialPath === 'ProjectHome' || initialPath === 'SignIn')) {
-    return router.replace({ name: store.state.project.path });
+    return router.replace({ name: store.state.master.path });
   }
 
   if (initialPath) {
-    store.commit('project/path', initialPath);
+    store.commit('master/path', initialPath);
   }
 });
 

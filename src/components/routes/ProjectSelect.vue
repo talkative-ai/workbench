@@ -28,7 +28,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('project', {
+    ...mapState('master', {
       projects: 'projectsList'
     })
   },
@@ -41,7 +41,7 @@ export default {
       }
     },
     openProject() {
-      this.$store.dispatch('project/selectProject', this.selected);
+      this.$store.dispatch('master/selectProject', this.selected);
     },
 
     createProject() {

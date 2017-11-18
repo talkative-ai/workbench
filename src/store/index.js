@@ -3,7 +3,7 @@ import Vuex from 'vuex';
 import localforage from 'localforage';
 import dcopy from 'deep-copy';
 
-import project from './modules/project';
+import master from './modules/master';
 import actors from './modules/actors';
 import dialogs from './modules/dialogs';
 import zones from './modules/zones';
@@ -25,8 +25,8 @@ const actions = {
 
     let freshState = dcopy(cleanState);
     if (keepAuth) {
-      freshState.project.user = store.state.project.user;
-      freshState.project.token = store.state.project.token;
+      freshState.master.user = store.state.master.user;
+      freshState.master.token = store.state.master.token;
     }
 
     store.replaceState(freshState);
@@ -68,7 +68,7 @@ const actions = {
 const store = new Vuex.Store({
   actions,
   modules: {
-    project,
+    master,
     actors,
     dialogs,
     zones
