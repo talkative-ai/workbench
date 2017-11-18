@@ -48,7 +48,7 @@ const actions = {
 
   selectProject({ dispatch, commit, state }, p) {
     commit('initializing', true);
-    return dispatch('resetState', { keepAuth: true })
+    return dispatch('resetState', { keepAuth: true }, { root: true })
       .then(newState => {
         return API.GetProject(p)
         .then(newState => dispatch('setProject', newState))
@@ -63,7 +63,7 @@ const actions = {
   },
 
   unauthorized({ dispatch, state }) {
-    return dispatch('resetState').then(() => {
+    return dispatch('resetState', {}, { root: true }).then(() => {
       router.push({ name: 'SignIn' });
     });
   },
@@ -73,7 +73,7 @@ const actions = {
   },
 
   reset({ dispatch }) {
-    return dispatch('resetState', { keepAuth: true });
+    return dispatch('resetState', { keepAuth: true }, { root: true });
   },
 
   setProject({ state, commit }, project) {
@@ -114,7 +114,7 @@ const actions = {
 
 const mutations = {
 
-  updateToken(state, value) {
+  token(state, value) {
     state.token = value;
   },
 

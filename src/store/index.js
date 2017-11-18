@@ -25,8 +25,8 @@ const actions = {
 
     let freshState = dcopy(cleanState);
     if (keepAuth) {
-      freshState.user = store.state.user;
-      freshState.token = store.state.token;
+      freshState.project.user = store.state.project.user;
+      freshState.project.token = store.state.project.token;
     }
 
     store.replaceState(freshState);

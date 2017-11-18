@@ -15,6 +15,8 @@
 
 <script>
 import WButton from '../elements/Button';
+import { mapState } from 'vuex';
+
 export default {
   name: 'ProjectSelect',
   components: {
@@ -26,9 +28,9 @@ export default {
     };
   },
   computed: {
-    projects() {
-      return this.$store.state.projectsList;
-    }
+    ...mapState('project', {
+      projects: 'projectsList'
+    })
   },
   methods: {
     toggleSelected(id) {
@@ -39,7 +41,7 @@ export default {
       }
     },
     openProject() {
-      this.$store.dispatch('selectProject', this.selected);
+      this.$store.dispatch('project/selectProject', this.selected);
     },
 
     createProject() {
