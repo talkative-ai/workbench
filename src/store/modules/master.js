@@ -4,15 +4,12 @@ import { SelectedEntity } from '@/store/models';
 import { titleCase } from '@/utilities';
 
 const state = {
-  initializing: true,
-
   user: null,
   token: null,
 
   path: '',
 
   projectsList: null,
-  selectedProject: null,
   selectedEntity: new SelectedEntity(),
 
   createID: 0
@@ -28,11 +25,6 @@ const actions = {
   generateID({ commit, state }) {
     commit('incrCreate');
     return `harihara-${state.createID}`;
-  },
-
-  createProject({ dispatch, state }, project) {
-    return API.CreateProject(project)
-      .then(res => dispatch('setProject', res));
   },
 
   authGoogle({ commit, state }, googleUser) {
@@ -95,10 +87,6 @@ const mutations = {
 
   clearSelectedEntity(state) {
     state.selectedEntity = new SelectedEntity();
-  },
-
-  selectedProject(state, project) {
-    state.selectedProject = project;
   },
 
   selectedEntity(state, entity) {

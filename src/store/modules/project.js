@@ -40,6 +40,11 @@ const actions = {
     }
 
     router.push({ name: 'ProjectHome' });
+  },
+
+  createProject({ dispatch, state }, project) {
+    return API.CreateProject(project)
+      .then(res => dispatch('setProject', res));
   }
 };
 
