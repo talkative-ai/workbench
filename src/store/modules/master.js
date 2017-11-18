@@ -51,18 +51,6 @@ const actions = {
       });
   },
 
-  selectProject({ dispatch, commit, state }, p) {
-    commit('initializing', true);
-    return dispatch('resetState', { keepAuth: true }, { root: true })
-      .then(newState => {
-        return API.GetProject(p)
-        .then(newState => dispatch('setProject', newState))
-        .then(newState => {
-          commit('initializing', false);
-        });
-      });
-  },
-
   publish({ commit, state }) {
     API.Publish();
   },
@@ -81,33 +69,11 @@ const actions = {
     return dispatch('resetState', { keepAuth: true }, { root: true });
   },
 
-  setProject({ state, commit }, project) {
-    if (!project.Actors) project.Actors = [];
-    if (!project.Zones) project.Zones = [];
-    if (!project.ZoneActors) project.ZoneActors = [];
-    if (!project.Dialogs) project.Dialogs = [];
-    if (!project.DialogRelations) project.DialogRelations = [];
-
-    commit('selectedProject', project);
-    for (const a of project.Actors) {
-      commit('actors/actorInMap', a, { root: true });
-    }
-    for (const z of project.Zones) {
-      commit('zones/zoneInMap', z, { root: true });
-    }
-    for (const za of project.ZoneActors) {
-      commit('zones/addActor', { ZoneID: za.ZoneID, ActorID: za.ActorID }, { root: true });
-      commit('actors/addToZone', { ZoneID: za.ZoneID, ActorID: za.ActorID }, { root: true });
-    }
-
-    router.push({ name: 'ProjectHome' });
-  },
-
   selectEntity({ state, commit }, entity) {
-    let redirect = entity.redirect;
-    delete entity.redirect;
+    let navigate = entity.navigate;
+    delete entity.navigate;
     commit('selectedEntity', entity);
-    if (redirect) {
+    if (navigate) {
       if (entity.kind === 'dialog') {
         router.push({ name: 'DialogHome', params: { id: entity.data.ActorID, dialog_id: entity.data.ID } });
       } else {
@@ -129,10 +95,6 @@ const mutations = {
 
   clearSelectedEntity(state) {
     state.selectedEntity = new SelectedEntity();
-  },
-
-  initializing(state, bool) {
-    state.initializing = bool;
   },
 
   selectedProject(state, project) {

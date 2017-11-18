@@ -41,7 +41,7 @@ export default {
       }
     },
     openProject() {
-      this.$store.dispatch('master/selectProject', this.selected);
+      this.$store.dispatch('project/selectProject', this.selected);
     },
 
     createProject() {

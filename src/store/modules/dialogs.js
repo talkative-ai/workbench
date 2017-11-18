@@ -416,6 +416,17 @@ const mutations = {
 
   saveEditDialogError(state, { dialogID, error }) {
     Vue.set(state.dialogEditError, dialogID, error);
+  },
+
+  initializeChain(state, ActorID) {
+    state.dialogChain[ActorID] = [];
+  },
+
+  clearView(state, ActorID) {
+    state.rootDialogs = [];
+    state.dialogMap = {};
+    state.dialogSiblings = [];
+    state.dialogChain[ActorID] = [];
   }
 
 };

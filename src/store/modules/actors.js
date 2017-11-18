@@ -26,27 +26,34 @@ const actions = {
     return API.CreateActor({ Actor, ZoneActors })
     .then(idMap => {
       Actor.ID = idMap[Actor.CreateID];
-      zoneActor.ActorID = idMap[Actor.CreateID];
       delete Actor.CreateID;
 
-      Vue.set(state.dialogChain, Actor.ID, []);
       Actor.Dialogs = Actor.Dialogs || [];
       Actor.DialogRelations = Actor.DialogRelations || [];
+      commit('dialogs/initializeChain', Actor.ID);
       commit('addActor', Actor);
-      commit('selectEntity', { kind: 'actor', data: Actor, redirect: true });
+      commit('actorInMap', Actor);
+      if (Actor.zoneIDs) {
+        for (let ZoneID of Actor.zoneIDs) {
+          commit('zones/addActor', { ZoneID, ActorID: Actor.ID }, { root: true });
+        }
+      }
+      commit('newActor', Actor);
+      commit('master/selectEntity', { kind: 'actor', data: Actor, navigate: true }, { root: true });
       return Actor;
     });
   },
 
-  selectActor({ commit, state }, actorID) {
-    if (state.selectedEntity.data && state.selectedEntity.kind === 'actor' && state.selectedEntity.data.ID === actorID) return;
-    const actor = state.actorMap[actorID];
+  selectActor({ commit, state }, ActorID) {
+    if (state.selectedEntity.data && state.selectedEntity.kind === 'actor' && state.selectedEntity.data.ID === ActorID) return;
+    const actor = state.actorMap[ActorID];
     if (!actor) {
       router.push({ name: 'NotFound' });
       return;
     }
     return API.GetActor(actor)
     .then(actor => {
+      commit('dialogs/clearView', ActorID, { root: true });
       commit('updateActor', { actor });
       commit('selectEntity', { kind: 'actor', data: actor });
     });
@@ -58,15 +65,6 @@ const mutations = {
 
   addActor(state, actor) {
     state.selectedProject.Actors.push(actor);
-    Vue.set(state.actorMap, actor.ID, actor);
-    if (actor.zoneIDs) {
-      for (let zoneID of actor.zoneIDs) {
-        if (!state.zoneActors[zoneID]) {
-          Vue.set(state.zoneActors, zoneID, {});
-        }
-        Vue.set(state.zoneActors[zoneID], actor.ID, true);
-      }
-    }
   },
 
   actorInMap(state, actor) {
@@ -79,9 +77,6 @@ const mutations = {
     if (!state.dialogChain[payload.actor.ID]) {
       Vue.set(state.dialogChain, payload.actor.ID, []);
     }
-    Vue.set(state, 'rootDialogs', []);
-    Vue.set(state, 'dialogMap', {});
-    Vue.set(state, 'dialogSiblings', []);
 
     let id = 0;
     for (let idx in state.selectedProject.Actors) {

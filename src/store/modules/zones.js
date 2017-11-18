@@ -12,7 +12,7 @@ const state = {
 
 const actions = {
   async createZone({ commit, state, dispatch }, zone) {
-    zone.CreateID = await dispatch('generateID');
+    zone.CreateID = await dispatch('master/generateID', {}, { root: true });
     return API.CreateZone(zone)
     .then(idMap => {
       let newZone = dcopy(defaultZone);
@@ -20,8 +20,8 @@ const actions = {
       newZone.Title = zone.Title;
 
       commit('addZone', newZone);
-      commit('master/addZone', newZone);
-      commit('selectEntity', { kind: 'zone', data: newZone, redirect: true });
+      commit('master/addZone', newZone, { root: true });
+      commit('master/selectEntity', { kind: 'zone', data: newZone, navigate: true }, { root: true });
       return newZone;
     });
   },
@@ -92,7 +92,7 @@ const actions = {
     return API.GetZone(zone)
     .then(zone => {
       commit('updateZone', zone);
-      commit('selectEntity', { kind: 'zone', data: zone });
+      commit('master/selectEntity', { kind: 'zone', data: zone }, { root: true });
     });
   }
 };

@@ -4,6 +4,7 @@ import localforage from 'localforage';
 import dcopy from 'deep-copy';
 
 import master from './modules/master';
+import project from './modules/project';
 import actors from './modules/actors';
 import dialogs from './modules/dialogs';
 import zones from './modules/zones';
@@ -69,6 +70,7 @@ const store = new Vuex.Store({
   actions,
   modules: {
     master,
+    project,
     actors,
     dialogs,
     zones
