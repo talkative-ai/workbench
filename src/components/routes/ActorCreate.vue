@@ -32,32 +32,18 @@
 </template>
 
 <script>
-import WButton from '../elements/Button';
-import Grid from '../elements/Grid';
-import Sidebar from '../Sidebar';
-import Paper from '../Paper';
-import PaperText from '../elements/PaperText';
-import BGActor from '@/assets/images/actor.jpg';
-import PictureInput from 'vue-picture-input';
-
 export default {
   name: 'ActorCreate',
   props: ['zoneid'],
-  components: {
-    WButton,
-    Sidebar,
-    Grid,
-    PaperText,
-    Paper,
-    PictureInput
-  },
   data() {
     return {
-      BGActor,
       actor: {
         Title: ''
       }
     };
+  },
+  computed: {
+
   },
   methods: {
     create() {

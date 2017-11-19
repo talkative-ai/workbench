@@ -14,14 +14,9 @@
 </template>
 
 <script>
-import WButton from '../elements/Button';
 import { mapState } from 'vuex';
 
 export default {
-  name: 'ProjectSelect',
-  components: {
-    WButton
-  },
   data() {
     return {
       selected: false

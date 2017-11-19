@@ -22,21 +22,8 @@
 </template>
 
 <script>
-import Grid from '../elements/Grid';
-import Button from '../elements/Button';
-import PaperText from '../elements/PaperText';
-import Sidebar from '../Sidebar';
-import Paper from '../Paper';
-
 export default {
   name: 'ZoneCreate',
-  components: {
-    Sidebar,
-    'w-button': Button,
-    Grid,
-    PaperText,
-    Paper
-  },
   data() {
     return {
       zone: {

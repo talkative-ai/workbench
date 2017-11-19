@@ -12,12 +12,6 @@
 
 
 <script>
-import WButton from '../elements/Button';
-import Grid from '../elements/Grid';
-import Column from '../elements/Column';
-import PaperText from '../elements/PaperText';
-import Paper from '../Paper';
-
 export default {
   name: 'SignIn',
   data() {
@@ -26,13 +20,6 @@ export default {
         client_id: '693388894852-2s2q0ggfj09c5mq094gpdbppugce944m.apps.googleusercontent.com'
       }
     };
-  },
-  components: {
-    WButton,
-    Grid,
-    Column,
-    Paper,
-    PaperText
   },
   computed: {
     user() {

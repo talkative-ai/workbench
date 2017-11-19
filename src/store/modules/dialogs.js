@@ -243,7 +243,7 @@ const actions = {
 
   async startNewConversation({ state, getters, commit, dispatch }, dialogID) {
     let newDialog = dcopy(defaultDialog);
-    let newID = await dispatch('generateID');
+    let newID = await dispatch('master/generateID', {}, { root: true });
     newDialog.ID = newID;
     newDialog.CreateID = newID;
     if (!dialogID) {
@@ -270,7 +270,7 @@ const actions = {
     commit('master/stageCreateDialogRelation', {
       ChildNodeID: state.connectingToDialogID,
       ParentNodeID: state.connectingFromDialogID
-    });
+    }, { root: true });
     API.PutActor(rootState.master.selectedEntity.data);
     dispatch('cancelConnectDialog', true);
   },

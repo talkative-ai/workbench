@@ -10,21 +10,8 @@
 </template>
 
 <script>
-import Grid from '../elements/Grid';
-import Sidebar from '../Sidebar';
-import Paper from '../Paper';
-import PaperText from '../elements/PaperText';
-import Preview from '../Preview';
-
 export default {
-  name: 'ProjectHome',
-  components: {
-    Grid,
-    Sidebar,
-    Paper,
-    PaperText,
-    Preview
-  }
+  name: 'ProjectHome'
 };
 </script>
 

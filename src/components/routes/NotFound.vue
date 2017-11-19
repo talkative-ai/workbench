@@ -13,23 +13,8 @@
 </template>
 
 <script>
-import WButton from '../elements/Button';
-import Grid from '../elements/Grid';
-import Sidebar from '../Sidebar';
-import Paper from '../Paper';
-import PaperText from '../elements/PaperText';
-
 export default {
-  name: 'NotFound',
-  components: {
-    WButton,
-    Sidebar,
-    Grid,
-    PaperText,
-    Paper
-  },
-  methods: {
-  }
+  name: 'NotFound'
 };
 </script>
 

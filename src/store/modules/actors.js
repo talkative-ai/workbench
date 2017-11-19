@@ -20,7 +20,7 @@ const getters = {
 const actions = {
 
   async createActor({ commit, state, dispatch }, Actor) {
-    Actor.CreateID = await dispatch('master/generateID');
+    Actor.CreateID = await dispatch('master/generateID', {}, { root: true });
     let ZoneActors = [];
     let zoneActor;
     if (Actor.ZoneID) {

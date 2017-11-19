@@ -35,28 +35,10 @@
 </template>
 
 <script>
-import WButton from '../elements/Button';
-import Grid from '../elements/Grid';
-import Sidebar from '../Sidebar';
-import Paper from '../Paper';
-import PaperText from '../elements/PaperText';
-import BGActor from '@/assets/images/actor-color.jpg';
 import { mapGetters, mapState } from 'vuex';
 
 export default {
   name: 'ActorHome',
-  components: {
-    WButton,
-    Grid,
-    Sidebar,
-    Paper,
-    PaperText
-  },
-  data() {
-    return {
-      BGActor
-    };
-  },
   computed: {
     ...mapGetters('actors', {
       actor: 'currentActor'

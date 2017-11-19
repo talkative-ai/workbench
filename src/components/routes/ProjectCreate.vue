@@ -24,21 +24,8 @@
 </template>
 
 <script>
-import Button from '../elements/Button';
-import Grid from '../elements/Grid';
-import PaperText from '../elements/PaperText';
-import Sidebar from '../Sidebar';
-import Paper from '../Paper';
-
 export default {
   name: 'ProjectCreate',
-  components: {
-    'w-button': Button,
-    Grid,
-    PaperText,
-    Sidebar,
-    Paper
-  },
   data() {
     return {
       project: {

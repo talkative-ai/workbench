@@ -4,7 +4,6 @@ import ZoneHome from '@/components/routes/ZoneHome';
 import ZoneCreate from '@/components/routes/ZoneCreate';
 import ActorHome from '@/components/routes/ActorHome';
 import ActorCreate from '@/components/routes/ActorCreate';
-import ActorSelect from '@/components/routes/ActorSelect';
 import ActorDialog from '@/components/routes/ActorDialog';
 import NotFound from '@/components/routes/NotFound';
 import ProjectCreate from '@/components/routes/ProjectCreate';
@@ -69,18 +68,6 @@ const router = new Router({
       name: 'ActorCreate',
       props: true,
       component: ActorCreate,
-      meta: {
-        background: 'paper',
-        theme: 'light',
-        title: () => store.state.project.selectedProject.Title,
-        titleLink: () => router.push({ name: 'ProjectHome' })
-      }
-    },
-    {
-      path: 'zone/:id/actor/select',
-      name: 'ActorSelect',
-      props: true,
-      component: ActorSelect,
       meta: {
         background: 'paper',
         theme: 'light',

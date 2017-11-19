@@ -48,25 +48,11 @@
 </template>
 
 <script>
-import WButton from '../elements/Button';
-import Grid from '../elements/Grid';
-import PaperText from '../elements/PaperText';
-import PaperPath from '../elements/PaperPath';
-import Sidebar from '../Sidebar';
-import Paper from '../Paper';
 import { PATCH_ACTION, TRIGGER_TYPES } from '@/const';
 import { mapState } from 'vuex';
 
 export default {
   name: 'ZoneHome',
-  components: {
-    WButton,
-    Grid,
-    PaperText,
-    PaperPath,
-    Sidebar,
-    Paper
-  },
   watch: {
     '$route.params.id'(id) {
       let newIntroMessage = '';
@@ -113,10 +99,10 @@ export default {
       });
     },
     removeActor(ID) {
-      this.$store.dispatch('actors/removeActorFromZone', { ActorID: ID, ZoneID: this.$route.params.id });
+      this.$store.dispatch('zones/removeActorFromZone', { ActorID: ID, ZoneID: this.$route.params.id });
     },
     addActor(ID) {
-      this.$store.dispatch('actors/addActorToZone', { ActorID: ID, ZoneID: this.$route.params.id });
+      this.$store.dispatch('zones/addActorToZone', { ActorID: ID, ZoneID: this.$route.params.id });
     },
     createIntroMessage() {
       this.$store.dispatch('zones/createIntroMessage', this.$route.params.id);

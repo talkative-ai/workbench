@@ -19,15 +19,10 @@
 </template>
 
 <script>
-import '../assets/icons2';
-import Column from './elements/Column';
 import { mapGetters, mapState } from 'vuex';
 
 export default {
   name: 'sidebar',
-  components: {
-    Column
-  },
   computed: {
     ...mapGetters('master', {
       selectedZoneID: 'selectedEntityID'

@@ -5,14 +5,9 @@
 </template>
 
 <script>
-import Column from './elements/Column';
-
 export default {
   name: 'paper',
-  props: ['transparent'],
-  components: {
-    Column
-  }
+  props: ['transparent']
 };
 </script>
 

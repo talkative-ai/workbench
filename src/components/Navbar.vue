@@ -25,15 +25,8 @@
 
 <script>
 import '../assets/icons2';
-import WButton from './elements/Button';
-import Column from './elements/Column';
-
 export default {
   name: 'navbar',
-  components: {
-    WButton,
-    Column
-  },
   computed: {
     user() {
       return this.$store.state.user;
