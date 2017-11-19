@@ -107,6 +107,20 @@ const mutations = {
 
   addZone(state, zone) {
     state.selectedProject.Zones.push(zone);
+  },
+
+  replaceNewDialog(state, dialog) {
+    // Replace the dialog in the actor entity
+    state.selectedEntity.data.Dialogs.pop();
+    state.selectedEntity.data.Dialogs.push(dialog);
+
+    if (!dialog.IsRoot) {
+      state.selectedEntity.data.DialogRelations.pop();
+      state.selectedEntity.data.DialogRelations.push({
+        ChildNodeID: dialog.ID,
+        ParentNodeID: dialog.ParentDialogIDs[0]
+      });
+    }
   }
 };
 
