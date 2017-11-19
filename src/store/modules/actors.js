@@ -8,7 +8,7 @@ const state = {
 
 const getters = {
   currentActor: (state, getters, rootState) => {
-    if (!rootState.master.selectedEntity) {
+    if (!rootState.master.selectedEntity || rootState.master.selectedEntity.kind !== 'actor') {
       return {};
     }
     return state.actorMap[rootState.master.selectedEntity.data.ID];
@@ -18,7 +18,7 @@ const getters = {
 const actions = {
 
   async createActor({ commit, state, dispatch }, Actor) {
-    Actor.CreateID = await dispatch('generateID');
+    Actor.CreateID = await dispatch('master/generateID');
     let ZoneActors = [];
     let zoneActor;
     if (Actor.ZoneID) {

@@ -64,7 +64,7 @@ export default {
       if (this.zoneid) {
         this.actor.ZoneID = this.zoneid;
       }
-      this.$store.dispatch('createActor', this.actor);
+      this.$store.dispatch('actors/createActor', this.actor);
     },
     onChange() {
       console.log('New picture selected!');

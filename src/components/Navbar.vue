@@ -48,7 +48,7 @@ export default {
   },
   methods: {
     publish() {
-      this.$store.dispatch('publish');
+      this.$store.dispatch('project/publish');
     }
   }
 };

@@ -47,7 +47,7 @@ export default {
   methods: {
     create() {
       let zone;
-      this.$store.dispatch('createZone', this.zone)
+      this.$store.dispatch('zones/createZone', this.zone)
       .then(z => {
         zone = z;
         return this.$store.dispatch('zones/selectZone', zone.ID);

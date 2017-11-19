@@ -51,7 +51,7 @@ export default {
   methods: {
     createProject() {
       this.creating = true;
-      this.$store.dispatch('createProject', this.project)
+      this.$store.dispatch('project/createProject', this.project)
       .catch(err => {
         switch (err.message) {
           case 'project_exists':

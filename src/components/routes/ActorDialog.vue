@@ -6,15 +6,23 @@
         <div class="chain">
           <h1>Conversation</h1>
           <hr>
-          <DialogNode v-for="(dialogID, idx) of dialogChain" :key="dialogID" :dialog="dialogs[dialogID]" :recurse="false" @click="clickChain(idx)"
-            :isChildIteration="idx > 0" :isSelected="isSelected(dialogID)"></DialogNode>
-          <DummyNode v-if="!newDialog && !connectingDialogID" @click.native="$store.dispatch('startNewConversation', dialogChain.slice(-1).pop())"
+          <DialogNode
+            v-for="(dialogID, idx) of dialogChain"
+            :key="dialogID"
+            :dialog="dialogs[dialogID]"
+            :recurse="false"
+            @click="clickChain(idx)"
+            :isChildIteration="idx > 0"
+            :isSelected="isSelected(dialogID)" />
+          <DummyNode
+            v-if="!newDialog && !connectingFromDialogID"
+            @click.native="$store.dispatch('dialogs/startNewConversation', dialogChain.slice(-1).pop())"
             isChildIteration="true">
             <IconButton name="plus" flat="flat"></IconButton>
             <template v-if="rootDialogs.length">new</template>
             <template v-else>start first conversation</template>
           </DummyNode>
-          <div v-if="connectingDialogID">
+          <div v-if="connectingFromDialogID">
             <hr>
             <div class="button-grid">
               <w-button @click.native="saveConnect">Connect</w-button>
@@ -22,15 +30,30 @@
             </div>
           </div>
         </div>
-        <w-button class="Headline" large="large" @click.native="$router.push({ name: 'ActorHome', params: { zoneid: $route.params.id } })">
+        <w-button
+          class="Headline"
+          large="large"
+          @click.native="$router.push({ name: 'ActorHome', params: { zoneid: $route.params.id } })">
           <span class="u-arrowWest"></span>Return</w-button>
         <div class="space"></div>
       </div>
-      <div class="dialogs" v-if="dialogSiblings.length" :style="{ 'min-width': `${(dialogSiblings.length + 1) * 400}px` }">
-        <DialogNode v-for="dialogID of dialogSiblings" :key="dialogID" :dialog="dialogs[dialogID]" :recurse="isSelected(dialogID)"
-          :isSelected="isSelected(dialogID)" :tallest="tallest" @change-height="changeNodeHeight(dialogID, $event)" @click="clickDialog($event)"
-          @click-child="clickDialog($event)"></DialogNode>
-        <DummyNode v-if="!newDialog && !connectingDialogID" @click.native="topNewConversation()">
+      <div
+        class="dialogs"
+        v-if="dialogSiblings.length"
+        :style="{ 'min-width': `${(dialogSiblings.length + 1) * 400}px` }">
+        <DialogNode
+          v-for="dialogID of dialogSiblings"
+          :key="dialogID"
+          :dialog="dialogs[dialogID]"
+          :recurse="isSelected(dialogID)"
+          :isSelected="isSelected(dialogID)"
+          :tallest="tallest"
+          @change-height="changeNodeHeight(dialogID, $event)"
+          @click="clickDialog($event)"
+          @click-child="clickDialog($event)" />
+        <DummyNode
+          v-if="!newDialog && !connectingFromDialogID"
+          @click.native="topNewConversation()">
           <IconButton name="plus" flat="flat"></IconButton>new</DummyNode>
       </div>
     </div>
@@ -61,7 +84,7 @@ export default {
       actorSelectedDialogID(state) {
         return state.actorSelectedDialogID[this.$route.params.id];
       },
-      connectingDialogID: 'connectingDialogID',
+      connectingFromDialogID: 'connectingFromDialogID',
       newDialog: 'newDialog'
     }),
     ...mapGetters('dialogs', {
@@ -82,8 +105,8 @@ export default {
     },
     clickDialog(event) {
       this.$store.dispatch('dialogs/cancelEditDialog');
-      if (this.connectingDialogID) {
-        this.$store.dispatch('selectDialogPreviewConnect', event);
+      if (this.connectingFromDialogID) {
+        this.$store.dispatch('dialogs/selectDialogPreviewConnect', event);
       } else {
         this.$store.dispatch('dialogs/selectDialog', event);
       }
@@ -103,7 +126,7 @@ export default {
     },
     clickChain(index) {
       this.$store.dispatch('dialogs/cancelEditDialog');
-      if (this.connectingDialogID) {
+      if (this.connectingFromDialogID) {
         this.$store.dispatch('dialogs/selectChainPreviewConnect', index);
       } else {
         this.$store.dispatch('dialogs/selectChain', index);
@@ -138,7 +161,7 @@ export default {
       }
     },
     saveConnect() {
-      this.$store.dispatch('saveConnectDialog');
+      this.$store.dispatch('dialogs/saveConnectDialog');
     }
   }
 };

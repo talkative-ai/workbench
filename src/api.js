@@ -154,11 +154,11 @@ function aumFetch(method, path, payload) {
   let req = new Request(`${process.env.API_URL}${path}`, config);
   return fetch(req).then(result => {
     if (result.status === 401) {
-      store.dispatch('unauthorized');
+      store.dispatch('master/unauthorized');
       throw new Error('Unauthorized');
     }
     if (result.status === 404) {
-      store.dispatch('NotFound');
+      store.dispatch('master/NotFound');
     }
     return result;
   }).then(result => {

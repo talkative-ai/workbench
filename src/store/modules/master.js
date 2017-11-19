@@ -67,11 +67,7 @@ const actions = {
     delete entity.navigate;
     commit('selectedEntity', entity);
     if (navigate) {
-      if (entity.kind === 'dialog') {
-        router.push({ name: 'DialogHome', params: { id: entity.data.ActorID, dialog_id: entity.data.ID } });
-      } else {
-        router.push({ name: `${titleCase(entity.kind)}Home`, params: { id: entity.data.ID } });
-      }
+      router.push({ name: `${titleCase(entity.kind)}Home`, params: { id: entity.data.ID } });
     }
   }
 };
