@@ -4,7 +4,7 @@
     <paper>
       <paper-text>
         <h1 class="Headline">
-          <span class="Headline--dark" v-if="$store.state.zoneActors[zoneid] && !$store.state.zoneActors[zoneid].length">You don't have any actors yet.</span>
+          <span class="Headline--dark" v-if="zoneActors && !zoneActors.length">You don't have any actors yet.</span>
           <br/>Create a new actor:</h1>
         <form class="Form" @submit.prevent="create()">
           <grid gutter>
@@ -32,6 +32,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
   name: 'ActorCreate',
   props: ['zoneid'],
@@ -43,7 +45,11 @@ export default {
     };
   },
   computed: {
-
+    ...mapState('zones', {
+      zoneActors(state) {
+        return state.zoneActors[this.zoneid];
+      }
+    })
   },
   methods: {
     create() {
@@ -51,14 +57,6 @@ export default {
         this.actor.ZoneID = this.zoneid;
       }
       this.$store.dispatch('actors/createActor', this.actor);
-    },
-    onChange() {
-      console.log('New picture selected!');
-      if (this.$refs.pictureInput.image) {
-        console.log('Picture loaded.');
-      } else {
-        console.log('FileReader API not supported: use the <form>, Luke!');
-      }
     }
   }
 };

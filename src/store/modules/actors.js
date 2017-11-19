@@ -46,7 +46,6 @@ const actions = {
           commit('zones/addActor', { ZoneID, ActorID: Actor.ID }, { root: true });
         }
       }
-      commit('newActor', Actor);
       dispatch('master/selectEntity', { kind: 'actor', data: Actor, navigate: true }, { root: true });
       return Actor;
     });

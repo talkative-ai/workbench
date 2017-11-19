@@ -25,15 +25,17 @@
 
 <script>
 import '../assets/icons2';
+import { mapState } from 'vuex';
+
 export default {
   name: 'navbar',
   computed: {
-    user() {
-      return this.$store.state.user;
-    },
-    project() {
-      return this.$store.state.selectedProject;
-    },
+    ...mapState('master', {
+      user: 'user'
+    }),
+    ...mapState('project', {
+      project: 'selectedProject'
+    }),
     title() {
       if (typeof this.$route.meta.title === 'function') return this.$route.meta.title();
       return this.$route.meta.title;
