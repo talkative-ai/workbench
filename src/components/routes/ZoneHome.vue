@@ -103,10 +103,7 @@ export default {
       introMessageChanged(state) {
         return this.newIntroMessage !== state.zoneMap[this.$route.params.id].Triggers[TRIGGER_TYPES.InitializeZone].AlwaysExec.PlaySounds[0].Val;
       }
-    }),
-    introMessageChanged() {
-
-    }
+    })
   },
   methods: {
     selectActor(ID) {

@@ -79,10 +79,15 @@ const store = new Vuex.Store({
 
 store.dispatch('resetState', { initial: true });
 
+let writeStore = {};
+
 for (let k in store.state) {
   if (k === 'initializing') continue;
   store.watch(state => state[k], (value) => {
-    localforage.setItem(`aum.state.v1.${k}`, store.state[k]);
+    if (writeStore) {
+      clearTimeout(writeStore);
+    }
+    writeStore[k] = setTimeout(() => localforage.setItem(`aum.state.v1.${k}`, store.state[k]), 250);
   }, {
     immediate: true,
     deep: true
