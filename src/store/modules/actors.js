@@ -3,8 +3,7 @@ import router from '@/router';
 import { PATCH_ACTION } from '@/const';
 
 const state = {
-  actorMap: {},
-  actorSelectedDialogID: {}
+  actorMap: {}
 };
 
 const getters = {

@@ -8,13 +8,13 @@
           <hr>
           <DialogNode v-for="(dialogID, idx) of dialogChain" :key="dialogID" :dialog="dialogs[dialogID]" :recurse="false" @click="clickChain(idx)"
             :isChildIteration="idx > 0" :isSelected="isSelected(dialogID)"></DialogNode>
-          <DummyNode v-if="!$store.state.newDialog && !$store.state.connectingDialogID" @click.native="$store.dispatch('startNewConversation', dialogChain.slice(-1).pop())"
+          <DummyNode v-if="!newDialog && !connectingDialogID" @click.native="$store.dispatch('startNewConversation', dialogChain.slice(-1).pop())"
             isChildIteration="true">
             <IconButton name="plus" flat="flat"></IconButton>
-            <template v-if="$store.state.rootDialogs.length">new</template>
+            <template v-if="rootDialogs.length">new</template>
             <template v-else>start first conversation</template>
           </DummyNode>
-          <div v-if="$store.state.connectingDialogID">
+          <div v-if="connectingDialogID">
             <hr>
             <div class="button-grid">
               <w-button @click.native="saveConnect">Connect</w-button>
@@ -26,11 +26,11 @@
           <span class="u-arrowWest"></span>Return</w-button>
         <div class="space"></div>
       </div>
-      <div class="dialogs" v-if="$store.state.dialogSiblings.length" :style="{ 'min-width': `${(($store.state.dialogSiblings.length + 1) * 400)}px` }">
-        <DialogNode v-for="dialogID of $store.state.dialogSiblings" :key="dialogID" :dialog="dialogs[dialogID]" :recurse="isSelected(dialogID)"
+      <div class="dialogs" v-if="dialogSiblings.length" :style="{ 'min-width': `${(dialogSiblings.length + 1) * 400}px` }">
+        <DialogNode v-for="dialogID of dialogSiblings" :key="dialogID" :dialog="dialogs[dialogID]" :recurse="isSelected(dialogID)"
           :isSelected="isSelected(dialogID)" :tallest="tallest" @change-height="changeNodeHeight(dialogID, $event)" @click="clickDialog($event)"
           @click-child="clickDialog($event)"></DialogNode>
-        <DummyNode v-if="!$store.state.newDialog && !$store.state.connectingDialogID" @click.native="topNewConversation()">
+        <DummyNode v-if="!newDialog && !connectingDialogID" @click.native="topNewConversation()">
           <IconButton name="plus" flat="flat"></IconButton>new</DummyNode>
       </div>
     </div>
@@ -40,6 +40,7 @@
 <script>
 import DummyNode from '../DummyNode';
 import Vue from 'vue';
+import { mapState, mapGetters } from 'vuex';
 
 export default {
   name: 'ActorDialog',
@@ -53,17 +54,19 @@ export default {
     };
   },
   computed: {
-    rootDialogs() {
-      return this.$store.state.rootDialogs || [];
-    },
-    dialogs() {
-      return this.$store.state.dialogMap || {};
-    },
-    dialogChain() {
-      return (
-        this.$store.state.dialogChain[this.$store.state.selectedEntity.data.ID] || []
-      );
-    }
+    ...mapState('dialogs', {
+      rootDialogs: 'rootDialogs',
+      dialogs: 'dialogMap',
+      dialogSiblings: 'dialogSiblings',
+      actorSelectedDialogID(state) {
+        return state.actorSelectedDialogID[this.$route.params.id];
+      },
+      connectingDialogID: 'connectingDialogID',
+      newDialog: 'newDialog'
+    }),
+    ...mapGetters('dialogs', {
+      dialogChain: 'currentDialogChain'
+    })
   },
   methods: {
     changeNodeHeight(id, value) {
@@ -75,14 +78,11 @@ export default {
       }
     },
     isSelected(dialogID = 0) {
-      return (
-        (this.$store.state.actorSelectedDialogID[this.$route.params.id] ||
-          '') === dialogID
-      );
+      return this.actorSelectedDialogID === dialogID;
     },
     clickDialog(event) {
       this.$store.dispatch('dialogs/cancelEditDialog');
-      if (this.$store.state.connectingDialogID) {
+      if (this.connectingDialogID) {
         this.$store.dispatch('selectDialogPreviewConnect', event);
       } else {
         this.$store.dispatch('dialogs/selectDialog', event);
@@ -92,7 +92,7 @@ export default {
         for (let k in this.heightMap) {
           if (!this.heightMap[k]) continue;
           if (
-            !this.$store.state.dialogSiblings.find(v => Number(v) === Number(k))
+            !this.dialogSiblings.find(v => Number(v) === Number(k))
           ) {
             this.heightMap[k] = undefined;
             continue;
@@ -103,17 +103,17 @@ export default {
     },
     clickChain(index) {
       this.$store.dispatch('dialogs/cancelEditDialog');
-      if (this.$store.state.connectingDialogID) {
-        this.$store.dispatch('selectChainPreviewConnect', index);
+      if (this.connectingDialogID) {
+        this.$store.dispatch('dialogs/selectChainPreviewConnect', index);
       } else {
-        this.$store.dispatch('selectChain', index);
+        this.$store.dispatch('dialogs/selectChain', index);
       }
       Vue.nextTick(() => {
         this.tallest = 0;
         for (let k in this.heightMap) {
           if (!this.heightMap[k]) continue;
           if (
-            !this.$store.state.dialogSiblings.find(v => Number(v) === Number(k))
+            !this.dialogSiblings.find(v => Number(v) === Number(k))
           ) {
             this.heightMap[k] = undefined;
             continue;
@@ -124,14 +124,14 @@ export default {
     },
     topNewConversation() {
       if (
-        this.$store.state.dialogChain[this.$store.state.selectedEntity.data.ID]
+        this.dialogChain
           .length <= 1
       ) {
-        this.$store.dispatch('startNewConversation');
+        this.$store.dispatch('dialogs/startNewConversation');
       } else {
         this.$store.dispatch(
-          'startNewConversation',
-          this.$store.state.dialogChain[this.$store.state.selectedEntity.data.ID]
+          'dialogs/startNewConversation',
+          this.dialogChain
             .slice(-2, -1)
             .pop()
         );

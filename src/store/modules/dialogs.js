@@ -25,6 +25,9 @@ function validateDialog(dialog) {
 }
 
 const state = {
+
+  actorSelectedDialogID: {},
+
   dialogMap: {},
   rootDialogs: [],
   newDialog: null,
