@@ -47,7 +47,12 @@ const actions = {
   createProject({ dispatch, state }, project) {
     return API.CreateProject(project)
       .then(res => dispatch('setProject', res));
+  },
+
+  publish({ commit, state }) {
+    API.Publish();
   }
+
 };
 
 const mutations = {

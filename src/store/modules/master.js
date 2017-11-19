@@ -46,10 +46,6 @@ const actions = {
       });
   },
 
-  publish({ commit, state }) {
-    API.Publish();
-  },
-
   unauthorized({ dispatch, state }) {
     return dispatch('resetState', {}, { root: true }).then(() => {
       router.push({ name: 'SignIn' });
