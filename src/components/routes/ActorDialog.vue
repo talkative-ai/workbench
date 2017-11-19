@@ -16,7 +16,7 @@
             :isSelected="actorSelectedDialogID == dialogID" />
           <DummyNode
             v-if="!newDialog && !connectingFromDialogID"
-            @click.native="$store.dispatch('dialogs/startNewConversation', dialogChain.slice(-1).pop())"
+            @click.native="$store.dispatch('dialogs/startNewConversation', dialogChain && dialogChain.slice(-1).pop())"
             isChildIteration="true">
             <IconButton name="plus" flat="flat"></IconButton>
             <template v-if="rootDialogs.length">new</template>

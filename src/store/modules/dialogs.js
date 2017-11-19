@@ -69,7 +69,6 @@ const actions = {
         !isChildOfConnecting &&
         state.connectingFromDialogID !== dialogID) {
       commit('connectingToDialogID', dialogID);
-      dispatch('addDialogChain', dialogID);
     }
 
     // A specific dialog is being selected
@@ -215,7 +214,7 @@ const actions = {
           getters.currentDialogChain.pop();
           commit('updateDialogChain', state.dialogChain);
           commit('replaceNewDialog', result);
-          commit('master/replaceNewDialog', result, { root: true });
+          commit('master/replaceNewDialog', state.dialogMap[newID], { root: true });
           dispatch('selectDialog', { dialogID: newID, isChild: !state.dialogMap[newID].IsRoot });
         });
       }
@@ -354,7 +353,7 @@ const mutations = {
     const dialog = dcopy(state.newDialog);
 
     // Update the dialog with the backend generated ID
-    Vue.set(dialog.ID, newIDMap[state.newDialog.CreateID].toString());
+    Vue.set(dialog, 'ID', newIDMap[state.newDialog.CreateID].toString());
     Vue.set(dialog, 'CreateID', null);
 
     // Add the official dialog to the map
@@ -367,8 +366,6 @@ const mutations = {
       state.rootDialogs.pop();
       state.rootDialogs.push(dialog.ID);
     }
-
-    state.dialogSiblings.push(dialog.ID);
 
     // Remove the old dialog from the map
     Vue.delete(state.dialogMap, state.newDialog.CreateID);
@@ -428,9 +425,9 @@ const mutations = {
   },
 
   clearView(state, ActorID) {
-    Vue.set(state.rootDialogs, []);
-    Vue.set(state.dialogMap, {});
-    Vue.set(state.dialogSiblings, []);
+    Vue.set(state, 'rootDialogs', []);
+    Vue.set(state, 'dialogMap', {});
+    Vue.set(state, 'dialogSiblings', []);
   },
 
   connectingToDialogID(state, dialogID) {
