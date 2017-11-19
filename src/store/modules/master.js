@@ -1,3 +1,5 @@
+import Vue from 'vue';
+
 import router from '@/router';
 import API from '@/api';
 import { SelectedEntity } from '@/store/models';
@@ -75,7 +77,7 @@ const actions = {
 const mutations = {
 
   token(state, value) {
-    state.token = value;
+    Vue.set(state, 'token', value);
   },
 
   incrCreate(state) {
@@ -83,23 +85,23 @@ const mutations = {
   },
 
   clearSelectedEntity(state) {
-    state.selectedEntity = new SelectedEntity();
+    Vue.set(state, 'selectedEntity', new SelectedEntity());
   },
 
   selectedEntity(state, entity) {
-    state.selectedEntity = new SelectedEntity(entity);
+    Vue.set(state, 'selectedEntity', new SelectedEntity(entity));
   },
 
   user(state, user) {
-    state.user = user;
+    Vue.set(state, 'user', user);
   },
 
   path(state, path) {
-    state.path = path;
+    Vue.set(state, 'path', path);
   },
 
   projectsList(state, list) {
-    state.projectsList = list;
+    Vue.set(state, 'projectsList', list);
   },
 
   addZone(state, zone) {

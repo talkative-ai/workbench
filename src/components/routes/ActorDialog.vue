@@ -13,7 +13,7 @@
             :recurse="false"
             @click="clickChain(idx)"
             :isChildIteration="idx > 0"
-            :isSelected="isSelected(dialogID)" />
+            :isSelected="actorSelectedDialogID == dialogID" />
           <DummyNode
             v-if="!newDialog && !connectingFromDialogID"
             @click.native="$store.dispatch('dialogs/startNewConversation', dialogChain.slice(-1).pop())"
@@ -45,8 +45,8 @@
           v-for="dialogID of dialogSiblings"
           :key="dialogID"
           :dialog="dialogs[dialogID]"
-          :recurse="isSelected(dialogID)"
-          :isSelected="isSelected(dialogID)"
+          :recurse="actorSelectedDialogID == dialogID"
+          :isSelected="actorSelectedDialogID == dialogID"
           :tallest="tallest"
           @change-height="changeNodeHeight(dialogID, $event)"
           @click="clickDialog($event)"
@@ -82,6 +82,7 @@ export default {
       dialogs: 'dialogMap',
       dialogSiblings: 'dialogSiblings',
       actorSelectedDialogID(state) {
+        console.log('Selected dialog', state.actorSelectedDialogID[this.$route.params.id]);
         return state.actorSelectedDialogID[this.$route.params.id];
       },
       connectingFromDialogID: 'connectingFromDialogID',
@@ -99,9 +100,6 @@ export default {
         if (!this.heightMap[k]) continue;
         this.tallest = Math.max(this.tallest, this.heightMap[k]);
       }
-    },
-    isSelected(dialogID = 0) {
-      return this.actorSelectedDialogID === dialogID;
     },
     clickDialog(event) {
       this.$store.dispatch('dialogs/cancelEditDialog');

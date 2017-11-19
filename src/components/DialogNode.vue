@@ -14,7 +14,7 @@
           <div class="cover opaque" v-if="connectingFromDialogID === dialog.ID" @click="$emit('click', { dialogID: dialog.ID })">
             <h1>connecting</h1>
           </div>
-          <div class="cover opaque" v-else-if="connectingToDialog === dialog.ID">
+          <div class="cover opaque" v-else-if="connectingToDialogID === dialog.ID">
             <h1>previewing connect</h1>
           </div>
           <div class="cover" v-else-if="connectingFromDialogID && !dialogs[connectingFromDialogID].ChildDialogIDs.includes(dialog.ID)"

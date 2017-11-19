@@ -1,4 +1,5 @@
 import dcopy from 'deep-copy';
+import Vue from 'vue';
 
 import router from '@/router';
 import API from '@/api';
@@ -99,54 +100,54 @@ const actions = {
 
 const mutations = {
   addZone(state, zone) {
-    state.zoneMap[zone.ID] = zone;
-    state.zoneActors[zone.ID] = zone;
+    Vue.set(state.zoneMap, zone.ID, zone);
+    Vue.set(state.zoneActors, zone.ID, zone);
   },
 
   updateZone(state, zone) {
-    state.zoneMap[zone.ID] = zone;
+    Vue.set(state.zoneMap, zone.ID, zone);
     if (!state.zoneActors[zone.ID]) {
-      state.zoneActors[zone.ID] = {};
+      Vue.set(state.zoneActors, zone.ID, {});
     }
   },
 
   zoneInMap(state, zone) {
-    state.zoneMap[zone.ID] = zone;
+    Vue.set(state.zoneMap, zone.ID, zone);
   },
 
   zoneActors(state, { id, value }) {
-    state.zoneActors[id] = value;
+    Vue.set(state.zoneActors, id, value);
   },
 
   addActor(state, { ZoneID, ActorID }) {
     if (!state.zoneActors[ZoneID]) {
-      state.zoneActors[ZoneID] = {};
+      Vue.set(state.zoneActors, ZoneID, {});
     }
-    state.zoneActors[ZoneID][ActorID] = true;
+    Vue.set(state.zoneActors[ZoneID], ActorID, true);
   },
 
   removeActor(state, { ZoneID, ActorID }) {
     if (!state.zoneActors[ZoneID]) {
-      state.zoneActors[ZoneID] = {};
+      Vue.set(state.zoneActors, ZoneID, {});
     }
-    state.zoneActors[ZoneID][ActorID] = false;
+    Vue.set(state.zoneActors[ZoneID], ActorID, false);
   },
 
   stageCreateZoneIntroTrigger(state, ZoneID) {
     if (!state.zoneMap[ZoneID].Triggers[TRIGGER_TYPES.InitializeZone]) {
-      state.zoneMap[ZoneID].Triggers[TRIGGER_TYPES.InitializeZone] = {
+      Vue.set(state.zoneMap[ZoneID].Triggers, TRIGGER_TYPES.InitializeZone, {
         'AlwaysExec': dcopy(defaultActionSet)
-      };
+      });
     }
-    state.zoneMap[ZoneID].Triggers[TRIGGER_TYPES.InitializeZone]['PatchAction'] = PATCH_ACTION.CREATE;
+    Vue.set(state.zoneMap[ZoneID].Triggers[TRIGGER_TYPES.InitializeZone], 'PatchAction', PATCH_ACTION.CREATE);
   },
 
   stageDeleteZoneIntroTrigger(state, { ZoneID }) {
-    state.zoneMap[ZoneID].Triggers[TRIGGER_TYPES.InitializeZone]['PatchAction'] = PATCH_ACTION.DELETE;
+    Vue.set(state.zoneMap[ZoneID].Triggers[TRIGGER_TYPES.InitializeZone], 'PatchAction', PATCH_ACTION.DELETE);
   },
 
   introMessage(state, { ZoneID, message }) {
-    state.zoneMap[ZoneID].Triggers[TRIGGER_TYPES.InitializeZone].AlwaysExec.PlaySounds[0]['Val'] = message;
+    Vue.set(state.zoneMap[ZoneID].Triggers[TRIGGER_TYPES.InitializeZone].AlwaysExec.PlaySounds[0], 'Val', message);
   }
 };
 

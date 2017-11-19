@@ -1,3 +1,5 @@
+import Vue from 'vue';
+
 import API from '@/api';
 import router from '@/router';
 import { PATCH_ACTION } from '@/const';
@@ -98,22 +100,22 @@ const actions = {
 const mutations = {
 
   actorInMap(state, actor) {
-    state.actorMap[actor.ID] = actor;
+    Vue.set(state.actorMap, actor.ID, actor);
   },
 
   addToZone(state, { ZoneID, ActorID }) {
     if (!state.actorMap[ActorID].zoneIDs) {
-      state.actorMap[ActorID].zoneIDs = {};
+      Vue.set(state.actorMap[ActorID], 'zoneIDs', {});
     }
-    state.actorMap[ActorID].zoneIDs[ZoneID] = true;
+    Vue.set(state.actorMap[ActorID].zoneIDs, ZoneID, true);
   },
 
   removeFromZone(state, { ZoneID, ActorID }) {
     if (!state.actorMap[ActorID].zoneIDs) {
-      state.actorMap[ActorID].zoneIDs = {};
+      Vue.set(state.actorMap[ActorID], 'zoneIDs', {});
     }
     if (state.actorMap[ActorID].zoneIDs[ZoneID]) {
-      state.actorMap[ActorID].zoneIDs[ZoneID] = false;
+      Vue.set(state.actorMap[ActorID].zoneIDs, ZoneID, false);
     }
   }
 };

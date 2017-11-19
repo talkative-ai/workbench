@@ -1,3 +1,5 @@
+import Vue from 'vue';
+
 import router from '@/router';
 import API from '@/api';
 
@@ -70,7 +72,7 @@ const mutations = {
       }
     }
     if (id > -1) {
-      state.selectedProject.Actors[id] = actor;
+      Vue.set(state.selectedProject.Actors, id, actor);
     }
   }
 };
