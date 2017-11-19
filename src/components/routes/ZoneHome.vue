@@ -25,15 +25,15 @@
           <h1 class="Headline">Actors say and do what you wish.</h1>
           <w-button class="Headline" large="large" outline="outline" @click.native="$router.push({ name: 'ActorCreate', params: { zoneid: $route.params.id } })">create an actor</w-button>
           <div class="actor-wrap">
-            <div class="actor-item" v-for="(actor, id) in $store.state.actorMap" :class="{
-                blank: !$store.state.zoneActors[$route.params.id] || !$store.state.zoneActors[$route.params.id][id]
+            <div class="actor-item" v-for="(actor, id) in actors" :class="{
+                blank: !zoneActors || !zoneActors[id]
               }" :key="id">
               <h1 class="Headline">{{ actors[id].Title }}</h1>
               <div class="button-grid">
-                <w-button class="add-button" v-if="!$store.state.zoneActors[$route.params.id] || !$store.state.zoneActors[$route.params.id][id]"
+                <w-button class="add-button" v-if="!zoneActors || !zoneActors[id]"
                   @click.native="addActor(id)">
                   <fa-icon name="plus"></fa-icon>Add</w-button>
-                <w-button outline="outline" v-if="$store.state.zoneActors[$route.params.id] && $store.state.zoneActors[$route.params.id][id]"
+                <w-button outline="outline" v-if="zoneActors && zoneActors[id]"
                   @click.native="removeActor(id)">
                   <fa-icon name="times"></fa-icon>Remove</w-button>
                 <w-button @click.native="selectActor(id)">
@@ -55,6 +55,7 @@ import PaperPath from '../elements/PaperPath';
 import Sidebar from '../Sidebar';
 import Paper from '../Paper';
 import { PATCH_ACTION, TRIGGER_TYPES } from '@/const';
+import { mapState } from 'vuex';
 
 export default {
   name: 'ZoneHome',
@@ -69,59 +70,68 @@ export default {
   watch: {
     '$route.params.id'(id) {
       let newIntroMessage = '';
-      if (this.$store.state.zoneMap[this.$route.params.id].Triggers[TRIGGER_TYPES.InitializeZone]) {
-        newIntroMessage = this.$store.state.zoneMap[this.$route.params.id].Triggers[TRIGGER_TYPES.InitializeZone].AlwaysExec.PlaySounds[0].Val;
+      if (this.$store.state.zones.zoneMap[this.$route.params.id].Triggers[TRIGGER_TYPES.InitializeZone]) {
+        newIntroMessage = this.$store.state.zones.zoneMap[this.$route.params.id].Triggers[TRIGGER_TYPES.InitializeZone].AlwaysExec.PlaySounds[0].Val;
       }
       this.newIntroMessage = newIntroMessage;
     }
   },
   data() {
     let newIntroMessage = '';
-    if (this.$store.state.zoneMap[this.$route.params.id].Triggers[TRIGGER_TYPES.InitializeZone]) {
-      newIntroMessage = this.$store.state.zoneMap[this.$route.params.id].Triggers[TRIGGER_TYPES.InitializeZone].AlwaysExec.PlaySounds[0].Val;
+    if (this.$store.state.zones.zoneMap[this.$route.params.id].Triggers[TRIGGER_TYPES.InitializeZone]) {
+      newIntroMessage = this.$store.state.zones.zoneMap[this.$route.params.id].Triggers[TRIGGER_TYPES.InitializeZone].AlwaysExec.PlaySounds[0].Val;
     }
     return {
       newIntroMessage
     };
   },
   computed: {
-    actors() {
-      return this.$store.state.actorMap;
-    },
-    zone() {
-      return this.$store.state.zoneMap[this.$route.params.id];
-    },
-    introMessageExists() {
-      return this.zone.Triggers[TRIGGER_TYPES.InitializeZone] && this.zone.Triggers[TRIGGER_TYPES.InitializeZone].PatchAction !== PATCH_ACTION.DELETE;
-    },
+    ...mapState('actors', {
+      actors: 'actorMap'
+    }),
+    ...mapState('zones', {
+      zone(state) {
+        return state.zoneMap[this.$route.params.id];
+      },
+      zoneActors(state) {
+        return state.zoneActors[this.$route.params.id];
+      },
+      introMessageExists(state) {
+        return state.zoneMap[this.$route.params.id].Triggers[TRIGGER_TYPES.InitializeZone] &&
+        state.zoneMap[this.$route.params.id].Triggers[TRIGGER_TYPES.InitializeZone].PatchAction !== PATCH_ACTION.DELETE;
+      },
+      introMessageChanged(state) {
+        return this.newIntroMessage !== state.zoneMap[this.$route.params.id].Triggers[TRIGGER_TYPES.InitializeZone].AlwaysExec.PlaySounds[0].Val;
+      }
+    }),
     introMessageChanged() {
-      return this.newIntroMessage !== this.zone.Triggers[TRIGGER_TYPES.InitializeZone].AlwaysExec.PlaySounds[0].Val;
+
     }
   },
   methods: {
     selectActor(ID) {
-      this.$store.dispatch('selectActor', ID)
+      this.$store.dispatch('actors/selectActor', ID)
       .then(() => {
         this.$router.push({ name: 'ActorHome', params: { id: ID } });
       });
     },
     removeActor(ID) {
-      this.$store.dispatch('removeActorFromZone', { ActorID: ID, ZoneID: this.$route.params.id });
+      this.$store.dispatch('actors/removeActorFromZone', { ActorID: ID, ZoneID: this.$route.params.id });
     },
     addActor(ID) {
-      this.$store.dispatch('addActorToZone', { ActorID: ID, ZoneID: this.$route.params.id });
+      this.$store.dispatch('actors/addActorToZone', { ActorID: ID, ZoneID: this.$route.params.id });
     },
     createIntroMessage() {
-      this.$store.dispatch('createIntroMessage', this.$route.params.id);
+      this.$store.dispatch('zones/createIntroMessage', this.$route.params.id);
     },
     saveIntroMessage() {
-      this.$store.dispatch('saveIntroMessage', { ZoneID: this.$route.params.id, message: this.newIntroMessage });
+      this.$store.dispatch('zones/saveIntroMessage', { ZoneID: this.$route.params.id, message: this.newIntroMessage });
     },
     revertIntroMessage() {
-      this.newIntroMessage = this.$store.state.zoneMap[this.$route.params.id].Triggers[TRIGGER_TYPES.InitializeZone].AlwaysExec.PlaySounds[0].Val;
+      this.newIntroMessage = this.$store.state.zones.zoneMap[this.$route.params.id].Triggers[TRIGGER_TYPES.InitializeZone].AlwaysExec.PlaySounds[0].Val;
     },
     removeIntroMessage() {
-      this.$store.dispatch('removeIntroMessage', this.$route.params.id);
+      this.$store.dispatch('zones/removeIntroMessage', this.$route.params.id);
     }
   }
 };

@@ -37,7 +37,7 @@ const actions = {
         }
       }
       commit('newActor', Actor);
-      commit('master/selectEntity', { kind: 'actor', data: Actor, navigate: true }, { root: true });
+      dispatch('master/selectEntity', { kind: 'actor', data: Actor, navigate: true }, { root: true });
       return Actor;
     });
   },

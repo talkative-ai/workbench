@@ -46,7 +46,7 @@ const state = {
 };
 
 const getters = {
-  currentDialogChain: (state, getters) => state.dialogChain[getters.master.selectedEntityID]
+  currentDialogChain: (state, getters, rootState) => rootState.master.selectedEntity.data ? state.dialogChain[rootState.master.selectedEntity.data.ID] : []
 };
 
 const actions = {

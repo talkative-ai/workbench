@@ -21,7 +21,7 @@ const actions = {
 
       commit('addZone', newZone);
       commit('master/addZone', newZone, { root: true });
-      commit('master/selectEntity', { kind: 'zone', data: newZone, navigate: true }, { root: true });
+      dispatch('master/selectEntity', { kind: 'zone', data: newZone, navigate: true }, { root: true });
       return newZone;
     });
   },
@@ -82,7 +82,7 @@ const actions = {
     });
   },
 
-  selectZone({ commit, state, rootState }, zoneID) {
+  selectZone({ commit, dispatch, state, rootState }, zoneID) {
     if (rootState.master.selectedEntity.data && rootState.master.selectedEntity.data.ID === zoneID) return;
     const zone = state.zoneMap[zoneID];
     if (!zone) {
@@ -92,7 +92,7 @@ const actions = {
     return API.GetZone(zone)
     .then(zone => {
       commit('updateZone', zone);
-      commit('master/selectEntity', { kind: 'zone', data: zone }, { root: true });
+      dispatch('master/selectEntity', { kind: 'zone', data: zone }, { root: true });
     });
   }
 };
