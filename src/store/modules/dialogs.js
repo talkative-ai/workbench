@@ -432,6 +432,9 @@ const mutations = {
 
   connectingToDialogID(state, dialogID) {
     Vue.set(state, 'connectingToDialogID', dialogID);
+    if (dialogID) {
+      state.dialogMap[state.connectingFromDialogID].ChildDialogIDs.push(dialogID);
+    }
   },
 
   connectingFromDialogID(state, dialogID) {
