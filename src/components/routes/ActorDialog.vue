@@ -82,7 +82,6 @@ export default {
       dialogs: 'dialogMap',
       dialogSiblings: 'dialogSiblings',
       actorSelectedDialogID(state) {
-        console.log('Selected dialog', state.actorSelectedDialogID[this.$route.params.id]);
         return state.actorSelectedDialogID[this.$route.params.id];
       },
       connectingFromDialogID: 'connectingFromDialogID',

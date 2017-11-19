@@ -339,13 +339,13 @@ const mutations = {
   },
 
   editDialog(state, dialogID) {
-    Vue.set(state.dialogEditError[dialogID], null);
+    Vue.set(state.dialogEditError, dialogID, null);
     Vue.set(state, 'dialogEditingID', dialogID);
     Vue.set(state.dialogEditingCopy, dialogID, dcopy(state.dialogMap[dialogID]));
   },
 
   saveEditDialog(state, dialogID) {
-    Vue.set(state.dialogEditError[dialogID], null);
+    Vue.set(state.dialogEditError, dialogID, null);
     Vue.set(state, 'dialogEditingID', false);
     Vue.set(state.dialogMap[dialogID], dcopy(state.dialogEditingCopy[dialogID]));
   },
@@ -431,7 +431,6 @@ const mutations = {
     Vue.set(state.rootDialogs, []);
     Vue.set(state.dialogMap, {});
     Vue.set(state.dialogSiblings, []);
-    Vue.set(state.dialogChain, ActorID, []);
   },
 
   connectingToDialogID(state, dialogID) {

@@ -230,7 +230,7 @@ export default {
       this.$store.dispatch('dialogs/editDialog', this.dialog.ID);
     },
     cancelEdit() {
-      if (this.newDialog.ID === this.dialog.ID) {
+      if (this.dialogEditingID === this.dialog.ID) {
         Vue.nextTick(() => {
           this.$emit('change-height', 0);
         });
