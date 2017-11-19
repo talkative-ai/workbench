@@ -7,6 +7,15 @@ const state = {
   actorSelectedDialogID: {}
 };
 
+const getters = {
+  currentActor: (state, getters, rootState) => {
+    if (!rootState.master.selectedEntity) {
+      return {};
+    }
+    return state.actorMap[rootState.master.selectedEntity.data.ID];
+  }
+};
+
 const actions = {
 
   async createActor({ commit, state, dispatch }, Actor) {
@@ -28,8 +37,8 @@ const actions = {
 
       Actor.Dialogs = Actor.Dialogs || [];
       Actor.DialogRelations = Actor.DialogRelations || [];
-      commit('dialogs/initializeChain', Actor.ID);
-      commit('addActor', Actor);
+      commit('dialogs/initializeChain', Actor.ID, { root: true });
+      commit('project/addActor', Actor, { root: true });
       commit('actorInMap', Actor);
       if (Actor.zoneIDs) {
         for (let ZoneID of Actor.zoneIDs) {
@@ -42,8 +51,10 @@ const actions = {
     });
   },
 
-  selectActor({ commit, state }, ActorID) {
-    if (state.selectedEntity.data && state.selectedEntity.kind === 'actor' && state.selectedEntity.data.ID === ActorID) return;
+  selectActor({ commit, dispatch, state, rootState }, ActorID) {
+    if (rootState.master.selectedEntity.data &&
+      rootState.master.selectedEntity.kind === 'actor' &&
+      rootState.master.selectedEntity.data.ID === ActorID) return;
     const actor = state.actorMap[ActorID];
     if (!actor) {
       router.push({ name: 'NotFound' });
@@ -57,7 +68,7 @@ const actions = {
       actor.Dialogs = actor.Dialogs || [];
       actor.DialogRelations = actor.DialogRelations || [];
 
-      commit('project/updateActor', actor, { root: true });
+      commit('project/setActor', actor, { root: true });
 
       let rdialogs = new Set();
 
@@ -66,7 +77,7 @@ const actions = {
         d.ID = d.ID.toString();
         d.ParentDialogIDs = d.ParentDialogIDs || [];
         d.ChildDialogIDs = d.ChildDialogIDs || [];
-        commit('dialog/dialogInMap', d, { root: true });
+        commit('dialogs/dialogInMap', d, { root: true });
         if (d.IsRoot) {
           rdialogs.add(d.ID);
         }
@@ -75,21 +86,17 @@ const actions = {
       // Build dialog graph
       // In other words, construct dialog relations
       for (const r of actor.DialogRelations) {
-        commit('dialogs/relation', { parentID: r.ParentNodeID, childID: r.ChildNodeID });
+        commit('dialogs/relation', { parentID: r.ParentNodeID, childID: r.ChildNodeID }, { root: true });
       }
 
-      commit('dialogs/rootDialogs', [...rdialogs]);
-      commit('selectEntity', { kind: 'actor', data: actor });
+      commit('dialogs/rootDialogs', [...rdialogs], { root: true });
+      dispatch('master/selectEntity', { kind: 'actor', data: actor }, { root: true });
     });
   }
 
 };
 
 const mutations = {
-
-  addActor(state, actor) {
-    state.selectedProject.Actors.push(actor);
-  },
 
   actorInMap(state, actor) {
     state.actorMap[actor.ID] = actor;
@@ -115,6 +122,7 @@ const mutations = {
 export default {
   namespaced: true,
   state,
+  getters,
   actions,
   mutations
 };

@@ -49,6 +49,10 @@ const actions = {
 };
 
 const mutations = {
+  addActor(state, actor) {
+    state.selectedProject.Actors.push(actor);
+  },
+
   selectedProject(state, project) {
     state.selectedProject = project;
   },

@@ -1,5 +1,5 @@
 <template>
-  <grid gutter="gutter" id="RouteActorCreate">
+  <grid gutter id="RouteActorCreate">
     <sidebar></sidebar>
     <paper>
       <paper-text>
@@ -7,7 +7,7 @@
           <span class="Headline--dark" v-if="$store.state.zoneActors[zoneid] && !$store.state.zoneActors[zoneid].length">You don't have any actors yet.</span>
           <br/>Create a new actor:</h1>
         <form class="Form" @submit.prevent="create()">
-          <grid gutter="gutter">
+          <grid gutter>
             <div class="Grid-cell u-size2of3">
               <label>Name (required):
                 <input class="Headline u-colorTextDark" v-model="actor.Title" placeholder="What's their name?"

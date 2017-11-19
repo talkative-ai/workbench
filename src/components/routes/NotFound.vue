@@ -1,11 +1,11 @@
 <template>
-  <grid gutter="gutter" id="RouteNotFound">
+  <grid gutter id="RouteNotFound">
     <sidebar></sidebar>
     <paper-text>
       <h1 class="Headline">
         <span class="Headline--dark">Oops!</span>
       </h1>
-      <grid gutter="gutter">
+      <grid gutter>
         <span>Can't find that. Sorry!</span>
       </grid>
     </paper-text>

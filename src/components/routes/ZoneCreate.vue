@@ -1,5 +1,5 @@
 <template>
-  <grid id="RouteZoneCreate" gutter="gutter">
+  <grid id="RouteZoneCreate" gutter>
     <sidebar></sidebar>
     <paper>
       <paper-text full="full">

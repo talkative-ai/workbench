@@ -60,7 +60,7 @@ const router = new Router({
         title: 'Create a new project'
       },
       beforeEnter(to, from, next) {
-        store.dispatch('reset').then(() => {
+        store.dispatch('resetState').then(() => {
           return next();
         });
       }
@@ -103,7 +103,7 @@ const router = new Router({
         if (isNaN(to.params.id)) {
           next({ name: 'NotFound' });
         }
-        store.dispatch('selectActor', to.params.id)
+        store.dispatch('actors/selectActor', to.params.id)
         .then(() => next());
       }
     },
@@ -118,10 +118,10 @@ const router = new Router({
         titleLink: () => router.push({ name: 'ProjectHome' })
       },
       async beforeEnter(to, from, next) {
-        await store.dispatch('cancelEditDialog');
-        await store.dispatch('cancelConnectDialog');
-        await store.dispatch('selectActor', to.params.id);
-        await store.dispatch('selectDialog');
+        await store.dispatch('dialogs/cancelEditDialog');
+        await store.dispatch('dialogs/cancelConnectDialog');
+        await store.dispatch('actors/selectActor', to.params.id);
+        await store.dispatch('dialogs/selectDialog');
         next();
       }
     },
@@ -180,7 +180,7 @@ const router = new Router({
         titleLink: () => router.push({ name: 'ProjectHome' })
       },
       beforeEnter(to, from, next) {
-        store.dispatch('selectActor', to.params.id)
+        store.dispatch('actors/selectActor', to.params.id)
         .then(() => next());
       }
     },

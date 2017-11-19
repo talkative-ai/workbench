@@ -447,6 +447,10 @@ const mutations = {
       state.dialogChain[actorID] = [];
     }
     state.dialogChain[actorID].push(dialogID);
+  },
+
+  rootDialogs(state, rootDialogs) {
+    state.rootDialogs = rootDialogs;
   }
 };
 

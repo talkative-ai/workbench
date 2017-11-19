@@ -1,5 +1,5 @@
 <template>
-  <grid gutter="gutter" id="RouteProjectCreate">
+  <grid gutter id="RouteProjectCreate">
     <paper>
       <paper-text>
         <h1 class="Headline">

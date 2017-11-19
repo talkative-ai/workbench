@@ -1,12 +1,12 @@
 <template>
-  <grid gutter="gutter" id="RouteActorSelect">
+  <grid gutter id="RouteActorSelect">
     <sidebar></sidebar>
     <paper>
       <paper-text>
         <h1 class="Headline">
           <span class="Headline--dark">Select an actor</span>
         </h1>
-        <grid gutter="gutter">
+        <grid gutter>
           <span>Hello</span>
         </grid>
       </paper-text>

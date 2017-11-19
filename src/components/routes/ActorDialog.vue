@@ -81,11 +81,11 @@ export default {
       );
     },
     clickDialog(event) {
-      this.$store.dispatch('cancelEditDialog');
+      this.$store.dispatch('dialogs/cancelEditDialog');
       if (this.$store.state.connectingDialogID) {
         this.$store.dispatch('selectDialogPreviewConnect', event);
       } else {
-        this.$store.dispatch('selectDialog', event);
+        this.$store.dispatch('dialogs/selectDialog', event);
       }
       Vue.nextTick(() => {
         this.tallest = 0;
@@ -102,7 +102,7 @@ export default {
       });
     },
     clickChain(index) {
-      this.$store.dispatch('cancelEditDialog');
+      this.$store.dispatch('dialogs/cancelEditDialog');
       if (this.$store.state.connectingDialogID) {
         this.$store.dispatch('selectChainPreviewConnect', index);
       } else {

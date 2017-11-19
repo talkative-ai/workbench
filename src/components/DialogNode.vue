@@ -194,7 +194,7 @@ export default {
           this.$emit('change-height', 0);
         });
       }
-      this.$store.dispatch('cancelEditDialog', this.dialog.ID);
+      this.$store.dispatch('dialogs/cancelEditDialog', this.dialog.ID);
     },
     saveEdit() {
       this.$store.dispatch('saveEditDialog', this.dialog.ID);

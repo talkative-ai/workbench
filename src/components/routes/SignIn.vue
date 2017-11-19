@@ -1,5 +1,5 @@
 <template>
-  <grid gutter="gutter" id="RouteSignIn">
+  <grid gutter id="RouteSignIn">
     <column menu="menu">&nbsp;</column>
     <paper>
       <paper-text>
