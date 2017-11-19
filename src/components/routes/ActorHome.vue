@@ -11,10 +11,10 @@
             <div class="Grid-cell u-size2of3">
               <p class="u-colorTextDark">Where this actor appears:</p>
               <section class="u-marginT3">
-                <h2 class="Text u-colorTextLite" v-if="!actor.zoneIDs || !actor.zoneIDs.length">{{ actor.Title }} hasn't appeared yet</h2>
+                <h2 class="Text u-colorTextLite" v-if="!isActorInZone">{{ actor.Title }} hasn't appeared yet</h2>
                 <h2 class="Text"
                   v-else
-                  v-for="zoneID in actor.zoneIDs"
+                  v-for="(exists, zoneID) in actor.zoneIDs"
                   :key="zoneID"
                   >
                   {{ zones[zoneID].Title }}</h2>
@@ -63,7 +63,10 @@ export default {
     }),
     ...mapState('zones', {
       zones: 'zoneMap'
-    })
+    }),
+    isActorInZone() {
+      return this.actor.zoneIDs && Object.keys(this.actor.zoneIDs).length;
+    }
   }
 };
 </script>
