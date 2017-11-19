@@ -2,6 +2,7 @@ import router from '@/router';
 import API from '@/api';
 import { SelectedEntity } from '@/store/models';
 import { titleCase } from '@/utilities';
+import { PATCH_ACTION } from '@/const';
 
 const state = {
   user: null,
@@ -120,6 +121,34 @@ const mutations = {
         ChildNodeID: dialog.ID,
         ParentNodeID: dialog.ParentDialogIDs[0]
       });
+    }
+  },
+
+  stageCreateNewDialog(state, dialog) {
+    state.selectedEntity.data.Dialogs.push(dialog);
+    if (!dialog.IsRoot) {
+      state.selectedEntity.data.DialogRelations.push({
+        ChildNodeID: dialog.CreateID,
+        ParentNodeID: dialog.ParentDialogIDs[0],
+        PatchAction: PATCH_ACTION.CREATE
+      });
+    }
+  },
+
+  stageCreateDialogRelation(state, { ChildNodeID, ParentNodeID }) {
+    state.selectedEntity.data.DialogRelations.push({
+      ChildNodeID,
+      ParentNodeID,
+      PatchAction: PATCH_ACTION.CREATE
+    });
+  },
+
+  overwriteDialog(state, dialog) {
+    for (let i = 0; i < state.selectedEntity.data.Dialogs.length; i++) {
+      if (state.selectedEntity.data.Dialogs[i].ID === dialog.ID) {
+        state.selectedEntity.data.Dialogs.splice(i, 1, dialog);
+        return;
+      }
     }
   }
 };

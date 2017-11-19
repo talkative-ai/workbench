@@ -1,7 +1,6 @@
 import dcopy from 'deep-copy';
 
 import API from '@/api';
-import { PATCH_ACTION } from '@/const';
 import { defaultDialog } from '@/store/models';
 
 function validateDialog(dialog) {
@@ -46,6 +45,10 @@ const state = {
   poppedItem: null
 };
 
+const getters = {
+  currentDialogChain: (state, getters) => state.dialogChain[getters.master.selectedEntityID]
+};
+
 const actions = {
   updateDialog({ commit, rootState }) {
     if (rootState.master.selectedEntity.kind !== 'actor') return;
@@ -84,12 +87,12 @@ const actions = {
     dispatch('setSelectedDialog', dialogID);
   },
 
-  selectChainPreviewConnect({ state, rootState, dispatch, commit }, index) {
+  selectChainPreviewConnect({ state, rootState, dispatch, commit, getters }, index) {
     dispatch('cancelPreviewConnectDialog');
     // If linking a dialog, then the chain doesn't navigate
     // But rather previews a conversation cycle
-    if (state.connectingFromDialogID && state.connectingFromDialogID !== state.dialogChain[rootState.master.selectedEntity.data.ID][index]) {
-      commit('connectingToDialogID', state.dialogChain[rootState.master.selectedEntity.data.ID][index]);
+    if (state.connectingFromDialogID && state.connectingFromDialogID !== getters.currentDialogChain[index]) {
+      commit('connectingToDialogID', getters.currentDialogChain[index]);
       commit('isConversationCycle', true);
     }
 
@@ -98,15 +101,15 @@ const actions = {
     }
 
     dispatch('selectDialogPreviewConnect', {
-      dialogID: state.dialogChain[rootState.master.selectedEntity.data.ID][index],
+      dialogID: getters.currentDialogChain[index],
       isChild: index > 0,
-      relativeParent: state.dialogMap[state.dialogChain[rootState.master.selectedEntity.data.ID][index - 1]]
+      relativeParent: state.dialogMap[getters.currentDialogChain[index - 1]]
     });
   },
 
   // selectDialog manages the state of the currently selected dialog
   // and all previously selected parent dialogs within the dialogChain
-  selectDialog({ state, rootState, dispatch, commit }, { dialogID, isChild = false, relativeParent } = {}) {
+  selectDialog({ state, rootState, dispatch, commit, getters }, { dialogID, isChild = false, relativeParent } = {}) {
     // If no dialog is specified
     // and there is no default selected dialog
     // and there exist root dialogs
@@ -123,7 +126,7 @@ const actions = {
     } else if (!dialogID && state.actorSelectedDialogID[rootState.master.selectedEntity.data.ID]) {
       // If the dialogChain length is one, then this is a root dialog selected by default
       // Set the sibling dialogs accordingly
-      if (state.dialogChain[rootState.master.selectedEntity.data.ID].length === 1) {
+      if (getters.currentDialogChain.length === 1) {
         commit('setDialogSiblings', state.rootDialogs);
       } else {
         // Otherwise this isn't a root dialog selected
@@ -131,7 +134,7 @@ const actions = {
         // The reason it's important to get siblings from the relative parent is because a single dialog can have
         // multiple parents, and each parent can have different children.
         // In other words, a signle dialog can have multiple sibling sets depending on the selected dialog.
-        commit('setDialogSiblings', state.dialogMap[state.dialogChain[rootState.master.selectedEntity.data.ID].slice(-2, -1).pop()].ChildDialogIDs);
+        commit('setDialogSiblings', state.dialogMap[getters.currentDialogChain.slice(-2, -1).pop()].ChildDialogIDs);
       }
       dispatch('setSelectedDialog', state.actorSelectedDialogID[rootState.master.selectedEntity.data.ID]);
       return;
@@ -150,7 +153,7 @@ const actions = {
 
       // Otherwise it's a sibling
     } else {
-      state.dialogChain[rootState.master.selectedEntity.data.ID].pop();
+      getters.currentDialogChain.pop();
       dispatch('addDialogChain', dialogID);
       commit('updateDialogChain', state.dialogChain);
     }
@@ -159,24 +162,24 @@ const actions = {
   },
 
   // selectChain is similar to selectDialog except that it's always going to be a parent dialog
-  selectChain({ state, rootState, dispatch, commit }, index) {
+  selectChain({ state, rootState, dispatch, commit, getters }, index) {
     if (index < 0) {
-      index = state.dialogChain[rootState.master.selectedEntity.data.ID].length + index;
+      index = getters.currentDialogChain.length + index;
     }
-    if (index === state.dialogChain[rootState.master.selectedEntity.data.ID].length - 1) {
+    if (index === getters.currentDialogChain.length - 1) {
       return;
     }
 
     if (index === 0) {
       dispatch('sliceChain', 1);
       commit('setDialogSiblings', state.rootDialogs);
-      dispatch('setSelectedDialog', state.dialogChain[rootState.master.selectedEntity.data.ID][0]);
+      dispatch('setSelectedDialog', getters.currentDialogChain[0]);
       return;
     }
     dispatch('selectDialog', {
-      dialogID: state.dialogChain[rootState.master.selectedEntity.data.ID][index],
+      dialogID: getters.currentDialogChain[index],
       isChild: true,
-      relativeParent: state.dialogMap[state.dialogChain[rootState.master.selectedEntity.data.ID][index - 1]]
+      relativeParent: state.dialogMap[getters.currentDialogChain[index - 1]]
     });
     dispatch('sliceChain', index + 1);
   },
@@ -186,7 +189,7 @@ const actions = {
     commit('editDialog', dialogID);
   },
 
-  saveEditDialog({ state, rootState, commit, dispatch }, dialogID) {
+  saveEditDialog({ state, rootState, commit, dispatch, getters }, dialogID) {
     if (state.dialogEditingID === dialogID) {
       let error = validateDialog(state.dialogEditingCopy[dialogID]);
       if (error) {
@@ -194,36 +197,21 @@ const actions = {
         return;
       }
       if (state.newDialog && state.newDialog.ID === dialogID) {
-        state.newDialog = dcopy(state.dialogEditingCopy[dialogID]);
+        commit('newDialog', dcopy(state.dialogEditingCopy[dialogID]));
         delete state.newDialog.ID;
-        rootState.master.selectedEntity.data.Dialogs.push(state.newDialog);
-        if (!state.newDialog.IsRoot) {
-          rootState.master.selectedEntity.data.DialogRelations.push({
-            ChildNodeID: state.newDialog.CreateID,
-            ParentNodeID: state.newDialog.ParentDialogIDs[0],
-            PatchAction: PATCH_ACTION.CREATE
-          });
-        }
+        commit('master/stageCreateNewDialog', state.newDialog, { root: true });
       } else {
-        for (let i = 0; i < rootState.master.selectedEntity.data.Dialogs.length; i++) {
-          if (rootState.master.selectedEntity.data.Dialogs[i].ID === dialogID) {
-            rootState.master.selectedEntity.data.Dialogs.splice(i, 1, state.dialogEditingCopy[dialogID]);
-            break;
-          }
-        }
+        commit('master/overwriteDialog', state.dialogEditingCopy[dialogID], { root: true });
       }
       commit('saveEditDialog', dialogID);
       let p = API.PutActor(rootState.master.selectedEntity.data);
       if (state.newDialog) {
         p.then(result => {
           const newID = result[state.newDialog.CreateID].toString();
-          state.dialogChain[rootState.master.selectedEntity.data.ID].pop();
+          getters.currentDialogChain.pop();
           commit('updateDialogChain', state.dialogChain);
           commit('replaceNewDialog', result);
           commit('master/replaceNewDialog', result, { root: true });
-          if (!state.dialogSiblings.length) {
-            state.dialogSiblings.push(newID);
-          }
           dispatch('selectDialog', { dialogID: newID, isChild: !state.dialogMap[newID].IsRoot });
         });
       }
@@ -231,7 +219,7 @@ const actions = {
     }
   },
 
-  cancelEditDialog({ state, rootState, commit, dispatch }) {
+  cancelEditDialog({ state, commit, dispatch, getters }) {
     if (state.newDialog && state.newDialog.ID === state.dialogEditingID) {
       if (state.newDialog.IsRoot) {
         dispatch('setSelectedDialog', null);
@@ -239,7 +227,7 @@ const actions = {
           dispatch('sliceChain', 0);
           dispatch('selectDialog');
         } else {
-          state.dialogChain[rootState.master.selectedEntity.data.ID].pop();
+          getters.currentDialogChain.pop();
           commit('updateDialogChain', state.dialogChain);
         }
       } else {
@@ -249,7 +237,7 @@ const actions = {
     commit('cancelEditDialog');
   },
 
-  async startNewConversation({ state, rootState, commit, dispatch }, dialogID) {
+  async startNewConversation({ state, getters, commit, dispatch }, dialogID) {
     let newDialog = dcopy(defaultDialog);
     let newID = await dispatch('generateID');
     newDialog.ID = newID;
@@ -262,7 +250,7 @@ const actions = {
       dispatch('selectChain', 0);
     } else {
       commit('newChildDialog', { newDialog: newDialog, parentID: dialogID });
-      if (state.dialogChain[rootState.master.selectedEntity.data.ID].slice(-1).pop() === dialogID) {
+      if (getters.currentDialogChain.slice(-1).pop() === dialogID) {
         dispatch('addDialogChain', newDialog.ID);
         commit('updateDialogChain', state.dialogChain);
       }
@@ -274,11 +262,10 @@ const actions = {
     commit('connectingFromDialogID', dialogID);
   },
 
-  saveConnectDialog({ state, rootState, dispatch }, dialogID) {
-    rootState.master.selectedEntity.data.DialogRelations.push({
+  saveConnectDialog({ state, rootState, commit, dispatch }, dialogID) {
+    commit('master/stageCreateDialogRelation', {
       ChildNodeID: state.connectingToDialogID,
-      ParentNodeID: state.connectingFromDialogID,
-      PatchAction: PATCH_ACTION.CREATE
+      ParentNodeID: state.connectingFromDialogID
     });
     API.PutActor(rootState.master.selectedEntity.data);
     dispatch('cancelConnectDialog', true);
@@ -297,12 +284,12 @@ const actions = {
     }
   },
 
-  cancelPreviewConnectDialog({ state, rootState, commit, dispatch }) {
+  cancelPreviewConnectDialog({ state, getters, commit, dispatch }) {
     if (state.connectingToDialogID) {
       commit('connectingToDialogID', false);
       state.dialogMap[state.connectingFromDialogID].ChildDialogIDs.pop();
-      if (state.dialogChain[rootState.master.selectedEntity.data.ID].slice(-1).pop() !== state.connectingFromDialogID) {
-        state.dialogChain[rootState.master.selectedEntity.data.ID].pop();
+      if (getters.currentDialogChain.slice(-1).pop() !== state.connectingFromDialogID) {
+        getters.currentDialogChain.pop();
       }
       commit('isConversationCycle', false);
     }
@@ -376,6 +363,8 @@ const mutations = {
       state.rootDialogs.pop();
       state.rootDialogs.push(dialog.ID);
     }
+
+    state.dialogSiblings.push(dialog.ID);
 
     // Remove the old dialog from the map
     state.dialogMap[state.newDialog.CreateID] = null;
@@ -459,12 +448,12 @@ const mutations = {
     }
     state.dialogChain[actorID].push(dialogID);
   }
-
 };
 
 export default {
   namespaced: true,
   state,
+  getters,
   actions,
   mutations
 };
