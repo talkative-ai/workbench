@@ -79,6 +79,10 @@ const mutations = {
     if (id > -1) {
       Vue.set(state.selectedProject.Actors, id, actor);
     }
+  },
+
+  addZone(state, zone) {
+    state.selectedProject.Zones.push(zone);
   }
 };
 

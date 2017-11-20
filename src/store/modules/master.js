@@ -56,10 +56,6 @@ const actions = {
     router.push({ name: 'NotFound' });
   },
 
-  reset({ dispatch }) {
-    return dispatch('resetState', { keepAuth: true }, { root: true });
-  },
-
   selectEntity({ state, commit }, entity) {
     let navigate = entity.navigate;
     delete entity.navigate;
@@ -98,10 +94,6 @@ const mutations = {
 
   projectsList(state, list) {
     Vue.set(state, 'projectsList', list);
-  },
-
-  addZone(state, zone) {
-    state.selectedProject.Zones.push(zone);
   },
 
   replaceNewDialog(state, dialog) {

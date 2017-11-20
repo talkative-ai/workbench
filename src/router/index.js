@@ -58,7 +58,7 @@ const router = new Router({
         title: 'Create a new project'
       },
       beforeEnter(to, from, next) {
-        store.dispatch('resetState').then(() => {
+        store.dispatch('resetState', { keepAuth: true }).then(() => {
           return next();
         });
       }

@@ -21,7 +21,7 @@ const actions = {
       newZone.Title = zone.Title;
 
       commit('addZone', newZone);
-      commit('master/addZone', newZone, { root: true });
+      commit('project/addZone', newZone, { root: true });
       dispatch('master/selectEntity', { kind: 'zone', data: newZone, navigate: true }, { root: true });
       return newZone;
     });
@@ -33,7 +33,7 @@ const actions = {
 
   saveIntroMessage({ state, commit }, { ZoneID, message }) {
     let zone = state.zoneMap[ZoneID];
-    commit('introMessage', { zoneID: ZoneID, message });
+    commit('introMessage', { ZoneID, message });
     API.PatchProject({
       Zones: [{
         ID: zone.ID,
