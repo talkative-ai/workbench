@@ -166,11 +166,12 @@ const actions = {
 
   // selectChain is similar to selectDialog except that it's always going to be a parent dialog
   selectChain({ state, rootState, dispatch, commit, getters }, index) {
+    if (!getters.currentDialogChain) {
+      return;
+    }
+
     if (index < 0) {
       index = getters.currentDialogChain.length + index;
-    }
-    if (index === getters.currentDialogChain.length - 1) {
-      return;
     }
 
     if (index === 0) {
@@ -274,15 +275,19 @@ const actions = {
     dispatch('cancelConnectDialog', true);
   },
 
-  cancelConnectDialog({ state, commit, dispatch }, keep) {
+  cancelConnectDialog({ state, commit, dispatch }, keepConnection) {
     let oldID = state.connectingFromDialogID;
     commit('connectingFromDialogID', false);
     if (state.connectingToDialogID) {
       commit('connectingToDialogID', false);
       commit('isConversationCycle', false);
-      if (!keep) {
+      if (!keepConnection) {
         state.dialogMap[oldID].ChildDialogIDs.pop();
         dispatch('selectChain', -2);
+      }
+    } else {
+      if (!keepConnection) {
+        dispatch('selectChain', -1);
       }
     }
   },

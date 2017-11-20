@@ -26,7 +26,7 @@
             <hr>
             <div class="button-grid">
               <w-button @click.native="saveConnect">Connect</w-button>
-              <w-button @click.native="saveConnect">Cancel</w-button>
+              <w-button @click.native="cancelConnect">Cancel</w-button>
             </div>
           </div>
         </div>
@@ -159,6 +159,9 @@ export default {
     },
     saveConnect() {
       this.$store.dispatch('dialogs/saveConnectDialog');
+    },
+    cancelConnect() {
+      this.$store.dispatch('dialogs/cancelConnectDialog');
     }
   }
 };
