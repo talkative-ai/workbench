@@ -41,10 +41,9 @@ const actions = {
       commit('dialogs/initializeChain', Actor.ID, { root: true });
       commit('project/addActor', Actor, { root: true });
       commit('actorInMap', Actor);
-      if (Actor.zoneIDs) {
-        for (let ZoneID of Actor.zoneIDs) {
-          commit('zones/addActor', { ZoneID, ActorID: Actor.ID }, { root: true });
-        }
+      if (Actor.ZoneID) {
+        commit('zones/addActor', { ZoneID: Actor.ZoneID, ActorID: Actor.ID }, { root: true });
+        commit('addToZone', { ZoneID: Actor.ZoneID, ActorID: Actor.ID });
       }
       dispatch('master/selectEntity', { kind: 'actor', data: Actor, navigate: true }, { root: true });
       return Actor;
