@@ -94,7 +94,7 @@ const router = new Router({
       }
     },
     {
-      path: '/actor/:id/dialog',
+      path: '/actor/:id/conversations',
       name: 'ActorDialog',
       component: ActorDialog,
       meta: {
