@@ -12,9 +12,10 @@
         :parentNode="idx > 0 ? dialogChain[idx-1] : false"
         :isSelected="actorSelectedDialogID == dialogID" />
       <ChildConnector
-       width="0px"
-       height="50px"
-       :key="dialogID" />
+        v-if="!connectingFromDialogID || (connectingFromDialogID && idx < dialogChain.length-1)"
+        width="0px"
+        height="50px"
+        :key="dialogID" />
     </template>
     <DialogNode
       dummy="true"
@@ -74,3 +75,13 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+h1 {
+  text-align: center;
+  color: var(--color-brand);
+  &.left {
+    text-align: left;
+  }
+}
+</style>
