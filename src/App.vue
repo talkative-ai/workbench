@@ -140,6 +140,7 @@ input, select, textarea {
     border: 2px dashed $purple;
     pointer-events: none;
     flex-direction: column;
+    box-shadow: 2pt 2pt 5pt rgba(0, 0, 0, 0.20);
   }
   h1 {
     color: $purple;
