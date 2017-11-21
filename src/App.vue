@@ -157,6 +157,7 @@ input, select, textarea {
 .selected {
   border: 1px solid $purple;
   opacity: 1;
+  box-shadow: 2pt 2pt 5pt rgba(0, 0, 0, 0.20);
 }
 .cover-wrap {
   position: absolute;
@@ -170,6 +171,8 @@ input, select, textarea {
   &:hover {
     z-index: 20;
     .cover {
+      box-shadow: 2pt 2pt 5pt rgba(0, 0, 0, 0.20);
+      transition: box-shadow 0.5s;
       opacity: 1;
       border: 1px solid $purple;
       background-color: var(--color-paper-low-opacity);

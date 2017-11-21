@@ -39,7 +39,7 @@
         <div class="space"></div>
       </div>
       <div class="flex-column">
-        <h1>Dialogs with {{ actor.Title }}</h1>
+        <h1 class="left">Dialogs with {{ actor.Title }}</h1>
         <hr>
         <div
           class="dialogs"
@@ -179,6 +179,9 @@ export default {
 h1 {
   text-align: center;
   color: var(--color-brand);
+  &.left {
+    text-align: left;
+  }
 }
 .chain {
   width: 332pt;
