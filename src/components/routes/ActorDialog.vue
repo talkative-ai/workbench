@@ -19,7 +19,7 @@
           class="dialogs"
           v-if="dialogSiblings.length"
           :style="{ 'min-width': `${(dialogSiblings.length + 1) * 400}px` }">
-          <DialogNode
+          <Dialogue
             v-for="dialogID of dialogSiblings"
             :key="dialogID"
             :dialog="dialogs[dialogID]"
@@ -30,11 +30,11 @@
             @change-height="changeNodeHeight(dialogID, $event)"
             @click="clickDialog($event)"
             @click-child="clickDialog($event)" />
-          <DialogNode
+          <Dialogue
             dummy="true"
             v-if="!newDialog && !connectingFromDialogID"
             @click.native="topNewConversation()">
-            <IconButton name="plus" flat="flat"></IconButton>{{ dialogChain.length == 1 ? 'new conversation' : 'continue conversation' }}</DialogNode>
+            <IconButton name="plus" flat="flat"></IconButton>{{ dialogChain.length == 1 ? 'new conversation' : 'continue conversation' }}</Dialogue>
         </div>
       </div>
     </div>

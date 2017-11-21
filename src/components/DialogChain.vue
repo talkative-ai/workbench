@@ -3,7 +3,7 @@
     <h1>Preview Conversation</h1>
     <hr>
     <template v-for="(dialogID, idx) of dialogChain">
-      <DialogNode
+      <Dialogue
         :key="dialogID"
         :dialog="dialogs[dialogID]"
         :recurse="false"
@@ -17,7 +17,7 @@
         height="50px"
         :key="dialogID" />
     </template>
-    <DialogNode
+    <Dialogue
       dummy="true"
       v-if="!newDialog && !connectingFromDialogID"
       @click.native="$store.dispatch('dialogs/startNewConversation', dialogChain && dialogChain.slice(-1).pop())"
@@ -25,7 +25,7 @@
       <IconButton name="plus" flat="flat"></IconButton>
       <template v-if="rootDialogs.length">continue conversation</template>
       <template v-else>start first conversation</template>
-    </DialogNode>
+    </Dialogue>
     <div v-if="connectingFromDialogID">
       <hr>
       <div class="button-grid">
@@ -38,7 +38,7 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex';
-import ChildConnector from '@/components/DialogNode/ChildConnector';
+import ChildConnector from '@/components/Dialogue/ChildConnector';
 
 export default {
   name: 'DialogChain',

@@ -1,6 +1,6 @@
 <template>
 
-  <div v-if="dummy" class="DialogNode">
+  <div v-if="dummy" class="Dialogue">
     <div class="wrap" style="height: 100px;" ref="dialog">
       <div class="vspacer" v-if="parentNode"></div>
       <div class="ball" v-if="parentNode"></div>
@@ -14,7 +14,7 @@
     </div>
   </div>
 
-  <div v-else class="DialogNode">
+  <div v-else class="Dialogue">
     <div
       class="wrap"
       :class="{
@@ -138,27 +138,27 @@
         :height="`${tallest - height + 50}px`" />
       <div class="child-dialogs" v-if="dialog.ChildDialogIDs && dialog.ChildDialogIDs.length">
         <div v-for="(dialogID, idx) of dialog.ChildDialogIDs" :key="dialogID">
-          <DialogNode
+          <Dialogue
             :actor="actor"
             :dialog="dialogs[dialogID]"
             :parentNode="dialog.ID"
             :recurse="false"
             @click="$emit('click-child', { dialogID, isChild: true })"
-            @click-child="$emit('click-child', { dialogID, isChild: true })"></DialogNode>
+            @click-child="$emit('click-child', { dialogID, isChild: true })"></Dialogue>
         </div>
-        <DialogNode
+        <Dialogue
           dummy="true"
           v-if="!newDialog && !connectingFromDialogID"
           @click.native="$store.dispatch('dialogs/startNewConversation', dialogChain.slice(-1).pop())"
           :parentNode="dialog.ID">
-          <IconButton name="plus" flat="flat"></IconButton>continue conversation</DialogNode>
+          <IconButton name="plus" flat="flat"></IconButton>continue conversation</Dialogue>
       </div>
-      <DialogNode
+      <Dialogue
         dummy="true"
         v-else-if="!newDialog && !connectingFromDialogID"
         @click.native="$store.dispatch('dialogs/startNewConversation', dialogChain.slice(-1).pop())"
         :parentNode="dialog.ID">
-        <IconButton name="plus" flat="flat"></IconButton>continue conversation</DialogNode>
+        <IconButton name="plus" flat="flat"></IconButton>continue conversation</Dialogue>
     </template>
   </div>
 </template>
@@ -169,7 +169,7 @@ import { mapGetters, mapState } from 'vuex';
 import ChildConnector from './ChildConnector';
 
 export default {
-  name: 'DialogNode',
+  name: 'Dialogue',
   components: {
     ChildConnector
   },
@@ -294,7 +294,7 @@ export default {
 
 <style lang="scss" scoped>
 // TODO: Cleanup this mess and componentize more
-.DialogNode {
+.Dialogue {
   display: inline-flex;
   flex-direction: column;
   user-select: none;

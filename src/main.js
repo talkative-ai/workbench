@@ -7,7 +7,7 @@ import App from './App';
 import * as svgicon from 'vue-svgicon';
 import Icon from 'vue-awesome/components/Icon';
 
-import DialogNode from './components/DialogNode/index';
+import Dialogue from './components/Dialogue/index';
 import Sidebar from './components/Sidebar';
 import Paper from './components/Paper';
 
@@ -17,7 +17,7 @@ import Grid from './components/elements/Grid';
 import PaperText from './components/elements/PaperText';
 import Column from './components/elements/Column';
 
-Vue.component('DialogNode', DialogNode);
+Vue.component('Dialogue', Dialogue);
 Vue.component('WButton', WButton);
 Vue.component('IconButton', IconButton);
 Vue.component('WButton', WButton);
