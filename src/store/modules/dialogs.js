@@ -241,20 +241,20 @@ const actions = {
     commit('cancelEditDialog');
   },
 
-  async startNewConversation({ state, getters, commit, dispatch }, dialogID) {
+  async startNewConversation({ state, getters, commit, dispatch }, parentDialogID) {
     let newDialog = dcopy(defaultDialog);
     let newID = await dispatch('master/generateID', {}, { root: true });
     newDialog.ID = newID;
     newDialog.CreateID = newID;
-    if (!dialogID) {
+    if (!parentDialogID) {
       commit('newRootDialog', newDialog);
       if (state.rootDialogs.length === 1) {
         dispatch('addDialogChain', newDialog.ID);
       }
       dispatch('selectChain', 0);
     } else {
-      commit('newChildDialog', { newDialog: newDialog, parentID: dialogID });
-      if (getters.currentDialogChain.slice(-1).pop() === dialogID) {
+      commit('newChildDialog', { newDialog: newDialog, parentID: parentDialogID });
+      if (getters.currentDialogChain.slice(-1).pop() === parentDialogID) {
         dispatch('addDialogChain', newDialog.ID);
         commit('updateDialogChain', state.dialogChain);
       }

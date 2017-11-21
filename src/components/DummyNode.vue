@@ -1,8 +1,8 @@
 <template>
   <div class="DialogNode">
     <div class="wrap" style="height: 100px;">
-      <div class="vspacer" v-if="isChildIteration"></div>
-      <div class="ball" v-if="isChildIteration"></div>
+      <div class="vspacer" v-if="parentNode"></div>
+      <div class="ball" v-if="parentNode"></div>
       <div class="cover-wrap">
         <div class="cover opaque no-border">
           <h1>
@@ -17,6 +17,6 @@
 <script>
 export default {
   name: 'DummyNode',
-  props: ['isChildIteration']
+  props: ['parentNode']
 };
 </script>

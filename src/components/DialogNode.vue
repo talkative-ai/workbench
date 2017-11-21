@@ -63,7 +63,7 @@
           </div>
         </template>
         <template v-else>
-          <h3>The user should say one of the following:</h3>
+          <h3>The user can say one of the following:</h3>
           <div
             class="entry"
             v-for="(entry, index) in dialogEditingCopy.EntryInput"
@@ -73,9 +73,9 @@
             <IconButton v-if="dialogEditingCopy.EntryInput.length > 1" name="times" flat="flat" @click.native="dialogEditingCopy.EntryInput.splice(index, 1)"></IconButton>
             <span v-if="index < dialogEditingCopy.EntryInput.length-1"></span>
           </div>
-          <IconButton label="user should say" name="plus" @click.native="addEntryInput()"></IconButton>
+          <IconButton label="User can say" name="plus" @click.native="addEntryInput()"></IconButton>
           <div class="ai-wrap">
-            <h3>Your AI replies with all of the following:</h3>
+            <h3>{{ actor.Title }} replies with all of the following:</h3>
             <div class="dialog-values">
               <div class="inner-values actor-vals" v-for="(sound, index) of dialogEditingCopy.AlwaysExec.PlaySounds"
                 :key="`sound-${dialog.ID}-${index}`">
@@ -88,7 +88,7 @@
               </div>
               <div class="inner-values actor-vals">
                 <div class="flex flex-column">
-                  <IconButton name="plus" label="ai says" @click.native="addPlaySound()"></IconButton>
+                  <IconButton name="plus" :label="`${actor.Title} says`" @click.native="addPlaySound()"></IconButton>
                 </div>
               </div>
               <div class="actions" v-if="dialog.ChildDialogIDs && dialog.ChildDialogIDs.length">await response</div>
@@ -120,16 +120,25 @@
       <div class="after-values-space" v-if="dialog.ChildDialogIDs && dialog.ChildDialogIDs.length" :style="{ width: `${calculateChildrenWidth()}px`, height: `${tallest - height + 50}px` }"></div>
       <div class="child-dialogs" v-if="dialog.ChildDialogIDs && dialog.ChildDialogIDs.length">
         <div v-for="(dialogID, idx) of dialog.ChildDialogIDs" :key="dialogID">
-          <DialogNode :dialog="dialogs[dialogID]" :parentNode="dialog.ID" :recurse="false" @click="$emit('click-child', { dialogID, isChild: true })"
+          <DialogNode
+            :actor="actor"
+            :dialog="dialogs[dialogID]"
+            :parentNode="dialog.ID"
+            :recurse="false"
+            @click="$emit('click-child', { dialogID, isChild: true })"
             @click-child="$emit('click-child', { dialogID, isChild: true })"></DialogNode>
         </div>
-        <DummyNode v-if="!newDialog && !connectingFromDialogID" @click.native="$store.dispatch('dialogs/startNewConversation', dialogChain.slice(-1).pop())"
+        <DummyNode
+          v-if="!newDialog && !connectingFromDialogID"
+          @click.native="$store.dispatch('dialogs/startNewConversation', dialogChain.slice(-1).pop())"
           :parentNode="dialog.ID">
-          <IconButton name="plus" flat="flat"></IconButton>new</DummyNode>
+          <IconButton name="plus" flat="flat"></IconButton>continue conversation</DummyNode>
       </div>
-      <DummyNode v-else-if="!newDialog && !connectingFromDialogID" @click.native="$store.dispatch('dialogs/startNewConversation', dialogChain.slice(-1).pop())"
+      <DummyNode
+        v-else-if="!newDialog && !connectingFromDialogID"
+        @click.native="$store.dispatch('dialogs/startNewConversation', dialogChain.slice(-1).pop())"
         :parentNode="dialog.ID">
-        <IconButton name="plus" flat="flat"></IconButton>new</DummyNode>
+        <IconButton name="plus" flat="flat"></IconButton>continue conversation</DummyNode>
     </template>
   </div>
 </template>
@@ -147,7 +156,8 @@ export default {
     'parentNode',
     'recurse',
     'isSelected',
-    'tallest'
+    'tallest',
+    'actor'
   ],
   components: {
     DummyNode

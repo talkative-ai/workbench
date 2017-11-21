@@ -104,9 +104,9 @@ const router = new Router({
         titleLink: () => router.push({ name: 'ProjectHome' })
       },
       async beforeEnter(to, from, next) {
+        await store.dispatch('actors/selectActor', to.params.id);
         await store.dispatch('dialogs/cancelEditDialog');
         await store.dispatch('dialogs/cancelConnectDialog');
-        await store.dispatch('actors/selectActor', to.params.id);
         await store.dispatch('dialogs/selectDialog');
         next();
       }

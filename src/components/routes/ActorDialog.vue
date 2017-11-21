@@ -4,22 +4,23 @@
     <div class="flex">
       <div class="flex-column">
         <div class="chain">
-          <h1>Conversation</h1>
+          <h1>Preview Conversation</h1>
           <hr>
           <DialogNode
             v-for="(dialogID, idx) of dialogChain"
             :key="dialogID"
             :dialog="dialogs[dialogID]"
             :recurse="false"
+            :actor="actor"
             @click="clickChain(idx)"
-            :isChildIteration="idx > 0"
+            :parentNode="idx > 0 ? dialogChain[idx-1] : false"
             :isSelected="actorSelectedDialogID == dialogID" />
           <DummyNode
             v-if="!newDialog && !connectingFromDialogID"
             @click.native="$store.dispatch('dialogs/startNewConversation', dialogChain && dialogChain.slice(-1).pop())"
-            isChildIteration="true">
+            :parentNode="dialogChain.slice(-1).pop()">
             <IconButton name="plus" flat="flat"></IconButton>
-            <template v-if="rootDialogs.length">new</template>
+            <template v-if="rootDialogs.length">continue conversation</template>
             <template v-else>start first conversation</template>
           </DummyNode>
           <div v-if="connectingFromDialogID">
@@ -37,24 +38,29 @@
           <span class="u-arrowWest"></span>Return</w-button>
         <div class="space"></div>
       </div>
-      <div
-        class="dialogs"
-        v-if="dialogSiblings.length"
-        :style="{ 'min-width': `${(dialogSiblings.length + 1) * 400}px` }">
-        <DialogNode
-          v-for="dialogID of dialogSiblings"
-          :key="dialogID"
-          :dialog="dialogs[dialogID]"
-          :recurse="actorSelectedDialogID == dialogID"
-          :isSelected="actorSelectedDialogID == dialogID"
-          :tallest="tallest"
-          @change-height="changeNodeHeight(dialogID, $event)"
-          @click="clickDialog($event)"
-          @click-child="clickDialog($event)" />
-        <DummyNode
-          v-if="!newDialog && !connectingFromDialogID"
-          @click.native="topNewConversation()">
-          <IconButton name="plus" flat="flat"></IconButton>new</DummyNode>
+      <div class="flex-column">
+        <h1>Dialogs with {{ actor.Title }}</h1>
+        <hr>
+        <div
+          class="dialogs"
+          v-if="dialogSiblings.length"
+          :style="{ 'min-width': `${(dialogSiblings.length + 1) * 400}px` }">
+          <DialogNode
+            v-for="dialogID of dialogSiblings"
+            :key="dialogID"
+            :dialog="dialogs[dialogID]"
+            :recurse="actorSelectedDialogID == dialogID"
+            :isSelected="actorSelectedDialogID == dialogID"
+            :tallest="tallest"
+            :actor="actor"
+            @change-height="changeNodeHeight(dialogID, $event)"
+            @click="clickDialog($event)"
+            @click-child="clickDialog($event)" />
+          <DummyNode
+            v-if="!newDialog && !connectingFromDialogID"
+            @click.native="topNewConversation()">
+            <IconButton name="plus" flat="flat"></IconButton>{{ dialogChain.length == 1 ? 'new conversation' : 'continue conversation' }}</DummyNode>
+        </div>
       </div>
     </div>
   </div>
@@ -89,6 +95,11 @@ export default {
     }),
     ...mapGetters('dialogs', {
       dialogChain: 'currentDialogChain'
+    }),
+    ...mapState('actors', {
+      actor(state) {
+        return state.actorMap[this.$route.params.id];
+      }
     })
   },
   methods: {
@@ -143,10 +154,7 @@ export default {
       });
     },
     topNewConversation() {
-      if (
-        this.dialogChain
-          .length <= 1
-      ) {
+      if (this.dialogChain.length <= 1) {
         this.$store.dispatch('dialogs/startNewConversation');
       } else {
         this.$store.dispatch(
