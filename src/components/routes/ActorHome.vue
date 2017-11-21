@@ -12,12 +12,9 @@
               <p class="u-colorTextDark">Where this actor appears:</p>
               <section class="u-marginT3">
                 <h2 class="Text u-colorTextLite" v-if="!isActorInZone">{{ actor.Title }} hasn't appeared yet</h2>
-                <h2 class="Text"
-                  v-else
-                  v-for="(exists, zoneID) in actor.zoneIDs"
-                  :key="zoneID"
-                  >
-                  {{ zones[zoneID].Title }}</h2>
+                <template v-for="(exists, zoneID) in actor.zoneIDs" v-if="exists">
+                  <h2 class="Text" :key="zoneID">{{ zones[zoneID].Title }}</h2>
+                </template>
               </section>
             </div>
           </grid>

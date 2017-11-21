@@ -113,7 +113,7 @@ const mutations = {
       Vue.set(state.actorMap[ActorID], 'zoneIDs', {});
     }
     if (state.actorMap[ActorID].zoneIDs[ZoneID]) {
-      Vue.set(state.actorMap[ActorID].zoneIDs, ZoneID, false);
+      Vue.delete(state.actorMap[ActorID].zoneIDs, ZoneID);
     }
   }
 };
