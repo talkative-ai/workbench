@@ -13,12 +13,14 @@
             <w-button class="Headline" large="large" outline="outline" v-if="!introMessageExists" @click.native="createIntroMessage()">add an introduction</w-button>
             <template v-else>
               <h1 class="Headline">A message to play when they first enter</h1>
-              <textarea v-model="newIntroMessage" :placeholder="`e.g. Welcome to ${zone.Title}! Try saying &quot;Hello&quot;`"></textarea>
-              <div class="button-grid">
-                <w-button v-if="introMessageChanged && newIntroMessage" @click.native="saveIntroMessage()">Save Changes</w-button>
-                <w-button v-if="introMessageChanged" @click.native="revertIntroMessage()">Cancel</w-button>
-                <w-button @click.native="removeIntroMessage()">Remove</w-button>
-              </div>
+              <form class="Form" @submit.prevent>
+                <textarea v-model="newIntroMessage" :placeholder="`e.g. Welcome to ${zone.Title}! Try saying &quot;Hello&quot;`"></textarea>
+                <div class="button-grid">
+                  <w-button v-if="introMessageChanged && newIntroMessage" @click.native="saveIntroMessage()">Save Changes</w-button>
+                  <w-button v-if="introMessageChanged" @click.native="revertIntroMessage()">Cancel</w-button>
+                  <w-button @click.native="removeIntroMessage()">Remove</w-button>
+                </div>
+              </form>
             </template>
           </div>
           <hr>

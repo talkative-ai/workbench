@@ -1,6 +1,5 @@
 <template>
   <div id="RouteActorDialog">
-    <h1 v-if="$route.params.linking_child">Select a dialog to link to</h1>
     <div class="flex">
       <div class="flex-column">
         <DialogChain
@@ -14,7 +13,7 @@
         <div class="space"></div>
       </div>
       <div class="flex-column">
-        <h1 class="left">Dialogs with {{ actor.Title }}</h1>
+        <h1 class="left">Dialogues with {{ actor.Title }}</h1>
         <hr>
         <div
           class="dialogs"
