@@ -6,15 +6,17 @@
         <div class="chain">
           <h1>Preview Conversation</h1>
           <hr>
-          <DialogNode
-            v-for="(dialogID, idx) of dialogChain"
-            :key="dialogID"
-            :dialog="dialogs[dialogID]"
-            :recurse="false"
-            :actor="actor"
-            @click="clickChain(idx)"
-            :parentNode="idx > 0 ? dialogChain[idx-1] : false"
-            :isSelected="actorSelectedDialogID == dialogID" />
+          <template v-for="(dialogID, idx) of dialogChain">
+            <DialogNode
+              :key="dialogID"
+              :dialog="dialogs[dialogID]"
+              :recurse="false"
+              :actor="actor"
+              @click="clickChain(idx)"
+              :parentNode="idx > 0 ? dialogChain[idx-1] : false"
+              :isSelected="actorSelectedDialogID == dialogID" />
+            <div class="after-values-space" style="width: 0px; height: 50px;" :key="dialogID"></div>
+          </template>
           <DummyNode
             v-if="!newDialog && !connectingFromDialogID"
             @click.native="$store.dispatch('dialogs/startNewConversation', dialogChain && dialogChain.slice(-1).pop())"
