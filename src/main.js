@@ -7,7 +7,7 @@ import App from './App';
 import * as svgicon from 'vue-svgicon';
 import Icon from 'vue-awesome/components/Icon';
 
-import DialogNode from './components/DialogNode';
+import DialogNode from './components/DialogNode/index';
 import Sidebar from './components/Sidebar';
 import Paper from './components/Paper';
 

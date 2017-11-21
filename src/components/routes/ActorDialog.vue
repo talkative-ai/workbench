@@ -3,36 +3,9 @@
     <h1 v-if="$route.params.linking_child">Select a dialog to link to</h1>
     <div class="flex">
       <div class="flex-column">
-        <div class="chain">
-          <h1>Preview Conversation</h1>
-          <hr>
-          <template v-for="(dialogID, idx) of dialogChain">
-            <DialogNode
-              :key="dialogID"
-              :dialog="dialogs[dialogID]"
-              :recurse="false"
-              :actor="actor"
-              @click="clickChain(idx)"
-              :parentNode="idx > 0 ? dialogChain[idx-1] : false"
-              :isSelected="actorSelectedDialogID == dialogID" />
-            <div class="after-values-space" style="width: 0px; height: 50px;" :key="dialogID"></div>
-          </template>
-          <DummyNode
-            v-if="!newDialog && !connectingFromDialogID"
-            @click.native="$store.dispatch('dialogs/startNewConversation', dialogChain && dialogChain.slice(-1).pop())"
-            :parentNode="dialogChain.slice(-1).pop()">
-            <IconButton name="plus" flat="flat"></IconButton>
-            <template v-if="rootDialogs.length">continue conversation</template>
-            <template v-else>start first conversation</template>
-          </DummyNode>
-          <div v-if="connectingFromDialogID">
-            <hr>
-            <div class="button-grid">
-              <w-button @click.native="saveConnect">Connect</w-button>
-              <w-button @click.native="cancelConnect">Cancel</w-button>
-            </div>
-          </div>
-        </div>
+        <DialogChain
+          @select-dialog="clickChain($event)"
+        />
         <w-button
           class="Headline"
           large="large"
@@ -58,10 +31,11 @@
             @change-height="changeNodeHeight(dialogID, $event)"
             @click="clickDialog($event)"
             @click-child="clickDialog($event)" />
-          <DummyNode
+          <DialogNode
+            dummy="true"
             v-if="!newDialog && !connectingFromDialogID"
             @click.native="topNewConversation()">
-            <IconButton name="plus" flat="flat"></IconButton>{{ dialogChain.length == 1 ? 'new conversation' : 'continue conversation' }}</DummyNode>
+            <IconButton name="plus" flat="flat"></IconButton>{{ dialogChain.length == 1 ? 'new conversation' : 'continue conversation' }}</DialogNode>
         </div>
       </div>
     </div>
@@ -69,14 +43,14 @@
 </template>
 
 <script>
-import DummyNode from '../DummyNode';
 import Vue from 'vue';
 import { mapState, mapGetters } from 'vuex';
+import DialogChain from '@/components/DialogChain';
 
 export default {
   name: 'ActorDialog',
   components: {
-    DummyNode
+    DialogChain
   },
   data() {
     return {
@@ -166,12 +140,6 @@ export default {
             .pop()
         );
       }
-    },
-    saveConnect() {
-      this.$store.dispatch('dialogs/saveConnectDialog');
-    },
-    cancelConnect() {
-      this.$store.dispatch('dialogs/cancelConnectDialog');
     }
   }
 };

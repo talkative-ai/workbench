@@ -1,5 +1,20 @@
 <template>
-  <div class="DialogNode">
+
+  <div v-if="dummy" class="DialogNode">
+    <div class="wrap" style="height: 100px;" ref="dialog">
+      <div class="vspacer" v-if="parentNode"></div>
+      <div class="ball" v-if="parentNode"></div>
+      <div class="cover-wrap">
+        <div class="cover opaque no-border">
+          <h1>
+            <slot></slot>
+          </h1>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div v-else class="DialogNode">
     <div
       class="wrap"
       :class="{
@@ -117,7 +132,10 @@
       </div>
     </div>
     <template v-if="recurse">
-      <div class="after-values-space" v-if="dialog.ChildDialogIDs && dialog.ChildDialogIDs.length" :style="{ width: `${calculateChildrenWidth()}px`, height: `${tallest - height + 50}px` }"></div>
+      <ChildConnector
+        v-if="dialog.ChildDialogIDs && dialog.ChildDialogIDs.length"
+        :width="`${calculateChildrenWidth()}px`"
+        :height="`${tallest - height + 50}px`" />
       <div class="child-dialogs" v-if="dialog.ChildDialogIDs && dialog.ChildDialogIDs.length">
         <div v-for="(dialogID, idx) of dialog.ChildDialogIDs" :key="dialogID">
           <DialogNode
@@ -128,17 +146,19 @@
             @click="$emit('click-child', { dialogID, isChild: true })"
             @click-child="$emit('click-child', { dialogID, isChild: true })"></DialogNode>
         </div>
-        <DummyNode
+        <DialogNode
+          dummy="true"
           v-if="!newDialog && !connectingFromDialogID"
           @click.native="$store.dispatch('dialogs/startNewConversation', dialogChain.slice(-1).pop())"
           :parentNode="dialog.ID">
-          <IconButton name="plus" flat="flat"></IconButton>continue conversation</DummyNode>
+          <IconButton name="plus" flat="flat"></IconButton>continue conversation</DialogNode>
       </div>
-      <DummyNode
+      <DialogNode
+        dummy="true"
         v-else-if="!newDialog && !connectingFromDialogID"
         @click.native="$store.dispatch('dialogs/startNewConversation', dialogChain.slice(-1).pop())"
         :parentNode="dialog.ID">
-        <IconButton name="plus" flat="flat"></IconButton>continue conversation</DummyNode>
+        <IconButton name="plus" flat="flat"></IconButton>continue conversation</DialogNode>
     </template>
   </div>
 </template>
@@ -146,22 +166,22 @@
 <script>
 import Vue from 'vue';
 import { mapGetters, mapState } from 'vuex';
-
-import DummyNode from './DummyNode';
+import ChildConnector from './ChildConnector';
 
 export default {
   name: 'DialogNode',
+  components: {
+    ChildConnector
+  },
   props: [
     'dialog',
     'parentNode',
     'recurse',
     'isSelected',
     'tallest',
-    'actor'
+    'actor',
+    'dummy'
   ],
-  components: {
-    DummyNode
-  },
   data() {
     return {
       height: 0
@@ -272,5 +292,180 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+// TODO: Cleanup this mess and componentize more
+.DialogNode {
+  display: inline-flex;
+  flex-direction: column;
+  user-select: none;
+  margin-top: -1px;
+  min-width: 400px;
+  max-width: 400px;
+}
+.entry, .inner-values {
+  display: flex;
+}
+.ai-wrap {
+  margin: 10pt 0;
+  padding: 10pt 0;
+  border-top: 1px solid $purple;
+}
+.cover {
+  position: absolute;
+  top: -1px;
+  bottom: -1px;
+  left: -1px;
+  width: 401px;
+  z-index: 10;
+  opacity: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &.editing {
+    opacity: 1;
+    border: 2px dashed $purple;
+    pointer-events: none;
+    flex-direction: column;
+    box-shadow: 2pt 2pt 5pt rgba(0, 0, 0, 0.20);
+  }
+  h1 {
+    color: $purple;
+  }
+  &.opaque {
+    opacity: 1;
+    cursor: default;
+    background-color: transparent;
+    border: 1px solid $purple;
+  }
+  &.no-border {
+    border: 0;
+  }
+}
+.selected {
+  border: 1px solid $purple;
+  opacity: 1;
+  box-shadow: 2pt 2pt 5pt rgba(0, 0, 0, 0.20);
+}
+.cover-wrap {
+  position: absolute;
+  top: 0px;
+  bottom: -1px;
+  left: -1px;
+  z-index: 10;
+  .edit-bar {
+    opacity: 0;
+  }
+  &:hover {
+    z-index: 20;
+    .cover {
+      box-shadow: 2pt 2pt 5pt rgba(0, 0, 0, 0.20);
+      transition: box-shadow 0.5s;
+      opacity: 1;
+      border: 1px solid $purple;
+      background-color: var(--color-paper-low-opacity);
+      cursor: pointer;
+      &.selected {
+        cursor: default;
+      }
+    }
+    .edit-bar {
+      opacity: 1;
+    }
+  }
+}
+.edit-bar {
+  bottom: -31pt;
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 400px;
+  height: 30pt;
+  &.with-error {
+    height: 60pt;
+    bottom: -61pt;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 10pt;
+    flex-direction: column;
+  }
+  .error {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    background-color: pink;
+    color: black;
+    font-weight: bold;
+    padding: 0 5pt;
+  }
+  display: flex;
+  align-items: center;
+  background-color: var(--color-paper);
+  box-shadow: 0 0 5pt rgba(0,0,0,0.2);
+  padding-left: 10pt;
+  z-index: 100;
+}
+.vspacer {
+  height: 20pt;
+  border-left: 1px solid $purple;
+  margin-top: -1px;
+}
+.actor-vals {
+  color: $purple;
+  border-left: 1px solid $purple;
+}
+.actions {
+  cursor: default;
+  pointer-events: auto;
+  display: inline-block;
+  padding: 0.25rem;
+  background-color: $purple;
+  color: white;
+}
+.ball {
+  width: 0.25rem;
+  height: 0.25rem;
+  border: 0.25rem solid $purple;
+  border-radius: 100%;
+  position: absolute;
+  display: inline-block;
+  margin-left: -0.25rem;
+  margin-top: -0.25rem;
+}
+.child-dialog-head {
+  position: relative;
+  margin: 0 0 1rem 0.25rem;
+}
+.wrap {
+  padding-left: 10pt;
+  border: 1px solid transparent;
+  position: relative;
+}
+.inner-values {
+  padding: 0.25rem;
+  padding: 5pt 0.25rem 10pt 0.25rem;
+}
+.child-dialogs {
+  display: flex;
+}
+.child-dialog-head-nth {
+  border-top: 1px solid $purple;
+}
+.entry {
+  position: relative;
+  left: -10pt;
+  padding: 5pt 0;
+}
+.black {
+  background-color: black;
+}
+.dialog-action {
+  &.go-to-zone {
+    background-color: green;
+    color: white;
+  }
+  &.end-conversation {
+    background-color: black;
+    color: white;
+  }
+}
 </style>
