@@ -45,6 +45,10 @@ export default {
   display: inline-flex;
   align-items: center;
 
+  svg {
+    margin-right: 5pt;
+  }
+
   &:hover {
     box-shadow: inset 0 0 0 999px color(var(--color-brand) blackness(20%));
   }
