@@ -147,7 +147,7 @@ input, select, textarea {
   &.opaque {
     opacity: 1;
     cursor: default;
-    background-color: var(--color-paper-low-opacity);
+    background-color: transparent;
     border: 1px solid $purple;
   }
   &.no-border {
