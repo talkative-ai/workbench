@@ -25,6 +25,59 @@ function validateDialog(dialog) {
   }
 }
 
+function determineDeleteCandidates(nodeIDToDelete, map) {
+  let candidates = [];
+  let hasEdgeFromRoot = {};
+
+  function edgesFromRoot(nodeID, track) {
+    hasEdgeFromRoot[nodeID] = (function() {
+      if (hasEdgeFromRoot[nodeID] != null) {
+        return hasEdgeFromRoot[nodeID];
+      }
+      if (track[nodeID]) {
+        return false;
+      }
+
+      track[nodeID] = true;
+
+      if (map[nodeID].IsRoot) {
+        return true;
+      }
+      for (let id of map[nodeID].ParentDialogIDs) {
+        if (edgesFromRoot(id, Object.assign({}, track))) {
+          return true;
+        }
+      }
+      hasEdgeFromRoot[nodeID] = false;
+      return false;
+    })();
+
+    return hasEdgeFromRoot[nodeID];
+  }
+
+  for (let id of map[nodeIDToDelete].ChildDialogIDs) {
+    if (!edgesFromRoot(id, { [nodeIDToDelete]: true })) {
+      candidates.push(id);
+    }
+  }
+
+  function recurseChildren(dialog, fn) {
+    for (let child of map[dialog].ChildDialogIDs) {
+      fn(child);
+      recurseChildren(child, fn);
+    }
+  }
+
+  for (let id of candidates) {
+    recurseChildren(id, childID => edgesFromRoot(childID, { [id]: true }));
+  }
+
+  return {
+    candidates,
+    hasEdgeFromRoot
+  };
+}
+
 const state = {
 
   actorSelectedDialogID: {},
@@ -46,7 +99,7 @@ const state = {
   connectingToDialogID: false,
   isConversationCycle: false,
 
-  poppedItem: null
+  stagedForDeletion: null
 };
 
 const getters = {
@@ -313,6 +366,24 @@ const actions = {
 
   sliceChain({ rootState, commit }, index) {
     commit('sliceChain', { actorID: rootState.master.selectedEntity.data.ID, index });
+  },
+
+  stageDeletion({ state, commit }, dialogID) {
+    let { candidates, hasEdgeFromRoot } = determineDeleteCandidates(dialogID, state.dialogMap);
+    commit('stageDelete', {
+      dialogID,
+      candidates,
+      hasEdgeFromRoot
+    });
+  },
+
+  confirmDeletion({ state, commit }) {
+    // Execute delete in API
+    // Delete from state
+  },
+
+  cancelDeletion({ state, commit }) {
+    commit('cancelStageDelete');
   }
 
 };
@@ -459,6 +530,11 @@ const mutations = {
 
   rootDialogs(state, rootDialogs) {
     Vue.set(state, 'rootDialogs', rootDialogs);
+  },
+
+  stageDelete(state, { dialogID, candidates, hasEdgeFromRoot }) {
+    Vue.set(state, 'hasEdgeFromRoot', hasEdgeFromRoot);
+    Vue.set(state, 'candidates', candidates);
   }
 };
 

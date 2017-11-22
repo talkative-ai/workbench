@@ -51,6 +51,8 @@
               <div class="button-grid-small">
                 <IconButton name="pencil" label="edit" @click.native="beginEdit()"></IconButton>
                 <IconButton name="link" label="connect" @click.native="beginConnect()"></IconButton>
+                <div class="hspacer" />
+                <IconButton name="trash" label="delete" @click.native="stageDeleteDialog()"></IconButton>
               </div>
             </div>
           </template>
@@ -259,6 +261,9 @@ export default {
     beginEdit() {
       this.$store.dispatch('dialogs/editDialog', this.dialog.ID);
     },
+    stageDeleteDialog() {
+      this.$store.dispatch('dialogs/stageDeletion', this.dialog.ID);
+    },
     cancelEdit() {
       if (this.dialogEditingID === this.dialog.ID) {
         Vue.nextTick(() => {
@@ -401,13 +406,16 @@ export default {
   align-items: center;
   background-color: var(--color-paper);
   box-shadow: 0 0 5pt rgba(0,0,0,0.2);
-  padding-left: 10pt;
+  padding: 0 10pt;
   z-index: 100;
 }
 .vspacer {
   height: 20pt;
   border-left: 1px solid $purple;
   margin-top: -1px;
+}
+.hspacer {
+  flex: 1;
 }
 .actor-vals {
   color: $purple;

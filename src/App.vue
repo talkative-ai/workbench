@@ -92,6 +92,8 @@ input, select, textarea {
   }
 }
 .button-grid-small {
+  display: flex;
+  width: 100%;
   > * {
     margin: 0 2.5pt;
     &:first-child {
@@ -104,6 +106,8 @@ input, select, textarea {
 }
 .button-grid {
   padding: 10pt 0px;
+  display: flex;
+  width: 100%;
 }
 .flex {
   display: flex;

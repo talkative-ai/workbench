@@ -21,7 +21,7 @@
       dummy="true"
       v-if="!newDialog && !connectingFromDialogID"
       @click.native="$store.dispatch('dialogs/startNewConversation', dialogChain && dialogChain.slice(-1).pop())"
-      :parentNode="dialogChain.slice(-1).pop()">
+      :parentNode="dialogChain && dialogChain.length ? dialogChain.slice(-1).pop() : false">
       <IconButton name="plus" flat="flat"></IconButton>
       <template v-if="rootDialogs.length">continue conversation</template>
       <template v-else>start first conversation</template>

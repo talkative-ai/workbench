@@ -1,8 +1,8 @@
 <template>
   <div class="icon-button" :class="classList">
-      <fa-icon v-if="name" :name="name"></fa-icon>
-      <div class="label" v-if="label">{{ label }}</div>
-    </div>
+    <fa-icon v-if="name" :name="name"></fa-icon>
+    <div class="label" v-if="label">{{ label }}</div>
+  </div>
 </template>
 
 <script scoped>
@@ -11,6 +11,7 @@ import 'vue-awesome/icons/search';
 import 'vue-awesome/icons/plus';
 import 'vue-awesome/icons/times';
 import 'vue-awesome/icons/link';
+import 'vue-awesome/icons/trash';
 export default {
   name: 'icon-button',
   props: ['name', 'label', 'flat'],
