@@ -5,6 +5,7 @@ import ZoneCreate from '@/components/routes/ZoneCreate';
 import ActorHome from '@/components/routes/ActorHome';
 import ActorCreate from '@/components/routes/ActorCreate';
 import ActorDialog from '@/components/routes/ActorDialog';
+import DialogDeletion from '@/components/routes/DialogDeletion';
 import NotFound from '@/components/routes/NotFound';
 import ProjectCreate from '@/components/routes/ProjectCreate';
 import ProjectSelect from '@/components/routes/ProjectSelect';
@@ -109,6 +110,17 @@ const router = new Router({
         await store.dispatch('dialogs/cancelConnectDialog');
         await store.dispatch('dialogs/selectDialog');
         next();
+      }
+    },
+    {
+      path: '/actor/:id/conversations/delete',
+      name: 'DialogDeletion',
+      component: DialogDeletion,
+      meta: {
+        background: 'paper',
+        theme: 'light',
+        title: () => store.state.project.selectedProject.Title,
+        titleLink: () => router.push({ name: 'ProjectHome' })
       }
     },
     {

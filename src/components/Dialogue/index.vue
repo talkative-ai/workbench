@@ -37,15 +37,21 @@
             <h1 v-if="!isSelected">
               <IconButton name="link"></IconButton>preview connect</h1>
           </div>
-          <div class="cover" v-else @click="$emit('click', { dialogID: dialog.ID })" :class="{
-                selected: isSelected
-              }">
+          <div
+            class="cover"
+            v-else
+            @click="$emit('click', { dialogID: dialog.ID })"
+            :class="{
+              selected: isSelected
+            }">
             <h1 v-if="!isSelected">
               <IconButton name="search"></IconButton>&nbsp;select</h1>
           </div>
           <template v-if="connectingFromDialogID"></template>
           <template v-else>
-            <div class="edit-bar" :class="{
+            <div
+              v-if="!hideTools"
+              class="toolbox" :class="{
                   'with-error': dialogEditError
                 }">
               <div class="button-grid-small">
@@ -75,7 +81,7 @@
           </div>
           <div class="dialog-values">
             <div class="inner-values actor-vals" v-for="(sound, index) of dialog.AlwaysExec.PlaySounds" :key="`sound-${dialog.ID}-${index}`">"{{ sound.Val }}"</div>
-            <div class="actions" v-if="dialog.ChildDialogIDs && dialog.ChildDialogIDs.length">await response</div>
+            <div class="actions" v-if="childDialogIDs && childDialogIDs.length">await response</div>
             <div class="actions dialog-action" v-else :class="{ [dialogAction]: true }">{{ dialogActionFriendly }}</div>
           </div>
         </template>
@@ -108,7 +114,7 @@
                   <IconButton name="plus" :label="`${actor.Title} says`" @click.native="addPlaySound()"></IconButton>
                 </div>
               </div>
-              <div class="actions" v-if="dialog.ChildDialogIDs && dialog.ChildDialogIDs.length">await response</div>
+              <div class="actions" v-if="childDialogIDs && childDialogIDs.length">await response</div>
               <select class="actions dialog-action" v-else :class="{ [dialogAction]: true }" :value="dialogAction" @change="updateAction">
                 <option value="end-conversation">end conversation</option>
                 <option value="go-to-zone">go to zone</option>
@@ -121,7 +127,10 @@
               </select>
             </div>
           </div>
-          <div class="edit-bar" :class="{
+          <div
+            v-if="!hideTools"
+            class="toolbox"
+            :class="{
                 'with-error': dialogEditError
               }">
             <div class="button-grid-small">
@@ -135,29 +144,30 @@
     </div>
     <template v-if="recurse">
       <ChildConnector
-        v-if="dialog.ChildDialogIDs && dialog.ChildDialogIDs.length"
+        v-if="childDialogIDs && childDialogIDs.length"
         :width="`${calculateChildrenWidth()}px`"
         :height="`${tallest - height + 50}px`" />
-      <div class="child-dialogs" v-if="dialog.ChildDialogIDs && dialog.ChildDialogIDs.length">
-        <div v-for="(dialogID, idx) of dialog.ChildDialogIDs" :key="dialogID">
+      <div class="child-dialogs" v-if="childDialogIDs && childDialogIDs.length">
+        <div v-for="(dialogID, idx) of childDialogIDs" :key="dialogID">
           <Dialogue
             :actor="actor"
             :dialog="dialogs[dialogID]"
             :parentNode="dialog.ID"
             :recurse="false"
+            :filterChildren="filterChildren"
             @click="$emit('click-child', { dialogID, isChild: true })"
             @click-child="$emit('click-child', { dialogID, isChild: true })"></Dialogue>
         </div>
         <Dialogue
           dummy="true"
-          v-if="!newDialog && !connectingFromDialogID"
+          v-if="!newDialog && !connectingFromDialogID && !hideTools"
           @click.native="$store.dispatch('dialogs/startNewConversation', dialogChain.slice(-1).pop())"
           :parentNode="dialog.ID">
           <IconButton name="plus" flat="flat"></IconButton>continue conversation</Dialogue>
       </div>
       <Dialogue
         dummy="true"
-        v-else-if="!newDialog && !connectingFromDialogID"
+        v-else-if="!newDialog && !connectingFromDialogID && !hideTools"
         @click.native="$store.dispatch('dialogs/startNewConversation', dialogChain.slice(-1).pop())"
         :parentNode="dialog.ID">
         <IconButton name="plus" flat="flat"></IconButton>continue conversation</Dialogue>
@@ -182,7 +192,9 @@ export default {
     'isSelected',
     'tallest',
     'actor',
-    'dummy'
+    'dummy',
+    'filterChildren',
+    'hideTools'
   ],
   data() {
     return {
@@ -220,6 +232,12 @@ export default {
       },
       dialogEditError(state) {
         return state.dialogEditError[this.dialog.ID];
+      },
+      childDialogIDs(state) {
+        if (!this.filterChildren) {
+          return this.dialog.ChildDialogIDs;
+        }
+        return this.dialog.ChildDialogIDs.filter(this.filterChildren);
       }
     }),
     ...mapState('zones', {
@@ -254,9 +272,9 @@ export default {
       this.$store.dispatch('dialogs/beginConnectDialog', this.dialog.ID);
     },
     calculateChildrenWidth() {
-      if (!this.dialog.ChildDialogIDs) return 1;
+      if (!this.childDialogIDs) return 1;
       let newDialogOffset = this.newDialog || this.connectingFromDialogID ? 1 : 0;
-      return ((this.dialog.ChildDialogIDs.length - newDialogOffset) * 400);
+      return ((this.childDialogIDs.length - newDialogOffset) * 400);
     },
     beginEdit() {
       this.$store.dispatch('dialogs/editDialog', this.dialog.ID);
@@ -357,7 +375,7 @@ export default {
   bottom: -1px;
   left: -1px;
   z-index: 10;
-  .edit-bar {
+  .toolbox {
     opacity: 0;
   }
   &:hover {
@@ -373,12 +391,12 @@ export default {
         cursor: default;
       }
     }
-    .edit-bar {
+    .toolbox {
       opacity: 1;
     }
   }
 }
-.edit-bar {
+.toolbox {
   bottom: -31pt;
   position: absolute;
   left: 0;

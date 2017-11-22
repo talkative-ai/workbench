@@ -26,13 +26,12 @@ function validateDialog(dialog) {
 }
 
 function determineDeleteCandidates(nodeIDToDelete, map) {
-  let candidates = [];
-  let hasEdgeFromRoot = {};
+  let deletionCandidates = {};
 
   function edgesFromRoot(nodeID, track) {
-    hasEdgeFromRoot[nodeID] = (function() {
-      if (hasEdgeFromRoot[nodeID] != null) {
-        return hasEdgeFromRoot[nodeID];
+    deletionCandidates[nodeID] = !(function() {
+      if (deletionCandidates[nodeID] != null) {
+        return !deletionCandidates[nodeID];
       }
       if (track[nodeID]) {
         return false;
@@ -48,16 +47,15 @@ function determineDeleteCandidates(nodeIDToDelete, map) {
           return true;
         }
       }
-      hasEdgeFromRoot[nodeID] = false;
       return false;
     })();
 
-    return hasEdgeFromRoot[nodeID];
+    return !deletionCandidates[nodeID];
   }
 
   for (let id of map[nodeIDToDelete].ChildDialogIDs) {
     if (!edgesFromRoot(id, { [nodeIDToDelete]: true })) {
-      candidates.push(id);
+      deletionCandidates[id] = true;
     }
   }
 
@@ -68,14 +66,11 @@ function determineDeleteCandidates(nodeIDToDelete, map) {
     }
   }
 
-  for (let id of candidates) {
+  for (let id of Object.keys(deletionCandidates)) {
     recurseChildren(id, childID => edgesFromRoot(childID, { [id]: true }));
   }
 
-  return {
-    candidates,
-    hasEdgeFromRoot
-  };
+  return deletionCandidates;
 }
 
 const state = {
@@ -99,7 +94,8 @@ const state = {
   connectingToDialogID: false,
   isConversationCycle: false,
 
-  stagedForDeletion: null
+  stagedForDeletion: null,
+  hasEdgeFromRoot: {}
 };
 
 const getters = {
@@ -369,11 +365,11 @@ const actions = {
   },
 
   stageDeletion({ state, commit }, dialogID) {
-    let { candidates, hasEdgeFromRoot } = determineDeleteCandidates(dialogID, state.dialogMap);
+    let deletionCandidates = determineDeleteCandidates(dialogID, state.dialogMap);
+    deletionCandidates[dialogID] = true;
     commit('stageDelete', {
       dialogID,
-      candidates,
-      hasEdgeFromRoot
+      deletionCandidates
     });
   },
 
@@ -532,9 +528,9 @@ const mutations = {
     Vue.set(state, 'rootDialogs', rootDialogs);
   },
 
-  stageDelete(state, { dialogID, candidates, hasEdgeFromRoot }) {
-    Vue.set(state, 'hasEdgeFromRoot', hasEdgeFromRoot);
-    Vue.set(state, 'candidates', candidates);
+  stageDelete(state, { dialogID, deletionCandidates }) {
+    Vue.set(state, 'stagedForDeletion', dialogID);
+    Vue.set(state, 'deletionCandidates', deletionCandidates);
   }
 };
 
