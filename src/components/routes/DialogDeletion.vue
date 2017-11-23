@@ -139,6 +139,9 @@ export default {
             .pop()
         );
       }
+    },
+    filterChildren(id) {
+      return this.deletionCandidates[id];
     }
   }
 };

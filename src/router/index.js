@@ -106,6 +106,7 @@ const router = new Router({
       },
       async beforeEnter(to, from, next) {
         await store.dispatch('actors/selectActor', to.params.id);
+        await store.dispatch('dialogs/cancelDeletion');
         await store.dispatch('dialogs/cancelEditDialog');
         await store.dispatch('dialogs/cancelConnectDialog');
         await store.dispatch('dialogs/selectDialog');

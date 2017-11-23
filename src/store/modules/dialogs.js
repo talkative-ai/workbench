@@ -95,11 +95,28 @@ const state = {
   isConversationCycle: false,
 
   stagedForDeletion: null,
-  hasEdgeFromRoot: {}
+  hasEdgeFromRoot: {},
+  poppedValue: null
 };
 
 const getters = {
-  currentDialogChain: (state, getters, rootState) => rootState.master.selectedEntity.data ? state.dialogChain[rootState.master.selectedEntity.data.ID] : []
+  rootDialogs: (state) => {
+    if (state.stagedForDeletion) {
+      return [ state.stagedForDeletion ];
+    } else {
+      return state.rootDialogs;
+    }
+  },
+  selectedEntityID: (state, getters, rootState) => {
+    if (state.stagedForDeletion) {
+      return `deletion-${state.stagedForDeletion}`;
+    } else {
+      return rootState.master.selectedEntity.data ? rootState.master.selectedEntity.data.ID : null;
+    }
+  },
+  currentDialogChain: (state, getters, rootState) => {
+    return state.dialogChain[getters.selectedEntityID] || [];
+  }
 };
 
 const actions = {
@@ -166,20 +183,20 @@ const actions = {
     // and there is no default selected dialog
     // and there exist root dialogs
     if (!dialogID &&
-        !state.actorSelectedDialogID[rootState.master.selectedEntity.data.ID] &&
-        state.rootDialogs.length > 0) {
-      commit('setDialogSiblings', state.rootDialogs);
-      dispatch('setSelectedDialog', state.rootDialogs[0]);
-      dispatch('addDialogChain', state.rootDialogs[0]);
+        !state.actorSelectedDialogID[getters.selectedEntityID] &&
+        getters.rootDialogs.length > 0) {
+      commit('setDialogSiblings', getters.rootDialogs);
+      dispatch('setSelectedDialog', getters.rootDialogs[0]);
+      dispatch('addDialogChain', getters.rootDialogs[0]);
       commit('updateDialogChain', state.dialogChain);
       return;
       // Otherwise if no dialog is specified
       // and there is a default selected node
-    } else if (!dialogID && state.actorSelectedDialogID[rootState.master.selectedEntity.data.ID]) {
+    } else if (!dialogID && state.actorSelectedDialogID[getters.selectedEntityID]) {
       // If the dialogChain length is one, then this is a root dialog selected by default
       // Set the sibling dialogs accordingly
       if (getters.currentDialogChain.length === 1) {
-        commit('setDialogSiblings', state.rootDialogs);
+        commit('setDialogSiblings', getters.rootDialogs);
       } else {
         // Otherwise this isn't a root dialog selected
         // Therefore we get the siblings of the current dialog relative to the currently selected parent in the chain
@@ -188,7 +205,7 @@ const actions = {
         // In other words, a signle dialog can have multiple sibling sets depending on the selected dialog.
         commit('setDialogSiblings', state.dialogMap[getters.currentDialogChain.slice(-2, -1).pop()].ChildDialogIDs);
       }
-      dispatch('setSelectedDialog', state.actorSelectedDialogID[rootState.master.selectedEntity.data.ID]);
+      dispatch('setSelectedDialog', state.actorSelectedDialogID[getters.selectedEntityID]);
       return;
     } else if (!dialogID) {
       // Otherwise this is a no-op
@@ -205,7 +222,7 @@ const actions = {
 
       // Otherwise it's a sibling
     } else {
-      getters.currentDialogChain.pop();
+      commit('popDialogChain', getters.selectedEntityID);
       dispatch('addDialogChain', dialogID);
       commit('updateDialogChain', state.dialogChain);
     }
@@ -225,7 +242,7 @@ const actions = {
 
     if (index === 0) {
       dispatch('sliceChain', 1);
-      commit('setDialogSiblings', state.rootDialogs);
+      commit('setDialogSiblings', getters.rootDialogs);
       dispatch('setSelectedDialog', getters.currentDialogChain[0]);
       return;
     }
@@ -261,7 +278,7 @@ const actions = {
       if (state.newDialog) {
         p.then(result => {
           const newID = result[state.newDialog.CreateID].toString();
-          getters.currentDialogChain.pop();
+          commit('popDialogChain', getters.selectedEntityID);
           commit('updateDialogChain', state.dialogChain);
           commit('replaceNewDialog', result);
           commit('master/replaceNewDialog', state.dialogMap[newID], { root: true });
@@ -280,7 +297,7 @@ const actions = {
           dispatch('sliceChain', 0);
           dispatch('selectDialog');
         } else {
-          getters.currentDialogChain.pop();
+          commit('popDialogChain', getters.selectedEntityID);
           commit('updateDialogChain', state.dialogChain);
         }
       } else {
@@ -334,7 +351,7 @@ const actions = {
         state.dialogMap[oldID].ChildDialogIDs.pop();
         dispatch('selectChain', -2);
       }
-    } else {
+    } else if (state.connectingFromDialogID) {
       if (!keepConnection) {
         dispatch('selectChain', -1);
       }
@@ -346,7 +363,7 @@ const actions = {
       commit('connectingToDialogID', false);
       state.dialogMap[state.connectingFromDialogID].ChildDialogIDs.pop();
       if (getters.currentDialogChain.slice(-1).pop() !== state.connectingFromDialogID) {
-        getters.currentDialogChain.pop();
+        commit('popDialogChain', getters.selectedEntityID);
       }
       commit('isConversationCycle', false);
     }
@@ -458,7 +475,7 @@ const mutations = {
   },
 
   sliceChain(state, { actorID, index }) {
-    Vue.set(state.dialogChain, actorID, state.dialogChain[actorID].slice(0, index));
+    Vue.set(state.dialogChain, actorID, state.dialogChain[actorID] ? state.dialogChain[actorID].slice(0, index) : []);
   },
 
   setDialogSiblings(state, dialogs) {
@@ -524,6 +541,10 @@ const mutations = {
     state.dialogChain[actorID].push(dialogID);
   },
 
+  popDialogChain(state, actorID) {
+    state.poppedValue = state.dialogChain[actorID].pop();
+  },
+
   rootDialogs(state, rootDialogs) {
     Vue.set(state, 'rootDialogs', rootDialogs);
   },
@@ -531,6 +552,11 @@ const mutations = {
   stageDelete(state, { dialogID, deletionCandidates }) {
     Vue.set(state, 'stagedForDeletion', dialogID);
     Vue.set(state, 'deletionCandidates', deletionCandidates);
+  },
+
+  cancelStageDelete(state) {
+    Vue.set(state, 'deletionCandidates', {});
+    Vue.delete(state, 'stagedForDeletion');
   }
 };
 
