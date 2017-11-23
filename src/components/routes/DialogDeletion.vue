@@ -60,11 +60,19 @@ export default {
     ...mapState('dialogs', {
       rootDialogs: 'rootDialogs',
       dialogs: 'dialogMap',
-      dialogSiblings: 'dialogSiblings',
+      deletionCandidates: 'deletionCandidates',
+      dialogSiblings(state) {
+        let result = [];
+        for (let sibling of state.dialogSiblings) {
+          if (this.deletionCandidates[sibling]) {
+            result.push(sibling);
+          }
+        }
+        return result;
+      },
       actorSelectedDialogID(state) {
         return state.actorSelectedDialogID[this.$route.params.id];
-      },
-      deletionCandidates: 'deletionCandidates'
+      }
     }),
     ...mapGetters('dialogs', {
       dialogChain: 'currentDialogChain'
@@ -143,6 +151,7 @@ export default {
     },
     cancelDelete() {
       this.$store.dispatch('dialogs/cancelDeletion');
+      this.$store.dispatch('dialogs/selectDialog', { dialogID: this.dialogChain.slice(-1).pop() });
       this.$router.push({ name: 'ActorDialog', params: this.$route.params });
     }
   }

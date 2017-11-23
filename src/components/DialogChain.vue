@@ -8,6 +8,7 @@
         :dialog="dialogs[dialogID]"
         :recurse="false"
         :actor="actor"
+        :hideTools="hideTools"
         @click="$emit('select-dialog', idx)"
         :parentNode="idx > 0 ? dialogChain[idx-1] : false"
         :isSelected="actorSelectedDialogID == dialogID" />

@@ -379,8 +379,8 @@ const actions = {
     commit('setSelectedDialog', { actorID: rootState.master.selectedEntity.data.ID, dialogID });
   },
 
-  sliceChain({ rootState, commit }, index) {
-    commit('sliceChain', { actorID: rootState.master.selectedEntity.data.ID, index });
+  sliceChain({ getters, commit }, index) {
+    commit('sliceChain', { actorID: getters.selectedEntityID, index });
   },
 
   stageDeletion({ state, commit, dispatch, getters }, dialogID) {
@@ -554,12 +554,12 @@ const mutations = {
   },
 
   stageDelete(state, { dialogID, deletionCandidates }) {
+    Vue.set(state.dialogChain, `deletion-${dialogID}`, []);
     Vue.set(state, 'stagedForDeletion', dialogID);
     Vue.set(state, 'deletionCandidates', deletionCandidates);
   },
 
   cancelStageDelete(state) {
-    Vue.set(state.dialogChain, `deletion-${state.stagedForDeletion}`, []);
     Vue.set(state, 'deletionCandidates', {});
     Vue.delete(state, 'stagedForDeletion');
   }

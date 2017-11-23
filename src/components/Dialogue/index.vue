@@ -155,6 +155,7 @@
             :parentNode="dialog.ID"
             :recurse="false"
             :filterChildren="filterChildren"
+            :hideTools="hideTools"
             @click="$emit('click-child', { dialogID, isChild: true })"
             @click-child="$emit('click-child', { dialogID, isChild: true })"></Dialogue>
         </div>
