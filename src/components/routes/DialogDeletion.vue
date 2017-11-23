@@ -4,15 +4,13 @@
       <div class="flex-column">
         <DialogChain
           @select-dialog="clickChain($event)"
+          hideTools="true"
         />
         <w-button
           class="Headline"
           large="large"
-          @click.native="$router.push({
-            name: 'ActorHome',
-            params: { zoneid: $route.params.id }
-          })">
-          <span class="u-arrowWest"></span>Return</w-button>
+          @click.native="cancelDelete()">
+          <span class="u-arrowWest"></span>Cancel Delete</w-button>
         <div class="space"></div>
       </div>
       <div class="flex-column">
@@ -48,7 +46,7 @@ import { mapState, mapGetters } from 'vuex';
 import DialogChain from '@/components/DialogChain';
 
 export default {
-  name: 'ActorDialog',
+  name: 'DialogDeletion',
   components: {
     DialogChain
   },
@@ -142,6 +140,10 @@ export default {
     },
     filterChildren(id) {
       return this.deletionCandidates[id];
+    },
+    cancelDelete() {
+      this.$store.dispatch('dialogs/cancelDeletion');
+      this.$router.push({ name: 'ActorDialog', params: this.$route.params });
     }
   }
 };

@@ -273,7 +273,7 @@ export default {
     },
     calculateChildrenWidth() {
       if (!this.childDialogIDs) return 1;
-      let newDialogOffset = this.newDialog || this.connectingFromDialogID ? 1 : 0;
+      let newDialogOffset = this.newDialog || this.connectingFromDialogID || this.hideTools ? 1 : 0;
       return ((this.childDialogIDs.length - newDialogOffset) * 400);
     },
     beginEdit() {
@@ -281,6 +281,7 @@ export default {
     },
     stageDeleteDialog() {
       this.$store.dispatch('dialogs/stageDeletion', this.dialog.ID);
+      this.$router.push({ name: 'DialogDeletion', params: this.$route.params });
     },
     cancelEdit() {
       if (this.dialogEditingID === this.dialog.ID) {

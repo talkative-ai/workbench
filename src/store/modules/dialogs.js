@@ -59,10 +59,12 @@ function determineDeleteCandidates(nodeIDToDelete, map) {
     }
   }
 
-  function recurseChildren(dialog, fn) {
+  function recurseChildren(dialog, fn, track = {}) {
+    track[dialog] = true;
     for (let child of map[dialog].ChildDialogIDs) {
+      if (track[child]) continue;
       fn(child);
-      recurseChildren(child, fn);
+      recurseChildren(child, fn, track);
     }
   }
 
@@ -369,8 +371,8 @@ const actions = {
     }
   },
 
-  addDialogChain({ rootState, commit }, dialogID) {
-    commit('addDialogChain', { actorID: rootState.master.selectedEntity.data.ID, dialogID });
+  addDialogChain({ getters, commit }, dialogID) {
+    commit('addDialogChain', { actorID: getters.selectedEntityID, dialogID });
   },
 
   setSelectedDialog({ rootState, commit }, dialogID) {
@@ -381,13 +383,15 @@ const actions = {
     commit('sliceChain', { actorID: rootState.master.selectedEntity.data.ID, index });
   },
 
-  stageDeletion({ state, commit }, dialogID) {
+  stageDeletion({ state, commit, dispatch, getters }, dialogID) {
     let deletionCandidates = determineDeleteCandidates(dialogID, state.dialogMap);
     deletionCandidates[dialogID] = true;
+    commit('setDialogSiblings', [ dialogID ]);
     commit('stageDelete', {
       dialogID,
       deletionCandidates
     });
+    dispatch('selectDialog', { dialogID, isChild: false });
   },
 
   confirmDeletion({ state, commit }) {
@@ -555,6 +559,7 @@ const mutations = {
   },
 
   cancelStageDelete(state) {
+    Vue.set(state.dialogChain, `deletion-${state.stagedForDeletion}`, []);
     Vue.set(state, 'deletionCandidates', {});
     Vue.delete(state, 'stagedForDeletion');
   }

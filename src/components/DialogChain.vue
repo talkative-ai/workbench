@@ -12,14 +12,14 @@
         :parentNode="idx > 0 ? dialogChain[idx-1] : false"
         :isSelected="actorSelectedDialogID == dialogID" />
       <ChildConnector
-        v-if="!connectingFromDialogID || (connectingFromDialogID && idx < dialogChain.length-1)"
+        v-if="!hideTools && (!connectingFromDialogID || (connectingFromDialogID && idx < dialogChain.length-1))"
         width="0px"
         height="50px"
         :key="dialogID" />
     </template>
     <Dialogue
       dummy="true"
-      v-if="!newDialog && !connectingFromDialogID"
+      v-if="!hideTools && !newDialog && !connectingFromDialogID"
       @click.native="$store.dispatch('dialogs/startNewConversation', dialogChain && dialogChain.slice(-1).pop())"
       :parentNode="dialogChain && dialogChain.length ? dialogChain.slice(-1).pop() : false">
       <IconButton name="plus" flat="flat"></IconButton>
@@ -42,6 +42,7 @@ import ChildConnector from '@/components/Dialogue/ChildConnector';
 
 export default {
   name: 'DialogChain',
+  props: [ 'hideTools' ],
   components: {
     ChildConnector
   },
