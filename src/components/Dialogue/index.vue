@@ -58,7 +58,16 @@
                 <IconButton name="pencil" label="edit" @click.native="beginEdit()"></IconButton>
                 <IconButton name="link" label="connect" @click.native="beginConnect()"></IconButton>
                 <div class="hspacer" />
-                <IconButton name="trash" label="delete" @click.native="stageDeleteDialog()"></IconButton>
+                <IconButton
+                  class="warn-button"
+                  name="chain-broken"
+                  label="disconnect"
+                  @click.native="stageDeleteDialog()"></IconButton>
+                <IconButton
+                  class="warn-button"
+                  name="trash"
+                  label="delete"
+                  @click.native="stageDeleteDialog()"></IconButton>
               </div>
             </div>
           </template>

@@ -12,6 +12,9 @@ import 'vue-awesome/icons/plus';
 import 'vue-awesome/icons/times';
 import 'vue-awesome/icons/link';
 import 'vue-awesome/icons/trash';
+import 'vue-awesome/icons/exclamation-triangle';
+import 'vue-awesome/icons/chain-broken';
+
 export default {
   name: 'icon-button',
   props: ['name', 'label', 'flat'],
@@ -41,6 +44,13 @@ export default {
   cursor: pointer;
 }
 
+  .icon-button:hover {
+    .label {
+      max-width: 100px;
+      padding: 5pt;
+    }
+  }
+
 .flat {
   background-color: transparent;
   color: $purple;
@@ -48,8 +58,14 @@ export default {
 
 .label {
   font-weight: bold;
-  padding: 5pt;
   font-size: 1rem;
+  max-width: 0;
+  padding: 0;
+  overflow: hidden;
+  transition: all 0.25s;
+  text-align: left;
 }
-
+.warn-button {
+  background-color: $warn !important;
+}
 </style>

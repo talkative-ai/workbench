@@ -15,8 +15,9 @@
         <div class="space"></div>
       </div>
       <div class="flex-column">
-        <h1 class="left">Confirm dialog deletion</h1>
-        <h2>All of these dialogs will also be deleted</h2>
+        <h1 class="left warn"><fa-icon name="exclamation-triangle"></fa-icon> Confirm Delete</h1>
+        <h2 class="warn">
+        All of these conversations will be deleted. This action cannot be undone</h2>
         <hr>
         <div
           class="dialogs"
@@ -186,5 +187,8 @@ hr {
 }
 .space {
   height: 50pt;
+}
+.warn {
+  color: $warn;
 }
 </style>
