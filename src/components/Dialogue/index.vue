@@ -71,7 +71,7 @@
                   class="warn-button"
                   name="chain-broken"
                   label="disconnect"
-                  @click.native="stageDeleteDialog()"></IconButton>
+                  @click.native="beginDisconnect()"></IconButton>
                 <IconButton
                   shrinky="true"
                   class="warn-button"
@@ -180,14 +180,14 @@
         </div>
         <Dialogue
           dummy="true"
-          v-if="!newDialog && !connectingFromDialogID && !hideTools"
+          v-if="showNewDialog"
           @click.native="$store.dispatch('dialogs/startNewConversation', dialogChain.slice(-1).pop())"
           :parentNode="dialog.ID">
           <IconButton name="plus" flat="flat"></IconButton>continue conversation</Dialogue>
       </div>
       <Dialogue
         dummy="true"
-        v-else-if="!newDialog && !connectingFromDialogID && !hideTools"
+        v-else-if="showNewDialog"
         @click.native="$store.dispatch('dialogs/startNewConversation', dialogChain.slice(-1).pop())"
         :parentNode="dialog.ID">
         <IconButton name="plus" flat="flat"></IconButton>continue conversation</Dialogue>
@@ -258,7 +258,8 @@ export default {
           return this.dialog.ChildDialogIDs;
         }
         return this.dialog.ChildDialogIDs.filter(this.filterChildren);
-      }
+      },
+      disconnectingFromDialogID: 'disconnectingFromDialogID'
     }),
     ...mapState('zones', {
       zones: 'zoneMap'
@@ -266,6 +267,9 @@ export default {
     ...mapGetters('dialogs', {
       dialogChain: 'currentDialogChain'
     }),
+    showNewDialog() {
+      return !this.newDialog && !this.connectingFromDialogID && !this.hideTools && !this.disconnectingFromDialogID;
+    },
     isEditing() {
       return this.dialogEditingID === this.dialog.ID;
     },
@@ -291,9 +295,12 @@ export default {
       this.$emit('click', { dialogID: this.dialog.ID });
       this.$store.dispatch('dialogs/beginConnectDialog', this.dialog.ID);
     },
+    beginDisconnect() {
+      this.$store.dispatch('dialogs/beginDisconnectDialog', this.dialog.ID);
+    },
     calculateChildrenWidth() {
       if (!this.childDialogIDs) return 1;
-      let newDialogOffset = this.newDialog || this.connectingFromDialogID || this.hideTools ? 1 : 0;
+      let newDialogOffset = this.showNewDialog ? 0 : 1;
       return ((this.childDialogIDs.length - newDialogOffset) * 400);
     },
     beginEdit() {

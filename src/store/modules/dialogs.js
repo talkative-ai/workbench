@@ -98,7 +98,9 @@ const state = {
 
   stagedForDeletion: null,
   hasEdgeFromRoot: {},
-  poppedValue: null
+  poppedValue: null,
+
+  disconnectingFromDialogID: false
 };
 
 const getters = {
@@ -401,6 +403,14 @@ const actions = {
 
   cancelDeletion({ state, commit }) {
     commit('cancelStageDelete');
+  },
+
+  beginDisconnectDialog({ state, commit }, dialogID) {
+    commit('disconnectingFromDialogID', dialogID);
+  },
+
+  cancelDisconnectDialog({ state, commit }) {
+    commit('disconnectingFromDialogID', false);
   }
 
 };
@@ -562,6 +572,10 @@ const mutations = {
   cancelStageDelete(state) {
     Vue.set(state, 'deletionCandidates', {});
     Vue.delete(state, 'stagedForDeletion');
+  },
+
+  disconnectingFromDialogID(state, dialogID) {
+    Vue.set(state, 'disconnectingFromDialogID', dialogID);
   }
 };
 

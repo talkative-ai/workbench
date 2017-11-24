@@ -32,7 +32,7 @@
             @click-child="clickDialog($event)" />
           <Dialogue
             dummy="true"
-            v-if="!newDialog && !connectingFromDialogID"
+            v-if="showNewDialog"
             @click.native="topNewConversation()">
             <IconButton name="plus" flat="flat"></IconButton>{{ dialogChain.length == 1 ? 'new conversation' : 'continue conversation' }}</Dialogue>
         </div>
@@ -66,6 +66,7 @@ export default {
         return state.actorSelectedDialogID[this.$route.params.id];
       },
       connectingFromDialogID: 'connectingFromDialogID',
+      disconnectingFromDialogID: 'disconnectingFromDialogID',
       newDialog: 'newDialog'
     }),
     ...mapGetters('dialogs', {
@@ -75,7 +76,10 @@ export default {
       actor(state) {
         return state.actorMap[this.$route.params.id];
       }
-    })
+    }),
+    showNewDialog() {
+      return !this.newDialog && !this.connectingFromDialogID && !this.disconnectingFromDialogID;
+    }
   },
   methods: {
     changeNodeHeight(id, value) {
