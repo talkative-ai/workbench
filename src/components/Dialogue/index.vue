@@ -55,15 +55,25 @@
                   'with-error': dialogEditError
                 }">
               <div class="button-grid-small">
-                <IconButton name="pencil" label="edit" @click.native="beginEdit()"></IconButton>
-                <IconButton name="link" label="connect" @click.native="beginConnect()"></IconButton>
+                <IconButton
+                  shrinky="true"
+                  name="pencil"
+                  label="edit"
+                  @click.native="beginEdit()"></IconButton>
+                <IconButton
+                  shrinky="true"
+                  name="link"
+                  label="connect"
+                  @click.native="beginConnect()"></IconButton>
                 <div class="hspacer" />
                 <IconButton
+                  shrinky="true"
                   class="warn-button"
                   name="chain-broken"
                   label="disconnect"
                   @click.native="stageDeleteDialog()"></IconButton>
                 <IconButton
+                  shrinky="true"
                   class="warn-button"
                   name="trash"
                   label="delete"

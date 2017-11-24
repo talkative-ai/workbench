@@ -1,5 +1,10 @@
 <template>
-  <div class="icon-button" :class="classList">
+  <div :class="{
+    'icon-button': true,
+    flat: this.flat,
+    shrinky: this.shrinky,
+    normal: !this.shrinky
+  }">
     <fa-icon v-if="name" :name="name"></fa-icon>
     <div class="label" v-if="label">{{ label }}</div>
   </div>
@@ -17,16 +22,7 @@ import 'vue-awesome/icons/chain-broken';
 
 export default {
   name: 'icon-button',
-  props: ['name', 'label', 'flat'],
-  data() {
-    let classList = [];
-    if (this.flat) {
-      classList.push('flat');
-    }
-    return {
-      classList: classList.join(' ')
-    };
-  }
+  props: ['name', 'label', 'flat', 'shrinky']
 };
 </script>
 
@@ -44,23 +40,30 @@ export default {
   cursor: pointer;
 }
 
-  .icon-button:hover {
-    .label {
-      max-width: 100px;
-      padding: 5pt;
-    }
+.shrinky:hover {
+  .label {
+    max-width: 100px;
+    padding: 5pt;
   }
+}
 
 .flat {
   background-color: transparent;
   color: $purple;
 }
 
+.shrinky > .label {
+  max-width: 0;
+  padding: 0;
+}
+
+.normal > .label {
+  padding: 5pt;
+}
+
 .label {
   font-weight: bold;
   font-size: 1rem;
-  max-width: 0;
-  padding: 0;
   overflow: hidden;
   transition: all 0.25s;
   text-align: left;
