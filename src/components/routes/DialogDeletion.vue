@@ -5,6 +5,7 @@
         <DialogChain
           @select-dialog="clickChain($event)"
           hideTools="true"
+          :filterChildren="filterChildren"
         />
         <w-button
           class="Headline"

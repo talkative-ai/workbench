@@ -8,18 +8,20 @@
         :dialog="dialogs[dialogID]"
         :recurse="false"
         :actor="actor"
+        :filterChildren="filterChildren"
         :hideTools="hideTools"
         @click="$emit('select-dialog', idx)"
         :parentNode="idx > 0 ? dialogChain[idx-1] : false"
         :isSelected="actorSelectedDialogID == dialogID" />
       <ChildConnector
-        v-if="!hideTools && (!connectingFromDialogID || (connectingFromDialogID && idx < dialogChain.length-1))"
+        v-if="displayChildConnector(idx)"
         width="0px"
         height="50px"
         :key="dialogID" />
     </template>
     <Dialogue
       dummy="true"
+      :filterChildren="filterChildren"
       v-if="!hideTools && !newDialog && !connectingFromDialogID"
       @click.native="$store.dispatch('dialogs/startNewConversation', dialogChain && dialogChain.slice(-1).pop())"
       :parentNode="dialogChain && dialogChain.length ? dialogChain.slice(-1).pop() : false">
@@ -43,7 +45,7 @@ import ChildConnector from '@/components/Dialogue/ChildConnector';
 
 export default {
   name: 'DialogChain',
-  props: [ 'hideTools' ],
+  props: [ 'hideTools', 'filterChildren' ],
   components: {
     ChildConnector
   },
@@ -73,6 +75,11 @@ export default {
     },
     cancelConnect() {
       this.$store.dispatch('dialogs/cancelConnectDialog');
+    },
+    displayChildConnector(idx) {
+      return (!this.connectingFromDialogID || (this.connectingFromDialogID && idx < this.dialogChain.length - 1)) &&
+      (!this.newDialog || (this.newDialog && idx < this.dialogChain.length - 1)) &&
+      (!this.hideTools || (this.hideTools && idx < this.dialogChain.length - 1));
     }
   }
 };
