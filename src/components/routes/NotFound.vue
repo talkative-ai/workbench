@@ -3,11 +3,8 @@
     <sidebar></sidebar>
     <paper-text>
       <h1 class="Headline">
-        <span class="Headline--dark">Oops!</span>
+        <span class="Headline--dark">404. This is not the page you are looking for</span>
       </h1>
-      <grid gutter>
-        <span>Can't find that. Sorry!</span>
-      </grid>
     </paper-text>
   </grid>
 </template>
