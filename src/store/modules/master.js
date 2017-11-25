@@ -136,6 +136,28 @@ const mutations = {
         return;
       }
     }
+  },
+
+  stageDeleteDialog(state, dialogID) {
+    let index = state.selectedEntity.data.Dialogs.findIndex(dialog => {
+      return Number(dialog.ID) === Number(dialogID);
+    });
+    Vue.set(state.selectedEntity.data.Dialogs[index], 'PatchAction', PATCH_ACTION.DELETE);
+  },
+
+  stageDeleteDialogRelation(state, index) {
+    Vue.set(state.selectedEntity.data.DialogRelations[index], 'PatchAction', PATCH_ACTION.DELETE);
+  },
+
+  deleteDialog(state, dialogID) {
+    let index = state.selectedEntity.data.Dialogs.findIndex(dialog => {
+      return Number(dialog.ID) === Number(dialogID);
+    });
+    Vue.delete(state.selectedEntity.data.Dialogs, index);
+  },
+
+  deleteDialogRelation(state, index) {
+    Vue.delete(state.selectedEntity.data.DialogRelations, index);
   }
 };
 

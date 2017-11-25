@@ -3,6 +3,7 @@ import dcopy from 'deep-copy';
 
 import API from '@/api';
 import { defaultDialog } from '@/store/models';
+import { PATCH_ACTION } from '@/const';
 
 function validateDialog(dialog) {
   if (dialog.EntryInput.length <= 0) {
@@ -97,6 +98,7 @@ const state = {
   isConversationCycle: false,
 
   stagedForDeletion: null,
+  isDeleting: false,
   hasEdgeFromRoot: {},
   poppedValue: null,
 
@@ -105,14 +107,14 @@ const state = {
 
 const getters = {
   rootDialogs: (state) => {
-    if (state.stagedForDeletion) {
+    if (state.isDeleting) {
       return [ state.stagedForDeletion ];
     } else {
       return state.rootDialogs;
     }
   },
   selectedEntityID: (state, getters, rootState) => {
-    if (state.stagedForDeletion) {
+    if (state.isDeleting) {
       return `deletion-${state.stagedForDeletion}`;
     } else {
       return rootState.master.selectedEntity.data ? rootState.master.selectedEntity.data.ID : null;
@@ -120,13 +122,16 @@ const getters = {
   },
   currentDialogChain: (state, getters, rootState) => {
     return state.dialogChain[getters.selectedEntityID] || [];
+  },
+  selectedDialog: (state, getters, rootState) => {
+    return state.dialogMap[state.actorSelectedDialogID[rootState.master.selectedEntity.data.ID]];
   }
 };
 
 const actions = {
   updateDialog({ commit, rootState }) {
     if (rootState.master.selectedEntity.kind !== 'actor') return;
-    API.PutActor(rootState.master.selectedEntity.data);
+    return API.PutActor(rootState.master.selectedEntity.data);
   },
 
   selectDialogPreviewConnect({ state, rootState, dispatch, commit }, { dialogID, isChild = false, relativeParent }) {
@@ -258,6 +263,11 @@ const actions = {
     dispatch('sliceChain', index + 1);
   },
 
+  clearSelected({ state, dispatch, commit, getters }) {
+    dispatch('setSelectedDialog', null);
+    commit('clearSelected', getters.selectedEntityID);
+  },
+
   editDialog({ state, commit, dispatch }, dialogID) {
     dispatch('cancelEditDialog');
     commit('editDialog', dialogID);
@@ -336,12 +346,12 @@ const actions = {
     commit('connectingFromDialogID', dialogID);
   },
 
-  saveConnectDialog({ state, rootState, commit, dispatch }, dialogID) {
+  async saveConnectDialog({ state, rootState, commit, dispatch }, dialogID) {
     commit('master/stageCreateDialogRelation', {
       ChildNodeID: state.connectingToDialogID,
       ParentNodeID: state.connectingFromDialogID
     }, { root: true });
-    API.PutActor(rootState.master.selectedEntity.data);
+    await API.PutActor(rootState.master.selectedEntity.data);
     dispatch('cancelConnectDialog', true);
   },
 
@@ -396,9 +406,42 @@ const actions = {
     dispatch('selectDialog', { dialogID, isChild: false });
   },
 
-  confirmDeletion({ state, commit }) {
-    // Execute delete in API
-    // Delete from state
+  async confirmDeletion({ state, commit, dispatch, rootState }) {
+    Vue.set(state, 'isDeleting', false);
+
+    for (let dialogID in state.deletionCandidates) {
+      if (!state.deletionCandidates[dialogID]) continue;
+      commit('master/stageDeleteDialog', dialogID, { root: true });
+    }
+
+    await API.PutActor(rootState.master.selectedEntity.data);
+
+    dispatch('selectChain', -2);
+
+    if (state.dialogMap[state.stagedForDeletion].IsRoot) {
+      dispatch('setSelectedDialog', false);
+      for (let id in state.rootDialogs) {
+        if (Number(state.rootDialogs[id]) === Number(state.stagedForDeletion)) {
+          commit('spliceRoot', id);
+        }
+      }
+      commit('setDialogSiblings', state.rootDialogs);
+      if (state.rootDialogs.length === 0) {
+        dispatch('clearSelected');
+      } else {
+        for (let id of state.rootDialogs) {
+          if (Number(id) === Number(state.stagedForDeletion)) continue;
+          dispatch('selectDialog', { dialogID: id });
+        }
+      }
+    }
+
+    for (let dialogID in state.deletionCandidates) {
+      if (!state.deletionCandidates[dialogID]) continue;
+      commit('master/deleteDialog', dialogID, { root: true });
+      commit('removeDialogFromMap', dialogID);
+    }
+    commit('cancelStageDelete');
   },
 
   cancelDeletion({ state, commit }) {
@@ -458,6 +501,7 @@ const mutations = {
     // Update the dialog with the backend generated ID
     Vue.set(dialog, 'ID', newIDMap[state.newDialog.CreateID].toString());
     Vue.set(dialog, 'CreateID', null);
+    Vue.delete(dialog, 'PatchAction');
 
     // Add the official dialog to the map
     Vue.set(state.dialogMap, dialog.ID, dialog);
@@ -505,6 +549,7 @@ const mutations = {
   },
 
   newRootDialog(state, newDialog) {
+    Vue.set(newDialog, 'PatchAction', PATCH_ACTION.CREATE);
     Vue.set(state.dialogMap, newDialog.ID, newDialog);
     state.rootDialogs.push(newDialog.ID);
     Vue.set(state, 'newDialog', newDialog);
@@ -512,6 +557,7 @@ const mutations = {
 
   newChildDialog(state, { newDialog, parentID }) {
     Vue.set(newDialog, 'IsRoot', false);
+    Vue.set(newDialog, 'PatchAction', PATCH_ACTION.CREATE);
     Vue.set(state.dialogMap, newDialog.ID, newDialog);
     Vue.set(state.dialogMap[parentID], 'ChildDialogIDs', state.dialogMap[parentID].ChildDialogIDs || []);
     state.dialogMap[parentID].ChildDialogIDs.push(newDialog.ID);
@@ -564,18 +610,33 @@ const mutations = {
   },
 
   stageDelete(state, { dialogID, deletionCandidates }) {
+    Vue.set(state, 'isDeleting', true);
     Vue.set(state.dialogChain, `deletion-${dialogID}`, []);
     Vue.set(state, 'stagedForDeletion', dialogID);
     Vue.set(state, 'deletionCandidates', deletionCandidates);
   },
 
   cancelStageDelete(state) {
+    Vue.set(state, 'isDeleting', false);
     Vue.set(state, 'deletionCandidates', {});
     Vue.delete(state, 'stagedForDeletion');
   },
 
   disconnectingFromDialogID(state, dialogID) {
     Vue.set(state, 'disconnectingFromDialogID', dialogID);
+  },
+
+  clearSelected(state, selectedEntityID) {
+    state.dialogChain[selectedEntityID].splice(0, state.dialogChain[selectedEntityID].length);
+    state.dialogSiblings.splice(0, state.dialogSiblings.length);
+  },
+
+  spliceRoot(state, id) {
+    state.rootDialogs.splice(id, 1);
+  },
+
+  removeDialogFromMap(state, dialogID) {
+    Vue.delete(state.dialogMap, dialogID);
   }
 };
 

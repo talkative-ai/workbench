@@ -54,12 +54,12 @@
         <w-button
           class="Headline"
           large="large"
-          @click.native="cancelDisconnectDialog()">
+          @click.native="cancelConnect()">
           Cancel</w-button>
         <w-button
           class="Headline"
           large="large"
-          @click.native="saveConnectDialog()">
+          @click.native="saveConnect()">
           Save connect</w-button>
       </template>
       <template v-else>

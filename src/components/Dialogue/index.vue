@@ -75,6 +75,7 @@
                   @click.native="beginConnect()"></IconButton>
                 <div class="hspacer" />
                 <IconButton
+                  v-if="childDialogIDs.length"
                   shrinky="true"
                   class="danger"
                   name="chain-broken"
@@ -304,6 +305,7 @@ export default {
       this.$store.dispatch('dialogs/beginConnectDialog', this.dialog.ID);
     },
     beginDisconnect() {
+      this.$emit('click', { dialogID: this.dialog.ID });
       this.$store.dispatch('dialogs/beginDisconnectDialog', this.dialog.ID);
     },
     calculateChildrenWidth() {
@@ -315,6 +317,7 @@ export default {
       this.$store.dispatch('dialogs/editDialog', this.dialog.ID);
     },
     stageDeleteDialog() {
+      this.$emit('click', { dialogID: this.dialog.ID });
       this.$store.dispatch('dialogs/stageDeletion', this.dialog.ID);
       this.$router.push({ name: 'DialogDeletion', params: this.$route.params });
     },

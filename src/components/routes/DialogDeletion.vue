@@ -43,7 +43,7 @@
       <w-button
         class="Headline danger"
         large="large"
-        @click.native="cancelDelete()">
+        @click.native="confirmDeleteDialog()">
         Confirm Delete</w-button>
     </div>
   </div>
@@ -162,6 +162,11 @@ export default {
       this.$store.dispatch('dialogs/cancelDeletion');
       this.$store.dispatch('dialogs/selectDialog', { dialogID: this.dialogChain.slice(-1).pop() });
       this.$router.push({ name: 'ActorDialog', params: this.$route.params });
+    },
+    confirmDeleteDialog() {
+      this.$store.dispatch('dialogs/confirmDeletion').then(() => {
+        this.$router.push({ name: 'ActorDialog', params: this.$route.params });
+      });
     }
   }
 };
