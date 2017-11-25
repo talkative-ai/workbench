@@ -164,6 +164,7 @@ const router = new Router({
         title: () => store.state.project.selectedProject.Title
       },
       beforeEnter(to, from, next) {
+        API.GetProjectMetadata({ ID: store.state.project.selectedProject.ID });
         store.commit('master/clearSelectedEntity');
         next();
       }

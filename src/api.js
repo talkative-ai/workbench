@@ -15,6 +15,11 @@ export default {
     .then(result => result.json());
   },
 
+  GetProjectMetadata({ ID }) {
+    return aumFetch('GET', `project/${ID}/metadata`)
+    .then(result => result.json());
+  },
+
   GetActor({ ID }) {
     return aumFetch('GET', `actor/${ID}`)
     .then(result => result.json());

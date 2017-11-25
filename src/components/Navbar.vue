@@ -1,24 +1,25 @@
 <template>
   <header class="Navbar Block Grid Grid--withGutter" id="Header">
     <column menu="menu">
-      <div class="Navbar-cell Text--sm Pointer" v-if="user" @click="$router.push({ name: 'ProjectSelect' })">
-        <icon name="author" width="32" height="32"></icon>{{ user.GivenName }}</div>
+      <w-button
+        lightOutline="lightOutline"
+        class="Navbar-cell Text--sm Pointer" v-if="user" @click.native="$router.push({ name: 'ProjectSelect' })">
+        <icon name="author" width="32" height="32"></icon>{{ user.GivenName }}
+      </w-button>
     </column>
     <column main="main">
       <div class="Navbar-cell Text--sm u-flexJustifyBetween">
-        <div class="Paper-align" :class="{
-            'u-clickable': $route.meta.titleLink
-          }" @click="$route.meta.titleLink ? $route.meta.titleLink() : () => {}">{{ title }}
+        <w-button
+          v-if="$route.meta.titleLink"
+          lightOutline="lightOutline"
+          class="u-clickable" @click.native="$route.meta.titleLink ? $route.meta.titleLink() : () => {}">
           <icon class="u-marginL1" name="settings" width="24" height="24"></icon>
+          {{ title }}
+        </w-button>
+        <div v-else>
+          {{ title }}
         </div>
-        <w-button lightOutline="lightOutline" v-if="user && project" @click.native="publish()">
-          <icon name="google-home" width="32" height="32"></icon>Publish to the Multiverse</w-button>
       </div>
-    </column>
-    <column logo="logo">
-      <a class="Navbar-cell Navbar-logo" href="#">
-        <icon name="logo" width="32" height="32"></icon>
-      </a>
     </column>
   </header>
 </template>
@@ -39,11 +40,6 @@ export default {
     title() {
       if (typeof this.$route.meta.title === 'function') return this.$route.meta.title();
       return this.$route.meta.title;
-    }
-  },
-  methods: {
-    publish() {
-      this.$store.dispatch('project/publish');
     }
   }
 };

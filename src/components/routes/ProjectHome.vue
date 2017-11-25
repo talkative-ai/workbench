@@ -4,6 +4,10 @@
     <paper>
       <paper-text>
         <h1 class="Headline">Dashboard</h1>
+        <w-button lightOutline="lightOutline" @click.native="publish()">
+          <icon name="logo" width="32" height="32"></icon>
+          Publish to the Multiverse
+        </w-button>
       </paper-text>
     </paper>
   </grid>
@@ -11,7 +15,12 @@
 
 <script>
 export default {
-  name: 'ProjectHome'
+  name: 'ProjectHome',
+  methods: {
+    publish() {
+      this.$store.dispatch('project/publish');
+    }
+  }
 };
 </script>
 
