@@ -61,6 +61,7 @@
           @click.native="cancelConnect()">
           Cancel</w-button>
         <w-button
+          v-if="connectingToDialogID"
           class="Headline"
           large="large"
           @click.native="saveConnect()">
@@ -107,6 +108,7 @@ export default {
         return state.actorSelectedDialogID[this.$route.params.id];
       },
       connectingFromDialogID: 'connectingFromDialogID',
+      connectingToDialogID: 'connectingToDialogID',
       disconnectingFromDialogID: 'disconnectingFromDialogID',
       disconnectingToDialogID: 'disconnectingToDialogID',
       newDialog: 'newDialog'

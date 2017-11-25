@@ -12,7 +12,7 @@
       <div class="flex-column">
         <h1 class="left danger"><fa-icon name="exclamation-triangle"></fa-icon> Confirm Delete</h1>
         <h2 class="danger">
-        All of these conversations will be deleted. This action cannot be undone</h2>
+        All of these dialogs and conversations will be deleted. This action cannot be undone</h2>
         <hr>
         <div
           class="dialogs"
