@@ -75,7 +75,7 @@
                   @click.native="beginConnect()"></IconButton>
                 <div class="hspacer" />
                 <IconButton
-                  v-if="childDialogIDs.length"
+                  v-if="disconnectChildDialogIDs.length"
                   shrinky="true"
                   class="danger"
                   name="chain-broken"
@@ -183,6 +183,7 @@
             :parentNode="dialog.ID"
             :recurse="false"
             :filterChildren="filterChildren"
+            :filterDisconnectChildren="filterDisconnectChildren"
             :hideTools="hideTools"
             @click="$emit('click-child', { dialogID, isChild: true })"
             @click-child="$emit('click-child', { dialogID, isChild: true })"></Dialogue>
@@ -223,6 +224,7 @@ export default {
     'actor',
     'dummy',
     'filterChildren',
+    'filterDisconnectChildren',
     'hideTools'
   ],
   data() {
@@ -256,19 +258,28 @@ export default {
       connectingToDialogID: 'connectingToDialogID',
       newDialog: 'newDialog',
       dialogEditingID: 'dialogEditingID',
+      disconnectingFromDialogID: 'disconnectingFromDialogID',
       dialogEditingCopy(state) {
         return state.dialogEditingCopy[this.dialog.ID];
       },
       dialogEditError(state) {
         return state.dialogEditError[this.dialog.ID];
       },
+      disconnectChildDialogIDs(state) {
+        if (!this.filterDisconnectChildren) {
+          return this.dialog.ChildDialogIDs;
+        }
+        return this.dialog.ChildDialogIDs.filter(this.filterDisconnectChildren);
+      },
       childDialogIDs(state) {
+        if (this.disconnectingFromDialogID) {
+          return this.disconnectChildDialogIDs;
+        }
         if (!this.filterChildren) {
           return this.dialog.ChildDialogIDs;
         }
         return this.dialog.ChildDialogIDs.filter(this.filterChildren);
-      },
-      disconnectingFromDialogID: 'disconnectingFromDialogID'
+      }
     }),
     ...mapState('zones', {
       zones: 'zoneMap'

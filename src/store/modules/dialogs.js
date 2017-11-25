@@ -351,6 +351,12 @@ const actions = {
       ChildNodeID: state.connectingToDialogID,
       ParentNodeID: state.connectingFromDialogID
     }, { root: true });
+    commit('addChildDialogID', {
+      childID: state.connectingToDialogID,
+      parentID: state.connectingFromDialogID });
+    commit('addParentDialogID', {
+      childID: state.connectingToDialogID,
+      parentID: state.connectingFromDialogID });
     await API.PutActor(rootState.master.selectedEntity.data);
     dispatch('cancelConnectDialog', true);
   },
@@ -637,6 +643,14 @@ const mutations = {
 
   removeDialogFromMap(state, dialogID) {
     Vue.delete(state.dialogMap, dialogID);
+  },
+
+  addChildDialogID(state, { childID, parentID }) {
+    state.dialogMap[parentID].ChildDialogIDs.push(childID);
+  },
+
+  addParentDialogID(state, { childID, parentID }) {
+    state.dialogMap[childID].ParentDialogIDs.push(parentID);
   }
 };
 

@@ -2,8 +2,10 @@
   <div id="RouteActorDialog">
     <div class="flex">
       <div
-        class="flex-column"
-        v-if="!disconnectingFromDialogID">
+        :class="{
+          'flex-column': true,
+          'disabled': disconnectingFromDialogID
+        }">
         <DialogChain
           @select-dialog="clickChain($event)"
         />
@@ -28,6 +30,7 @@
             :hideTools="disconnectingFromDialogID"
             @change-height="changeNodeHeight(dialogID, $event)"
             @click="clickDialog($event)"
+            :filterDisconnectChildren="filterDisconnectChildren"
             @click-child="clickDialog($event)" />
           <Dialogue
             dummy="true"
@@ -189,6 +192,9 @@ export default {
     },
     cancelConnect() {
       this.$store.dispatch('dialogs/cancelConnectDialog');
+    },
+    filterDisconnectChildren(id) {
+      if (this.dialogs[id].ParentDialogIDs.length > 1) return true;
     }
   }
 };
@@ -224,5 +230,12 @@ hr {
 }
 .action-buttons {
   padding-top: 100pt;
+}
+.disabled {
+  filter: grayscale(100%) contrast(15%) brightness(150%);
+  pointer-events: none;
+  * {
+    box-shadow: none;
+  }
 }
 </style>
