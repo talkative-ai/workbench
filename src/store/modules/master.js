@@ -145,7 +145,10 @@ const mutations = {
     Vue.set(state.selectedEntity.data.Dialogs[index], 'PatchAction', PATCH_ACTION.DELETE);
   },
 
-  stageDeleteDialogRelation(state, index) {
+  stageDeleteDialogRelation(state, { childID, parentID }) {
+    let index = state.selectedEntity.data.DialogRelations.findIndex(rel => {
+      return Number(rel.ChildNodeID) === Number(childID) && Number(rel.ParentNodeID) === Number(parentID);
+    });
     Vue.set(state.selectedEntity.data.DialogRelations[index], 'PatchAction', PATCH_ACTION.DELETE);
   },
 
@@ -156,7 +159,10 @@ const mutations = {
     Vue.delete(state.selectedEntity.data.Dialogs, index);
   },
 
-  deleteDialogRelation(state, index) {
+  deleteDialogRelation(state, { childID, parentID }) {
+    let index = state.selectedEntity.data.DialogRelations.findIndex(rel => {
+      return Number(rel.ChildNodeID) === Number(childID) && Number(rel.ParentNodeID) === Number(parentID);
+    });
     Vue.delete(state.selectedEntity.data.DialogRelations, index);
   }
 };

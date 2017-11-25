@@ -102,7 +102,8 @@ const state = {
   hasEdgeFromRoot: {},
   poppedValue: null,
 
-  disconnectingFromDialogID: false
+  disconnectingFromDialogID: false,
+  disconnectingToDialogID: false
 };
 
 const getters = {
@@ -351,9 +352,6 @@ const actions = {
       ChildNodeID: state.connectingToDialogID,
       ParentNodeID: state.connectingFromDialogID
     }, { root: true });
-    commit('addChildDialogID', {
-      childID: state.connectingToDialogID,
-      parentID: state.connectingFromDialogID });
     commit('addParentDialogID', {
       childID: state.connectingToDialogID,
       parentID: state.connectingFromDialogID });
@@ -460,6 +458,28 @@ const actions = {
 
   cancelDisconnectDialog({ state, commit }) {
     commit('disconnectingFromDialogID', false);
+    commit('disconnectingToDialogID', false);
+  },
+
+  stageDisconnectDialog({ state, commit }, dialogID) {
+    commit('disconnectingToDialogID', dialogID);
+  },
+
+  async confirmDisconnectDialog({ state, commit, rootState, dispatch }) {
+    commit('master/stageDeleteDialogRelation', {
+      childID: state.disconnectingToDialogID,
+      parentID: state.disconnectingFromDialogID }, { root: true });
+    await API.PutActor(rootState.master.selectedEntity.data);
+    commit('removeParentDialogID', {
+      childID: state.disconnectingToDialogID,
+      parentID: state.disconnectingFromDialogID });
+    commit('removeChildDialogID', {
+      childID: state.disconnectingToDialogID,
+      parentID: state.disconnectingFromDialogID });
+    commit('master/deleteDialogRelation', {
+      childID: state.disconnectingToDialogID,
+      parentID: state.disconnectingFromDialogID }, { root: true });
+    dispatch('cancelDisconnectDialog');
   }
 
 };
@@ -632,6 +652,10 @@ const mutations = {
     Vue.set(state, 'disconnectingFromDialogID', dialogID);
   },
 
+  disconnectingToDialogID(state, dialogID) {
+    Vue.set(state, 'disconnectingToDialogID', dialogID);
+  },
+
   clearSelected(state, selectedEntityID) {
     state.dialogChain[selectedEntityID].splice(0, state.dialogChain[selectedEntityID].length);
     state.dialogSiblings.splice(0, state.dialogSiblings.length);
@@ -647,6 +671,16 @@ const mutations = {
 
   addChildDialogID(state, { childID, parentID }) {
     state.dialogMap[parentID].ChildDialogIDs.push(childID);
+  },
+
+  removeChildDialogID(state, { childID, parentID }) {
+    let index = state.dialogMap[parentID].ChildDialogIDs.findIndex(v => Number(v) === Number(childID));
+    state.dialogMap[parentID].ChildDialogIDs.splice(index, 1);
+  },
+
+  removeParentDialogID(state, { childID, parentID }) {
+    let index = state.dialogMap[parentID].ParentDialogIDs.findIndex(v => Number(v) === Number(childID));
+    state.dialogMap[childID].ParentDialogIDs.splice(index, 1);
   },
 
   addParentDialogID(state, { childID, parentID }) {

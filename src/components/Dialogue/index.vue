@@ -32,6 +32,9 @@
           <div class="cover opaque" v-else-if="connectingToDialogID === dialog.ID">
             <h1>previewing connect</h1>
           </div>
+          <div class="cover opaque" v-else-if="disconnectingToDialogID === dialog.ID">
+            <h1 class="danger">disconnecting</h1>
+          </div>
           <div class="cover" v-else-if="connectingFromDialogID && !dialogs[connectingFromDialogID].ChildDialogIDs.includes(dialog.ID)"
             @click="$emit('click', { dialogID: dialog.ID })">
             <h1 v-if="!isSelected">
@@ -75,7 +78,7 @@
                   @click.native="beginConnect()"></IconButton>
                 <div class="hspacer" />
                 <IconButton
-                  v-if="disconnectChildDialogIDs.length"
+                  v-if="disconnectChildDialogIDs().length"
                   shrinky="true"
                   class="danger"
                   name="chain-broken"
@@ -259,26 +262,12 @@ export default {
       newDialog: 'newDialog',
       dialogEditingID: 'dialogEditingID',
       disconnectingFromDialogID: 'disconnectingFromDialogID',
+      disconnectingToDialogID: 'disconnectingToDialogID',
       dialogEditingCopy(state) {
         return state.dialogEditingCopy[this.dialog.ID];
       },
       dialogEditError(state) {
         return state.dialogEditError[this.dialog.ID];
-      },
-      disconnectChildDialogIDs(state) {
-        if (!this.filterDisconnectChildren) {
-          return this.dialog.ChildDialogIDs;
-        }
-        return this.dialog.ChildDialogIDs.filter(this.filterDisconnectChildren);
-      },
-      childDialogIDs(state) {
-        if (this.disconnectingFromDialogID) {
-          return this.disconnectChildDialogIDs;
-        }
-        if (!this.filterChildren) {
-          return this.dialog.ChildDialogIDs;
-        }
-        return this.dialog.ChildDialogIDs.filter(this.filterChildren);
       }
     }),
     ...mapState('zones', {
@@ -308,6 +297,15 @@ export default {
     },
     dialogActionFriendly() {
       return this.dialogAction.replace(/-/g, ' ');
+    },
+    childDialogIDs() {
+      if (this.disconnectingFromDialogID) {
+        return this.disconnectChildDialogIDs();
+      }
+      if (!this.filterChildren) {
+        return this.dialog.ChildDialogIDs;
+      }
+      return this.dialog.ChildDialogIDs.filter(this.filterChildren);
     }
   },
   methods: {
@@ -360,6 +358,12 @@ export default {
     },
     updateZone(action) {
       this.$store.commit('dialogs/setDialogZone', { dialogID: this.dialog.ID, zoneID: action.target.value });
+    },
+    disconnectChildDialogIDs() {
+      if (!this.filterDisconnectChildren) {
+        return [];
+      }
+      return this.dialog.ChildDialogIDs.filter(id => this.filterDisconnectChildren(id));
     }
   }
 };

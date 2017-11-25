@@ -48,9 +48,10 @@
           @click.native="cancelDisconnectDialog()">
           Cancel</w-button>
         <w-button
+          v-if="disconnectingToDialogID"
           class="Headline danger"
           large="large"
-          @click.native="cancelDisconnectDialog()">
+          @click.native="confirmDisconnectDialog()">
           Confirm disconnect</w-button>
       </template>
       <template v-else-if="connectingFromDialogID">
@@ -107,6 +108,7 @@ export default {
       },
       connectingFromDialogID: 'connectingFromDialogID',
       disconnectingFromDialogID: 'disconnectingFromDialogID',
+      disconnectingToDialogID: 'disconnectingToDialogID',
       newDialog: 'newDialog'
     }),
     ...mapGetters('dialogs', {
@@ -131,6 +133,14 @@ export default {
       }
     },
     clickDialog(event) {
+      if (this.disconnectingFromDialogID) {
+        if (Number(this.disconnectingFromDialogID) === Number(event.dialogID)) {
+          return;
+        }
+        this.$store.dispatch('dialogs/stageDisconnectDialog', event.dialogID);
+        return;
+      }
+
       this.$store.dispatch('dialogs/cancelEditDialog');
       if (this.connectingFromDialogID) {
         this.$store.dispatch('dialogs/selectDialogPreviewConnect', event);
@@ -187,6 +197,9 @@ export default {
     cancelDisconnectDialog() {
       this.$store.dispatch('dialogs/cancelDisconnectDialog');
     },
+    confirmDisconnectDialog() {
+      this.$store.dispatch('dialogs/confirmDisconnectDialog');
+    },
     saveConnect() {
       this.$store.dispatch('dialogs/saveConnectDialog');
     },
@@ -194,7 +207,8 @@ export default {
       this.$store.dispatch('dialogs/cancelConnectDialog');
     },
     filterDisconnectChildren(id) {
-      if (this.dialogs[id].ParentDialogIDs.length > 1) return true;
+      let dialog = this.dialogs[id];
+      if (dialog.ParentDialogIDs.length > 1) return true;
     }
   }
 };
