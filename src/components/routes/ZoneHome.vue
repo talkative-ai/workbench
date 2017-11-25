@@ -95,7 +95,7 @@ export default {
       this.$store.dispatch('zones/saveIntroMessage', { ZoneID: this.$route.params.id, message: this.newIntroMessage });
     },
     revertIntroMessage() {
-      this.newIntroMessage = this.$store.state.zones.zoneMap[this.$route.params.id].Triggers[TRIGGER_TYPES.InitializeZone].AlwaysExec.PlaySounds[0].Val;
+      this.newIntroMessage = this.zone.Triggers[TRIGGER_TYPES.InitializeZone].AlwaysExec.PlaySounds[0].Val;
     },
     removeIntroMessage() {
       this.$store.dispatch('zones/removeIntroMessage', this.$route.params.id);

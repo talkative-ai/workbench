@@ -46,7 +46,7 @@ const actions = {
     let zone = state.zoneMap[ZoneID];
     if (!zone.Triggers[TRIGGER_TYPES.InitializeZone] ||
       zone.Triggers[TRIGGER_TYPES.InitializeZone].PATCH_ACTION === PATCH_ACTION.CREATE) return;
-    commit('stageDeleteZoneIntroTrigger', ZoneID);
+    commit('stageDeleteZoneIntroTrigger', { ZoneID });
     API.PatchProject({
       Zones: [{
         ID: zone.ID,
