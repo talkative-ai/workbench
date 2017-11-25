@@ -420,7 +420,9 @@ const actions = {
 
     await API.PutActor(rootState.master.selectedEntity.data);
 
-    dispatch('selectChain', -2);
+    while (state.dialogChain.length > 1 && state.stagedForDeletion[state.dialogChain.slice(-1).pop()]) {
+      dispatch('selectChain', -2);
+    }
 
     if (state.dialogMap[state.stagedForDeletion].IsRoot) {
       dispatch('setSelectedDialog', false);
