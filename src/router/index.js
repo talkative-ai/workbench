@@ -13,6 +13,7 @@ import ProjectHome from '@/components/routes/ProjectHome';
 import SignIn from '@/components/routes/SignIn';
 import store, { initializer } from '../store';
 import API from '../api';
+import { PUBLISH_STATUS } from '@/const';
 
 Vue.use(Router);
 
@@ -163,8 +164,11 @@ const router = new Router({
         theme: 'light',
         title: () => store.state.project.selectedProject.Title
       },
-      beforeEnter(to, from, next) {
-        API.GetProjectMetadata({ ID: store.state.project.selectedProject.ID });
+      async beforeEnter(to, from, next) {
+        await store.dispatch('project/getMetadata');
+        if (store.state.project.metadata.Status === PUBLISH_STATUS.Publishing) {
+          store.dispatch('project/beginCheckStatus');
+        }
         store.commit('master/clearSelectedEntity');
         next();
       }

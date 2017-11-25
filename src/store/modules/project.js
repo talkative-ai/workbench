@@ -2,10 +2,14 @@ import Vue from 'vue';
 
 import router from '@/router';
 import API from '@/api';
+import { PUBLISH_STATUS } from '@/const';
 
 const state = {
   initializing: true,
-  selectedProject: null
+  selectedProject: null,
+  metadata: {},
+  checkingStatus: false,
+  checkStatusTimeout: null
 };
 
 const actions = {
@@ -49,8 +53,35 @@ const actions = {
       .then(res => dispatch('setProject', res));
   },
 
-  publish({ commit, state }) {
+  publish({ commit, state, dispatch }) {
     API.Publish();
+    commit('metadataSetPublishing');
+    dispatch('beginCheckStatus');
+  },
+
+  getMetadata({ commit, state }) {
+    return API.GetProjectMetadata({ ID: state.selectedProject.ID })
+    .then(metadata => {
+      commit('metadata', metadata);
+    });
+  },
+
+  beginCheckStatus({ state, commit, dispatch }) {
+    let timeout = setTimeout(() => {
+      return API.GetProjectMetadata({ ID: state.selectedProject.ID })
+      .then(metadata => {
+        if (metadata.ProjectStatus === PUBLISH_STATUS.Publishing && state.checkingStatus) {
+          dispatch('beginCheckStatus');
+        } else {
+          commit('metadata', metadata);
+        }
+      });
+    }, 1000);
+    commit('updateCheckStatus', timeout);
+  },
+
+  cancelCheckStatus({ status, commit }) {
+    commit('cancelCheckStatus');
   }
 
 };
@@ -83,6 +114,25 @@ const mutations = {
 
   addZone(state, zone) {
     state.selectedProject.Zones.push(zone);
+  },
+
+  metadata(state, metadata) {
+    Vue.set(state, 'metadata', metadata);
+  },
+
+  metadataSetPublishing(state) {
+    Vue.set(state.metadata, 'Status', PUBLISH_STATUS.Publishing);
+  },
+
+  updateCheckStatus(state, timeout) {
+    Vue.set(state, 'checkingStatus', true);
+    Vue.set(state, 'checkStatusTimeout', timeout);
+  },
+
+  cancelCheckStatus(state) {
+    Vue.set(state, 'checkingStatus', false);
+    clearTimeout(state.checkStatusTimeout);
+    Vue.set(state, 'checkStatusTimeout', null);
   }
 };
 

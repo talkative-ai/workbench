@@ -125,7 +125,7 @@ const getters = {
     return state.dialogChain[getters.selectedEntityID] || [];
   },
   selectedDialog: (state, getters, rootState) => {
-    return state.dialogMap[state.actorSelectedDialogID[rootState.master.selectedEntity.data.ID]];
+    return state.dialogMap[state.actorSelectedDialogID[getters.selectedEntityID]];
   }
 };
 
