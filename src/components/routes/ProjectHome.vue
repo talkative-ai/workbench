@@ -7,12 +7,16 @@
       </paper-text>
       <div class="Grid-cell">
         <div class="Paper-text">
-          <w-button lightOutline="lightOutline" @click.native="publish()">
+          <w-button
+            :disabled="metadata.Status == PUBLISH_STATUS.Publishing"
+            lightOutline="lightOutline" @click.native="publish()">
             <icon name="logo" width="32" height="32"></icon>
             Publish to the Multiverse
           </w-button>
+          <h2 v-if="metadata.Status == PUBLISH_STATUS.NotPublished">Never before published!</h2>
           <h2 v-if="metadata.Status == PUBLISH_STATUS.Published">Last time published: {{ lastTimePublished }}</h2>
           <h2 v-if="metadata.Status == PUBLISH_STATUS.Publishing">Publishing project...</h2>
+          <h2 v-if="metadata.Status == PUBLISH_STATUS.Problem">Sorry, there was a problem publishing. Please contact support.</h2>
         </div>
       </div>
     </paper>
