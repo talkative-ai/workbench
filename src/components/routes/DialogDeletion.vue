@@ -7,16 +7,11 @@
           hideTools="true"
           :filterChildren="filterChildren"
         />
-        <w-button
-          class="Headline"
-          large="large"
-          @click.native="cancelDelete()">
-          <span class="u-arrowWest"></span>Cancel Delete</w-button>
         <div class="space"></div>
       </div>
       <div class="flex-column">
-        <h1 class="left warn"><fa-icon name="exclamation-triangle"></fa-icon> Confirm Delete</h1>
-        <h2 class="warn">
+        <h1 class="left danger"><fa-icon name="exclamation-triangle"></fa-icon> Confirm Delete</h1>
+        <h2 class="danger">
         All of these conversations will be deleted. This action cannot be undone</h2>
         <hr>
         <div
@@ -38,6 +33,18 @@
             @click-child="clickDialog($event)" />
         </div>
       </div>
+    </div>
+    <div class="action-buttons button-grid">
+      <w-button
+        class="Headline"
+        large="large"
+        @click.native="cancelDelete()">
+        Cancel</w-button>
+      <w-button
+        class="Headline danger"
+        large="large"
+        @click.native="cancelDelete()">
+        Confirm Delete</w-button>
     </div>
   </div>
 </template>
@@ -188,7 +195,7 @@ hr {
 .space {
   height: 50pt;
 }
-.warn {
-  color: $warn;
+.action-buttons {
+  padding-top: 100pt;
 }
 </style>

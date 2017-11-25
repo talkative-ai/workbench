@@ -22,20 +22,13 @@
     <Dialogue
       dummy="true"
       :filterChildren="filterChildren"
-      v-if="!hideTools && !newDialog && !connectingFromDialogID"
+      v-if="showNewDialog"
       @click.native="$store.dispatch('dialogs/startNewConversation', dialogChain && dialogChain.slice(-1).pop())"
       :parentNode="dialogChain && dialogChain.length ? dialogChain.slice(-1).pop() : false">
       <IconButton name="plus" flat="flat"></IconButton>
       <template v-if="rootDialogs.length">continue conversation</template>
       <template v-else>start first conversation</template>
     </Dialogue>
-    <div v-if="connectingFromDialogID">
-      <hr>
-      <div class="button-grid">
-        <w-button @click.native="saveConnect">Connect</w-button>
-        <w-button @click.native="cancelConnect">Cancel</w-button>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -58,6 +51,7 @@ export default {
         return state.actorSelectedDialogID[this.$route.params.id];
       },
       connectingFromDialogID: 'connectingFromDialogID',
+      disconnectingFromDialogID: 'disconnectingFromDialogID',
       newDialog: 'newDialog'
     }),
     ...mapGetters('dialogs', {
@@ -67,19 +61,15 @@ export default {
       actor(state) {
         return state.actorMap[this.$route.params.id];
       }
-    })
+    }),
+    showNewDialog() {
+      return !this.newDialog && !this.connectingFromDialogID && !this.hideTools && !this.disconnectingFromDialogID;
+    }
   },
   methods: {
-    saveConnect() {
-      this.$store.dispatch('dialogs/saveConnectDialog');
-    },
-    cancelConnect() {
-      this.$store.dispatch('dialogs/cancelConnectDialog');
-    },
     displayChildConnector(idx) {
-      return (!this.connectingFromDialogID || (this.connectingFromDialogID && idx < this.dialogChain.length - 1)) &&
-      (!this.newDialog || (this.newDialog && idx < this.dialogChain.length - 1)) &&
-      (!this.hideTools || (this.hideTools && idx < this.dialogChain.length - 1));
+      if (idx < this.dialogChain.length - 1) return true;
+      return this.showNewDialog;
     }
   }
 };

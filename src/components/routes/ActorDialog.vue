@@ -1,19 +1,17 @@
 <template>
   <div id="RouteActorDialog">
     <div class="flex">
-      <div class="flex-column">
+      <div
+        class="flex-column"
+        v-if="!disconnectingFromDialogID">
         <DialogChain
           @select-dialog="clickChain($event)"
         />
-        <w-button
-          class="Headline"
-          large="large"
-          @click.native="$router.push({ name: 'ActorHome', params: { zoneid: $route.params.id } })">
-          <span class="u-arrowWest"></span>Return</w-button>
         <div class="space"></div>
       </div>
       <div class="flex-column">
         <h1 class="left">Dialogues with {{ actor.Title }}</h1>
+        <h2 v-if="disconnectingFromDialogID" class="left danger">Disconnect dialog</h2>
         <hr>
         <div
           class="dialogs"
@@ -27,6 +25,7 @@
             :isSelected="actorSelectedDialogID == dialogID"
             :tallest="tallest"
             :actor="actor"
+            :hideTools="disconnectingFromDialogID"
             @change-height="changeNodeHeight(dialogID, $event)"
             @click="clickDialog($event)"
             @click-child="clickDialog($event)" />
@@ -37,6 +36,39 @@
             <IconButton name="plus" flat="flat"></IconButton>{{ dialogChain.length == 1 ? 'new conversation' : 'continue conversation' }}</Dialogue>
         </div>
       </div>
+    </div>
+    <div class="action-buttons button-grid">
+      <template v-if="disconnectingFromDialogID">
+        <w-button
+          class="Headline"
+          large="large"
+          @click.native="cancelDisconnectDialog()">
+          Cancel</w-button>
+        <w-button
+          class="Headline danger"
+          large="large"
+          @click.native="cancelDisconnectDialog()">
+          Confirm disconnect</w-button>
+      </template>
+      <template v-else-if="connectingFromDialogID">
+        <w-button
+          class="Headline"
+          large="large"
+          @click.native="cancelDisconnectDialog()">
+          Cancel</w-button>
+        <w-button
+          class="Headline"
+          large="large"
+          @click.native="saveConnectDialog()">
+          Save connect</w-button>
+      </template>
+      <template v-else>
+        <w-button
+          class="Headline"
+          large="large"
+          @click.native="$router.push({ name: 'ActorHome', params: { zoneid: $route.params.id } })">
+          <span class="u-arrowWest"></span>Return</w-button>
+      </template>
     </div>
   </div>
 </template>
@@ -61,7 +93,12 @@ export default {
     ...mapState('dialogs', {
       rootDialogs: 'rootDialogs',
       dialogs: 'dialogMap',
-      dialogSiblings: 'dialogSiblings',
+      dialogSiblings(state) {
+        if (state.disconnectingFromDialogID) {
+          return [ state.disconnectingFromDialogID ];
+        }
+        return state.dialogSiblings;
+      },
       actorSelectedDialogID(state) {
         return state.actorSelectedDialogID[this.$route.params.id];
       },
@@ -143,6 +180,15 @@ export default {
             .pop()
         );
       }
+    },
+    cancelDisconnectDialog() {
+      this.$store.dispatch('dialogs/cancelDisconnectDialog');
+    },
+    saveConnect() {
+      this.$store.dispatch('dialogs/saveConnectDialog');
+    },
+    cancelConnect() {
+      this.$store.dispatch('dialogs/cancelConnectDialog');
     }
   }
 };
@@ -175,5 +221,8 @@ hr {
 }
 .space {
   height: 50pt;
+}
+.action-buttons {
+  padding-top: 100pt;
 }
 </style>

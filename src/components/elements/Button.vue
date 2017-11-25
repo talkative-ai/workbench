@@ -93,6 +93,7 @@ export default {
     }
   }
 
+
   &.outline--light {
     background-color: transparent;
     box-shadow: inset 0 0 0 1px;
@@ -114,7 +115,14 @@ export default {
     }
   }
 
-
+  &.danger {
+    background-color: $danger;
+    &:active {
+      box-shadow: inset 0 0 0 1px currentColor, inset 0 0 8px color($danger blackness(20%));
+      background-color: white !important;
+      color: $danger !important;
+    }
+  }
 
 
 

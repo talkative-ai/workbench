@@ -116,4 +116,14 @@ input, select, textarea {
 .flex-column {
   flex-direction: column;
 }
+h1 {
+  &.danger {
+    color: $danger !important;
+  }
+}
+h2 {
+  &.danger {
+    color: $danger !important;
+  }
+}
 </style>

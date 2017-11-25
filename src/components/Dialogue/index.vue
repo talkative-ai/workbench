@@ -44,8 +44,16 @@
             :class="{
               selected: isSelected
             }">
-            <h1 v-if="!isSelected">
-              <IconButton name="search"></IconButton>&nbsp;select</h1>
+            <template v-if="!isSelected">
+              <h1 class="danger" v-if="disconnectingFromDialogID">
+                <IconButton class="danger" name="chain-broken"></IconButton>
+                &nbsp;disconnect
+              </h1>
+              <h1 v-else>
+                <IconButton name="search"></IconButton>
+                &nbsp;select
+              </h1>
+            </template>
           </div>
           <template v-if="connectingFromDialogID"></template>
           <template v-else>
@@ -68,13 +76,13 @@
                 <div class="hspacer" />
                 <IconButton
                   shrinky="true"
-                  class="warn-button"
+                  class="danger"
                   name="chain-broken"
                   label="disconnect"
                   @click.native="beginDisconnect()"></IconButton>
                 <IconButton
                   shrinky="true"
-                  class="warn-button"
+                  class="danger"
                   name="trash"
                   label="delete"
                   @click.native="stageDeleteDialog()"></IconButton>

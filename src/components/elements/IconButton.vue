@@ -68,7 +68,7 @@ export default {
   transition: all 0.25s;
   text-align: left;
 }
-.warn-button {
-  background-color: $warn !important;
+.danger {
+  background-color: $danger !important;
 }
 </style>
