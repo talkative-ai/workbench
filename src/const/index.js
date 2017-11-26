@@ -1,6 +1,7 @@
 export const PATCH_ACTION = {
   CREATE: 0,
-  DELETE: 1
+  DELETE: 1,
+  UPDATE: 2
 };
 
 export const TRIGGER_TYPES = {

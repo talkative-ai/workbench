@@ -154,6 +154,7 @@ const mutations = {
 
   introMessage(state, { ZoneID, message }) {
     Vue.set(state.zoneMap[ZoneID].Triggers[TRIGGER_TYPES.InitializeZone].AlwaysExec.PlaySounds[0], 'Val', message);
+    Vue.set(state.zoneMap[ZoneID].Triggers[TRIGGER_TYPES.InitializeZone], 'PatchAction', PATCH_ACTION.UPDATE);
   },
 
   lastViewedZone(state, id) {

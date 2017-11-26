@@ -130,6 +130,7 @@ const mutations = {
   },
 
   overwriteDialog(state, dialog) {
+    Vue.set(dialog, 'PatchAction', PATCH_ACTION.UPDATE);
     for (let i = 0; i < state.selectedEntity.data.Dialogs.length; i++) {
       if (state.selectedEntity.data.Dialogs[i].ID === dialog.ID) {
         state.selectedEntity.data.Dialogs.splice(i, 1, dialog);

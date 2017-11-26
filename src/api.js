@@ -43,7 +43,7 @@ export default {
         r.ParentNodeID = Number(r.ParentNodeID);
       }
     }
-    return aumFetch('PUT', `actor/${actor.ID}`, actor)
+    return aumFetch('PATCH', `actor/${actor.ID}`, actor)
     .then(result => {
       for (const d of actor.Dialogs || []) {
         if (!d.ID) continue;

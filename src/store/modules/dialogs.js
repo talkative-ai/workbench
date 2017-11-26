@@ -275,33 +275,35 @@ const actions = {
   },
 
   saveEditDialog({ state, rootState, commit, dispatch, getters }, dialogID) {
-    if (state.dialogEditingID === dialogID) {
-      let error = validateDialog(state.dialogEditingCopy[dialogID]);
-      if (error) {
-        commit('saveEditDialogError', { dialogID, error });
-        return;
-      }
-      if (state.newDialog && state.newDialog.ID === dialogID) {
-        commit('newDialog', dcopy(state.dialogEditingCopy[dialogID]));
-        delete state.newDialog.ID;
-        commit('master/stageCreateNewDialog', state.newDialog, { root: true });
-      } else {
-        commit('master/overwriteDialog', state.dialogEditingCopy[dialogID], { root: true });
-      }
-      commit('saveEditDialog', dialogID);
-      let p = API.PutActor(rootState.master.selectedEntity.data);
-      if (state.newDialog) {
-        p.then(result => {
-          const newID = result[state.newDialog.CreateID].toString();
-          commit('popDialogChain', getters.selectedEntityID);
-          commit('updateDialogChain', state.dialogChain);
-          commit('replaceNewDialog', result);
-          commit('master/replaceNewDialog', state.dialogMap[newID], { root: true });
-          dispatch('selectDialog', { dialogID: newID, isChild: !state.dialogMap[newID].IsRoot });
-        });
-      }
-      return p;
+    if (state.dialogEditingID !== dialogID) {
+      return;
     }
+
+    let error = validateDialog(state.dialogEditingCopy[dialogID]);
+    if (error) {
+      commit('saveEditDialogError', { dialogID, error });
+      return;
+    }
+    if (state.newDialog && state.newDialog.ID === dialogID) {
+      commit('newDialog', dcopy(state.dialogEditingCopy[dialogID]));
+      delete state.newDialog.ID;
+      commit('master/stageCreateNewDialog', state.newDialog, { root: true });
+    } else {
+      commit('master/overwriteDialog', state.dialogEditingCopy[dialogID], { root: true });
+    }
+    commit('saveEditDialog', dialogID);
+    let p = API.PutActor(rootState.master.selectedEntity.data);
+    if (state.newDialog) {
+      p.then(result => {
+        const newID = result[state.newDialog.CreateID].toString();
+        commit('popDialogChain', getters.selectedEntityID);
+        commit('updateDialogChain', state.dialogChain);
+        commit('replaceNewDialog', result);
+        commit('master/replaceNewDialog', state.dialogMap[newID], { root: true });
+        dispatch('selectDialog', { dialogID: newID, isChild: !state.dialogMap[newID].IsRoot });
+      });
+    }
+    return p;
   },
 
   cancelEditDialog({ state, commit, dispatch, getters }) {
