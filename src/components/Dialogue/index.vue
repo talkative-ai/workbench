@@ -359,7 +359,7 @@ export default {
     },
     addPlaySound() {
       this.dialogEditingCopy.AlwaysExec.PlaySounds.push({
-        SoundType: 1,
+        SoundType: 0,
         Val: ''
       });
     },
@@ -411,6 +411,7 @@ export default {
 }
 .entry, .inner-values {
   display: flex;
+  word-break: break-word;
 }
 .ai-wrap {
   margin: 10pt 0;

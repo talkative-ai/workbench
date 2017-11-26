@@ -1,5 +1,5 @@
 <template>
-  <div class="chain">
+  <div ref="chain" class="chain">
     <h1>Preview Conversation</h1>
     <hr>
     <template v-for="(dialogID, idx) of dialogChain">
@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import Vue from 'vue';
 import { mapState, mapGetters } from 'vuex';
 import ChildConnector from '@/components/Dialogue/ChildConnector';
 
@@ -67,6 +68,15 @@ export default {
       return !this.newDialog && !this.connectingFromDialogID && !this.hideTools && !this.disconnectingFromDialogID;
     }
   },
+  watch: {
+    dialogChain(newVal, oldVal) {
+      if (newVal.length >= oldVal.length) {
+        Vue.nextTick(() => {
+          this.$refs.chain.scrollTop = this.$refs.chain.scrollHeight;
+        });
+      }
+    }
+  },
   methods: {
     displayChildConnector(idx) {
       if (idx < this.dialogChain.length - 1) return true;
@@ -83,5 +93,9 @@ h1 {
   &.left {
     text-align: left;
   }
+}
+.chain {
+  max-height: 85vh;
+  overflow-y: scroll;
 }
 </style>
