@@ -385,7 +385,6 @@ export default {
       event.preventDefault();
       this.addEntryInput();
       Vue.nextTick(() => {
-        console.log(id);
         document.getElementById(id).focus();
       });
     },
@@ -393,7 +392,6 @@ export default {
       event.preventDefault();
       this.addPlaySound();
       Vue.nextTick(() => {
-        console.log(id);
         document.getElementById(id).focus();
       });
     }
