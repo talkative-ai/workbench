@@ -410,7 +410,7 @@ const actions = {
     dispatch('selectDialog', { dialogID, isChild: false });
   },
 
-  async confirmDeletion({ state, commit, dispatch, rootState }) {
+  async confirmDeletion({ state, commit, dispatch, getters, rootState }) {
     Vue.set(state, 'isDeleting', false);
 
     for (let dialogID in state.deletionCandidates) {
@@ -420,7 +420,7 @@ const actions = {
 
     await API.PutActor(rootState.master.selectedEntity.data);
 
-    while (state.dialogChain.length > 1 && state.stagedForDeletion[state.dialogChain.slice(-1).pop()]) {
+    while (getters.currentDialogChain.length > 1 && state.deletionCandidates[getters.currentDialogChain.slice(-1).pop()]) {
       dispatch('selectChain', -2);
     }
 
