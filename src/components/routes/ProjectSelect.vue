@@ -15,6 +15,9 @@
 
 <script>
 import { mapState } from 'vuex';
+import store from '@/store';
+import API from '@/api';
+import router from '@/router';
 
 export default {
   data() {
@@ -42,6 +45,16 @@ export default {
     createProject() {
       this.$router.push({ name: 'ProjectCreate' });
     }
+  },
+  beforeCreate() {
+    store.dispatch('resetState', { keepAuth: true });
+    return API.GetProjects()
+    .then(result => {
+      store.commit('master/projectsList', result);
+      if (!result.length) {
+        router.push({ name: 'ProjectCreate' });
+      }
+    });
   }
 };
 </script>

@@ -11,7 +11,7 @@
         @click.native="removeActor(actor.ID)">
         <fa-icon name="times"></fa-icon>Remove from zone</w-button>
       <w-button @click.native="selectActor(actor.ID)">
-        <fa-icon name="pencil"></fa-icon>Edit</w-button>
+        <fa-icon name="comments"></fa-icon>Conversations</w-button>
     </div>
   </div>
 </template>
@@ -24,7 +24,7 @@ export default {
     selectActor(ID) {
       this.$store.dispatch('actors/selectActor', ID)
       .then(() => {
-        this.$router.push({ name: 'ActorHome', params: { id: ID } });
+        this.$router.push({ name: 'ActorDialog', params: { id: ID } });
       });
     },
     removeActor(ID) {

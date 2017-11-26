@@ -45,7 +45,6 @@ const actions = {
         commit('zones/addActor', { ZoneID: Actor.ZoneID, ActorID: Actor.ID }, { root: true });
         commit('addToZone', { ZoneID: Actor.ZoneID, ActorID: Actor.ID });
       }
-      dispatch('master/selectEntity', { kind: 'actor', data: Actor, navigate: true }, { root: true });
       return Actor;
     });
   },
@@ -92,7 +91,6 @@ const actions = {
       dispatch('master/selectEntity', { kind: 'actor', data: actor }, { root: true });
     });
   }
-
 };
 
 const mutations = {

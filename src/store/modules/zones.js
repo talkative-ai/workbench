@@ -8,7 +8,8 @@ import { defaultZone, defaultActionSet } from '@/store/models';
 
 const state = {
   zoneMap: {},
-  zoneActors: {}
+  zoneActors: {},
+  lastViewedZone: null
 };
 
 const actions = {
@@ -93,8 +94,13 @@ const actions = {
     return API.GetZone(zone)
     .then(zone => {
       commit('updateZone', zone);
+      commit('lastViewedZone', zone.ID);
       dispatch('master/selectEntity', { kind: 'zone', data: zone }, { root: true });
     });
+  },
+
+  lastViewedZone({ commit }, id) {
+    commit('lastViewedZone', id);
   }
 };
 
@@ -148,6 +154,10 @@ const mutations = {
 
   introMessage(state, { ZoneID, message }) {
     Vue.set(state.zoneMap[ZoneID].Triggers[TRIGGER_TYPES.InitializeZone].AlwaysExec.PlaySounds[0], 'Val', message);
+  },
+
+  lastViewedZone(state, id) {
+    Vue.set(state, 'lastViewedZone', id);
   }
 };
 

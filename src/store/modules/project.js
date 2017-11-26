@@ -12,6 +12,12 @@ const state = {
   checkStatusTimeout: null
 };
 
+const getters = {
+  selectedProjectTitle(state) {
+    return state.selectedProject ? state.selectedProject.Title : '';
+  }
+};
+
 const actions = {
 
   selectProject({ dispatch, commit, state }, p) {
@@ -139,6 +145,7 @@ const mutations = {
 export default {
   namespaced: true,
   state,
+  getters,
   actions,
   mutations
 };

@@ -1,11 +1,18 @@
 <template>
-  <header class="Navbar Block Grid Grid--withGutter" id="Header">
+  <header v-if="user" class="Navbar Block Grid Grid--withGutter" id="Header">
     <column menu="menu">
       <w-button
+        v-if="!$route.meta.outsideProject"
         lightOutline="lightOutline"
-        class="Navbar-cell Text--sm Pointer" v-if="user" @click.native="$router.push({ name: 'ProjectSelect' })">
+        class="Navbar-cell Text--sm Pointer" @click.native="$router.push({ name: 'ProjectSelect' })">
         <icon name="author" width="32" height="32"></icon>{{ user.GivenName }}
       </w-button>
+      <div
+        v-else
+        class="Navbar-cell">
+        <icon name="author" width="32" height="32"></icon>
+        {{ user.GivenName }}
+      </div>
     </column>
     <column main="main">
       <div class="Navbar-cell Text--sm u-flexJustifyBetween">
@@ -16,9 +23,6 @@
           <icon class="u-marginL1" name="settings" width="24" height="24"></icon>
           {{ title }}
         </w-button>
-        <div v-else>
-          {{ title }}
-        </div>
       </div>
     </column>
   </header>

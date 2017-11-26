@@ -1,5 +1,9 @@
 <template>
   <grid gutter id="RouteProjectCreate">
+    <header class="Navbar Block Grid Grid--withGutter" id="Header">
+      <column menu="menu">
+      </column>
+    </header>
     <paper>
       <paper-text>
         <h1 class="Headline">
@@ -8,13 +12,19 @@
         <form class="Form" @submit.prevent="createProject()" :disabled="isDisabled()">
           <input class="Headline u-size1of2 u-marginR3" placeholder="Add name" v-model="project.Title" required="required" />
           <div class="error" v-if="createError">{{ createError }}</div>
-          <div class="input-hint">Must be 3 - 255 characters long, with no special characters like !@#$%^&*()
-            <br/>You can change this later. Other people will see this name when you publish!</div>
-          <br/>
+          <div class="input-hint">
+            <ul>
+              <li>Minimum 3 characters</li>
+              <li>Maximum 255 characters</li>
+              <li>No special characters like !@#$%^&*()</li>
+            </ul>
+            <br>
+            Other people will see this name when you publish!</div>
+          <br>
           <w-button outline="outline">Begin
             <span class="u-arrowEast"></span>
           </w-button>
-          <w-button outline="outline" @click.native="$router.push({ name: 'ProjectHome' })">Cancel
+          <w-button v-if="projectsList.length" outline="outline" @click.native="$router.push({ name: 'ProjectHome' })">Cancel
             <span class="u-arrowEast"></span>
           </w-button>
         </form>
@@ -24,6 +34,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 export default {
   name: 'ProjectCreate',
   data() {
@@ -64,6 +75,11 @@ export default {
         return true;
       }
     }
+  },
+  computed: {
+    ...mapState('master', {
+      projectsList: 'projectsList'
+    })
   }
 };
 </script>

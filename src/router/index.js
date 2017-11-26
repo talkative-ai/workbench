@@ -12,7 +12,6 @@ import ProjectSelect from '@/components/routes/ProjectSelect';
 import ProjectHome from '@/components/routes/ProjectHome';
 import SignIn from '@/components/routes/SignIn';
 import store, { initializer } from '../store';
-import API from '../api';
 import { PUBLISH_STATUS } from '@/const';
 
 Vue.use(Router);
@@ -27,17 +26,8 @@ const router = new Router({
       meta: {
         background: 'paper',
         theme: 'light',
-        title: 'Your projects'
-      },
-      beforeEnter(to, from, next) {
-        API.GetProjects()
-        .then(result => {
-          store.commit('master/projectsList', result);
-          if (!result.length) {
-            return next({ name: 'ProjectCreate' });
-          }
-          return next();
-        });
+        title: 'Your projects',
+        outsideProject: true
       }
     },
     {
@@ -57,12 +47,8 @@ const router = new Router({
       meta: {
         background: 'clouds',
         theme: 'light',
-        title: 'Create a new project'
-      },
-      beforeEnter(to, from, next) {
-        store.dispatch('resetState', { keepAuth: true }).then(() => {
-          return next();
-        });
+        title: 'Create a new project',
+        outsideProject: true
       }
     },
     {
@@ -73,7 +59,7 @@ const router = new Router({
       meta: {
         background: 'paper',
         theme: 'light',
-        title: () => store.state.project.selectedProject.Title,
+        title: () => store.getters['project/selectedProjectTitle'],
         titleLink: () => router.push({ name: 'ProjectHome' })
       }
     },
@@ -84,7 +70,7 @@ const router = new Router({
       meta: {
         background: 'paper',
         theme: 'light',
-        title: () => store.state.project.selectedProject.Title,
+        title: () => store.getters['project/selectedProjectTitle'],
         titleLink: () => router.push({ name: 'ProjectHome' })
       },
       beforeEnter(to, from, next) {
@@ -102,7 +88,7 @@ const router = new Router({
       meta: {
         background: 'paper',
         theme: 'light',
-        title: () => store.state.project.selectedProject.Title,
+        title: () => store.getters['project/selectedProjectTitle'],
         titleLink: () => router.push({ name: 'ProjectHome' })
       },
       async beforeEnter(to, from, next) {
@@ -121,7 +107,7 @@ const router = new Router({
       meta: {
         background: 'paper',
         theme: 'light',
-        title: () => store.state.project.selectedProject.Title,
+        title: () => store.getters['project/selectedProjectTitle'],
         titleLink: () => router.push({ name: 'ProjectHome' })
       }
     },
@@ -132,7 +118,7 @@ const router = new Router({
       meta: {
         background: 'paper',
         theme: 'light',
-        title: () => store.state.project.selectedProject.Title,
+        title: () => store.getters['project/selectedProjectTitle'],
         titleLink: () => router.push({ name: 'ProjectHome' })
       },
       beforeEnter(to, from, next) {
@@ -147,12 +133,12 @@ const router = new Router({
       meta: {
         background: 'paper',
         theme: 'light',
-        title: () => store.state.project.selectedProject.Title,
+        title: () => store.getters['project/selectedProjectTitle'],
         titleLink: () => router.push({ name: 'ProjectHome' })
       },
-      beforeEnter(to, from, next) {
-        store.dispatch('zones/selectZone', to.params.id)
-        .then(() => next());
+      async beforeEnter(to, from, next) {
+        await store.dispatch('zones/selectZone', to.params.id);
+        next();
       }
     },
     {
@@ -162,7 +148,7 @@ const router = new Router({
       meta: {
         background: 'paper',
         theme: 'light',
-        title: () => store.state.project.selectedProject.Title
+        title: () => store.getters['project/selectedProjectTitle']
       },
       async beforeEnter(to, from, next) {
         await store.dispatch('project/getMetadata');

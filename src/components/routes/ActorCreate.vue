@@ -56,7 +56,10 @@ export default {
       if (this.zoneid) {
         this.actor.ZoneID = this.zoneid;
       }
-      this.$store.dispatch('actors/createActor', this.actor);
+      this.$store.dispatch('actors/createActor', this.actor)
+      .then(() => {
+        this.$router.push({ name: 'ZoneHome', params: { id: this.zoneid } });
+      });
     }
   }
 };

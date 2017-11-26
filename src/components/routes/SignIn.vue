@@ -3,7 +3,14 @@
     <column menu="menu">&nbsp;</column>
     <paper>
       <paper-text>
-        <g-signin-button class="Headline Button large" :params="googleSignInParams" @success="onSignInSuccess" @error="onSignInError">Sign in with Google</g-signin-button>
+          <g-signin-button
+            :params="googleSignInParams"
+            @success="onSignInSuccess"
+            @error="onSignInError">
+            <w-button class="Headline" outline="outline" large="large">
+              Sign in with Google
+            </w-button>
+          </g-signin-button>
         <p class="u-marginT3 u-colorTextLight">Currently only sign in with Google is supported.</p>
       </paper-text>
     </paper>

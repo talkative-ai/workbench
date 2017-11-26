@@ -71,7 +71,7 @@
         <w-button
           class="Headline"
           large="large"
-          @click.native="$router.push({ name: 'ActorHome', params: { zoneid: $route.params.id } })">
+          @click.native="exitBack()">
           <span class="u-arrowWest"></span>Return</w-button>
       </template>
     </div>
@@ -120,6 +120,9 @@ export default {
       actor(state) {
         return state.actorMap[this.$route.params.id];
       }
+    }),
+    ...mapState('zones', {
+      lastViewedZone: 'lastViewedZone'
     }),
     showNewDialog() {
       return !this.newDialog && !this.connectingFromDialogID && !this.disconnectingFromDialogID;
@@ -211,6 +214,13 @@ export default {
     filterDisconnectChildren(id) {
       let dialog = this.dialogs[id];
       if (dialog.ParentDialogIDs.length > 1) return true;
+    },
+    exitBack() {
+      if (this.lastViewedZone) {
+        this.$router.push({ name: 'ZoneHome', params: { id: this.lastViewedZone } });
+      } else {
+        this.$router.push({ name: 'ProjectHome' });
+      }
     }
   }
 };
