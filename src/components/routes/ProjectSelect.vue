@@ -1,16 +1,21 @@
 <template>
-  <div id="RouteProjectSelect">
-    <h1>Choose a project:</h1>
-    <div @click="toggleSelected(project)" :class="{
-        project: true,
-        selected: selected.ID === project.ID,
-      }" v-for="project in projects" :key="project.ID">{{ project.Title }}</div>
-    <hr>
-    <div class="button-grid">
-      <w-button class="no-outline" @click.native="openProject()" v-if="selected" to="/project/create">Open</w-button>
-      <w-button class="no-outline" @click.native="createProject()">Create New</w-button>
-    </div>
-  </div>
+  <grid gutter id="RouteProjectSelect">
+    <column menu="menu">&nbsp;</column>
+    <paper>
+      <paper-text>
+        <h1>Choose a project:</h1>
+        <div @click="toggleSelected(project)" :class="{
+            project: true,
+            selected: selected.ID === project.ID,
+          }" v-for="project in projects" :key="project.ID">{{ project.Title }}</div>
+        <hr>
+        <div class="button-grid">
+          <w-button class="no-outline" @click.native="openProject()" v-if="selected" to="/project/create">Open</w-button>
+          <w-button class="no-outline" @click.native="createProject()">Create New</w-button>
+        </div>
+      </paper-text>
+    </paper>
+  </grid>
 </template>
 
 <script>

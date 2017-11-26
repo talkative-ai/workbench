@@ -1,9 +1,6 @@
 <template>
   <grid gutter id="RouteProjectCreate">
-    <header class="Navbar Block Grid Grid--withGutter" id="Header">
-      <column menu="menu">
-      </column>
-    </header>
+    <column menu="menu">&nbsp;</column>
     <paper>
       <paper-text>
         <h1 class="Headline">

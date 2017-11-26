@@ -7,9 +7,7 @@
         class="Navbar-cell Text--sm Pointer" @click.native="$router.push({ name: 'ProjectSelect' })">
         <icon name="author" width="32" height="32"></icon>{{ user.GivenName }}
       </w-button>
-      <div
-        v-else
-        class="Navbar-cell">
+      <div v-else>
         <icon name="author" width="32" height="32"></icon>
         {{ user.GivenName }}
       </div>
