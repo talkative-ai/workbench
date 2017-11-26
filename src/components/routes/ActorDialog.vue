@@ -31,6 +31,7 @@
             @change-height="changeNodeHeight(dialogID, $event)"
             @click="clickDialog($event)"
             :filterDisconnectChildren="filterDisconnectChildren"
+            parentIdHash="dialog"
             @click-child="clickDialog($event)" />
           <Dialogue
             dummy="true"

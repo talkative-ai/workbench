@@ -12,6 +12,7 @@
         :hideTools="hideTools"
         @click="$emit('select-dialog', idx)"
         :parentNode="idx > 0 ? dialogChain[idx-1] : false"
+        parentIdHash="chain"
         :isSelected="actorSelectedDialogID == dialogID" />
       <ChildConnector
         v-if="displayChildConnector(idx)"

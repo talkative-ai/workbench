@@ -520,7 +520,7 @@ const mutations = {
   saveEditDialog(state, dialogID) {
     Vue.set(state.dialogEditError, dialogID, null);
     Vue.set(state, 'dialogEditingID', false);
-    Vue.set(state.dialogMap[dialogID], dcopy(state.dialogEditingCopy[dialogID]));
+    Vue.set(state.dialogMap, dialogID, dcopy(state.dialogEditingCopy[dialogID]));
   },
 
   replaceNewDialog(state, newIDMap) {

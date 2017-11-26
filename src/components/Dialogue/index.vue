@@ -127,6 +127,8 @@
             :key="index"
             :class="{ 'child': parentNode }">
             <textarea
+              :id="`entry-text-area.${idHash}.${index}`"
+              @keypress.enter="userEntryEnter(`entry-text-area.${idHash}.${index+1}`, $event)"
               :placeholder="`Example: Hello ${actor.Title}`"
               v-model="dialogEditingCopy.EntryInput[index]"></textarea>
             <IconButton v-if="dialogEditingCopy.EntryInput.length > 1" name="times" flat="flat" @click.native="dialogEditingCopy.EntryInput.splice(index, 1)"></IconButton>
@@ -139,6 +141,8 @@
               <div class="inner-values actor-vals" v-for="(sound, index) of dialogEditingCopy.AlwaysExec.PlaySounds"
                 :key="`sound-${dialog.ID}-${index}`">
                 <textarea
+                  :id="`sound.${idHash}.${index}`"
+                  @keypress.enter="userPlaySoundEnter(`sound.${idHash}.${index+1}`, $event)"
                   placeholder="Example: Hello! Go ahead and ask me a question."
                   v-model="sound.Val"></textarea>
                 <IconButton
@@ -195,6 +199,7 @@
             :filterChildren="filterChildren"
             :filterDisconnectChildren="filterDisconnectChildren"
             :hideTools="hideTools"
+            :parentIdHash="idHash"
             @click="$emit('click-child', { dialogID, isChild: true })"
             @click-child="$emit('click-child', { dialogID, isChild: true })"></Dialogue>
         </div>
@@ -235,7 +240,8 @@ export default {
     'dummy',
     'filterChildren',
     'filterDisconnectChildren',
-    'hideTools'
+    'hideTools',
+    'parentIdHash'
   ],
   data() {
     return {
@@ -275,6 +281,9 @@ export default {
       },
       dialogEditError(state) {
         return state.dialogEditError[this.dialog.ID];
+      },
+      idHash() {
+        return `${this.parentIdHash}.${this.dialog.ID}`;
       }
     }),
     ...mapState('zones', {
@@ -371,6 +380,22 @@ export default {
         return [];
       }
       return this.dialog.ChildDialogIDs.filter(id => this.filterDisconnectChildren(id));
+    },
+    userEntryEnter(id, event) {
+      event.preventDefault();
+      this.addEntryInput();
+      Vue.nextTick(() => {
+        console.log(id);
+        document.getElementById(id).focus();
+      });
+    },
+    userPlaySoundEnter(id, event) {
+      event.preventDefault();
+      this.addPlaySound();
+      Vue.nextTick(() => {
+        console.log(id);
+        document.getElementById(id).focus();
+      });
     }
   }
 };
