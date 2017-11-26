@@ -48,17 +48,20 @@ export default {
     margin-right: 5pt;
   }
 
-  &:hover:enabled {
+  &:enabled {
     cursor: pointer;
+  }
+
+  &:hover {
     box-shadow: inset 0 0 0 999px color(var(--color-brand) blackness(20%));
   }
 
-  &:focus:enabled {
+  &:focus {
     outline: 0;
     box-shadow: 0 0 0 2px var(--color-bg);
   }
 
-  &:active:enabled {
+  &:active {
     background-color: var(--color-bg);
     box-shadow: inset 0 0 8px var(--color-brand);
     color: var(--color-brand) !important;

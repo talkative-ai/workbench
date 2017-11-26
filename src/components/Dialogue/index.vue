@@ -100,7 +100,10 @@
       </template>
       <div class="vspacer" v-if="parentNode"></div>
       <div class="ball" v-if="parentNode"></div>
-      <div class="entry-wrap">
+      <div :class="{
+        'entry-wrap': true,
+        'editing': isEditing
+      }">
         <template v-if="!isEditing">
           <div
             class="entry"
@@ -123,7 +126,9 @@
             v-for="(entry, index) in dialogEditingCopy.EntryInput"
             :key="index"
             :class="{ 'child': parentNode }">
-            <input v-model="dialogEditingCopy.EntryInput[index]" />
+            <textarea
+              :placeholder="`Example: Hello ${actor.Title}`"
+              v-model="dialogEditingCopy.EntryInput[index]"></textarea>
             <IconButton v-if="dialogEditingCopy.EntryInput.length > 1" name="times" flat="flat" @click.native="dialogEditingCopy.EntryInput.splice(index, 1)"></IconButton>
             <span v-if="index < dialogEditingCopy.EntryInput.length-1"></span>
           </div>
@@ -133,7 +138,9 @@
             <div class="dialog-values">
               <div class="inner-values actor-vals" v-for="(sound, index) of dialogEditingCopy.AlwaysExec.PlaySounds"
                 :key="`sound-${dialog.ID}-${index}`">
-                <input v-model="sound.Val" />
+                <textarea
+                  placeholder="Example: Hello! Go ahead and ask me a question."
+                  v-model="sound.Val"></textarea>
                 <IconButton
                   v-if="dialogEditingCopy.AlwaysExec.PlaySounds.length > 1"
                   name="times"
@@ -535,6 +542,12 @@ export default {
   left: -10pt;
   padding: 5pt 0;
 }
+.editing {
+  > .entry {
+    left: 0;
+    padding: 5pt;
+  }
+}
 .black {
   background-color: black;
 }
@@ -547,5 +560,9 @@ export default {
     background-color: black;
     color: white;
   }
+}
+textarea {
+  width: 100%;
+  background-color: transparent;
 }
 </style>
