@@ -225,7 +225,7 @@ const actions = {
     // A specific dialog is being selected
     // If it's a child
     if (isChild) {
-      relativeParent = relativeParent || state.dialogMap[state.actorSelectedDialogID[rootState.master.selectedEntity.data.ID]];
+      relativeParent = relativeParent || state.dialogMap[getters.currentDialogChain.slice(-1).pop()];
       commit('setDialogSiblings', relativeParent.ChildDialogIDs);
       dispatch('addDialogChain', dialogID);
       commit('updateDialogChain', state.dialogChain);
