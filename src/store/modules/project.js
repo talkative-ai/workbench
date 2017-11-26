@@ -65,9 +65,14 @@ const actions = {
   },
 
   publish({ commit, state, dispatch }) {
-    API.Publish();
     commit('metadataSetPublishing');
-    dispatch('beginCheckStatus');
+    API.Publish()
+    .then(() => {
+      dispatch('beginCheckStatus');
+    })
+    .catch(() => {
+      commit('metadataSetProblem');
+    });
   },
 
   getMetadata({ commit, state }) {
@@ -133,6 +138,10 @@ const mutations = {
 
   metadataSetPublishing(state) {
     Vue.set(state.metadata, 'Status', PUBLISH_STATUS.Publishing);
+  },
+
+  metadataSetProblem(state) {
+    Vue.set(state.metadata, 'Status', PUBLISH_STATUS.Problem);
   },
 
   updateCheckStatus(state, timeout) {
