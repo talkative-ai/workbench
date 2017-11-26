@@ -151,7 +151,10 @@ const router = new Router({
         title: () => store.getters['project/selectedProjectTitle']
       },
       async beforeEnter(to, from, next) {
-        await store.dispatch('project/getMetadata');
+        let promises = [];
+        promises.push(store.dispatch('project/refreshProject'));
+        promises.push(store.dispatch('project/getMetadata'));
+        await Promise.all(promises);
         if (store.state.project.metadata.Status === PUBLISH_STATUS.Publishing) {
           store.dispatch('project/beginCheckStatus');
         }

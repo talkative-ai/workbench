@@ -44,7 +44,9 @@ export default {
       }
     },
     openProject() {
-      this.$store.dispatch('project/selectProject', this.selected);
+      this.$store.dispatch('project/selectProject', this.selected).then(() => {
+        this.$router.push({ name: 'ProjectHome' });
+      });
     },
 
     createProject() {

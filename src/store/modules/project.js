@@ -1,6 +1,5 @@
 import Vue from 'vue';
 
-import router from '@/router';
 import API from '@/api';
 import { PUBLISH_STATUS } from '@/const';
 
@@ -32,6 +31,14 @@ const actions = {
       });
   },
 
+  refreshProject({ dispatch, commit, state }) {
+    return API.GetProject(state.selectedProject)
+      .then(newState => dispatch('setProject', newState))
+      .then(newState => {
+        commit('initializing', false);
+      });
+  },
+
   setProject({ state, commit }, project) {
     if (!project.Actors) project.Actors = [];
     if (!project.Zones) project.Zones = [];
@@ -50,8 +57,6 @@ const actions = {
       commit('zones/addActor', { ZoneID: za.ZoneID, ActorID: za.ActorID }, { root: true });
       commit('actors/addToZone', { ZoneID: za.ZoneID, ActorID: za.ActorID }, { root: true });
     }
-
-    router.push({ name: 'ProjectHome' });
   },
 
   createProject({ dispatch, state }, project) {

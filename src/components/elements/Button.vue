@@ -35,7 +35,6 @@ export default {
   border: 0;
   border-radius: var(--border-radius-sm);
   color: white;
-  cursor: pointer;
   font-family: inherit;
   font-weight: inherit;
   line-height: inherit;
@@ -49,16 +48,17 @@ export default {
     margin-right: 5pt;
   }
 
-  &:hover {
+  &:hover:enabled {
+    cursor: pointer;
     box-shadow: inset 0 0 0 999px color(var(--color-brand) blackness(20%));
   }
 
-  &:focus {
+  &:focus:enabled {
     outline: 0;
     box-shadow: 0 0 0 2px var(--color-bg);
   }
 
-  &:active {
+  &:active:enabled {
     background-color: var(--color-bg);
     box-shadow: inset 0 0 8px var(--color-brand);
     color: var(--color-brand) !important;
@@ -99,7 +99,7 @@ export default {
     box-shadow: inset 0 0 0 1px;
     color: currentColor;
 
-    &:hover {
+    &:hover:enabled {
       background-color: var(--color-bg);
       color: var(--color-brand);
     }

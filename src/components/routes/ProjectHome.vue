@@ -5,7 +5,7 @@
       <paper-text>
         <h1 class="Headline">{{ selectedProject.Title }}</h1>
       </paper-text>
-      <div class="Grid-cell">
+      <div class="Grid-cell" v-if="selectedProject.Zones.length > 0 && selectedProject.Actors.length > 0">
         <div class="Paper-text">
           <w-button
             :disabled="metadata.Status == PUBLISH_STATUS.Publishing"
@@ -17,6 +17,17 @@
           <h2 v-if="metadata.Status == PUBLISH_STATUS.Published">Last time published: {{ lastTimePublished }}</h2>
           <h2 v-if="metadata.Status == PUBLISH_STATUS.Publishing">Publishing project...</h2>
           <h2 v-if="metadata.Status == PUBLISH_STATUS.Problem">Sorry, there was a problem publishing. Please contact support.</h2>
+        </div>
+      </div>
+      <div v-else class="Grid-cell">
+        <div class="Paper-text">
+          <w-button
+            :disabled="true"
+            lightOutline="lightOutline">
+            <icon name="logo" width="32" height="32"></icon>
+            Publish to the Multiverse
+          </w-button>
+          <h2>Start by creating some zones, actors, and dialogs to enable publishing.</h2>
         </div>
       </div>
     </paper>
