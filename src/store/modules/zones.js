@@ -34,12 +34,17 @@ const actions = {
 
   saveIntroMessage({ state, commit }, { ZoneID, message }) {
     let zone = state.zoneMap[ZoneID];
+    if (state.zoneMap[ZoneID].Triggers[TRIGGER_TYPES.InitializeZone].PatchAction == null) {
+      commit('stageUpdateIntroMessage', { ZoneID });
+    }
     commit('introMessage', { ZoneID, message });
     API.PatchProject({
       Zones: [{
         ID: zone.ID,
         Triggers: zone.Triggers
       }]
+    }).then(() => {
+      Vue.delete(state.zoneMap[ZoneID].Triggers[TRIGGER_TYPES.InitializeZone], 'PatchAction');
     });
   },
 
@@ -154,6 +159,9 @@ const mutations = {
 
   introMessage(state, { ZoneID, message }) {
     Vue.set(state.zoneMap[ZoneID].Triggers[TRIGGER_TYPES.InitializeZone].AlwaysExec.PlaySounds[0], 'Val', message);
+  },
+
+  stageUpdateIntroMessage(state, { ZoneID }) {
     Vue.set(state.zoneMap[ZoneID].Triggers[TRIGGER_TYPES.InitializeZone], 'PatchAction', PATCH_ACTION.UPDATE);
   },
 

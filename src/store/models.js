@@ -6,8 +6,8 @@ export const defaultActionSet = {
     SoundType: 0,
     Val: ''
   }],
-  'InitializeActorDialog': '',
-  'SetZone': '',
+  'InitializeActorDialog': null,
+  'SetZone': null,
   'ResetGame': false
 };
 

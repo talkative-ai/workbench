@@ -27,7 +27,7 @@ const actions = {
 
   generateID({ commit, state }) {
     commit('incrCreate');
-    return `harihara-${state.createID}`;
+    return `create-${state.createID}`;
   },
 
   authGoogle({ commit, state }, googleUser) {
