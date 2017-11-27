@@ -141,28 +141,28 @@ const mutations = {
 
   stageDeleteDialog(state, dialogID) {
     let index = state.selectedEntity.data.Dialogs.findIndex(dialog => {
-      return Number(dialog.ID) === Number(dialogID);
+      return dialog.ID === dialogID;
     });
     Vue.set(state.selectedEntity.data.Dialogs[index], 'PatchAction', PATCH_ACTION.DELETE);
   },
 
   stageDeleteDialogRelation(state, { childID, parentID }) {
     let index = state.selectedEntity.data.DialogRelations.findIndex(rel => {
-      return Number(rel.ChildNodeID) === Number(childID) && Number(rel.ParentNodeID) === Number(parentID);
+      return rel.ChildNodeID === childID && rel.ParentNodeID === parentID;
     });
     Vue.set(state.selectedEntity.data.DialogRelations[index], 'PatchAction', PATCH_ACTION.DELETE);
   },
 
   deleteDialog(state, dialogID) {
     let index = state.selectedEntity.data.Dialogs.findIndex(dialog => {
-      return Number(dialog.ID) === Number(dialogID);
+      return dialog.ID === dialogID;
     });
     Vue.delete(state.selectedEntity.data.Dialogs, index);
   },
 
   deleteDialogRelation(state, { childID, parentID }) {
     let index = state.selectedEntity.data.DialogRelations.findIndex(rel => {
-      return Number(rel.ChildNodeID) === Number(childID) && Number(rel.ParentNodeID) === Number(parentID);
+      return rel.ChildNodeID === childID && rel.ParentNodeID === parentID;
     });
     Vue.delete(state.selectedEntity.data.DialogRelations, index);
   }

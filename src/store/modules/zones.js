@@ -65,8 +65,8 @@ const actions = {
     commit('actors/removeFromZone', { ActorID, ZoneID }, { root: true });
     API.PatchProject({
       ZoneActors: [{
-        ZoneID: Number(ZoneID),
-        ActorID: Number(ActorID),
+        ZoneID: ZoneID,
+        ActorID: ActorID,
         PatchAction: PATCH_ACTION.DELETE
       }]
     });
@@ -77,8 +77,8 @@ const actions = {
     commit('actors/addToZone', { ActorID, ZoneID }, { root: true });
     API.PatchProject({
       ZoneActors: [{
-        ZoneID: Number(ZoneID),
-        ActorID: Number(ActorID),
+        ZoneID: ZoneID,
+        ActorID: ActorID,
         PatchAction: PATCH_ACTION.CREATE
       }]
     });

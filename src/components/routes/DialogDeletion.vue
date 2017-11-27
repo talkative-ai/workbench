@@ -113,7 +113,7 @@ export default {
         for (let k in this.heightMap) {
           if (!this.heightMap[k]) continue;
           if (
-            !this.dialogSiblings.find(v => Number(v) === Number(k))
+            !this.dialogSiblings.find(v => v === k)
           ) {
             this.heightMap[k] = undefined;
             continue;
@@ -134,7 +134,7 @@ export default {
         for (let k in this.heightMap) {
           if (!this.heightMap[k]) continue;
           if (
-            !this.dialogSiblings.find(v => Number(v) === Number(k))
+            !this.dialogSiblings.find(v => v === k)
           ) {
             this.heightMap[k] = undefined;
             continue;

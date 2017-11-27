@@ -429,7 +429,7 @@ const actions = {
     if (state.dialogMap[state.stagedForDeletion].IsRoot) {
       dispatch('setSelectedDialog', false);
       for (let id in state.rootDialogs) {
-        if (Number(state.rootDialogs[id]) === Number(state.stagedForDeletion)) {
+        if (state.rootDialogs[id] === state.stagedForDeletion) {
           commit('spliceRoot', id);
         }
       }
@@ -438,7 +438,7 @@ const actions = {
         dispatch('clearSelected');
       } else {
         for (let id of state.rootDialogs) {
-          if (Number(id) === Number(state.stagedForDeletion)) continue;
+          if (id === state.stagedForDeletion) continue;
           dispatch('selectDialog', { dialogID: id });
         }
       }
@@ -506,7 +506,7 @@ const mutations = {
   },
 
   setDialogZone(state, { dialogID, zoneID }) {
-    Vue.set(state.dialogEditingCopy[dialogID].AlwaysExec.SetZone, Number(zoneID));
+    Vue.set(state.dialogEditingCopy[dialogID].AlwaysExec.SetZone, zoneID);
   },
 
   updateDialogChain(state, value) {
@@ -678,12 +678,12 @@ const mutations = {
   },
 
   removeChildDialogID(state, { childID, parentID }) {
-    let index = state.dialogMap[parentID].ChildDialogIDs.findIndex(v => Number(v) === Number(childID));
+    let index = state.dialogMap[parentID].ChildDialogIDs.findIndex(v => v === childID);
     state.dialogMap[parentID].ChildDialogIDs.splice(index, 1);
   },
 
   removeParentDialogID(state, { childID, parentID }) {
-    let index = state.dialogMap[parentID].ParentDialogIDs.findIndex(v => Number(v) === Number(childID));
+    let index = state.dialogMap[parentID].ParentDialogIDs.findIndex(v => v === childID);
     state.dialogMap[childID].ParentDialogIDs.splice(index, 1);
   },
 

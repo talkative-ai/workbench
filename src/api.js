@@ -33,29 +33,9 @@ export default {
   PutActor(actor) {
     for (const d of actor.Dialogs || []) {
       if (!d.ID) continue;
-      d.ID = Number(d.ID);
-    }
-    for (const r of actor.DialogRelations || []) {
-      if (!isNaN(r.ChildNodeID)) {
-        r.ChildNodeID = Number(r.ChildNodeID);
-      }
-      if (!isNaN(r.ParentNodeID)) {
-        r.ParentNodeID = Number(r.ParentNodeID);
-      }
     }
     return aumFetch('PATCH', `actor/${actor.ID}`, actor)
-    .then(result => {
-      for (const d of actor.Dialogs || []) {
-        if (!d.ID) continue;
-        d.ID = d.ID.toString();
-      }
-      for (const r of actor.DialogRelations || []) {
-        r.ChildNodeID = r.ChildNodeID.toString();
-        r.ParentNodeID = r.ParentNodeID.toString();
-      }
-
-      return result.json();
-    });
+    .then(result => result.json());
   },
 
   PutZone(zone) {

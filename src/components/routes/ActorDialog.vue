@@ -140,7 +140,7 @@ export default {
     },
     clickDialog(event) {
       if (this.disconnectingFromDialogID) {
-        if (Number(this.disconnectingFromDialogID) === Number(event.dialogID)) {
+        if (this.disconnectingFromDialogID === event.dialogID) {
           return;
         }
         this.$store.dispatch('dialogs/stageDisconnectDialog', event.dialogID);
@@ -158,7 +158,7 @@ export default {
         for (let k in this.heightMap) {
           if (!this.heightMap[k]) continue;
           if (
-            !this.dialogSiblings.find(v => Number(v) === Number(k))
+            !this.dialogSiblings.find(v => v === k)
           ) {
             this.heightMap[k] = undefined;
             continue;
@@ -179,7 +179,7 @@ export default {
         for (let k in this.heightMap) {
           if (!this.heightMap[k]) continue;
           if (
-            !this.dialogSiblings.find(v => Number(v) === Number(k))
+            !this.dialogSiblings.find(v => v === k)
           ) {
             this.heightMap[k] = undefined;
             continue;
