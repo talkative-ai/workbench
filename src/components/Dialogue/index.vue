@@ -305,7 +305,7 @@ export default {
         return this.dialogEditingCopy.action;
       }
 
-      if (this.dialogEditingCopy.AlwaysExec.SetZone > 0) {
+      if (this.dialogEditingCopy.AlwaysExec.SetZone !== '') {
         return 'go-to-zone';
       }
 
