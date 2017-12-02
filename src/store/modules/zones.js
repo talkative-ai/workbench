@@ -13,7 +13,7 @@ const state = {
 };
 
 const actions = {
-  async createZone({ commit, state, dispatch }, zone) {
+  async createZone({ commit, state, dispatch, rootState }, zone) {
     zone.CreateID = await dispatch('master/generateID', {}, { root: true });
     return API.CreateZone(zone)
     .then(idMap => {
@@ -24,6 +24,12 @@ const actions = {
       commit('addZone', newZone);
       commit('project/addZone', newZone, { root: true });
       dispatch('master/selectEntity', { kind: 'zone', data: newZone, navigate: true }, { root: true });
+      return newZone;
+    })
+    .then(newZone => {
+      if (rootState.project.selectedProject.Zones.length === 1) {
+        dispatch('project/startZone', newZone.ID, { root: true });
+      }
       return newZone;
     });
   },

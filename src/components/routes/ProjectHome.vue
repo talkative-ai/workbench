@@ -5,7 +5,7 @@
       <paper-text>
         <h1 class="Headline">{{ selectedProject.Title }}</h1>
       </paper-text>
-      <div class="Grid-cell" v-if="selectedProject.Zones.length > 0 && selectedProject.Actors.length > 0">
+      <div class="Grid-cell" v-if="!nextStepsToPublish">
         <div class="Paper-text">
           <w-button
             :disabled="metadata.Status == PUBLISH_STATUS.Publishing"
@@ -27,7 +27,7 @@
             <icon name="logo" width="32" height="32"></icon>
             Publish to the Multiverse
           </w-button>
-          <h2>Start by creating some zones, actors, and dialogs to enable publishing.</h2>
+          <h2>{{ nextStepsToPublish }}</h2>
         </div>
       </div>
     </paper>
@@ -45,6 +45,9 @@ export default {
     }
   },
   computed: {
+    ...mapState('zones', {
+      zoneActors: 'zoneActors'
+    }),
     ...mapState('project', {
       selectedProject: 'selectedProject',
       metadata: 'metadata'
@@ -63,6 +66,15 @@ export default {
     },
     PUBLISH_STATUS() {
       return PUBLISH_STATUS;
+    },
+    nextStepsToPublish() {
+      if (!this.selectedProject.Zones.length) {
+        return 'In order to publish, create a Zone, add an Actor, and create some conversations!';
+      }
+      if (!this.selectedProject.Actors.length || !Object.keys(this.zoneActors[this.selectedProject.StartZoneID])
+        .find(actorKey => this.zoneActors[this.selectedProject.StartZoneID][actorKey])) {
+        return 'In order to publish, add an Actor to the Start Zone, and create some conversations!';
+      }
     }
   },
   beforeRouteLeave(to, from, next) {

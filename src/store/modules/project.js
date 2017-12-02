@@ -60,8 +60,13 @@ const actions = {
   },
 
   createProject({ dispatch, state }, project) {
+    let newProject;
     return API.CreateProject(project)
-      .then(res => dispatch('setProject', res));
+      .then(res => {
+        newProject = res;
+        return dispatch('setProject', res);
+      })
+      .then(() => newProject);
   },
 
   publish({ commit, state, dispatch }) {
@@ -98,6 +103,16 @@ const actions = {
 
   cancelCheckStatus({ status, commit }) {
     commit('cancelCheckStatus');
+  },
+
+  startZone({ state, commit }, StartZoneID) {
+    API.PatchProject({
+      StartZoneID: {
+        UUID: StartZoneID
+      }
+    }).then(() => {
+      commit('startZone', StartZoneID);
+    });
   }
 
 };
@@ -153,6 +168,10 @@ const mutations = {
     Vue.set(state, 'checkingStatus', false);
     clearTimeout(state.checkStatusTimeout);
     Vue.set(state, 'checkStatusTimeout', null);
+  },
+
+  startZone(state, zoneID) {
+    Vue.set(state.selectedProject, 'StartZoneID', zoneID);
   }
 };
 

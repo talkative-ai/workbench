@@ -57,8 +57,9 @@ export default {
             break;
         }
       })
-      .then(() => {
+      .then(pid => {
         this.creating = false;
+        this.$router.push({ name: 'ProjectHome' });
       });
     },
     isDisabled() {

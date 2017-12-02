@@ -23,6 +23,9 @@
               </form>
             </template>
           </div>
+          <label>
+            <input type="radio" :checked="selectedProject.StartZoneID === zone.ID" @change="setStartZone">This is the zone the player starts in
+          </label>
           <hr>
           <h1 class="Headline">Actors say and do what you wish.</h1>
           <w-button class="Headline" large="large" outline="outline" @click.native="$router.push({ name: 'ActorCreate', params: { zoneid: $route.params.id } })">create an actor</w-button>
@@ -85,26 +88,45 @@ export default {
       introMessageChanged(state) {
         return this.newIntroMessage !== state.zoneMap[this.$route.params.id].Triggers[TRIGGER_TYPES.InitializeZone].AlwaysExec.PlaySounds[0].Val;
       }
+    }),
+    ...mapState('project', {
+      selectedProject: 'selectedProject'
     })
   },
   methods: {
     createIntroMessage() {
-      this.$store.dispatch('zones/createIntroMessage', this.$route.params.id);
+      this.$store.dispatch('zones/createIntroMessage', this.zone.ID);
     },
     saveIntroMessage() {
-      this.$store.dispatch('zones/saveIntroMessage', { ZoneID: this.$route.params.id, message: this.newIntroMessage });
+      this.$store.dispatch('zones/saveIntroMessage', { ZoneID: this.zone.ID, message: this.newIntroMessage });
     },
     revertIntroMessage() {
       this.newIntroMessage = this.zone.Triggers[TRIGGER_TYPES.InitializeZone].AlwaysExec.PlaySounds[0].Val;
     },
     removeIntroMessage() {
-      this.$store.dispatch('zones/removeIntroMessage', this.$route.params.id);
+      this.$store.dispatch('zones/removeIntroMessage', this.zone.ID);
+    },
+    setStartZone() {
+      this.$store.dispatch('project/startZone', this.zone.ID);
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
+hr {
+  margin: 10pt 0;
+}
+label {
+  display: flex;
+  align-items: center;
+  font-size: 1.5rem;
+  padding: 10pt;
+  border: 1pt solid black;
+  input {
+    margin-right: 10pt;
+  }
+}
 .actor-wrap {
   display: flex;
   flex-wrap: wrap;
