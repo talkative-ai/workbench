@@ -157,9 +157,14 @@
                 </div>
               </div>
               <div class="actions" v-if="childDialogIDs && childDialogIDs.length">await response</div>
-              <select class="actions dialog-action" v-else :class="{ [dialogAction]: true }" :value="dialogAction" @change="updateAction">
+              <select v-else
+                class="actions dialog-action"
+                :class="{ [dialogAction]: true }"
+                :value="dialogAction"
+                @change="updateAction">
                 <option value="end-conversation">end conversation</option>
                 <option value="go-to-zone">go to zone</option>
+                <option value="reset-app">reset game</option>
               </select>
               <select v-if="dialogAction === 'go-to-zone'" :value="dialogEditingCopy.AlwaysExec.SetZone" @change="updateZone">
                 <option
@@ -299,13 +304,17 @@ export default {
       return this.dialogEditingID === this.dialog.ID;
     },
     dialogAction() {
-      if (!this.dialogEditingCopy) return 'end-conversation';
+      let d = this.dialogEditingCopy || this.dialog;
 
-      if (this.dialogEditingCopy.action) {
-        return this.dialogEditingCopy.action;
+      if (d.action) {
+        return d.action;
       }
 
-      if (this.dialogEditingCopy.AlwaysExec.SetZone !== null) {
+      if (d.resetApp) {
+        return 'reset-app';
+      }
+
+      if (d.AlwaysExec.SetZone !== null) {
         return 'go-to-zone';
       }
 
@@ -367,9 +376,13 @@ export default {
       this.dialogEditingCopy.EntryInput.push('');
     },
     updateAction(action) {
+      this.$store.commit('dialogs/resetApp', { dialogID: this.dialog.ID, val: false });
+      this.$store.commit('dialogs/clearSetDialogZone', { dialogID: this.dialog.ID });
       this.$store.commit('dialogs/setDialogAction', { dialogID: this.dialog.ID, action: action.target.value });
       if (action.target.value === 'end-conversation') {
         this.$store.commit('dialogs/setDialogZone', { dialogID: this.dialog.ID, zoneID: 0 });
+      } else if (action.target.value === 'reset-app') {
+        this.$store.commit('dialogs/resetApp', { dialogID: this.dialog.ID, val: true });
       }
     },
     updateZone(action) {
@@ -576,9 +589,13 @@ export default {
   background-color: black;
 }
 .dialog-action {
-  &.go-to-zone {
-    background-color: green;
+  &.reset-app {
+    background-color: maroon;
     color: white;
+  }
+  &.go-to-zone {
+    background-color: goldenrod;
+    color: black;
   }
   &.end-conversation {
     background-color: black;

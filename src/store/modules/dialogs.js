@@ -506,7 +506,15 @@ const mutations = {
   },
 
   setDialogZone(state, { dialogID, zoneID }) {
-    Vue.set(state.dialogEditingCopy[dialogID].AlwaysExec.SetZone, zoneID);
+    Vue.set(state.dialogEditingCopy[dialogID].AlwaysExec, 'SetZone', zoneID);
+  },
+
+  clearSetDialogZone(state, { dialogID, zoneID }) {
+    Vue.set(state.dialogEditingCopy[dialogID].AlwaysExec, 'SetZone', null);
+  },
+
+  resetApp(state, { dialogID, val }) {
+    Vue.set(state.dialogEditingCopy[dialogID].AlwaysExec, 'ResetApp', val);
   },
 
   updateDialogChain(state, value) {
