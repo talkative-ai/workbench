@@ -164,7 +164,7 @@
                 @change="updateAction">
                 <option value="end-conversation">end conversation</option>
                 <option value="go-to-zone">go to zone</option>
-                <option value="reset-app">reset game</option>
+                <option value="reset-app">reset app</option>
               </select>
               <select v-if="dialogAction === 'go-to-zone'" :value="dialogEditingCopy.AlwaysExec.SetZone" @change="updateZone">
                 <option
@@ -311,7 +311,7 @@ export default {
         return d.action;
       }
 
-      if (d.resetApp) {
+      if (d.ResetApp) {
         return 'reset-app';
       }
 
