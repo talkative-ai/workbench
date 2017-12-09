@@ -315,7 +315,7 @@ export default {
         return 'reset-app';
       }
 
-      if (d.AlwaysExec.SetZone !== NULL_UUID) {
+      if (d.AlwaysExec.SetZone !== NULL_UUID && d.AlwaysExec.SetZone !== null) {
         return 'go-to-zone';
       }
 
