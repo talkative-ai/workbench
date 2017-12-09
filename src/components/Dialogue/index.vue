@@ -311,7 +311,7 @@ export default {
         return d.action;
       }
 
-      if (d.ResetApp) {
+      if (d.AlwaysExec.ResetApp) {
         return 'reset-app';
       }
 
