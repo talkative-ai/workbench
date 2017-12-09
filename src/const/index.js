@@ -32,3 +32,5 @@ export const MONTHS = {
   10: 'November',
   11: 'December'
 };
+
+export const NULL_UUID = '00000000-0000-0000-0000-000000000000';

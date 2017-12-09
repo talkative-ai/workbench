@@ -229,6 +229,7 @@
 import Vue from 'vue';
 import { mapGetters, mapState } from 'vuex';
 import ChildConnector from './ChildConnector';
+import { NULL_UUID } from '../../const';
 
 export default {
   name: 'Dialogue',
@@ -314,7 +315,7 @@ export default {
         return 'reset-app';
       }
 
-      if (d.AlwaysExec.SetZone !== null) {
+      if (d.AlwaysExec.SetZone !== NULL_UUID) {
         return 'go-to-zone';
       }
 
@@ -379,9 +380,7 @@ export default {
       this.$store.commit('dialogs/resetApp', { dialogID: this.dialog.ID, val: false });
       this.$store.commit('dialogs/clearSetDialogZone', { dialogID: this.dialog.ID });
       this.$store.commit('dialogs/setDialogAction', { dialogID: this.dialog.ID, action: action.target.value });
-      if (action.target.value === 'end-conversation') {
-        this.$store.commit('dialogs/setDialogZone', { dialogID: this.dialog.ID, zoneID: 0 });
-      } else if (action.target.value === 'reset-app') {
+      if (action.target.value === 'reset-app') {
         this.$store.commit('dialogs/resetApp', { dialogID: this.dialog.ID, val: true });
       }
     },
