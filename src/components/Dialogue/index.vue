@@ -38,7 +38,7 @@
           <div class="cover" v-else-if="connectingFromDialogID && !dialogs[connectingFromDialogID].ChildDialogIDs.includes(dialog.ID)"
             @click="$emit('click', { dialogID: dialog.ID })">
             <h1 v-if="!isSelected">
-              <IconButton name="link"></IconButton>preview connect</h1>
+              <IconButton name="link" />preview connect</h1>
           </div>
           <div
             class="cover"
@@ -49,11 +49,11 @@
             }">
             <template v-if="!isSelected">
               <h1 class="danger" v-if="disconnectingFromDialogID">
-                <IconButton class="danger" name="chain-broken"></IconButton>
+                <IconButton class="danger" name="chain-broken" />
                 &nbsp;disconnect
               </h1>
               <h1 v-else>
-                <IconButton name="search"></IconButton>
+                <IconButton name="search" />
                 &nbsp;select
               </h1>
             </template>
@@ -70,12 +70,12 @@
                   shrinky="true"
                   name="pencil"
                   label="edit"
-                  @click.native="beginEdit()"></IconButton>
+                  @click.native="beginEdit()" />
                 <IconButton
                   shrinky="true"
                   name="link"
                   label="connect"
-                  @click.native="beginConnect()"></IconButton>
+                  @click.native="beginConnect()" />
                 <div class="hspacer" />
                 <IconButton
                   v-if="disconnectChildDialogIDs().length"
@@ -83,13 +83,13 @@
                   class="danger"
                   name="chain-broken"
                   label="disconnect"
-                  @click.native="beginDisconnect()"></IconButton>
+                  @click.native="beginDisconnect()" />
                 <IconButton
                   shrinky="true"
                   class="danger"
                   name="trash"
                   label="delete"
-                  @click.native="stageDeleteDialog()"></IconButton>
+                  @click.native="stageDeleteDialog()" />
               </div>
             </div>
           </template>
@@ -127,33 +127,35 @@
             :key="index"
             :class="{ 'child': parentNode }">
             <textarea
+              v-autosize="dialogEditingCopy.EntryInput[index]"
               :id="`entry-text-area.${idHash}.${index}`"
               @keypress.enter="userEntryEnter(`entry-text-area.${idHash}.${index+1}`, $event)"
               :placeholder="`Example: Hello ${actor.Title}`"
-              v-model="dialogEditingCopy.EntryInput[index]"></textarea>
-            <IconButton v-if="dialogEditingCopy.EntryInput.length > 1" name="times" flat="flat" @click.native="dialogEditingCopy.EntryInput.splice(index, 1)"></IconButton>
+              v-model="dialogEditingCopy.EntryInput[index]" />
+            <IconButton v-if="dialogEditingCopy.EntryInput.length > 1" name="times" flat="flat" @click.native="dialogEditingCopy.EntryInput.splice(index, 1)" />
             <span v-if="index < dialogEditingCopy.EntryInput.length-1"></span>
           </div>
-          <IconButton label="User can say" name="plus" @click.native="addEntryInput()"></IconButton>
+          <IconButton label="User can say" name="plus" @click.native="addEntryInput()" />
           <div class="ai-wrap">
             <h3>{{ actor.Title }} replies with all of the following:</h3>
             <div class="dialog-values">
               <div class="inner-values actor-vals" v-for="(sound, index) of dialogEditingCopy.AlwaysExec.PlaySounds"
                 :key="`sound-${dialog.ID}-${index}`">
                 <textarea
+                  v-autosize="dialogEditingCopy.EntryInput[index]"
                   :id="`sound.${idHash}.${index}`"
                   @keypress.enter="userPlaySoundEnter(`sound.${idHash}.${index+1}`, $event)"
                   placeholder="Example: Hello! Go ahead and ask me a question."
-                  v-model="sound.Val"></textarea>
+                  v-model="sound.Val" />
                 <IconButton
                   v-if="dialogEditingCopy.AlwaysExec.PlaySounds.length > 1"
                   name="times"
                   flat="flat"
-                  @click.native="dialogEditingCopy.AlwaysExec.PlaySounds.splice(index, 1)"></IconButton>
+                  @click.native="dialogEditingCopy.AlwaysExec.PlaySounds.splice(index, 1)" />
               </div>
               <div class="inner-values actor-vals">
                 <div class="flex flex-column">
-                  <IconButton name="plus" :label="`${actor.Title} says`" @click.native="addPlaySound()"></IconButton>
+                  <IconButton name="plus" :label="`${actor.Title} says`" @click.native="addPlaySound()" />
                 </div>
               </div>
               <div class="actions" v-if="childDialogIDs && childDialogIDs.length">await response</div>
@@ -181,8 +183,8 @@
                 'with-error': dialogEditError
               }">
             <div class="button-grid-small">
-              <IconButton @click.native="saveEdit()" label="save"></IconButton>
-              <IconButton @click.native="cancelEdit()" label="cancel"></IconButton>
+              <IconButton @click.native="saveEdit()" label="save" />
+              <IconButton @click.native="cancelEdit()" label="cancel" />
             </div>
             <div class="error" v-if="dialogEditError">{{dialogEditError}}</div>
           </div>
@@ -206,21 +208,21 @@
             :hideTools="hideTools"
             :parentIdHash="idHash"
             @click="$emit('click-child', { dialogID, isChild: true })"
-            @click-child="$emit('click-child', { dialogID, isChild: true })"></Dialogue>
+            @click-child="$emit('click-child', { dialogID, isChild: true })" />
         </div>
         <Dialogue
           dummy="true"
           v-if="showNewDialog"
           @click.native="$store.dispatch('dialogs/startNewConversation', dialogChain.slice(-1).pop())"
           :parentNode="dialog.ID">
-          <IconButton name="plus" flat="flat"></IconButton>continue conversation</Dialogue>
+          <IconButton name="plus" flat="flat" />continue conversation</Dialogue>
       </div>
       <Dialogue
         dummy="true"
         v-else-if="showNewDialog"
         @click.native="$store.dispatch('dialogs/startNewConversation', dialogChain.slice(-1).pop())"
         :parentNode="dialog.ID">
-        <IconButton name="plus" flat="flat"></IconButton>continue conversation</Dialogue>
+        <IconButton name="plus" flat="flat" />continue conversation</Dialogue>
     </template>
   </div>
 </template>

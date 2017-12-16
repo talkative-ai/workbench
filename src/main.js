@@ -4,6 +4,7 @@ import GSignInButton from 'vue-google-signin-button';
 
 import Vue from 'vue';
 import App from './App';
+import VueAutosize from 'vue-autosize';
 import * as svgicon from 'vue-svgicon';
 import Icon from 'vue-awesome/components/Icon';
 
@@ -37,6 +38,7 @@ Vue.use(svgicon, {
 });
 
 Vue.use(GSignInButton);
+Vue.use(VueAutosize);
 
 Vue.component('fa-icon', Icon);
 

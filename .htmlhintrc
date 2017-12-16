@@ -1,0 +1,8 @@
+{
+  "tagname-lowercase": false,
+  "attr-lowercase": false,
+  "attr-value-double-quotes": true,
+  "attr-order": ["v-else", "v-for"],
+  "attr-new-line": true,
+  "attr-name-style": "camel"
+}
