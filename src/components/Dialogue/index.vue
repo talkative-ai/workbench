@@ -397,6 +397,11 @@ export default {
     },
     userEntryEnter(id, event) {
       event.preventDefault();
+      let el = document.getElementById(id);
+      if (el) {
+        el.focus();
+        return;
+      }
       this.addEntryInput();
       Vue.nextTick(() => {
         document.getElementById(id).focus();
@@ -404,6 +409,11 @@ export default {
     },
     userPlaySoundEnter(id, event) {
       event.preventDefault();
+      let el = document.getElementById(id);
+      if (el) {
+        el.focus();
+        return;
+      }
       this.addPlaySound();
       Vue.nextTick(() => {
         document.getElementById(id).focus();
