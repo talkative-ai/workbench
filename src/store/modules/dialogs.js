@@ -6,17 +6,19 @@ import { defaultDialog } from '@/store/models';
 import { PATCH_ACTION } from '@/const';
 
 function validateDialog(dialog) {
-  if (dialog.EntryInput.length <= 0) {
-    return 'You need at least one entry into the dialog.';
+  if (!dialog.UnknownHandler) {
+    if (dialog.EntryInput.length <= 0) {
+      return 'You need at least one entry into the dialog.';
+    }
+    for (let s of dialog.EntryInput) {
+      if (!s) {
+        // TODO: Better validation handling here
+        return 'Dialog entry cannot be blank.';
+      }
+    }
   }
   if (dialog.AlwaysExec.PlaySounds.length <= 0) {
     return 'You must play at least one sound.';
-  }
-  for (let s of dialog.EntryInput) {
-    if (!s) {
-      // TODO: Better validation handling here
-      return 'Dialog entry cannot be blank.';
-    }
   }
   for (let s of dialog.AlwaysExec.PlaySounds) {
     if (!s.Val) {
@@ -43,7 +45,7 @@ function determineDeleteCandidates(nodeIDToDelete, map) {
       if (map[nodeID].IsRoot) {
         return true;
       }
-      for (let id of map[nodeID].ParentDialogIDs) {
+      for (let id of map[nodeID].parentDialogIDs) {
         if (edgesFromRoot(id, Object.assign({}, track))) {
           return true;
         }
@@ -54,7 +56,7 @@ function determineDeleteCandidates(nodeIDToDelete, map) {
     return !deletionCandidates[nodeID];
   }
 
-  for (let id of map[nodeIDToDelete].ChildDialogIDs) {
+  for (let id of map[nodeIDToDelete].childDialogIDs) {
     if (!edgesFromRoot(id, { [nodeIDToDelete]: true })) {
       deletionCandidates[id] = true;
     }
@@ -62,7 +64,7 @@ function determineDeleteCandidates(nodeIDToDelete, map) {
 
   function recurseChildren(dialog, fn, track = {}) {
     track[dialog] = true;
-    for (let child of map[dialog].ChildDialogIDs) {
+    for (let child of map[dialog].childDialogIDs) {
       if (track[child]) continue;
       fn(child);
       recurseChildren(child, fn, track);
@@ -136,7 +138,7 @@ const actions = {
   },
 
   selectDialogPreviewConnect({ state, rootState, dispatch, commit }, { dialogID, isChild = false, relativeParent }) {
-    let isChildOfConnecting = state.dialogMap[state.connectingFromDialogID].ChildDialogIDs.includes(dialogID);
+    let isChildOfConnecting = state.dialogMap[state.connectingFromDialogID].childDialogIDs.includes(dialogID);
     if (state.connectingToDialogID !== dialogID) {
       dispatch('cancelPreviewConnectDialog');
     }
@@ -151,7 +153,7 @@ const actions = {
     // If it's a child
     if (isChild) {
       relativeParent = relativeParent || state.dialogMap[state.actorSelectedDialogID[rootState.master.selectedEntity.data.ID]];
-      commit('setDialogSiblings', relativeParent.ChildDialogIDs);
+      commit('setDialogSiblings', relativeParent.childDialogIDs);
       commit('updateDialogChain', state.dialogChain);
 
       // Otherwise it's a sibling
@@ -213,7 +215,7 @@ const actions = {
         // The reason it's important to get siblings from the relative parent is because a single dialog can have
         // multiple parents, and each parent can have different children.
         // In other words, a signle dialog can have multiple sibling sets depending on the selected dialog.
-        commit('setDialogSiblings', state.dialogMap[getters.currentDialogChain.slice(-2, -1).pop()].ChildDialogIDs);
+        commit('setDialogSiblings', state.dialogMap[getters.currentDialogChain.slice(-2, -1).pop()].childDialogIDs);
       }
       dispatch('setSelectedDialog', state.actorSelectedDialogID[getters.selectedEntityID]);
       return;
@@ -226,7 +228,7 @@ const actions = {
     // If it's a child
     if (isChild) {
       relativeParent = relativeParent || state.dialogMap[getters.currentDialogChain.slice(-1).pop()];
-      commit('setDialogSiblings', relativeParent.ChildDialogIDs);
+      commit('setDialogSiblings', relativeParent.childDialogIDs);
       dispatch('addDialogChain', dialogID);
       commit('updateDialogChain', state.dialogChain);
 
@@ -324,11 +326,12 @@ const actions = {
     commit('cancelEditDialog');
   },
 
-  async startNewConversation({ state, getters, commit, dispatch }, parentDialogID) {
+  async startNewConversation({ state, getters, commit, dispatch }, { parentDialogID = null, unknownHandler = false }) {
     let newDialog = dcopy(defaultDialog);
     let newID = await dispatch('master/generateID', {}, { root: true });
     newDialog.ID = newID;
     newDialog.CreateID = newID;
+    newDialog.UnknownHandler = unknownHandler;
     if (!parentDialogID) {
       commit('newRootDialog', newDialog);
       if (state.rootDialogs.length === 1) {
@@ -368,7 +371,7 @@ const actions = {
       commit('connectingToDialogID', false);
       commit('isConversationCycle', false);
       if (!keepConnection) {
-        state.dialogMap[oldID].ChildDialogIDs.pop();
+        state.dialogMap[oldID].childDialogIDs.pop();
         dispatch('selectChain', -2);
       }
     } else if (state.connectingFromDialogID) {
@@ -381,7 +384,7 @@ const actions = {
   cancelPreviewConnectDialog({ state, getters, commit, dispatch }) {
     if (state.connectingToDialogID) {
       commit('connectingToDialogID', false);
-      state.dialogMap[state.connectingFromDialogID].ChildDialogIDs.pop();
+      state.dialogMap[state.connectingFromDialogID].childDialogIDs.pop();
       if (getters.currentDialogChain.slice(-1).pop() !== state.connectingFromDialogID) {
         commit('popDialogChain', getters.selectedEntityID);
       }
@@ -495,10 +498,10 @@ const mutations = {
   },
 
   relation(state, { parentID, childID }) {
-    Vue.set(state.dialogMap[parentID], 'ChildDialogIDs', state.dialogMap[parentID]['ChildDialogIDs'] || []);
-    Vue.set(state.dialogMap[childID], 'ParentDialogIDs', state.dialogMap[childID]['ParentDialogIDs'] || []);
-    state.dialogMap[parentID]['ChildDialogIDs'].push(childID.toString());
-    state.dialogMap[childID]['ParentDialogIDs'].push(parentID.toString());
+    Vue.set(state.dialogMap[parentID], 'childDialogIDs', state.dialogMap[parentID]['childDialogIDs'] || []);
+    Vue.set(state.dialogMap[childID], 'parentDialogIDs', state.dialogMap[childID]['parentDialogIDs'] || []);
+    state.dialogMap[parentID]['childDialogIDs'].push(childID.toString());
+    state.dialogMap[childID]['parentDialogIDs'].push(parentID.toString());
   },
 
   setDialogAction(state, { dialogID, action }) {
@@ -545,8 +548,8 @@ const mutations = {
     Vue.set(state.dialogMap, dialog.ID, dialog);
 
     if (!dialog.IsRoot) {
-      state.dialogMap[dialog.ParentDialogIDs[0]].ChildDialogIDs.pop();
-      state.dialogMap[dialog.ParentDialogIDs[0]].ChildDialogIDs.push(dialog.ID);
+      state.dialogMap[dialog.parentDialogIDs[0]].childDialogIDs.pop();
+      state.dialogMap[dialog.parentDialogIDs[0]].childDialogIDs.push(dialog.ID);
     } else {
       state.rootDialogs.pop();
       state.rootDialogs.push(dialog.ID);
@@ -562,7 +565,7 @@ const mutations = {
       if (state.newDialog.IsRoot) {
         state.rootDialogs.pop();
       } else {
-        state.dialogMap[state.newDialog.ParentDialogIDs[0]].ChildDialogIDs.pop();
+        state.dialogMap[state.newDialog.parentDialogIDs[0]].childDialogIDs.pop();
       }
       Vue.delete(state.dialogMap, state.dialogEditingID);
       Vue.delete(state, 'newDialog');
@@ -597,9 +600,9 @@ const mutations = {
     Vue.set(newDialog, 'IsRoot', false);
     Vue.set(newDialog, 'PatchAction', PATCH_ACTION.CREATE);
     Vue.set(state.dialogMap, newDialog.ID, newDialog);
-    Vue.set(state.dialogMap[parentID], 'ChildDialogIDs', state.dialogMap[parentID].ChildDialogIDs || []);
-    state.dialogMap[parentID].ChildDialogIDs.push(newDialog.ID);
-    state.dialogMap[newDialog.ID].ParentDialogIDs.push(parentID);
+    Vue.set(state.dialogMap[parentID], 'childDialogIDs', state.dialogMap[parentID].childDialogIDs || []);
+    state.dialogMap[parentID].childDialogIDs.push(newDialog.ID);
+    state.dialogMap[newDialog.ID].parentDialogIDs.push(parentID);
     Vue.set(state, 'newDialog', newDialog);
   },
 
@@ -620,7 +623,7 @@ const mutations = {
   connectingToDialogID(state, dialogID) {
     Vue.set(state, 'connectingToDialogID', dialogID);
     if (dialogID) {
-      state.dialogMap[state.connectingFromDialogID].ChildDialogIDs.push(dialogID);
+      state.dialogMap[state.connectingFromDialogID].childDialogIDs.push(dialogID);
     }
   },
 
@@ -682,21 +685,25 @@ const mutations = {
   },
 
   addChildDialogID(state, { childID, parentID }) {
-    state.dialogMap[parentID].ChildDialogIDs.push(childID);
+    state.dialogMap[parentID].childDialogIDs.push(childID);
   },
 
   removeChildDialogID(state, { childID, parentID }) {
-    let index = state.dialogMap[parentID].ChildDialogIDs.findIndex(v => v === childID);
-    state.dialogMap[parentID].ChildDialogIDs.splice(index, 1);
+    let index = state.dialogMap[parentID].childDialogIDs.findIndex(v => v === childID);
+    state.dialogMap[parentID].childDialogIDs.splice(index, 1);
   },
 
   removeParentDialogID(state, { childID, parentID }) {
-    let index = state.dialogMap[parentID].ParentDialogIDs.findIndex(v => v === childID);
-    state.dialogMap[childID].ParentDialogIDs.splice(index, 1);
+    let index = state.dialogMap[parentID].parentDialogIDs.findIndex(v => v === childID);
+    state.dialogMap[childID].parentDialogIDs.splice(index, 1);
   },
 
   addParentDialogID(state, { childID, parentID }) {
-    state.dialogMap[childID].ParentDialogIDs.push(parentID);
+    state.dialogMap[childID].parentDialogIDs.push(parentID);
+  },
+
+  isUnknownHandler(state, { dialogID, val }) {
+    Vue.set(state.dialogEditingCopy[dialogID], 'UnknownHandler', val);
   }
 };
 

@@ -73,8 +73,8 @@ const actions = {
       // Prepare the dialog map and root dialogs
       for (const d of actor.Dialogs) {
         d.ID = d.ID.toString();
-        d.ParentDialogIDs = d.ParentDialogIDs || [];
-        d.ChildDialogIDs = d.ChildDialogIDs || [];
+        d.parentDialogIDs = d.parentDialogIDs || [];
+        d.childDialogIDs = d.childDialogIDs || [];
         commit('dialogs/dialogInMap', d, { root: true });
         if (d.IsRoot) {
           rdialogs.add(d.ID);

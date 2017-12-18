@@ -4,7 +4,7 @@
     flat: this.flat,
     shrinky: this.shrinky,
     normal: !this.shrinky
-  }">
+  }" @click="onClick($event)">
     <fa-icon v-if="name" :name="name"></fa-icon>
     <div class="label" v-if="label">{{ label }}</div>
   </div>
@@ -23,7 +23,13 @@ import 'vue-awesome/icons/comments';
 
 export default {
   name: 'icon-button',
-  props: ['name', 'label', 'flat', 'shrinky']
+  props: ['name', 'label', 'flat', 'shrinky'],
+  methods: {
+    onClick($event) {
+      $event.stopPropagation();
+      this.$emit('click', $event);
+    }
+  }
 };
 </script>
 

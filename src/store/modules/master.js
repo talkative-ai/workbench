@@ -105,7 +105,7 @@ const mutations = {
       state.selectedEntity.data.DialogRelations.pop();
       state.selectedEntity.data.DialogRelations.push({
         ChildNodeID: dialog.ID,
-        ParentNodeID: dialog.ParentDialogIDs[0]
+        ParentNodeID: dialog.parentDialogIDs[0]
       });
     }
   },
@@ -115,7 +115,7 @@ const mutations = {
     if (!dialog.IsRoot) {
       state.selectedEntity.data.DialogRelations.push({
         ChildNodeID: dialog.CreateID,
-        ParentNodeID: dialog.ParentDialogIDs[0],
+        ParentNodeID: dialog.parentDialogIDs[0],
         PatchAction: PATCH_ACTION.CREATE
       });
     }

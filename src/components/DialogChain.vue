@@ -24,7 +24,7 @@
       dummy="true"
       :filterChildren="filterChildren"
       v-if="showNewDialog"
-      @click.native="$store.dispatch('dialogs/startNewConversation', dialogChain && dialogChain.slice(-1).pop())"
+      @click.native="$store.dispatch('dialogs/startNewConversation', { parentDialogID: dialogChain && dialogChain.slice(-1).pop() })"
       :parentNode="dialogChain && dialogChain.length ? dialogChain.slice(-1).pop() : false">
       <IconButton name="plus" flat="flat"></IconButton>
       <template v-if="rootDialogs.length">continue conversation</template>

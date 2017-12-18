@@ -30,6 +30,7 @@
             :hideTools="disconnectingFromDialogID"
             @change-height="changeNodeHeight(dialogID, $event)"
             @click="clickDialog($event)"
+            :filterChildren="filterDialogChildren"
             :filterDisconnectChildren="filterDisconnectChildren"
             parentIdHash="dialog"
             @click-child="clickDialog($event)" />
@@ -38,6 +39,25 @@
             v-if="showNewDialog"
             @click.native="topNewConversation()">
             <IconButton name="plus" flat="flat"></IconButton>{{ dialogChain.length == 1 ? 'new conversation' : 'continue conversation' }}</Dialogue>
+          <Dialogue
+            v-if="unknownHandlerDialogID"
+            :dialog="dialogs[unknownHandlerDialogID]"
+            :recurse="actorSelectedDialogID == unknownHandlerDialogID"
+            :isSelected="actorSelectedDialogID == unknownHandlerDialogID"
+            :tallest="tallest"
+            :actor="actor"
+            :hideTools="disconnectingFromDialogID"
+            @change-height="changeNodeHeight(unknownHandlerDialogID, $event)"
+            @click="clickDialog($event)"
+            :filterChildren="filterDialogChildren"
+            :filterDisconnectChildren="filterDisconnectChildren"
+            parentIdHash="dialog"
+            @click-child="clickDialog($event)" />
+        <Dialogue
+          dummy="true"
+          v-if="!unknownHandlerDialogID && showNewDialog"
+          @click.native="topNewConversation({ unknownHandler: true })">
+          <IconButton name="plus" flat="flat"></IconButton>anything else</Dialogue>
         </div>
       </div>
     </div>
@@ -103,6 +123,12 @@ export default {
         if (state.disconnectingFromDialogID) {
           return [ state.disconnectingFromDialogID ];
         }
+        return state.dialogSiblings.filter(sibling => !state.dialogMap[sibling].UnknownHandler);
+      },
+      dialogAllSiblings(state) {
+        if (state.disconnectingFromDialogID) {
+          return [ state.disconnectingFromDialogID ];
+        }
         return state.dialogSiblings;
       },
       actorSelectedDialogID(state) {
@@ -127,10 +153,17 @@ export default {
     }),
     showNewDialog() {
       return !this.newDialog && !this.connectingFromDialogID && !this.disconnectingFromDialogID;
+    },
+    unknownHandlerDialogID() {
+      let dialog = this.dialogAllSiblings.find(id => {
+        return this.dialogs[id].UnknownHandler;
+      });
+      return dialog;
     }
   },
   methods: {
     changeNodeHeight(id, value) {
+      if (!id) return;
       this.heightMap[id] = value;
       this.tallest = 0;
       for (let k in this.heightMap) {
@@ -188,15 +221,14 @@ export default {
         }
       });
     },
-    topNewConversation() {
+    topNewConversation({ unknownHandler = false } = {}) {
+      if (!this.showNewDialog) return;
       if (this.dialogChain.length <= 1) {
-        this.$store.dispatch('dialogs/startNewConversation');
+        this.$store.dispatch('dialogs/startNewConversation', { unknownHandler });
       } else {
         this.$store.dispatch(
           'dialogs/startNewConversation',
-          this.dialogChain
-            .slice(-2, -1)
-            .pop()
+          { parentDialogID: this.dialogChain.slice(-2, -1).pop(), unknownHandler }
         );
       }
     },
@@ -214,7 +246,11 @@ export default {
     },
     filterDisconnectChildren(id) {
       let dialog = this.dialogs[id];
-      if (dialog.ParentDialogIDs.length > 1) return true;
+      return dialog.parentDialogIDs.length > 1 && !dialog.UnknownHandler;
+    },
+    filterDialogChildren(id) {
+      let dialog = this.dialogs[id];
+      return !dialog.UnknownHandler;
     },
     exitBack() {
       if (this.lastViewedZone) {

@@ -35,7 +35,7 @@
           <div class="cover opaque" v-else-if="disconnectingToDialogID === dialog.ID">
             <h1 class="danger">disconnecting</h1>
           </div>
-          <div class="cover" v-else-if="connectingFromDialogID && !dialogs[connectingFromDialogID].ChildDialogIDs.includes(dialog.ID)"
+          <div class="cover" v-else-if="connectingFromDialogID && !dialogs[connectingFromDialogID].childDialogIDs.includes(dialog.ID)"
             @click="$emit('click', { dialogID: dialog.ID })">
             <h1 v-if="!isSelected">
               <IconButton name="link" />preview connect</h1>
@@ -70,12 +70,12 @@
                   shrinky="true"
                   name="pencil"
                   label="edit"
-                  @click.native="beginEdit()" />
+                  @click="beginEdit()" />
                 <IconButton
                   shrinky="true"
                   name="link"
                   label="connect"
-                  @click.native="beginConnect()" />
+                  @click="beginConnect()" />
                 <div class="hspacer" />
                 <IconButton
                   v-if="disconnectChildDialogIDs().length"
@@ -83,13 +83,13 @@
                   class="danger"
                   name="chain-broken"
                   label="disconnect"
-                  @click.native="beginDisconnect()" />
+                  @click="beginDisconnect()" />
                 <IconButton
                   shrinky="true"
                   class="danger"
                   name="trash"
                   label="delete"
-                  @click.native="stageDeleteDialog()" />
+                  @click="stageDeleteDialog()" />
               </div>
             </div>
           </template>
@@ -105,14 +105,22 @@
         'editing': isEditing
       }">
         <template v-if="!isEditing">
-          <div
-            class="entry"
-            v-for="(entry, index) in dialog.EntryInput"
-            :key="index"
-            :class="{ 'child': parentNode }">
-            {{ dialog.EntryInput[index] }}
-            <span v-if="index < dialog.EntryInput.length-1">,</span>
-          </div>
+          <template v-if="!dialog.UnknownHandler">
+            <div
+              class="entry"
+              v-for="(entry, index) in dialog.EntryInput"
+              :key="index"
+              :class="{ 'child': parentNode }">
+              {{ dialog.EntryInput[index] }}
+              <span v-if="index < dialog.EntryInput.length-1">,</span>
+            </div>
+          </template>
+          <template v-else>
+            <div
+            class="entry any">
+              (Anything else the user says leads here)
+            </div>
+          </template>
           <div class="dialog-values">
             <div class="inner-values actor-vals" v-for="(sound, index) of dialog.AlwaysExec.PlaySounds" :key="`sound-${dialog.ID}-${index}`">"{{ sound.Val }}"</div>
             <div class="actions" v-if="childDialogIDs && childDialogIDs.length">await response</div>
@@ -120,22 +128,25 @@
           </div>
         </template>
         <template v-else>
-          <h3>The user can say one of the following:</h3>
-          <div
-            class="entry"
-            v-for="(entry, index) in dialogEditingCopy.EntryInput"
-            :key="index"
-            :class="{ 'child': parentNode }">
-            <textarea
-              v-autosize="dialogEditingCopy.EntryInput[index]"
-              :id="`entry-text-area.${idHash}.${index}`"
-              @keypress.enter="userEntryEnter(`entry-text-area.${idHash}.${index+1}`, $event)"
-              :placeholder="`Example: Hello ${actor.Title}`"
-              v-model="dialogEditingCopy.EntryInput[index]" />
-            <IconButton v-if="dialogEditingCopy.EntryInput.length > 1" name="times" flat="flat" @click.native="dialogEditingCopy.EntryInput.splice(index, 1)" />
-            <span v-if="index < dialogEditingCopy.EntryInput.length-1"></span>
-          </div>
-          <IconButton label="User can say" name="plus" @click.native="addEntryInput()" />
+         <template v-if="!dialogEditingCopy.UnknownHandler">
+            <h3>The user can say one of the following:</h3>
+            <div
+              class="entry"
+              v-for="(entry, index) in dialogEditingCopy.EntryInput"
+              :key="index"
+              :class="{ 'child': parentNode }">
+              <textarea
+                v-autosize="dialogEditingCopy.EntryInput[index]"
+                :id="`entry-text-area.${idHash}.${index}`"
+                @keypress.enter="userEntryEnter(`entry-text-area.${idHash}.${index+1}`, $event)"
+                :placeholder="`Example: Hello ${actor.Title}`"
+                v-model="dialogEditingCopy.EntryInput[index]" />
+              <IconButton v-if="dialogEditingCopy.EntryInput.length > 1" name="times" flat="flat" @click="dialogEditingCopy.EntryInput.splice(index, 1)" />
+              <span v-if="index < dialogEditingCopy.EntryInput.length-1"></span>
+            </div>
+            <IconButton label="User can say" name="plus" @click="addEntryInput()" />
+            <hr>
+          </template>
           <div class="ai-wrap">
             <h3>{{ actor.Title }} replies with all of the following:</h3>
             <div class="dialog-values">
@@ -151,11 +162,11 @@
                   v-if="dialogEditingCopy.AlwaysExec.PlaySounds.length > 1"
                   name="times"
                   flat="flat"
-                  @click.native="dialogEditingCopy.AlwaysExec.PlaySounds.splice(index, 1)" />
+                  @click="dialogEditingCopy.AlwaysExec.PlaySounds.splice(index, 1)" />
               </div>
               <div class="inner-values actor-vals">
                 <div class="flex flex-column">
-                  <IconButton name="plus" :label="`${actor.Title} says`" @click.native="addPlaySound()" />
+                  <IconButton name="plus" :label="`${actor.Title} says`" @click="addPlaySound()" />
                 </div>
               </div>
               <div class="actions" v-if="childDialogIDs && childDialogIDs.length">await response</div>
@@ -183,8 +194,8 @@
                 'with-error': dialogEditError
               }">
             <div class="button-grid-small">
-              <IconButton @click.native="saveEdit()" label="save" />
-              <IconButton @click.native="cancelEdit()" label="cancel" />
+              <IconButton @click="saveEdit()" label="save" />
+              <IconButton @click="cancelEdit($event)" label="cancel" />
             </div>
             <div class="error" v-if="dialogEditError">{{dialogEditError}}</div>
           </div>
@@ -206,6 +217,7 @@
             :filterChildren="filterChildren"
             :filterDisconnectChildren="filterDisconnectChildren"
             :hideTools="hideTools"
+            :hideSpecialDialogs="hideSpecialDialogs"
             :parentIdHash="idHash"
             @click="$emit('click-child', { dialogID, isChild: true })"
             @click-child="$emit('click-child', { dialogID, isChild: true })" />
@@ -213,16 +225,45 @@
         <Dialogue
           dummy="true"
           v-if="showNewDialog"
-          @click.native="$store.dispatch('dialogs/startNewConversation', dialogChain.slice(-1).pop())"
+          @click.native="newConversation({ parentDialogID: dialogChain.slice(-1).pop() })"
           :parentNode="dialog.ID">
           <IconButton name="plus" flat="flat" />continue conversation</Dialogue>
+        <Dialogue
+          dummy="true"
+          v-if="showNewDialog && !unknownHandlerDialogID"
+          @click.native="newConversation({ parentDialogID: dialogChain.slice(-1).pop(), unknownHandler: true })"
+          :parentNode="dialog.ID">
+          <IconButton name="plus" flat="flat" />anything else</Dialogue>
+        <Dialogue
+          v-else-if="!hideSpecialDialogs"
+          :actor="actor"
+          :dialog="dialogs[unknownHandlerDialogID]"
+          :parentNode="dialog.ID"
+          :recurse="false"
+          :hideTools="hideTools"
+          :hideSpecialDialogs="hideSpecialDialogs"
+          :parentIdHash="idHash"
+          @click="$emit('click-child', { dialogID: unknownHandlerDialogID, isChild: true })"
+          @click-child="$emit('click-child', { dialogID: unknownHandlerDialogID, isChild: true })" />
       </div>
-      <Dialogue
-        dummy="true"
-        v-else-if="showNewDialog"
-        @click.native="$store.dispatch('dialogs/startNewConversation', dialogChain.slice(-1).pop())"
-        :parentNode="dialog.ID">
-        <IconButton name="plus" flat="flat" />continue conversation</Dialogue>
+      <template v-else-if="showNewDialog">
+        <ChildConnector
+          :width="`${calculateChildrenWidth(-1)}px`"
+          :height="`${tallest - height + 50}px`" />
+        <div class="child-dialogs">
+          <Dialogue
+            dummy="true"
+            @click.native="newConversation({ parentDialogID: dialogChain.slice(-1).pop() })"
+            :parentNode="dialog.ID">
+            <IconButton name="plus" flat="flat" />continue conversation</Dialogue>
+          <Dialogue
+            dummy="true"
+            v-if="!unknownHandlerDialogID && !hideSpecialDialogs"
+            @click.native="newConversation({ parentDialogID: dialogChain.slice(-1).pop(), unknownHandler: true })"
+            :parentNode="dialog.ID">
+            <IconButton name="plus" flat="flat" />anything else</Dialogue>
+        </div>
+      </template>
     </template>
   </div>
 </template>
@@ -249,6 +290,7 @@ export default {
     'filterChildren',
     'filterDisconnectChildren',
     'hideTools',
+    'hideSpecialDialogs',
     'parentIdHash'
   ],
   data() {
@@ -331,9 +373,15 @@ export default {
         return this.disconnectChildDialogIDs();
       }
       if (!this.filterChildren) {
-        return this.dialog.ChildDialogIDs;
+        return this.dialog.childDialogIDs;
       }
-      return this.dialog.ChildDialogIDs.filter(this.filterChildren);
+      return this.dialog.childDialogIDs.filter(this.filterChildren);
+    },
+    unknownHandlerDialogID() {
+      let dialog = this.dialog.childDialogIDs.find(id => {
+        return this.dialogs[id].UnknownHandler;
+      });
+      return dialog;
     }
   },
   methods: {
@@ -345,10 +393,16 @@ export default {
       this.$emit('click', { dialogID: this.dialog.ID });
       this.$store.dispatch('dialogs/beginDisconnectDialog', this.dialog.ID);
     },
-    calculateChildrenWidth() {
-      if (!this.childDialogIDs) return 1;
-      let newDialogOffset = this.showNewDialog ? 0 : 1;
-      return ((this.childDialogIDs.length - newDialogOffset) * 400);
+    calculateChildrenWidth(childrenCount) {
+      let count = childrenCount || (this.childDialogIDs ? this.childDialogIDs.length : 0) || 0;
+      let newDialogOffset = 0;
+      if (this.showNewDialog) {
+        newDialogOffset++;
+      }
+      if (!this.hideSpecialDialogs && !this.unknownHandlerDialogID) {
+        newDialogOffset++;
+      }
+      return (count + newDialogOffset) * 400;
     },
     beginEdit() {
       this.$store.dispatch('dialogs/editDialog', this.dialog.ID);
@@ -364,7 +418,7 @@ export default {
           this.$emit('change-height', 0);
         });
       }
-      this.$store.dispatch('dialogs/cancelEditDialog', this.dialog.ID);
+      this.$store.dispatch('dialogs/cancelEditDialog');
     },
     saveEdit() {
       this.$store.dispatch('dialogs/saveEditDialog', this.dialog.ID);
@@ -393,7 +447,7 @@ export default {
       if (!this.filterDisconnectChildren) {
         return [];
       }
-      return this.dialog.ChildDialogIDs.filter(id => this.filterDisconnectChildren(id));
+      return this.dialog.childDialogIDs.filter(id => this.filterDisconnectChildren(id));
     },
     userEntryEnter(id, event) {
       event.preventDefault();
@@ -418,6 +472,10 @@ export default {
       Vue.nextTick(() => {
         document.getElementById(id).focus();
       });
+    },
+    newConversation({ parentDialogID, unknownHandler }) {
+      if (!this.showNewDialog) return;
+      this.$store.dispatch('dialogs/startNewConversation', { parentDialogID, unknownHandler });
     }
   }
 };
@@ -438,9 +496,11 @@ export default {
   word-break: break-word;
 }
 .ai-wrap {
-  margin: 10pt 0;
   padding: 10pt 0;
-  border-top: 1px solid $purple;
+}
+hr {
+  margin: 10pt 0 0 0;
+  border-top: 2px solid $purple;
 }
 .cover {
   position: absolute;
@@ -590,6 +650,10 @@ export default {
   left: -10pt;
   padding: 5pt 0;
 }
+.entry.any {
+  color: $purple;
+  font-weight: bold;
+}
 .editing {
   > .entry {
     left: 0;
@@ -616,5 +680,29 @@ export default {
 textarea {
   width: 100%;
   background-color: transparent;
+}
+.linethrough {
+    text-align: center;
+    font-size: 1.5rem;
+    margin: 1rem 0;
+    position: relative;
+    z-index: 1;
+
+    &:before {
+        border-top: 2px solid #dfdfdf;
+        content:"";
+        margin: 0 auto; /* this centers the line to the full width specified */
+        position: absolute; /* positioning must be absolute here, and relative positioning must be applied to the parent */
+        top: 50%; left: 0; right: 0; bottom: 0;
+        width: 95%;
+        z-index: -1;
+    }
+
+    span {
+        /* to hide the lines from behind the text, you have to set the background color the same as the container */
+        background: $paper;
+        color: $purple;
+        padding: 0 15px;
+    }
 }
 </style>

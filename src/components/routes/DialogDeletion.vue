@@ -28,7 +28,7 @@
             :actor="actor"
             :filterChildren="filterChildren"
             hideTools="true"
-            @change-height="changeNodeHeight(dialogID, $event)"
+            hideSpecialDialogs="true"
             @click="clickDialog($event)"
             @click-child="clickDialog($event)" />
         </div>
@@ -93,14 +93,6 @@ export default {
     })
   },
   methods: {
-    changeNodeHeight(id, value) {
-      this.heightMap[id] = value;
-      this.tallest = 0;
-      for (let k in this.heightMap) {
-        if (!this.heightMap[k]) continue;
-        this.tallest = Math.max(this.tallest, this.heightMap[k]);
-      }
-    },
     clickDialog(event) {
       this.$store.dispatch('dialogs/cancelEditDialog');
       if (this.connectingFromDialogID) {
@@ -142,18 +134,6 @@ export default {
           this.tallest = Math.max(this.tallest, this.heightMap[k]);
         }
       });
-    },
-    topNewConversation() {
-      if (this.dialogChain.length <= 1) {
-        this.$store.dispatch('dialogs/startNewConversation');
-      } else {
-        this.$store.dispatch(
-          'dialogs/startNewConversation',
-          this.dialogChain
-            .slice(-2, -1)
-            .pop()
-        );
-      }
     },
     filterChildren(id) {
       return this.deletionCandidates[id];

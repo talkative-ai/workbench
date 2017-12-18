@@ -15,8 +15,8 @@ export const defaultDialog = {
   'IsRoot': true,
   'EntryInput': [''],
   'AlwaysExec': dcopy(defaultActionSet),
-  'ChildDialogIDs': [],
-  'ParentDialogIDs': []
+  'childDialogIDs': [],
+  'parentDialogIDs': []
 };
 
 export const defaultZone = {

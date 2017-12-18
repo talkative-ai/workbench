@@ -13,15 +13,16 @@ import Sidebar from './components/Sidebar';
 import Paper from './components/Paper';
 
 import WButton from './components/elements/Button';
+import WToggle from './components/elements/Toggle';
 import IconButton from './components/elements/IconButton';
 import Grid from './components/elements/Grid';
 import PaperText from './components/elements/PaperText';
 import Column from './components/elements/Column';
 
 Vue.component('Dialogue', Dialogue);
-Vue.component('WButton', WButton);
 Vue.component('IconButton', IconButton);
 Vue.component('WButton', WButton);
+Vue.component('WToggle', WToggle);
 Vue.component('Grid', Grid);
 Vue.component('Sidebar', Sidebar);
 Vue.component('Paper', Paper);
