@@ -4,7 +4,7 @@
     <hr>
     <template v-for="(dialogID, idx) of dialogChain">
       <Dialogue
-        :key="dialogID"
+        :key="`chain-${dialogID}`"
         :dialog="dialogs[dialogID]"
         :recurse="false"
         :actor="actor"

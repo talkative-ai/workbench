@@ -17,7 +17,6 @@
         <hr>
         <div
           class="dialogs"
-          v-if="dialogSiblings.length"
           :style="{ 'min-width': `${(dialogSiblings.length + 1) * 400}px` }">
           <Dialogue
             v-for="dialogID of dialogSiblings"
@@ -30,7 +29,6 @@
             :hideTools="disconnectingFromDialogID"
             @change-height="changeNodeHeight(dialogID, $event)"
             @click="clickDialog($event)"
-            :filterChildren="filterDialogChildren"
             :filterDisconnectChildren="filterDisconnectChildren"
             parentIdHash="dialog"
             @click-child="clickDialog($event)" />
@@ -49,7 +47,6 @@
             :hideTools="disconnectingFromDialogID"
             @change-height="changeNodeHeight(unknownHandlerDialogID, $event)"
             @click="clickDialog($event)"
-            :filterChildren="filterDialogChildren"
             :filterDisconnectChildren="filterDisconnectChildren"
             parentIdHash="dialog"
             @click-child="clickDialog($event)" />
@@ -172,6 +169,7 @@ export default {
       }
     },
     clickDialog(event) {
+      event.$event.stopPropagation();
       if (this.disconnectingFromDialogID) {
         if (this.disconnectingFromDialogID === event.dialogID) {
           return;
@@ -247,10 +245,6 @@ export default {
     filterDisconnectChildren(id) {
       let dialog = this.dialogs[id];
       return dialog.parentDialogIDs.length > 1 && !dialog.UnknownHandler;
-    },
-    filterDialogChildren(id) {
-      let dialog = this.dialogs[id];
-      return !dialog.UnknownHandler;
     },
     exitBack() {
       if (this.lastViewedZone) {

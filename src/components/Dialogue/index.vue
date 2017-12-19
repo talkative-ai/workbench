@@ -36,14 +36,14 @@
             <h1 class="danger">disconnecting</h1>
           </div>
           <div class="cover" v-else-if="connectingFromDialogID && !dialogs[connectingFromDialogID].childDialogIDs.includes(dialog.ID)"
-            @click="$emit('click', { dialogID: dialog.ID })">
+            @click="$emit('click', { $event, dialogID: dialog.ID })">
             <h1 v-if="!isSelected">
               <IconButton name="link" />preview connect</h1>
           </div>
           <div
             class="cover"
             v-else
-            @click="$emit('click', { dialogID: dialog.ID })"
+            @click="$emit('click', { $event, dialogID: dialog.ID })"
             :class="{
               selected: isSelected
             }">
@@ -208,7 +208,7 @@
         :width="`${calculateChildrenWidth()}px`"
         :height="`${tallest - height + 50}px`" />
       <div class="child-dialogs" v-if="childDialogIDs && childDialogIDs.length">
-        <div v-for="(dialogID, idx) of childDialogIDs" :key="dialogID">
+        <div v-for="(dialogID, idx) of childDialogIDs" :key="dialogID" v-if="dialogID !== unknownHandlerDialogID">
           <Dialogue
             :actor="actor"
             :dialog="dialogs[dialogID]"
@@ -219,8 +219,8 @@
             :hideTools="hideTools"
             :hideSpecialDialogs="hideSpecialDialogs"
             :parentIdHash="idHash"
-            @click="$emit('click-child', { dialogID, isChild: true })"
-            @click-child="$emit('click-child', { dialogID, isChild: true })" />
+            @click="$emit('click-child', { $event: $event.$event || $event, dialogID, isChild: true })"
+            @click-child="$emit('click-child', { $event: $event.$event || $event, dialogID, isChild: true })" />
         </div>
         <Dialogue
           dummy="true"
@@ -235,7 +235,7 @@
           :parentNode="dialog.ID">
           <IconButton name="plus" flat="flat" />anything else</Dialogue>
         <Dialogue
-          v-else-if="!hideSpecialDialogs"
+          v-if="unknownHandlerDialogID"
           :actor="actor"
           :dialog="dialogs[unknownHandlerDialogID]"
           :parentNode="dialog.ID"
@@ -243,12 +243,12 @@
           :hideTools="hideTools"
           :hideSpecialDialogs="hideSpecialDialogs"
           :parentIdHash="idHash"
-          @click="$emit('click-child', { dialogID: unknownHandlerDialogID, isChild: true })"
-          @click-child="$emit('click-child', { dialogID: unknownHandlerDialogID, isChild: true })" />
+          @click="$emit('click-child', { $event: $event.$event || $event, dialogID: unknownHandlerDialogID, isChild: true })"
+          @click-child="$emit('click-child', { $event: $event.$event || $event, dialogID: unknownHandlerDialogID, isChild: true })" />
       </div>
       <template v-else-if="showNewDialog">
         <ChildConnector
-          :width="`${calculateChildrenWidth(-1)}px`"
+          :width="`${calculateChildrenWidth(2)}px`"
           :height="`${tallest - height + 50}px`" />
         <div class="child-dialogs">
           <Dialogue
@@ -301,19 +301,27 @@ export default {
   activated() {
     const rect = this.$refs.dialog.getBoundingClientRect();
     this.height = rect.height;
-    this.$emit('change-height', rect.height);
+    if (this.height !== rect.height) {
+      this.height = rect.height;
+      this.$emit('change-height', rect.height);
+    }
   },
   mounted() {
     const rect = this.$refs.dialog.getBoundingClientRect();
     this.height = rect.height;
-    this.$emit('change-height', rect.height);
+    if (this.height !== rect.height) {
+      this.height = rect.height;
+      this.$emit('change-height', rect.height);
+    }
   },
   updated() {
     Vue.nextTick(() => {
       if (!this.$refs.dialog) return;
       const rect = this.$refs.dialog.getBoundingClientRect();
-      this.height = rect.height;
-      this.$emit('change-height', rect.height);
+      if (this.height !== rect.height) {
+        this.height = rect.height;
+        this.$emit('change-height', rect.height);
+      }
     });
   },
   computed: {
@@ -395,14 +403,15 @@ export default {
     },
     calculateChildrenWidth(childrenCount) {
       let count = childrenCount || (this.childDialogIDs ? this.childDialogIDs.length : 0) || 0;
-      let newDialogOffset = 0;
-      if (this.showNewDialog) {
-        newDialogOffset++;
+      if (!childrenCount) {
+        if (this.showNewDialog) {
+          count += 1;
+        }
+        if (!this.unknownHandlerDialogID) {
+          count += 1;
+        }
       }
-      if (!this.hideSpecialDialogs && !this.unknownHandlerDialogID) {
-        newDialogOffset++;
-      }
-      return (count + newDialogOffset) * 400;
+      return (count - 1) * 400;
     },
     beginEdit() {
       this.$store.dispatch('dialogs/editDialog', this.dialog.ID);

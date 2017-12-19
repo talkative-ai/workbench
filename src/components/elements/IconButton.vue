@@ -26,8 +26,10 @@ export default {
   props: ['name', 'label', 'flat', 'shrinky'],
   methods: {
     onClick($event) {
-      $event.stopPropagation();
-      this.$emit('click', $event);
+      if (this.$listeners.click) {
+        $event.stopPropagation();
+        this.$emit('click', $event);
+      }
     }
   }
 };
