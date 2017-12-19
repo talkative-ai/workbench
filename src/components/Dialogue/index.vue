@@ -206,7 +206,7 @@
       <ChildConnector
         v-if="childDialogIDs && childDialogIDs.length"
         :width="`${calculateChildrenWidth()}px`"
-        :height="`${tallest - height + 50}px`" />
+        :height="`${childConnectorHeight}px`" />
       <div class="child-dialogs" v-if="childDialogIDs && childDialogIDs.length">
         <div v-for="(dialogID, idx) of childDialogIDs" :key="dialogID" v-if="dialogID !== unknownHandlerDialogID">
           <Dialogue
@@ -249,7 +249,7 @@
       <template v-else-if="showNewDialog">
         <ChildConnector
           :width="`${calculateChildrenWidth(2)}px`"
-          :height="`${tallest - height + 50}px`" />
+          :height="`${childConnectorHeight}px`" />
         <div class="child-dialogs">
           <Dialogue
             dummy="true"
@@ -390,6 +390,9 @@ export default {
         return this.dialogs[id].UnknownHandler;
       });
       return dialog;
+    },
+    childConnectorHeight() {
+      return Math.max(this.tallest - this.height + 50, 50);
     }
   },
   methods: {
