@@ -320,7 +320,9 @@ const actions = {
           commit('updateDialogChain', state.dialogChain);
         }
       } else {
-        dispatch('selectChain', -2);
+        if (getters.currentDialogChain.slice(-1).pop() === state.newDialog.ID) {
+          dispatch('selectChain', -2);
+        }
       }
     }
     commit('cancelEditDialog');
