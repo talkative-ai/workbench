@@ -300,7 +300,6 @@ export default {
   },
   activated() {
     const rect = this.$refs.dialog.getBoundingClientRect();
-    this.height = rect.height;
     if (this.height !== rect.height) {
       this.height = rect.height;
       this.$emit('change-height', rect.height);
@@ -308,7 +307,6 @@ export default {
   },
   mounted() {
     const rect = this.$refs.dialog.getBoundingClientRect();
-    this.height = rect.height;
     if (this.height !== rect.height) {
       this.height = rect.height;
       this.$emit('change-height', rect.height);
