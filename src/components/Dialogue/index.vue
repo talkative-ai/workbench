@@ -209,7 +209,7 @@
         :width="`${calculateChildrenWidth()}px`"
         :height="`${childConnectorHeight}px`" />
       <div class="child-dialogs" v-if="childDialogIDs && childDialogIDs.length">
-        <div v-for="(dialogID, idx) of childDialogIDs" :key="dialogID" v-if="dialogID !== unknownHandlerDialogID">
+        <div v-for="(dialogID, idx) of childDialogIDs" :key="`dialog.${idHash}.${idx}`" v-if="dialogID !== unknownHandlerDialogID">
           <Dialogue
             :actor="actor"
             :dialog="dialogs[dialogID]"
@@ -236,7 +236,7 @@
           :parentNode="dialog.ID">
           <IconButton name="plus" flat="flat" />anything else</Dialogue>
         <Dialogue
-          v-if="unknownHandlerDialogID"
+          v-if="unknownHandlerDialogID && (!disconnectingFromDialogID || dialogs[unknownHandlerDialogID].parentDialogIDs.length > 1)"
           :actor="actor"
           :dialog="dialogs[unknownHandlerDialogID]"
           :parentNode="dialog.ID"
@@ -409,7 +409,7 @@ export default {
         if (this.showNewDialog) {
           count += 1;
         }
-        if ((!this.unknownHandlerDialogID && !this.disconnectingFromDialogID) || (this.unknownHandlerDialogID && this.disconnectingFromDialogID)) {
+        if (!this.unknownHandlerDialogID && !this.disconnectingFromDialogID) {
           count += 1;
         }
       }

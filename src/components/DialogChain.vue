@@ -4,7 +4,7 @@
     <hr>
     <template v-for="(dialogID, idx) of dialogChain">
       <Dialogue
-        :key="`chain-${dialogID}`"
+        :key="`chain.${dialogID}.${idx}`"
         :dialog="dialogs[dialogID]"
         :recurse="false"
         :actor="actor"
@@ -18,7 +18,7 @@
         v-if="displayChildConnector(idx)"
         width="0px"
         height="50px"
-        :key="dialogID" />
+        :key="`chain-child-connector.${dialogID}.${idx}`" />
     </template>
     <Dialogue
       dummy="true"

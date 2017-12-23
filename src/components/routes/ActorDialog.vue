@@ -169,7 +169,9 @@ export default {
       }
     },
     clickDialog(event) {
-      event.$event.stopPropagation();
+      if (event.$event) {
+        event.$event.stopPropagation();
+      }
       if (this.disconnectingFromDialogID) {
         if (this.disconnectingFromDialogID === event.dialogID) {
           return;
