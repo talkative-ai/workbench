@@ -138,7 +138,7 @@ const actions = {
   },
 
   selectDialogPreviewConnect({ state, rootState, dispatch, commit }, { dialogID, isChild = false, relativeParent }) {
-    let isChildOfConnecting = state.dialogMap[state.connectingFromDialogID].childDialogIDs.filter(id => id === dialogID);
+    let isChildOfConnecting = state.dialogMap[state.connectingFromDialogID].childDialogIDs.filter(id => id === dialogID).length;
     if (state.connectingToDialogID !== dialogID) {
       dispatch('cancelPreviewConnectDialog');
     }
