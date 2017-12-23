@@ -244,7 +244,7 @@ export default {
     },
     filterDisconnectChildren(id) {
       let dialog = this.dialogs[id];
-      return dialog.parentDialogIDs.length > 1 && !dialog.UnknownHandler;
+      return dialog.parentDialogIDs.length > 1;
     },
     exitBack() {
       if (this.lastViewedZone) {

@@ -35,10 +35,11 @@
           <div class="cover opaque" v-else-if="disconnectingToDialogID === dialog.ID">
             <h1 class="danger">disconnecting</h1>
           </div>
-          <div class="cover" v-else-if="connectingFromDialogID && !dialogs[connectingFromDialogID].childDialogIDs.includes(dialog.ID)"
-            @click="$emit('click', { $event, dialogID: dialog.ID })">
+          <div class="cover" v-else-if="isConnectable()"
+            @click="$emit('click', { $event, dialogID: dialog.ID, previewConnect: true })">
             <h1 v-if="!isSelected">
-              <IconButton name="link" />preview connect</h1>
+              <IconButton name="link" />preview connect
+            </h1>
           </div>
           <div
             class="cover"
@@ -408,7 +409,7 @@ export default {
         if (this.showNewDialog) {
           count += 1;
         }
-        if (!this.unknownHandlerDialogID) {
+        if ((!this.unknownHandlerDialogID && !this.disconnectingFromDialogID) || (this.unknownHandlerDialogID && this.disconnectingFromDialogID)) {
           count += 1;
         }
       }
@@ -486,6 +487,23 @@ export default {
     newConversation({ parentDialogID, unknownHandler }) {
       if (!this.showNewDialog) return;
       this.$store.dispatch('dialogs/startNewConversation', { parentDialogID, unknownHandler });
+    },
+    isConnectable() {
+      if (!this.connectingFromDialogID) {
+        return false;
+      }
+      if (this.dialogs[this.connectingFromDialogID].childDialogIDs.includes(this.dialog.ID)) {
+        return false;
+      }
+      if (this.dialog.UnknownHandler) {
+        let hasUnknownHandler = this.dialogs[this.connectingFromDialogID].childDialogIDs.find(id => {
+          return this.dialogs[id].UnknownHandler;
+        });
+        if (hasUnknownHandler) {
+          return false;
+        }
+      }
+      return true;
     }
   }
 };
