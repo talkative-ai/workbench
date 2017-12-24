@@ -15,7 +15,9 @@ const state = {
   projectsList: null,
   selectedEntity: new SelectedEntity(),
 
-  createID: 0
+  createID: 0,
+
+  isLoading: false
 };
 
 const getters = {
@@ -63,10 +65,18 @@ const actions = {
     if (navigate) {
       router.push({ name: `${titleCase(entity.kind)}Home`, params: { id: entity.data.ID } });
     }
+  },
+
+  isLoading({ commit }, isLoading) {
+    commit('isLoading', isLoading);
   }
 };
 
 const mutations = {
+
+  isLoading(state, value) {
+    Vue.set(state, 'isLoading', value);
+  },
 
   token(state, value) {
     Vue.set(state, 'token', value);

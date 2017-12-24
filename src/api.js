@@ -137,6 +137,7 @@ function aumFetch(method, path, payload) {
   };
 
   let req = new Request(`${process.env.API_URL}${path}`, config);
+  store.dispatch('master/isLoading', true);
   return fetch(req).then(result => {
     if (result.status === 401) {
       store.dispatch('master/unauthorized');
@@ -148,6 +149,7 @@ function aumFetch(method, path, payload) {
     return result;
   }).then(result => {
     store.commit('master/token', result.headers.get('x-token'));
+    store.dispatch('master/isLoading', false);
     return result;
   });
 }

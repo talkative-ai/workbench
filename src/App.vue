@@ -1,8 +1,9 @@
 <template>
-  <div v-if="$store.state.initializing">
-    <h1>Loading AUM</h1>
-  </div>
-  <div v-else id="app" :class="bgImageClass">
+  <div id="app" :class="bgImageClass">
+    <div v-if="isLoading" class="loading-splash">
+      <img src="./assets/images/aum-logo-color.256.png" />
+      <h1>Loading...</h1>
+    </div>
     <navbar />
     <main id="route-pad" class="Block">
       <router-view></router-view>
@@ -12,6 +13,7 @@
 
 <script>
 import Navbar from './components/Navbar.vue';
+import { mapState } from 'vuex';
 
 export default {
   name: 'app',
@@ -22,6 +24,11 @@ export default {
     return {
       bgImageClass: this.generateAppClass(this.$route)
     };
+  },
+  computed: {
+    ...mapState('master', {
+      isLoading: 'isLoading'
+    })
   },
   methods: {
     generateAppClass(route) {
@@ -51,7 +58,29 @@ input, select, textarea {
   position: relative;
   width: 100%;
 }
-
+@keyframes spin { 100% { transform:rotate(360deg); } }
+.loading-splash {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.75);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+  flex-direction: column;
+  img {
+    animation:spin 20s linear infinite;
+  }
+  h1 {
+    text-shadow: 2px 2px 0px black;
+    color: #6d00dd;
+    font-size: 3rem;
+  }
+}
 .bg-paper {
   background-color: var(--color-paper);
 }
