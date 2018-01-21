@@ -106,6 +106,7 @@ export default {
       this.newIntroMessage = this.zone.Triggers[TRIGGER_TYPES.InitializeZone].AlwaysExec.PlaySounds[0].Val;
     },
     removeIntroMessage() {
+      this.newIntroMessage = '';
       this.$store.dispatch('zones/removeIntroMessage', this.zone.ID);
     },
     setStartZone() {

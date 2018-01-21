@@ -4,18 +4,27 @@
     <paper>
       <paper-text full="full">
         <h1 class="Headline">
-          <span class="Headline">Everything happens in a Zone.</span>
-          <br/>Name your new Zone:</h1>
+          <span class="Headline">Everything happens in a zone.</span>
+          <br/>Name your new zone:</h1>
         <form class="Form u-flex" @submit.prevent="create()">
-          <input class="Headline u-size1of2 u-marginR3" v-model="zone.Title" placeholder="Enter name" required="required" />
+          <input
+            v-validate="{ required: true, regex: /^[\w|\s]*$/, min: 1, max: 50 }"
+            class="Headline u-size1of2 u-marginR3"
+            v-model="zone.Title"
+            placeholder="Enter name"
+            required="required" />
           <div class="Headline">
-            <w-button :class="{
-                hidden: !zone.Title.length
-              }">Enter
+            <w-button :disabled="errors.any()">Enter
               <span class="u-arrowEast"></span>
             </w-button>
           </div>
         </form>
+        <div class="input-hint">
+          <ul>
+            <li>Length between 1 and 50.</li>
+            <li>Only letters, numbers, and spaces.</li>
+          </ul>
+        </div>
       </paper-text>
     </paper>
   </grid>
@@ -24,6 +33,9 @@
 <script>
 export default {
   name: 'ZoneCreate',
+  mounted() {
+    this.$validator.validateAll();
+  },
   data() {
     return {
       zone: {

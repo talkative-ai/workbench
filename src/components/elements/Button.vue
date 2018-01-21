@@ -1,5 +1,5 @@
 <template>
-  <button :class="buttonClass">
+  <button :disabled="this.disabled" :class="buttonClass">
     <slot></slot>
   </button>
 </template>
@@ -23,7 +23,8 @@ export default {
     blank: Boolean,
     circle: Boolean,
     outline: Boolean,
-    lightOutline: String
+    lightOutline: String,
+    disabled: Boolean
   }
 };
 </script>
@@ -80,7 +81,7 @@ export default {
     box-shadow: inset 0 0 0 1px;
     color: var(--color-brand) !important;
 
-    &:hover {
+    &:hover:enabled {
       background-color: var(--color-brand);
       color: var(--color-bg) !important;
     }

@@ -13,6 +13,7 @@
             <icon name="logo" width="32" height="32"></icon>
             Publish to the Multiverse
           </w-button>
+          <div>Publishing to the Multiverse means your app will be available on the Google home.</div>
           <h2 v-if="metadata.Status == PUBLISH_STATUS.NotPublished">Never before published!</h2>
           <h2 v-if="metadata.Status == PUBLISH_STATUS.Published">Last time published: {{ lastTimePublished }}</h2>
           <h2 v-if="metadata.Status == PUBLISH_STATUS.Publishing">Publishing project...</h2>

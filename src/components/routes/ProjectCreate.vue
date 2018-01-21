@@ -7,18 +7,22 @@
           <span class="Headline--dark">Name your project:</span>
         </h1>
         <form class="Form" @submit.prevent="createProject()" :disabled="isDisabled()">
-          <input class="Headline u-size1of2 u-marginR3" placeholder="Add name" v-model="project.Title" required="required" />
+          <input
+            v-validate="'required|alpha_spaces|min:3|max:50'"
+            class="Headline u-size1of2 u-marginR3"
+            name="title"
+            placeholder="Add name" v-model="project.Title" required="required" />
           <div class="error" v-if="createError">{{ createError }}</div>
           <div class="input-hint">
             <ul>
-              <li>Minimum 3 characters</li>
-              <li>Maximum 255 characters</li>
-              <li>No special characters like !@#$%^&*()</li>
+              <li>Length between 3 and 50</li>
+              <li>Only letters and spaces</li>
             </ul>
             <br>
-            Other people will see this name when you publish!</div>
+            Other people will see this name when you publish!
+          </div>
           <br>
-          <w-button outline="outline">Begin
+          <w-button :disabled="errors.any()" outline="outline">Begin
             <span class="u-arrowEast"></span>
           </w-button>
           <w-button v-if="projectsList.length" outline="outline" @click.native="$router.push({ name: 'ProjectHome' })">Cancel
@@ -34,6 +38,9 @@
 import { mapState } from 'vuex';
 export default {
   name: 'ProjectCreate',
+  mounted() {
+    this.$validator.validateAll();
+  },
   data() {
     return {
       project: {
@@ -118,6 +125,7 @@ h3 {
 }
 
 .input-hint {
+  font-size: 0.9rem;
   color: $light-grey;
   i {
     display: block;

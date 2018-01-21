@@ -7,6 +7,7 @@ import App from './App';
 import VueAutosize from 'vue-autosize';
 import * as svgicon from 'vue-svgicon';
 import Icon from 'vue-awesome/components/Icon';
+import VeeValidate from 'vee-validate';
 
 import Dialogue from './components/Dialogue/index';
 import Sidebar from './components/Sidebar';
@@ -40,6 +41,7 @@ Vue.use(svgicon, {
 
 Vue.use(GSignInButton);
 Vue.use(VueAutosize);
+Vue.use(VeeValidate);
 
 Vue.component('fa-icon', Icon);
 

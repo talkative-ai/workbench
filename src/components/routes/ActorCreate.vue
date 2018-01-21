@@ -4,28 +4,28 @@
     <paper>
       <paper-text>
         <h1 class="Headline">
-          <span class="Headline--dark" v-if="zoneActors && !zoneActors.length">You don't have any actors yet.</span>
-          <br/>Create a new actor:</h1>
-        <form class="Form" @submit.prevent="create()">
-          <grid gutter>
-            <div class="Grid-cell u-size2of3">
-              <label>Name (required):
-                <input class="Headline u-colorTextDark" v-model="actor.Title" placeholder="What's their name?"
-                />
-              </label>
-            </div>
-            <div class="Grid-cell">
-              <div class="u-textRight u-marginT4">
-                <w-button large="large" :class="{
-                    disabled: !actor.Title.length,
-                    Headline: true
-                  }">Create actor
-                  <span class="u-arrowEast"></span>
-                </w-button>
-              </div>
-            </div>
-          </grid>
+          Actors carry conversations.
+          <br/>Name your actor:
+        </h1>
+        <form class="Form u-flex" @submit.prevent="create()">
+          <input
+            v-validate="{ required: true, regex: /^[\w|\s]*$/, min: 1, max: 50 }"
+            class="Headline u-size1of2 u-marginR3"
+            v-model="actor.Title"
+            placeholder="Enter name"
+            required="required" />
+          <div class="Headline">
+            <w-button :disabled="errors.any()">Enter
+              <span class="u-arrowEast"></span>
+            </w-button>
+          </div>
         </form>
+        <div class="input-hint">
+          <ul>
+            <li>Length between 1 and 50.</li>
+            <li>Only letters, numbers, and spaces.</li>
+          </ul>
+        </div>
       </paper-text>
     </paper>
   </grid>
@@ -36,6 +36,9 @@ import { mapState } from 'vuex';
 
 export default {
   name: 'ActorCreate',
+  mounted() {
+    this.$validator.validateAll();
+  },
   props: ['zoneid'],
   data() {
     return {
