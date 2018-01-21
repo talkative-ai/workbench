@@ -12,6 +12,9 @@
             </w-button>
           </g-signin-button>
         <p class="u-marginT3 u-colorTextLight">Currently only sign in with Google is supported.</p>
+        <div v-if="error" class="error">
+          {{ knownErrors[error.message] || error.message }}
+        </div>
       </paper-text>
     </paper>
   </grid>
@@ -25,6 +28,10 @@ export default {
     return {
       googleSignInParams: {
         client_id: '693388894852-2s2q0ggfj09c5mq094gpdbppugce944m.apps.googleusercontent.com'
+      },
+      error: {},
+      knownErrors: {
+        'not_whitelisted': "Sorry, your account hasn't been whitelisted for the beta."
       }
     };
   },
@@ -42,7 +49,10 @@ export default {
   },
   methods: {
     onSignInSuccess(googleUser) {
-      this.$store.dispatch('master/authGoogle', googleUser);
+      this.$store.dispatch('master/authGoogle', googleUser)
+      .catch(err => {
+        this.error = err;
+      });
     },
     onSignInError(error) {
       console.log('OH NOES', error);
@@ -53,5 +63,8 @@ export default {
 
 
 <style scoped>
-
+.error {
+  font-size: 1.5rem;
+  color: red;
+}
 </style>

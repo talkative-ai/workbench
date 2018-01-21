@@ -34,18 +34,26 @@ const actions = {
 
   authGoogle({ commit, state }, googleUser) {
     const profile = googleUser.getBasicProfile();
-    API.GetAuthGoogle({
-      token: googleUser.getAuthResponse().id_token,
-      givenName: profile.getGivenName(),
-      familyName: profile.getFamilyName()
-    })
+    return new Promise((resolve, reject) => {
+      API.GetAuthGoogle({
+        token: googleUser.getAuthResponse().id_token,
+        givenName: profile.getGivenName(),
+        familyName: profile.getFamilyName()
+      })
       .then(result => {
         return result.json();
       })
-      .then(user => {
-        commit('user', user);
+      .then(response => {
+        if (response.code) {
+          reject(response);
+          return;
+        }
+        commit('user', response);
         router.push({ name: 'ProjectSelect' });
+        resolve(response);
+        return;
       });
+    });
   },
 
   unauthorized({ dispatch, state }) {
