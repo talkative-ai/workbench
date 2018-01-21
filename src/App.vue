@@ -25,6 +25,11 @@ export default {
       bgImageClass: this.generateAppClass(this.$route)
     };
   },
+  mounted() {
+    window.Intercom('boot', {
+      app_id: 'n7g235n3'
+    });
+  },
   computed: {
     ...mapState('master', {
       isLoading: 'isLoading'

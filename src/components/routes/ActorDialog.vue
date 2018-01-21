@@ -36,7 +36,7 @@
             dummy="true"
             v-if="showNewDialog"
             @click.native="topNewConversation()">
-            <IconButton name="plus" flat="flat"></IconButton>{{ dialogChain.length == 1 ? 'new conversation' : 'continue conversation' }}</Dialogue>
+            <IconButton name="plus" flat="flat"></IconButton>{{ dialogChain.length <= 1 ? 'new conversation' : 'continue conversation' }}</Dialogue>
           <Dialogue
             v-if="unknownHandlerDialogID"
             :dialog="dialogs[unknownHandlerDialogID]"

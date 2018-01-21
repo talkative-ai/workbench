@@ -171,6 +171,8 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
+  window.Intercom('update');
+
   if (to.name !== 'SignIn') {
     store.commit('master/path', to.name);
   }
