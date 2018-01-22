@@ -1,7 +1,7 @@
 import store from './store';
 
 export default {
-  GetAuthGoogle({ token, givenName, familyName }) {
+  GetAuthGoogle({ token, givenName, familyName } = {}) {
     return aumFetch('GET', `auth/google?token=${token}&gn=${givenName}&fn=${familyName}`);
   },
 
@@ -10,40 +10,40 @@ export default {
     .then(result => result.json());
   },
 
-  GetProject({ ID }) {
+  GetProject({ ID } = {}) {
     return aumFetch('GET', `project/${ID}`)
     .then(result => result.json());
   },
 
-  GetProjectMetadata({ ID }) {
+  GetProjectMetadata({ ID } = {}) {
     return aumFetch('GET', `project/${ID}/metadata`)
     .then(result => result.json());
   },
 
-  GetActor({ ID }) {
+  GetActor({ ID } = {}) {
     return aumFetch('GET', `actor/${ID}`)
     .then(result => result.json());
   },
 
-  GetZone({ ID }) {
+  GetZone({ ID } = {}) {
     return aumFetch('GET', `zone/${ID}`)
     .then(result => result.json());
   },
 
-  PutActor(actor) {
-    for (const d of actor.Dialogs || []) {
+  PutActor({ Actor } = {}) {
+    for (const d of Actor.Dialogs || []) {
       if (!d.ID) continue;
     }
-    return aumFetch('PATCH', `actor/${actor.ID}`, actor)
+    return aumFetch('PATCH', `actor/${Actor.ID}`, Actor)
     .then(result => result.json());
   },
 
-  PutZone(zone) {
+  PutZone({ zone } = {}) {
     return aumFetch('PUT', `zone/${zone.ID}`, zone)
     .then(result => result.json());
   },
 
-  CreateZone({ CreateID, Title }) {
+  CreateZone({ CreateID, Title } = {}) {
     return aumFetch('PATCH', `project/${store.state.project.selectedProject.ID}`, {
       Zones: [{
         CreateID,
@@ -60,7 +60,7 @@ export default {
     });
   },
 
-  CreateActor({ Actor, ZoneActors = [] }) {
+  CreateActor({ Actor, ZoneActors = [] } = {}) {
     return aumFetch('PATCH', `project/${store.state.project.selectedProject.ID}`, {
       Actors: [ Actor ],
       ZoneActors
@@ -75,8 +75,8 @@ export default {
     });
   },
 
-  PatchProject(params) {
-    return aumFetch('PATCH', `project/${store.state.project.selectedProject.ID}`, params)
+  PatchProject({ project } = {}) {
+    return aumFetch('PATCH', `project/${store.state.project.selectedProject.ID}`, project)
     .then(idMap => {
       if (idMap.status < 200 || idMap.status > 299) {
         return idMap.json().then(result => {
@@ -87,7 +87,7 @@ export default {
     });
   },
 
-  UpdateActorZones(ActorZones) {
+  UpdateActorZones({ ActorZones } = {}) {
     return aumFetch('PATCH', `project/${store.state.project.selectedProject.ID}`, {
       ActorZones
     })
@@ -101,7 +101,7 @@ export default {
     });
   },
 
-  CreateProject(project) {
+  CreateProject({ project } = {}) {
     return aumFetch('POST', `project`, project)
     .then(result => {
       if (result.status !== 201) {
@@ -137,19 +137,19 @@ function aumFetch(method, path, payload) {
   };
 
   let req = new Request(`${process.env.API_URL}${path}`, config);
-  store.dispatch('master/isLoading', true);
+  store.dispatch('master/isLoading', true, { root: true });
   return fetch(req).then(result => {
     if (result.status === 401) {
-      store.dispatch('master/unauthorized');
+      store.dispatch('master/unauthorized', {}, { root: true });
       throw new Error('Unauthorized');
     }
     if (result.status === 404) {
-      store.dispatch('master/NotFound');
+      store.dispatch('master/NotFound', {}, { root: true });
     }
     return result;
   }).then(result => {
-    store.commit('master/token', result.headers.get('x-token'));
-    store.dispatch('master/isLoading', false);
+    store.dispatch('master/token', result.headers.get('x-token'), { root: true });
+    store.dispatch('master/isLoading', false, { root: true });
     return result;
   });
 }

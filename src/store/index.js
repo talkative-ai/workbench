@@ -28,6 +28,7 @@ const actions = {
     if (keepAuth) {
       freshState.master.user = store.state.master.user;
       freshState.master.token = store.state.master.token;
+      freshState.master.intercomHMAC = store.state.master.intercomHMAC;
     }
 
     store.replaceState(freshState);

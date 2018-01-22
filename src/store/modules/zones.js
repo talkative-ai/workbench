@@ -38,60 +38,72 @@ const actions = {
     commit('stageCreateZoneIntroTrigger', ZoneID);
   },
 
-  saveIntroMessage({ state, commit }, { ZoneID, message }) {
+  saveIntroMessage({ state, dispatch, commit }, { ZoneID, message }) {
     let zone = state.zoneMap[ZoneID];
     if (state.zoneMap[ZoneID].Triggers[TRIGGER_TYPES.InitializeZone].PatchAction == null) {
       commit('stageUpdateIntroMessage', { ZoneID });
     }
     commit('introMessage', { ZoneID, message });
     API.PatchProject({
-      Zones: [{
-        ID: zone.ID,
-        Triggers: zone.Triggers
-      }]
+      dispatch,
+      project: {
+        Zones: [{
+          ID: zone.ID,
+          Triggers: zone.Triggers
+        }]
+      }
     }).then(() => {
       Vue.delete(state.zoneMap[ZoneID].Triggers[TRIGGER_TYPES.InitializeZone], 'PatchAction');
     });
   },
 
-  removeIntroMessage({ state, commit }, ZoneID) {
+  removeIntroMessage({ state, dispatch, commit }, ZoneID) {
     let zone = state.zoneMap[ZoneID];
     if (!zone.Triggers[TRIGGER_TYPES.InitializeZone] ||
       zone.Triggers[TRIGGER_TYPES.InitializeZone].PATCH_ACTION === PATCH_ACTION.CREATE) return;
     commit('stageDeleteZoneIntroTrigger', { ZoneID });
     API.PatchProject({
-      Zones: [{
-        ID: zone.ID,
-        Triggers: {
-          [TRIGGER_TYPES.InitializeZone]: {
-            PatchAction: PATCH_ACTION.DELETE
+      dispatch,
+      project: {
+        Zones: [{
+          ID: zone.ID,
+          Triggers: {
+            [TRIGGER_TYPES.InitializeZone]: {
+              PatchAction: PATCH_ACTION.DELETE
+            }
           }
-        }
-      }]
+        }]
+      }
     });
   },
 
-  removeActorFromZone({ state, commit }, { ActorID, ZoneID }) {
+  removeActorFromZone({ state, dispatch, commit }, { ActorID, ZoneID }) {
     commit('removeActor', { ZoneID, ActorID });
     commit('actors/removeFromZone', { ActorID, ZoneID }, { root: true });
     API.PatchProject({
-      ZoneActors: [{
-        ZoneID: ZoneID,
-        ActorID: ActorID,
-        PatchAction: PATCH_ACTION.DELETE
-      }]
+      dispatch,
+      project: {
+        ZoneActors: [{
+          ZoneID: ZoneID,
+          ActorID: ActorID,
+          PatchAction: PATCH_ACTION.DELETE
+        }]
+      }
     });
   },
 
-  addActorToZone({ state, commit }, { ActorID, ZoneID }) {
+  addActorToZone({ state, dispatch, commit }, { ActorID, ZoneID }) {
     commit('addActor', { ZoneID, ActorID });
     commit('actors/addToZone', { ActorID, ZoneID }, { root: true });
     API.PatchProject({
-      ZoneActors: [{
-        ZoneID: ZoneID,
-        ActorID: ActorID,
-        PatchAction: PATCH_ACTION.CREATE
-      }]
+      dispatch,
+      project: {
+        ZoneActors: [{
+          ZoneID: ZoneID,
+          ActorID: ActorID,
+          PatchAction: PATCH_ACTION.CREATE
+        }]
+      }
     });
   },
 
@@ -102,7 +114,7 @@ const actions = {
       router.push({ name: 'NotFound' });
       return;
     }
-    return API.GetZone(zone)
+    return API.GetZone({ ID: zone.ID })
     .then(zone => {
       commit('updateZone', zone);
       commit('lastViewedZone', zone.ID);

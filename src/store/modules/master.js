@@ -8,6 +8,7 @@ import { PATCH_ACTION } from '@/const';
 
 const state = {
   user: null,
+  intercomHMAC: null,
   token: null,
 
   path: '',
@@ -32,10 +33,15 @@ const actions = {
     return `create-${state.createID}`;
   },
 
-  authGoogle({ commit, state }, googleUser) {
+  getProjects({ dispatch }) {
+    return API.GetProjects();
+  },
+
+  authGoogle({ commit, dispatch, state }, googleUser) {
     const profile = googleUser.getBasicProfile();
     return new Promise((resolve, reject) => {
       API.GetAuthGoogle({
+        dispatch,
         token: googleUser.getAuthResponse().id_token,
         givenName: profile.getGivenName(),
         familyName: profile.getFamilyName()
@@ -48,11 +54,25 @@ const actions = {
           reject(response);
           return;
         }
-        commit('user', response);
+        commit('user', response.User);
+        commit('intercomHMAC', response.IntercomHMAC);
+        dispatch('bootIntercom');
         router.push({ name: 'ProjectSelect' });
         resolve(response);
         return;
       });
+    });
+  },
+
+  bootIntercom({ state }) {
+    if (!state.intercomHMAC) {
+      return;
+    }
+    window.Intercom('boot', {
+      app_id: 'n7g235n3',
+      email: state.user.Email, // Email address
+      user_hash: state.intercomHMAC,
+      name: `${state.user.GivenName} ${state.user.FamilyName}`
     });
   },
 
@@ -75,6 +95,10 @@ const actions = {
     }
   },
 
+  token({ commit }, token) {
+    commit('token', token);
+  },
+
   isLoading({ commit }, isLoading) {
     commit('isLoading', isLoading);
   }
@@ -83,11 +107,15 @@ const actions = {
 const mutations = {
 
   isLoading(state, value) {
-    Vue.set(state, 'isLoading', value);
+    state.isLoading = value;
   },
 
   token(state, value) {
     Vue.set(state, 'token', value);
+  },
+
+  intercomHMAC(state, value) {
+    Vue.set(state, 'intercomHMAC', value);
   },
 
   incrCreate(state) {

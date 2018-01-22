@@ -26,9 +26,7 @@ export default {
     };
   },
   mounted() {
-    window.Intercom('boot', {
-      app_id: 'n7g235n3'
-    });
+    this.$store.dispatch('master/bootIntercom');
   },
   computed: {
     ...mapState('master', {

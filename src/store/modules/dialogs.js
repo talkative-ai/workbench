@@ -132,9 +132,9 @@ const getters = {
 };
 
 const actions = {
-  updateDialog({ commit, rootState }) {
+  updateDialog({ commit, dispatch, rootState }) {
     if (rootState.master.selectedEntity.kind !== 'actor') return;
-    return API.PutActor(rootState.master.selectedEntity.data);
+    return API.PutActor({ Actor: rootState.master.selectedEntity.data });
   },
 
   selectDialogPreviewConnect({ state, rootState, dispatch, commit }, { dialogID, isChild = false, relativeParent }) {
@@ -294,7 +294,7 @@ const actions = {
       commit('master/overwriteDialog', state.dialogEditingCopy[dialogID], { root: true });
     }
     commit('saveEditDialog', dialogID);
-    let p = API.PutActor(rootState.master.selectedEntity.data);
+    let p = API.PutActor({ Actor: rootState.master.selectedEntity.data });
     if (state.newDialog) {
       p.then(result => {
         const newID = result[state.newDialog.CreateID].toString();
@@ -362,7 +362,7 @@ const actions = {
     commit('addParentDialogID', {
       childID: state.connectingToDialogID,
       parentID: state.connectingFromDialogID });
-    await API.PutActor(rootState.master.selectedEntity.data);
+    await API.PutActor({ Actor: rootState.master.selectedEntity.data });
     dispatch('cancelConnectDialog', true);
   },
 
@@ -425,7 +425,7 @@ const actions = {
       commit('master/stageDeleteDialog', dialogID, { root: true });
     }
 
-    await API.PutActor(rootState.master.selectedEntity.data);
+    await API.PutActor({ Actor: rootState.master.selectedEntity.data });
 
     while (getters.currentDialogChain.length > 1 && state.deletionCandidates[getters.currentDialogChain.slice(-1).pop()]) {
       dispatch('selectChain', -2);
@@ -478,7 +478,7 @@ const actions = {
     commit('master/stageDeleteDialogRelation', {
       childID: state.disconnectingToDialogID,
       parentID: state.disconnectingFromDialogID }, { root: true });
-    await API.PutActor(rootState.master.selectedEntity.data);
+    await API.PutActor({ Actor: rootState.master.selectedEntity.data });
     commit('removeParentDialogID', {
       childID: state.disconnectingToDialogID,
       parentID: state.disconnectingFromDialogID });

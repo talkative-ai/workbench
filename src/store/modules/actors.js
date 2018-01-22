@@ -58,7 +58,7 @@ const actions = {
       router.push({ name: 'NotFound' });
       return;
     }
-    return API.GetActor(actor)
+    return API.GetActor({ ID: actor.ID })
     .then(actor => {
       commit('dialogs/clearView', ActorID, { root: true });
 

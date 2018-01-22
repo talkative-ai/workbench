@@ -23,7 +23,7 @@ const actions = {
     commit('initializing', true);
     return dispatch('resetState', { keepAuth: true }, { root: true })
       .then(newState => {
-        return API.GetProject(p)
+        return API.GetProject({ ID: p.ID })
         .then(newState => dispatch('setProject', newState))
         .then(newState => {
           commit('initializing', false);
@@ -32,7 +32,7 @@ const actions = {
   },
 
   refreshProject({ dispatch, commit, state }) {
-    return API.GetProject(state.selectedProject)
+    return API.GetProject({ ID: state.selectedProject.ID })
       .then(newState => dispatch('setProject', newState))
       .then(newState => {
         commit('initializing', false);
@@ -61,7 +61,7 @@ const actions = {
 
   createProject({ dispatch, state }, project) {
     let newProject;
-    return API.CreateProject(project)
+    return API.CreateProject({ project })
       .then(res => {
         newProject = res;
         return dispatch('setProject', res);
@@ -80,7 +80,7 @@ const actions = {
     });
   },
 
-  getMetadata({ commit, state }) {
+  getMetadata({ commit, state, dispatch }) {
     return API.GetProjectMetadata({ ID: state.selectedProject.ID })
     .then(metadata => {
       commit('metadata', metadata);
@@ -105,10 +105,13 @@ const actions = {
     commit('cancelCheckStatus');
   },
 
-  startZone({ state, commit }, StartZoneID) {
+  startZone({ state, dispatch, commit }, StartZoneID) {
     API.PatchProject({
-      StartZoneID: {
-        UUID: StartZoneID
+      dispatch,
+      project: {
+        StartZoneID: {
+          UUID: StartZoneID
+        }
       }
     }).then(() => {
       commit('startZone', StartZoneID);

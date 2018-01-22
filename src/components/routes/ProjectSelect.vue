@@ -21,7 +21,6 @@
 <script>
 import { mapState } from 'vuex';
 import store from '@/store';
-import API from '@/api';
 import router from '@/router';
 
 export default {
@@ -55,7 +54,7 @@ export default {
   },
   beforeCreate() {
     store.dispatch('resetState', { keepAuth: true });
-    return API.GetProjects()
+    return store.dispatch('master/getProjects')
     .then(result => {
       store.commit('master/projectsList', result);
       if (!result.length) {
