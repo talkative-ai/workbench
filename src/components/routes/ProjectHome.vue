@@ -72,7 +72,7 @@ export default {
       if (!this.selectedProject.Zones.length) {
         return 'In order to publish, create a Zone, add an Actor, and create some conversations!';
       }
-      if (!this.selectedProject.Actors.length || !Object.keys(this.zoneActors[this.selectedProject.StartZoneID])
+      if (!this.selectedProject.Actors.length || !Object.keys(this.zoneActors[this.selectedProject.StartZoneID] || {})
         .find(actorKey => this.zoneActors[this.selectedProject.StartZoneID][actorKey])) {
         return 'In order to publish, add an Actor to the Start Zone, and create some conversations!';
       }
