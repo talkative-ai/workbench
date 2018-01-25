@@ -146,6 +146,9 @@ function aumFetch(method, path, payload) {
     if (result.status === 404) {
       store.dispatch('master/NotFound', {}, { root: true });
     }
+    if (result.status !== 200 && result.status !== 201) {
+      throw result;
+    }
     return result;
   }).then(result => {
     store.dispatch('master/token', result.headers.get('x-token'), { root: true });

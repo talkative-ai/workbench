@@ -154,7 +154,14 @@ const router = new Router({
         let promises = [];
         promises.push(store.dispatch('project/refreshProject'));
         promises.push(store.dispatch('project/getMetadata'));
-        await Promise.all(promises);
+        try {
+          await Promise.all(promises);
+        } catch (err) {
+          // Project no longer exists for some reason
+          if (err.status) {
+            return next({ name: 'ProjectSelect' });
+          }
+        }
         if (store.state.project.metadata.Status === PUBLISH_STATUS.Publishing) {
           store.dispatch('project/beginCheckStatus');
         }
