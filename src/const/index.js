@@ -15,7 +15,9 @@ export const PUBLISH_STATUS = {
   NotPublished: 0,
   Publishing: 1,
   Published: 2,
-  Problem: 3
+  Problem: 3,
+  UnderReview: 4,
+  Denied: 5
 };
 
 export const MONTHS = {
@@ -34,3 +36,27 @@ export const MONTHS = {
 };
 
 export const NULL_UUID = '00000000-0000-0000-0000-000000000000';
+
+export const PROJECT_CATEGORIES = [
+  'Miscellaneous',
+  'Entertainment',
+  'Business',
+  'Education'
+];
+
+export const TAGS = [
+  'Interactive story',
+  'Humor',
+  'Adventure',
+  'Fiction',
+  'Nonfiction',
+  'Historical',
+  'Drama',
+  'Games',
+  'Study',
+  'History',
+  'English',
+  'Science',
+  'Math',
+  'Training'
+];

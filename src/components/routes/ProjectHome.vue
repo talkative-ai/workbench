@@ -7,6 +7,30 @@
       </paper-text>
       <div class="Grid-cell" v-if="!nextStepsToPublish">
         <div class="Paper-text">
+          <div class="label-container">
+            <label>
+              App Category
+              <multiselect
+              v-model="selectedCategory"
+              @select="updateCategory($event)"
+              :close-on-select="false"
+              :options="PROJECT_CATEGORIES" />
+            </label>
+          </div>
+          <div class="label-container">
+            <label>
+              App Tags
+              <multiselect
+              v-model="selectedTags"
+              :multiple="true"
+              :max="3"
+              @close="updateTags($event)"
+              @remove="updateTags($event)"
+              :close-on-select="false"
+              :options="TAGS" />
+            </label>
+          </div>
+          <hr>
           <w-button
             :disabled="metadata.Status == PUBLISH_STATUS.Publishing"
             lightOutline="lightOutline" @click.native="publish()">
@@ -14,10 +38,13 @@
             Publish to the Multiverse
           </w-button>
           <div>Publishing to the Multiverse means your app will be available on the Google home.</div>
+          <hr>
           <h2 v-if="metadata.Status == PUBLISH_STATUS.NotPublished">Never before published!</h2>
           <h2 v-if="metadata.Status == PUBLISH_STATUS.Published">Last time published: {{ lastTimePublished }}</h2>
           <h2 v-if="metadata.Status == PUBLISH_STATUS.Publishing">Publishing project...</h2>
           <h2 v-if="metadata.Status == PUBLISH_STATUS.Problem">Sorry, there was a problem publishing. Please contact support.</h2>
+          <h2 v-if="metadata.Status == PUBLISH_STATUS.UnderReview">Your app has been submitted is currently under review!</h2>
+          <h2 v-if="metadata.Status == PUBLISH_STATUS.Denied">Your app has been denied.</h2>
         </div>
       </div>
       <div v-else class="Grid-cell">
@@ -37,13 +64,27 @@
 
 <script>
 import { mapState } from 'vuex';
-import { MONTHS, PUBLISH_STATUS } from '@/const';
+import { MONTHS, PUBLISH_STATUS, TAGS, PROJECT_CATEGORIES } from '@/const';
 export default {
   name: 'ProjectHome',
   methods: {
     publish() {
       this.$store.dispatch('project/publish');
+    },
+    updateCategory() {
+      console.log('hi');
+    },
+    updateTags() {
+      console.log();
     }
+  },
+  data() {
+    return {
+      PROJECT_CATEGORIES,
+      TAGS,
+      selectedCategory: null,
+      selectedTags: []
+    };
   },
   computed: {
     ...mapState('zones', {
@@ -86,5 +127,11 @@ export default {
 </script>
 
 <style lang="scss">
-
+hr {
+  padding: 1rem;
+  color: $purple;
+}
+.label-container {
+  margin: 0.5rem 0;
+}
 </style>

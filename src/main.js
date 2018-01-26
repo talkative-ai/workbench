@@ -1,6 +1,7 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import GSignInButton from 'vue-google-signin-button';
+import 'vue-multiselect/dist/vue-multiselect.min.css';
 
 import Vue from 'vue';
 import App from './App';
@@ -8,6 +9,7 @@ import VueAutosize from 'vue-autosize';
 import * as svgicon from 'vue-svgicon';
 import Icon from 'vue-awesome/components/Icon';
 import VeeValidate from 'vee-validate';
+import Multiselect from 'vue-multiselect';
 
 import Dialogue from './components/Dialogue/index';
 import Sidebar from './components/Sidebar';
@@ -29,6 +31,7 @@ Vue.component('Sidebar', Sidebar);
 Vue.component('Paper', Paper);
 Vue.component('PaperText', PaperText);
 Vue.component('Column', Column);
+Vue.component('multiselect', Multiselect);
 
 import router from './router';
 import store, { initializer } from './store';
