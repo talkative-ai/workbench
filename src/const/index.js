@@ -45,7 +45,7 @@ export const PROJECT_CATEGORIES = [
 ];
 
 export const TAGS = [
-  'Interactive story',
+  'Interactive Story',
   'Humor',
   'Adventure',
   'Fiction',
