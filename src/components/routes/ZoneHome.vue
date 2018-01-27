@@ -84,7 +84,8 @@ export default {
         return state.zoneActors[this.$route.params.id];
       },
       introMessageExists(state) {
-        return state.zoneMap[this.$route.params.id].Triggers[TRIGGER_TYPES.InitializeZone] &&
+        return state.zoneMap[this.$route.params.id].Triggers &&
+        state.zoneMap[this.$route.params.id].Triggers[TRIGGER_TYPES.InitializeZone] &&
         state.zoneMap[this.$route.params.id].Triggers[TRIGGER_TYPES.InitializeZone].PatchAction !== PATCH_ACTION.DELETE;
       },
       introMessageChanged(state) {

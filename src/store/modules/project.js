@@ -1,7 +1,7 @@
 import Vue from 'vue';
 
 import API from '@/api';
-import { PUBLISH_STATUS } from '@/const';
+import { PUBLISH_STATUS, PROJECT_CATEGORIES } from '@/const';
 
 const state = {
   initializing: true,
@@ -107,7 +107,6 @@ const actions = {
 
   startZone({ state, dispatch, commit }, StartZoneID) {
     API.PatchProject({
-      dispatch,
       project: {
         StartZoneID: {
           UUID: StartZoneID
@@ -115,6 +114,37 @@ const actions = {
       }
     }).then(() => {
       commit('startZone', StartZoneID);
+    });
+  },
+
+  updateCategory({ state, commit }, Category = PROJECT_CATEGORIES[0]) {
+    if (state.selectedProject.Category === Category) return;
+    API.PatchProject({
+      project: {
+        Category
+      }
+    }).then(() => {
+      commit('category', Category);
+    });
+  },
+
+  updateTags({ state, commit }, Tags = []) {
+    let hasNewTag = Tags.length !== (state.selectedProject.Tags || []).length;
+    if (!hasNewTag) {
+      for (let projectTag of state.selectedProject.Tags) {
+        if (!Tags.includes(projectTag)) {
+          hasNewTag = true;
+          break;
+        }
+      }
+    }
+    if (!hasNewTag) return;
+    API.PatchProject({
+      project: {
+        Tags
+      }
+    }).then(() => {
+      commit('tags', Tags);
     });
   }
 
@@ -152,6 +182,14 @@ const mutations = {
 
   metadata(state, metadata) {
     Vue.set(state, 'metadata', metadata);
+  },
+
+  category(state, category) {
+    Vue.set(state.selectedProject, 'Category', category);
+  },
+
+  tags(state, tags) {
+    Vue.set(state.selectedProject, 'Tags', tags);
   },
 
   metadataSetPublishing(state) {

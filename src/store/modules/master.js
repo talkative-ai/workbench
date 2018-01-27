@@ -60,6 +60,12 @@ const actions = {
         router.push({ name: 'ProjectSelect' });
         resolve(response);
         return;
+      })
+      .catch(err => {
+        return err.json();
+      })
+      .then(err => {
+        reject(err);
       });
     });
   },

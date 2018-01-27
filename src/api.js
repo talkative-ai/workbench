@@ -138,21 +138,26 @@ function aumFetch(method, path, payload) {
 
   let req = new Request(`${process.env.API_URL}${path}`, config);
   store.dispatch('master/isLoading', true, { root: true });
-  return fetch(req).then(result => {
-    if (result.status === 401) {
-      store.dispatch('master/unauthorized', {}, { root: true });
-      throw new Error('Unauthorized');
-    }
-    if (result.status === 404) {
-      store.dispatch('master/NotFound', {}, { root: true });
-    }
-    if (result.status !== 200 && result.status !== 201) {
-      throw result;
-    }
-    return result;
-  }).then(result => {
-    store.dispatch('master/token', result.headers.get('x-token'), { root: true });
-    store.dispatch('master/isLoading', false, { root: true });
-    return result;
+  return new Promise((resolve, reject) => {
+    return fetch(req).then(result => {
+      if (result.status === 401) {
+        store.dispatch('master/unauthorized', {}, { root: true });
+        throw new Error('Unauthorized');
+      }
+      if (result.status === 404) {
+        store.dispatch('master/NotFound', {}, { root: true });
+      }
+      if (result.status !== 200 && result.status !== 201) {
+        throw result;
+      }
+      return result;
+    }).then(result => {
+      store.dispatch('master/token', result.headers.get('x-token'), { root: true });
+      store.dispatch('master/isLoading', false, { root: true });
+      resolve(result);
+    }).catch(err => {
+      store.dispatch('master/isLoading', false, { root: true });
+      reject(err);
+    });
   });
 }

@@ -12,7 +12,7 @@
               App Category
               <multiselect
               v-model="selectedCategory"
-              @select="updateCategory($event)"
+              @close="updateCategory()"
               :close-on-select="false"
               :options="PROJECT_CATEGORIES" />
             </label>
@@ -72,18 +72,18 @@ export default {
       this.$store.dispatch('project/publish');
     },
     updateCategory() {
-      console.log('hi');
+      this.$store.dispatch('project/updateCategory', this.selectedCategory);
     },
     updateTags() {
-      console.log();
+      this.$store.dispatch('project/updateTags', this.selectedTags);
     }
   },
   data() {
     return {
       PROJECT_CATEGORIES,
       TAGS,
-      selectedCategory: null,
-      selectedTags: []
+      selectedCategory: this.$store.state.project.selectedProject.Category || PROJECT_CATEGORIES[0],
+      selectedTags: this.$store.state.project.selectedProject.Tags || []
     };
   },
   computed: {
