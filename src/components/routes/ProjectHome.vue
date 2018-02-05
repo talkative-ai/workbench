@@ -45,7 +45,7 @@
           <h2 v-if="metadata.Status == PUBLISH_STATUS.Problem">Sorry, there was a problem publishing. Please contact support.</h2>
           <h2 v-if="metadata.Status == PUBLISH_STATUS.UnderReview">Your app has been submitted is currently under review!</h2>
           <div class="problem-list" v-if="metadata.Status == PUBLISH_STATUS.Denied">
-            <h2>Please resubmit after correcting problems.</h2>
+            <h2>After making adjustments, please resubmit.</h2>
             <div v-if="metadata.Review.Dialogues && metadata.Review.Dialogues.length">
               In the following {{problemWithTarget[metadata.Review.ProblemWith]}} snippet:
               <ul>
@@ -65,7 +65,7 @@
                 <li v-if="minorProblems[problem].help">&nbsp;&nbsp;&nbsp;{{minorProblems[problem].help}}</li>
               </ul>
               <br>
-              Please ensure your app follows all of our guidelines before resubmitting!
+              Please ensure your app follows all of our guidelines before resubmitting.
             </div>
           </div>
         </div>
