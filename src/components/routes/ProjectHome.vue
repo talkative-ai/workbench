@@ -44,7 +44,30 @@
           <h2 v-if="metadata.Status == PUBLISH_STATUS.Publishing">Publishing project...</h2>
           <h2 v-if="metadata.Status == PUBLISH_STATUS.Problem">Sorry, there was a problem publishing. Please contact support.</h2>
           <h2 v-if="metadata.Status == PUBLISH_STATUS.UnderReview">Your app has been submitted is currently under review!</h2>
-          <h2 v-if="metadata.Status == PUBLISH_STATUS.Denied">Your app has been denied.</h2>
+          <div class="problem-list" v-if="metadata.Status == PUBLISH_STATUS.Denied">
+            <h2>Please resubmit after correcting problems.</h2>
+            <div v-if="metadata.Review.Dialogues && metadata.Review.Dialogues.length">
+              In the following {{problemWithTarget[metadata.Review.ProblemWith]}} snippet:
+              <ul>
+                <li v-for="(dialogue, idx) of metadata.Review.Dialogues" :key="idx">
+                  &bull; <span v-if="metadata.Review.ProblemWith == 0">{{ idx % 2 === 0 ? 'User can say' : 'Actor replies' }}: </span>
+                  {{dialogue.map(d => `"${d}"`).join(', ')}}
+                </li>
+              </ul>
+              <br>
+              There's the following problem(s):
+              <ul v-for="problem of metadata.Review.MajorProblems" :key="problem">
+                <li>&bull; {{majorProblems[problem].title}}</li>
+                <li v-if="majorProblems[problem].help">&nbsp;&nbsp;&nbsp;<i>{{majorProblems[problem].help}}</i></li>
+              </ul>
+              <ul v-for="problem of metadata.Review.MinorProblems" :key="problem">
+                <li>&bull; {{minorProblems[problem].title}}</li>
+                <li v-if="minorProblems[problem].help">&nbsp;&nbsp;&nbsp;{{minorProblems[problem].help}}</li>
+              </ul>
+              <br>
+              Please ensure your app follows all of our guidelines before resubmitting!
+            </div>
+          </div>
         </div>
       </div>
       <div v-else class="Grid-cell">
@@ -83,7 +106,56 @@ export default {
       PROJECT_CATEGORIES,
       TAGS,
       selectedCategory: this.$store.state.project.selectedProject.Category || PROJECT_CATEGORIES[0],
-      selectedTags: this.$store.state.project.selectedProject.Tags || []
+      selectedTags: this.$store.state.project.selectedProject.Tags || [],
+      problemWithTarget: [
+        'conversation',
+        'zone entry text'
+      ],
+      majorProblems: {
+        0: {
+          title: 'Sexually explicit'
+        },
+        1: {
+          title: 'Child endangerment'
+        },
+        2: {
+          title: 'Violence and dangerous activities'
+        },
+        3: {
+          title: 'Bullying and harassment'
+        },
+        4: {
+          title: 'Hate speech'
+        },
+        5: {
+          title: 'Sensitive event'
+        },
+        6: {
+          title: 'Gambling'
+        },
+        7: {
+          title: 'Illegal activities'
+        },
+        8: {
+          title: 'Recreational drugs'
+        },
+        9: {
+          title: 'Health'
+        },
+        10: {
+          title: 'Language'
+        },
+        11: {
+          title: 'Mature content'
+        }
+      },
+      minorProblems: {
+        0: {
+          title: 'Conversation hanging open',
+          help: `The conversation should very clearly point the user in at least one direction.
+          Please make sure the user always knows what they can say to continue the conversation!`
+        }
+      }
     };
   },
   computed: {
@@ -133,5 +205,8 @@ hr {
 }
 .label-container {
   margin: 0.5rem 0;
+}
+.problem-list {
+  font-size: 1rem;
 }
 </style>
