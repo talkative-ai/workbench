@@ -6,15 +6,19 @@
         <h1 class="Headline">
           <span class="Headline--dark">Name your project:</span>
         </h1>
-        <form class="Form u-flex" @submit.prevent="createProject()" :disabled="isDisabled()">
+        <form
+          class="Form u-flex"
+          @submit.prevent="createProject()"
+          :disabled="isDisabled()">
           <div class="Headline u-size1of3 u-marginR3">
             <input
+              @keydown="updateTitle()"
               v-validate="'required|alpha_spaces|min:3|max:50'"
               class="Headline u-marginR3"
               name="title"
               placeholder="Add name" v-model="project.Title" required="required" />
             <div class="error" v-if="createError">{{ createError }}</div>
-            <div class="input-hint">
+            <div class="input-hint" v-else>
               <ul>
                 <li>Length between 3 and 50</li>
                 <li>Only letters and spaces</li>
@@ -63,7 +67,12 @@ export default {
     createProject() {
       this.creating = true;
       this.$store.dispatch('project/createProject', this.project)
-      .catch(err => {
+      .then(pid => {
+        this.creating = false;
+        this.$router.push({ name: 'ProjectHome' });
+      })
+      .catch(async err => {
+        err = await err.json();
         switch (err.message) {
           case 'project_exists':
             this.createError = `A project with the title "${this.project.Title}" already exists.`;
@@ -72,10 +81,7 @@ export default {
             this.createError = `You have reached your limit of projects.`;
             break;
         }
-      })
-      .then(pid => {
         this.creating = false;
-        this.$router.push({ name: 'ProjectHome' });
       });
     },
     isDisabled() {
@@ -88,6 +94,9 @@ export default {
       if (illegalChars.exec(this.project.Title)) {
         return true;
       }
+    },
+    updateTitle() {
+      this.createError = null;
     }
   },
   computed: {
@@ -107,6 +116,7 @@ export default {
   color: red;
   font-weight: bold;
   font-size: 1.4rem;
+  margin: 1rem 0;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -136,6 +146,7 @@ h3 {
 .input-hint {
   font-size: 0.9rem;
   color: $light-grey;
+  margin: 1rem 0;
   i {
     display: block;
   }

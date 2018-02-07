@@ -53,10 +53,10 @@ export default {
       .catch(err => {
         this.error = err;
       });
-    },
-    onSignInError(error) {
-      console.log('OH NOES', error);
     }
+    // onSignInError(error) {
+    //   // TODO: Handle this
+    // }
   }
 };
 </script>
