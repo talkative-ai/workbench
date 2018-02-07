@@ -92,11 +92,13 @@ const router = new Router({
         titleLink: () => router.push({ name: 'ProjectHome' })
       },
       async beforeEnter(to, from, next) {
+        store.dispatch('master/isLoading', true, { root: true });
         await store.dispatch('actors/selectActor', to.params.id);
         await store.dispatch('dialogs/cancelDeletion');
         await store.dispatch('dialogs/cancelEditDialog');
         await store.dispatch('dialogs/cancelConnectDialog');
         await store.dispatch('dialogs/selectDialog');
+        store.dispatch('master/isLoading', false, { root: true });
         next();
       }
     },
@@ -137,7 +139,9 @@ const router = new Router({
         titleLink: () => router.push({ name: 'ProjectHome' })
       },
       async beforeEnter(to, from, next) {
+        store.dispatch('master/isLoading', true, { root: true });
         await store.dispatch('zones/selectZone', to.params.id);
+        store.dispatch('master/isLoading', false, { root: true });
         next();
       }
     },
@@ -151,6 +155,7 @@ const router = new Router({
         title: () => store.getters['project/selectedProjectTitle']
       },
       async beforeEnter(to, from, next) {
+        store.dispatch('master/isLoading', true, { root: true });
         let promises = [];
         promises.push(store.dispatch('project/refreshProject'));
         promises.push(store.dispatch('project/getMetadata'));
@@ -166,6 +171,7 @@ const router = new Router({
           store.dispatch('project/beginCheckStatus');
         }
         store.commit('master/clearSelectedEntity');
+        store.dispatch('master/isLoading', false, { root: true });
         next();
       }
     },

@@ -137,7 +137,6 @@ function aumFetch(method, path, payload) {
   };
 
   let req = new Request(`${process.env.API_URL}${path}`, config);
-  store.dispatch('master/isLoading', true, { root: true });
   return new Promise((resolve, reject) => {
     return fetch(req).then(result => {
       if (result.status === 401) {
@@ -153,10 +152,8 @@ function aumFetch(method, path, payload) {
       return result;
     }).then(result => {
       store.dispatch('master/token', result.headers.get('x-token'), { root: true });
-      store.dispatch('master/isLoading', false, { root: true });
       resolve(result);
     }).catch(err => {
-      store.dispatch('master/isLoading', false, { root: true });
       reject(err);
     });
   });
