@@ -6,29 +6,38 @@
         <h1 class="Headline">
           <span class="Headline--dark">Name your project:</span>
         </h1>
-        <form class="Form" @submit.prevent="createProject()" :disabled="isDisabled()">
-          <input
-            v-validate="'required|alpha_spaces|min:3|max:50'"
-            class="Headline u-size1of2 u-marginR3"
-            name="title"
-            placeholder="Add name" v-model="project.Title" required="required" />
-          <div class="error" v-if="createError">{{ createError }}</div>
-          <div class="input-hint">
-            <ul>
-              <li>Length between 3 and 50</li>
-              <li>Only letters and spaces</li>
-            </ul>
-            <br>
-            Other people will see this name when you publish!
+        <form class="Form u-flex" @submit.prevent="createProject()" :disabled="isDisabled()">
+          <div class="Headline u-size1of3 u-marginR3">
+            <input
+              v-validate="'required|alpha_spaces|min:3|max:50'"
+              class="Headline u-marginR3"
+              name="title"
+              placeholder="Add name" v-model="project.Title" required="required" />
+            <div class="error" v-if="createError">{{ createError }}</div>
+            <div class="input-hint">
+              <ul>
+                <li>Length between 3 and 50</li>
+                <li>Only letters and spaces</li>
+              </ul>
+              <br>
+              Other people will see this name when you publish!
+            </div>
           </div>
-          <br>
-          <w-button :disabled="errors.any()" outline="outline">Begin
-            <span class="u-arrowEast"></span>
-          </w-button>
-          <w-button v-if="projectsList.length" outline="outline" @click.native="$router.push({ name: 'ProjectHome' })">Cancel
-            <span class="u-arrowEast"></span>
-          </w-button>
+          <div class="Headline">
+            <w-button :disabled="errors.any()">
+              Begin
+              <span class="u-arrowEast"></span>
+            </w-button>
+          </div>
         </form>
+        <template v-if="projectsList.length">
+          <hr>
+          <div>
+            <w-button @click="$router.push({ name: 'ProjectHome' })">
+              Cancel
+            </w-button>
+          </div>
+        </template>
       </paper-text>
     </paper>
   </grid>

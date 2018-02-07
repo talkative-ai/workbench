@@ -5,12 +5,12 @@
     <h1 class="Headline">{{ actor.Title }}</h1>
     <div class="button-grid">
       <w-button class="add-button" v-if="!zoneActors || !zoneActors[actor.ID]"
-        @click.native="addActor(actor.ID)">
+        @click="addActor(actor.ID)">
         <fa-icon name="plus"></fa-icon>Add to zone</w-button>
       <w-button class="remove-button" outline="outline" v-if="zoneActors && zoneActors[actor.ID]"
-        @click.native="removeActor(actor.ID)">
+        @click="removeActor(actor.ID)">
         <fa-icon name="times"></fa-icon>Remove from zone</w-button>
-      <w-button @click.native="selectActor(actor.ID)">
+      <w-button @click="selectActor(actor.ID)">
         <fa-icon name="comments"></fa-icon>Conversations</w-button>
     </div>
   </div>

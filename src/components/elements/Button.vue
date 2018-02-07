@@ -1,5 +1,5 @@
 <template>
-  <button :disabled="this.disabled" :class="buttonClass">
+  <button @click="$emit('click', $event)" :disabled="this.disabled" :class="buttonClass">
     <slot></slot>
   </button>
 </template>
@@ -30,159 +30,35 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.Button {
-  appearance: none;
-  background-color: var(--color-brand);
-  border: 0;
-  border-radius: var(--border-radius-sm);
-  color: white;
-  font-family: inherit;
-  font-weight: inherit;
-  line-height: inherit;
-  padding: 8px 16px;
-  // transition: background-color 0.1s, color 0.1s, opacity 0.2s ease-out;
-  vertical-align: middle;
-  display: inline-flex;
-  align-items: center;
-
-  svg {
-    margin-right: 5pt;
-  }
-
-  &:enabled {
+  button {
+    border-radius: 0.2rem;
+    outline: none !important;
+    border: 1px solid $purple;
+    display: flex;
+    align-items: center;
     cursor: pointer;
-  }
+    transition: color 0.15s, background-color 0.15s, box-shadow 0.3s, border 0.3s;
+    color: rgba(0,0,0,0.8);
 
-  &:hover {
-    box-shadow: inset 0 0 0 999px color(var(--color-brand) blackness(20%));
-  }
-
-  &:focus {
-    outline: 0;
-    box-shadow: 0 0 0 2px var(--color-bg);
-  }
-
-  &:active {
-    background-color: var(--color-bg);
-    box-shadow: inset 0 0 8px var(--color-brand);
-    color: var(--color-brand) !important;
-  }
-
-  &:disabled {
-    opacity: 0.25;
-  }
-
-  //
-  // outline variation
-  //
-
-  &.outline {
-    background-color: transparent;
-    box-shadow: inset 0 0 0 1px;
-    color: var(--color-brand) !important;
+    > svg {
+      margin-right: 5px;
+    }
 
     &:hover:enabled {
-      background-color: var(--color-brand);
-      color: var(--color-bg) !important;
+      background-color: $purple;
+      color: white;
+      box-shadow: 0.2rem 0.2rem 0.8rem rgba(0,0,0,0.5);
     }
 
-    &:focus {
-      box-shadow: inset 0 0 0 2px, 0 0 0 1px;
+    &:active:enabled {
+      box-shadow: 0 0 0.5rem rgba(0,0,0,0.4);
+      color: rgba(255,255,255,0.9);
+      background-color: $purple;
     }
 
-    &:active {
-      background-color: var(--color-brand);
-      box-shadow: inset 0 0 0 1px var(--color-brand), inset 0 0 8px color(var(--color-brand) blackness(20%));
-      color: var(--color-bg);
-    }
-  }
-
-
-  &.outline--light {
-    background-color: transparent;
-    box-shadow: inset 0 0 0 1px;
-    color: currentColor;
-
-    &:hover:enabled {
-      background-color: var(--color-bg);
-      color: var(--color-brand);
-    }
-
-    &:focus {
-      box-shadow: inset 0 0 0 1px, 0 0 0 1px;
-    }
-
-    &:active {
-      background-color: currentColor;
-      box-shadow: inset 0 0 0 1px currentColor, inset 0 0 8px color(var(--color-brand) blackness(20%));
-      color: var(--color-bg);
+    &:disabled {
+      border: 1px solid grey;
+      color: grey;
     }
   }
-
-  &.danger {
-    background-color: $danger;
-    &:active {
-      box-shadow: inset 0 0 0 1px currentColor, inset 0 0 8px color($danger blackness(20%));
-      background-color: white !important;
-      color: $danger !important;
-    }
-  }
-
-
-
-
-
-  &.large {
-    border-color: var(--color-bg);
-    color: var(--color-bg);
-    padding: 0.4em 0.75em 0.5em 0.8em;
-    transform: translateX(0);
-    transition: all 250ms ease;
-
-    &:hover {
-      transform: translateX(5px);
-      transition: all 250ms ease;
-    }
-  }
-
-  &.blank {
-    color: inherit;
-    border: initial;
-    height: auto;
-  }
-
-
-
-  &.wide {
-    width: 100%;
-  }
-
-  &.hidden {
-    opacity: 0;
-    cursor: default;
-    pointer-events: none;
-  }
-
-
-}
-
-
-
-
-
-// .theme-dark .Button.outline--light {
-//   border-color: currentColor;
-//   color: var(--color-text);
-// }
-
-// .Paper-path-button .Button {
-//   transform: translateX(0);
-//   transition: all 250ms ease-out;
-//   z-index: 1;
-// }
-//
-// .Paper-path-button:hover .Button {
-//   transform: translateX(5px);
-//   transition: all 250ms ease-out;
-// }
 </style>

@@ -4,7 +4,7 @@
       <w-button
         v-if="!$route.meta.outsideProject"
         lightOutline="lightOutline"
-        class="Navbar-cell Text--sm Pointer" @click.native="$router.push({ name: 'ProjectSelect' })">
+        class="Navbar-cell Text--sm Pointer" @click="$router.push({ name: 'ProjectSelect' })">
         <icon name="author" width="32" height="32"></icon>{{ user.GivenName }}
       </w-button>
       <div v-else>
@@ -17,7 +17,7 @@
         <w-button
           v-if="$route.meta.titleLink"
           lightOutline="lightOutline"
-          class="u-clickable" @click.native="$route.meta.titleLink ? $route.meta.titleLink() : () => {}">
+          class="u-clickable" @click="$route.meta.titleLink ? $route.meta.titleLink() : () => {}">
           <icon class="u-marginL1" name="settings" width="24" height="24"></icon>
           {{ title }}
         </w-button>

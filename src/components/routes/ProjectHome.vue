@@ -33,7 +33,7 @@
           <hr>
           <w-button
             :disabled="metadata.Status == PUBLISH_STATUS.Publishing"
-            lightOutline="lightOutline" @click.native="publish()">
+            lightOutline="lightOutline" @click="publish()">
             <icon name="logo" width="32" height="32"></icon>
             Publish to the Multiverse
           </w-button>

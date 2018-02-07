@@ -63,33 +63,33 @@
         <w-button
           class="Headline"
           large="large"
-          @click.native="cancelDisconnectDialog()">
+          @click="cancelDisconnectDialog()">
           Cancel</w-button>
         <w-button
           v-if="disconnectingToDialogID"
           class="Headline danger"
           large="large"
-          @click.native="confirmDisconnectDialog()">
+          @click="confirmDisconnectDialog()">
           Confirm disconnect</w-button>
       </template>
       <template v-else-if="connectingFromDialogID">
         <w-button
           class="Headline"
           large="large"
-          @click.native="cancelConnect()">
+          @click="cancelConnect()">
           Cancel</w-button>
         <w-button
           v-if="connectingToDialogID"
           class="Headline"
           large="large"
-          @click.native="saveConnect()">
+          @click="saveConnect()">
           Save connect</w-button>
       </template>
       <template v-else>
         <w-button
           class="Headline"
           large="large"
-          @click.native="exitBack()">
+          @click="exitBack()">
           <span class="u-arrowWest"></span>Return</w-button>
       </template>
     </div>

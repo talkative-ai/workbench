@@ -4,14 +4,11 @@
     <paper>
       <paper-text>
         <h1>Choose a project:</h1>
-        <div @click="toggleSelected(project)" :class="{
-            project: true,
-            selected: selected.ID === project.ID,
-          }" v-for="project in projects" :key="project.ID">{{ project.Title }}</div>
+        <div @click="openProject(project)" class="project" v-for="project in projects" :key="project.ID">{{ project.Title }}</div>
         <hr>
         <div class="button-grid">
-          <w-button class="no-outline" @click.native="openProject()" v-if="selected" to="/project/create">Open</w-button>
-          <w-button class="no-outline" @click.native="createProject()">Create New</w-button>
+          <w-button class="no-outline" @click="openProject()" v-if="selected" to="/project/create">Open</w-button>
+          <w-button class="no-outline" @click="createProject()">Create New</w-button>
         </div>
       </paper-text>
     </paper>
@@ -42,8 +39,8 @@ export default {
         this.selected = id;
       }
     },
-    openProject() {
-      this.$store.dispatch('project/selectProject', this.selected).then(() => {
+    openProject(projectID) {
+      this.$store.dispatch('project/selectProject', projectID).then(() => {
         this.$router.push({ name: 'ProjectHome' });
       });
     },
@@ -83,13 +80,5 @@ h1 {
 .selected {
   border: 1px solid $purple;
   padding: 0.5rem 1rem;
-}
-
-hr {
-  border-top: none;
-  border-left: none;
-  border-right: none;
-  border-bottom: 1px solid rgba(0,0,0,0.1);
-  margin-top: 4rem;
 }
 </style>

@@ -38,12 +38,12 @@
       <w-button
         class="Headline"
         large="large"
-        @click.native="cancelDelete()">
+        @click="cancelDelete()">
         Cancel</w-button>
       <w-button
         class="Headline danger"
         large="large"
-        @click.native="confirmDeleteDialog()">
+        @click="confirmDeleteDialog()">
         Confirm Delete</w-button>
     </div>
   </div>

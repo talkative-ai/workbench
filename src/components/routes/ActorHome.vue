@@ -21,7 +21,7 @@
           <grid gutter>
             <form class="Form" @submit.prevent>
               <div class="Grid-cell u-size3of3">
-                <w-button @click.native="$router.push({ name: 'ActorDialog', id: actor.ID })">View Conversations</w-button>
+                <w-button @click="$router.push({ name: 'ActorDialog', id: actor.ID })">View Conversations</w-button>
               </div>
             </form>
           </grid>

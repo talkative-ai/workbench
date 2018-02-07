@@ -10,7 +10,7 @@
       <div class="Grid-cell">
         <div class="Paper-text">
           <div class="info-box">
-            <w-button class="Headline" large="large" outline="outline" v-if="!introMessageExists" @click.native="createIntroMessage()">add an introduction</w-button>
+            <w-button class="Headline" large="large" outline="outline" v-if="!introMessageExists" @click="createIntroMessage()">add an introduction</w-button>
             <template v-else>
               <h1 class="Headline">A message to play when they first enter</h1>
               <form class="Form" @submit.prevent>
@@ -18,9 +18,9 @@
                   v-autosize="newIntroMessage"
                   v-model="newIntroMessage" :placeholder="`e.g. Welcome to ${zone.Title}! Try saying &quot;Hello&quot;`" />
                 <div class="button-grid">
-                  <w-button v-if="introMessageChanged && newIntroMessage" @click.native="saveIntroMessage()">Save Changes</w-button>
-                  <w-button v-if="introMessageChanged" @click.native="revertIntroMessage()">Cancel</w-button>
-                  <w-button @click.native="removeIntroMessage()">Remove</w-button>
+                  <w-button v-if="introMessageChanged && newIntroMessage" @click="saveIntroMessage()">Save Changes</w-button>
+                  <w-button v-if="introMessageChanged" @click="revertIntroMessage()">Cancel</w-button>
+                  <w-button @click="removeIntroMessage()">Remove</w-button>
                 </div>
               </form>
             </template>
@@ -30,7 +30,7 @@
           </label>
           <hr>
           <h1 class="Headline">Actors say and do what you wish.</h1>
-          <w-button class="Headline" large="large" outline="outline" @click.native="$router.push({ name: 'ActorCreate', params: { zoneid: $route.params.id } })">create an actor</w-button>
+          <w-button class="Headline" large="large" outline="outline" @click="$router.push({ name: 'ActorCreate', params: { zoneid: $route.params.id } })">create an actor</w-button>
           <div class="actor-wrap">
             <ZoneActorItem v-for="(actor, id) in actors"
               :key="id"
