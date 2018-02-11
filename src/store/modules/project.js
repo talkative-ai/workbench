@@ -108,9 +108,7 @@ const actions = {
   startZone({ state, dispatch, commit }, StartZoneID) {
     API.PatchProject({
       project: {
-        StartZoneID: {
-          UUID: StartZoneID
-        }
+        StartZoneID
       }
     }).then(() => {
       commit('startZone', StartZoneID);
