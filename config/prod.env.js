@@ -1,4 +1,4 @@
 module.exports = {
   NODE_ENV: '"production"',
-  API_URL: '"https://i.aum.ai/workbench/v1/"'
+  API_URL: '"https://i.talkative.ai/workbench/v1/"'
 }
