@@ -1,8 +1,8 @@
 {
-  "name": "aum-workbench",
+  "name": "talkative-workbench",
   "version": "1.0.0",
   "description": "A Vue.js project",
-  "author": "AUM <info@aum.ai>",
+  "author": "Wyatt <wyatt@talkative.ai>",
   "private": true,
   "scripts": {
     "dev": "node build/dev-server.js",

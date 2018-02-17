@@ -1,7 +1,7 @@
 <template>
   <div id="app" :class="bgImageClass">
     <div v-if="isLoading" class="loading-splash">
-      <img src="./assets/images/aum-logo-color.256.png" />
+      <img src="./assets/images/talkative-logo-color.256.png" />
       <h1>Loading...</h1>
     </div>
     <navbar />

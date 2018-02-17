@@ -36,12 +36,12 @@ const actions = {
     if (!initial) {
       for (let k in store.state) {
         if (k === 'initializing') continue;
-        localforage.setItem(`aum.state.v1.${k}`, store.state[k]);
+        localforage.setItem(`talkative.state.v1.${k}`, store.state[k]);
       }
     }
 
     let p = localforage.iterate((v, k) => {
-      let key = k.split('aum.state.v1.');
+      let key = k.split('talkative.state.v1.');
 
       key = key.pop().split('.');
 
@@ -88,7 +88,7 @@ for (let k in store.state) {
     if (writeStore) {
       clearTimeout(writeStore);
     }
-    writeStore[k] = setTimeout(() => localforage.setItem(`aum.state.v1.${k}`, store.state[k]), 250);
+    writeStore[k] = setTimeout(() => localforage.setItem(`talkative.state.v1.${k}`, store.state[k]), 250);
   }, {
     immediate: true,
     deep: true

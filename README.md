@@ -1,4 +1,4 @@
-# aum-workbench
+# talkative-workbench
 
 > A Vue.js project
 

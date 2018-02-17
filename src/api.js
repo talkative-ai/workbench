@@ -2,31 +2,31 @@ import store from './store';
 
 export default {
   GetAuthGoogle({ token, givenName, familyName } = {}) {
-    return aumFetch('GET', `auth/google?token=${token}&gn=${givenName}&fn=${familyName}`);
+    return talkativeFetch('GET', `auth/google?token=${token}&gn=${givenName}&fn=${familyName}`);
   },
 
   GetProjects() {
-    return aumFetch('GET', 'projects')
+    return talkativeFetch('GET', 'projects')
     .then(result => result.json());
   },
 
   GetProject({ ID } = {}) {
-    return aumFetch('GET', `project/${ID}`)
+    return talkativeFetch('GET', `project/${ID}`)
     .then(result => result.json());
   },
 
   GetProjectMetadata({ ID } = {}) {
-    return aumFetch('GET', `project/${ID}/metadata`)
+    return talkativeFetch('GET', `project/${ID}/metadata`)
     .then(result => result.json());
   },
 
   GetActor({ ID } = {}) {
-    return aumFetch('GET', `actor/${ID}`)
+    return talkativeFetch('GET', `actor/${ID}`)
     .then(result => result.json());
   },
 
   GetZone({ ID } = {}) {
-    return aumFetch('GET', `zone/${ID}`)
+    return talkativeFetch('GET', `zone/${ID}`)
     .then(result => result.json());
   },
 
@@ -34,17 +34,17 @@ export default {
     for (const d of Actor.Dialogs || []) {
       if (!d.ID) continue;
     }
-    return aumFetch('PATCH', `actor/${Actor.ID}`, Actor)
+    return talkativeFetch('PATCH', `actor/${Actor.ID}`, Actor)
     .then(result => result.json());
   },
 
   PutZone({ zone } = {}) {
-    return aumFetch('PUT', `zone/${zone.ID}`, zone)
+    return talkativeFetch('PUT', `zone/${zone.ID}`, zone)
     .then(result => result.json());
   },
 
   CreateZone({ CreateID, Title } = {}) {
-    return aumFetch('PATCH', `project/${store.state.project.selectedProject.ID}`, {
+    return talkativeFetch('PATCH', `project/${store.state.project.selectedProject.ID}`, {
       Zones: [{
         CreateID,
         Title
@@ -61,7 +61,7 @@ export default {
   },
 
   CreateActor({ Actor, ZoneActors = [] } = {}) {
-    return aumFetch('PATCH', `project/${store.state.project.selectedProject.ID}`, {
+    return talkativeFetch('PATCH', `project/${store.state.project.selectedProject.ID}`, {
       Actors: [ Actor ],
       ZoneActors
     })
@@ -76,7 +76,7 @@ export default {
   },
 
   PatchProject({ project } = {}) {
-    return aumFetch('PATCH', `project/${store.state.project.selectedProject.ID}`, project)
+    return talkativeFetch('PATCH', `project/${store.state.project.selectedProject.ID}`, project)
     .then(idMap => {
       if (idMap.status < 200 || idMap.status > 299) {
         return idMap.json().then(result => {
@@ -88,7 +88,7 @@ export default {
   },
 
   UpdateActorZones({ ActorZones } = {}) {
-    return aumFetch('PATCH', `project/${store.state.project.selectedProject.ID}`, {
+    return talkativeFetch('PATCH', `project/${store.state.project.selectedProject.ID}`, {
       ActorZones
     })
     .then(idMap => {
@@ -102,7 +102,7 @@ export default {
   },
 
   CreateProject({ project } = {}) {
-    return aumFetch('POST', `project`, project)
+    return talkativeFetch('POST', `project`, project)
     .then(result => {
       if (result.status !== 201) {
         return result.json().then(result => {
@@ -114,7 +114,7 @@ export default {
   },
 
   Publish() {
-    return aumFetch('POST', `publish/${store.state.project.selectedProject.ID}`);
+    return talkativeFetch('POST', `publish/${store.state.project.selectedProject.ID}`);
   }
 };
 
@@ -127,7 +127,7 @@ function generateHeaders() {
   return myHeaders;
 }
 
-function aumFetch(method, path, payload) {
+function talkativeFetch(method, path, payload) {
   const config = {
     method,
     headers: generateHeaders(),
