@@ -27,7 +27,7 @@ export default {
   data() {
     return {
       googleSignInParams: {
-        client_id: '693388894852-2s2q0ggfj09c5mq094gpdbppugce944m.apps.googleusercontent.com'
+        client_id: '978478335435-p23cf8b45ma06cgucuhtq4205ftq2drq.apps.googleusercontent.com'
       },
       error: {},
       knownErrors: {
