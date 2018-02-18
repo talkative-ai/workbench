@@ -35,9 +35,9 @@
             :disabled="metadata.Status == PUBLISH_STATUS.Publishing"
             lightOutline="lightOutline" @click="publish()">
             <icon name="logo" width="32" height="32"></icon>
-            Publish to the Multiverse
+            Submit for review
           </w-button>
-          <div>Publishing to the Multiverse means your app will be available on the Google home.</div>
+          <div>Publishing means your app will be available for other people to use.</div>
           <hr>
           <h2 v-if="metadata.Status == PUBLISH_STATUS.NotPublished">Never before published!</h2>
           <h2 v-if="metadata.Status == PUBLISH_STATUS.Published">Last time published: {{ lastTimePublished }}</h2>
@@ -76,7 +76,7 @@
             :disabled="true"
             lightOutline="lightOutline">
             <icon name="logo" width="32" height="32"></icon>
-            Publish to the Multiverse
+            Submit for review
           </w-button>
           <h2>{{ nextStepsToPublish }}</h2>
         </div>
