@@ -40,11 +40,10 @@ const actions = {
   authGoogle({ commit, dispatch, state }, googleUser) {
     const profile = googleUser.getBasicProfile();
     return new Promise((resolve, reject) => {
-      API.GetAuthGoogle({
-        dispatch,
-        token: googleUser.getAuthResponse().id_token,
-        givenName: profile.getGivenName(),
-        familyName: profile.getFamilyName()
+      API.PostAuthGoogle({
+        Token: googleUser.getAuthResponse().id_token,
+        GivenName: profile.getGivenName(),
+        FamilyName: profile.getFamilyName()
       })
       .then(result => {
         return result.json();

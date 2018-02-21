@@ -90,7 +90,7 @@ export default {
       if (this.project.Title.length < 3) {
         return true;
       }
-      const illegalChars = new RegExp('[!$\\#%^&*()_+|~=`{}\\[\\]:";\'<>?\\/]');
+      const illegalChars = new RegExp('[^\\w\\s!]');
       if (illegalChars.exec(this.project.Title)) {
         return true;
       }

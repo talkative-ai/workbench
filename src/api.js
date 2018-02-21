@@ -1,8 +1,8 @@
 import store from './store';
 
 export default {
-  GetAuthGoogle({ token, givenName, familyName } = {}) {
-    return talkativeFetch('GET', `auth/google?token=${token}&gn=${givenName}&fn=${familyName}`);
+  PostAuthGoogle(payload = {}) {
+    return talkativeFetch('POST', `auth/google`, payload);
   },
 
   GetProjects() {
