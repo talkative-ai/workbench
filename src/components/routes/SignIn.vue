@@ -35,6 +35,17 @@ export default {
       }
     };
   },
+  mounted() {
+    const Token = this.$cookie.get('landing_sign_in_tkn');
+    if (Token) {
+      const GivenName = this.$cookie.get('landing_sign_in_gn');
+      const FamilyName = this.$cookie.get('landing_sign_in_fn');
+      this.$store.dispatch('master/authGoogle', { redirected: true, Token, GivenName, FamilyName })
+        .catch(err => {
+          this.error = err;
+        });
+    }
+  },
   computed: {
     user() {
       return this.$store.state.user;

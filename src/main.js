@@ -10,6 +10,7 @@ import * as svgicon from 'vue-svgicon';
 import Icon from 'vue-awesome/components/Icon';
 import VeeValidate from 'vee-validate';
 import Multiselect from 'vue-multiselect';
+import VueCookie from 'vue-cookie';
 
 import Dialogue from './components/Dialogue/index';
 import Sidebar from './components/Sidebar';
@@ -45,6 +46,7 @@ Vue.use(svgicon, {
 Vue.use(GSignInButton);
 Vue.use(VueAutosize);
 Vue.use(VeeValidate);
+Vue.use(VueCookie);
 
 Vue.component('fa-icon', Icon);
 

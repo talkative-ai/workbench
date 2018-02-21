@@ -38,12 +38,22 @@ const actions = {
   },
 
   authGoogle({ commit, dispatch, state }, googleUser) {
-    const profile = googleUser.getBasicProfile();
+    let Token, GivenName, FamilyName;
+    if (googleUser.redirected) {
+      Token = googleUser.Token;
+      GivenName = googleUser.GivenName;
+      FamilyName = googleUser.FamilyName;
+    } else {
+      const profile = googleUser.getBasicProfile();
+      Token = googleUser.getAuthResponse().id_token;
+      GivenName = profile.getGivenName();
+      FamilyName = profile.getFamilyName();
+    }
     return new Promise((resolve, reject) => {
       API.PostAuthGoogle({
-        Token: googleUser.getAuthResponse().id_token,
-        GivenName: profile.getGivenName(),
-        FamilyName: profile.getFamilyName()
+        Token,
+        GivenName,
+        FamilyName
       })
       .then(result => {
         return result.json();
