@@ -114,7 +114,7 @@ export default {
   },
 
   Publish() {
-    return talkativeFetch('POST', `publish/${store.state.project.selectedProject.ID}`);
+    return talkativeFetch('POST', `submit/${store.state.project.selectedProject.ID}`);
   }
 };
 
