@@ -1,6 +1,32 @@
 import store from './store';
+import { API_TYPES } from './const';
 
 export default {
+
+  DemoInitialize() {
+    return talkativeFetch('POST', `demo/${store.state.project.selectedProject.ID}`, {});
+  },
+
+  DemoMessage(Message, isNew = false) {
+    const payload = {
+      Message
+    };
+    if (!isNew) {
+      if (store.state.demo.state) {
+        payload.State = store.state.demo.state;
+      }
+      if (store.state.demo.session) {
+        payload.Session = store.state.demo.session;
+      }
+    }
+    return talkativeFetch('POST', `demo/${store.state.project.selectedProject.ID}`, payload, API_TYPES.BRAHMAN)
+    .then(result => result.json());
+  },
+
+  GetDemoStatus() {
+    return talkativeFetch('GET', `demo/${store.state.project.selectedProject.ID}/status`);
+  },
+
   PostAuthGoogle(payload = {}) {
     return talkativeFetch('POST', `auth/google`, payload);
   },
@@ -127,7 +153,7 @@ function generateHeaders() {
   return myHeaders;
 }
 
-function talkativeFetch(method, path, payload) {
+function talkativeFetch(method, path, payload, server = API_TYPES.SHIVA) {
   const config = {
     method,
     headers: generateHeaders(),
@@ -136,7 +162,7 @@ function talkativeFetch(method, path, payload) {
     body: JSON.stringify(payload)
   };
 
-  let req = new Request(`${process.env.API_URL}${path}`, config);
+  let req = new Request(`${server}${path}`, config);
   return new Promise((resolve, reject) => {
     return fetch(req).then(result => {
       if (result.status === 401) {

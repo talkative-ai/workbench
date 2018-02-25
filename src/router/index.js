@@ -155,6 +155,7 @@ const router = new Router({
         title: () => store.getters['project/selectedProjectTitle']
       },
       async beforeEnter(to, from, next) {
+        store.dispatch('demo/initialize', {}, { root: true });
         store.dispatch('master/isLoading', true, { root: true });
         let promises = [];
         promises.push(store.dispatch('project/refreshProject'));

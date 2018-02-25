@@ -1,39 +1,41 @@
 <template>
   <div class="main">
-    <div class="dialogs-wrap">
-      <div class="ai-dialog dialog">
-        <div>AI</div>
-        Hello. Ask me how I'm doing.
-      </div>
-      <div class="user-dialog dialog">
-        <div>You</div>
-        How are you?
-      </div>
-      <div class="ai-dialog dialog">
-        <div>AI</div>
-        Hello. Ask me how I'm doing.
-      </div>
-      <div class="user-dialog dialog">
-        <div>You</div>
-        How are you?
-      </div>
-      <div class="ai-dialog dialog">
-        <div>AI</div>
-        Hello. Ask me how I'm doing.
-      </div>
-      <div class="user-dialog dialog">
-        <div>You</div>
-        How are you?
-      </div>
+    <div ref="dialogs" class="dialogs-wrap">
+      <template v-for="dialog of $store.state.demo.dialogs">
+        <div v-if="dialog.type == 'user'" class="user-dialog dialog" :key="dialog.key">
+          <div>You</div>
+          {{ dialog.text }}
+        </div>
+        <div v-else class="ai-dialog dialog" :key="dialog.key">
+          <div>AI</div>
+          {{ dialog.text }}
+        </div>
+      </template>
     </div>
-    <input placeholder="Enter your message here" type="text" />
+    <input @keyup.enter="sendMessage()" v-model="message" placeholder="Enter your message here" type="text" />
   </div>
 </template>
 <script>
   export default {
     name: 'ConvoBox',
     data() {
-      return {};
+      return {
+        message: ''
+      };
+    },
+    methods: {
+      sendMessage() {
+        this.$store.dispatch('demo/sendMessage', this.message);
+        this.message = '';
+      }
+    },
+    watch: {
+      '$store.state.demo.dialogs'() {
+        console.log('Updated', this.$refs.dialogs);
+        this.$nextTick(() => {
+          this.$refs.dialogs.scrollTop = this.$refs.dialogs.scrollHeight;
+        });
+      }
     }
   };
 </script>

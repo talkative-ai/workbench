@@ -60,3 +60,8 @@ export const TAGS = [
   'Math',
   'Training'
 ];
+
+export const API_TYPES = {
+  SHIVA: process.env.SHIVA_URL,
+  BRAHMAN: process.env.BRAHMAN_URL
+};

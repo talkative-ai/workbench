@@ -1,4 +1,5 @@
 module.exports = {
   NODE_ENV: '"production"',
-  API_URL: '"https://i.talkative.ai/workbench/v1/"'
+  SHIVA_URL: '"https://i.talkative.ai/workbench/v1/"',
+  BRAHMAN_URL: '"https://i.talkative.ai/ai/v1/"'
 }
