@@ -15,9 +15,6 @@ export default {
       if (store.state.demo.state) {
         payload.State = store.state.demo.state;
       }
-      if (store.state.demo.session) {
-        payload.Session = store.state.demo.session;
-      }
     }
     return talkativeFetch('POST', `demo/${store.state.project.selectedProject.ID}`, payload, API_TYPES.BRAHMAN)
     .then(result => result.json());

@@ -6,7 +6,7 @@ import API from '@/api';
 const state = {
   initialized: false,
   state: null,
-  session: null,
+  initialState: null,
   dialogs: []
 };
 
@@ -31,13 +31,20 @@ const actions = {
     }).then(result => {
       commit('initialized', true);
       commit('state', result.State);
-      commit('session', result.Session);
+      commit('initialState', result.State);
       commit('pushDialog', {
         type: 'ai',
         key: state.dialogs.length,
         text: result.Text
       });
     });
+  },
+
+  restart({ state, commit }) {
+    let startDialog = state.dialogs.shift();
+    commit('resetDialogs');
+    commit('pushDialog', startDialog);
+    commit('state', state.initialState);
   },
 
   sendMessage({ state, commit }, message) {
@@ -49,7 +56,6 @@ const actions = {
     return API.DemoMessage(message)
     .then(result => {
       commit('state', result.State);
-      commit('session', result.Session);
       commit('pushDialog', {
         type: 'ai',
         key: state.dialogs.length,
@@ -79,6 +85,14 @@ const mutations = {
 
   state(state, value) {
     Vue.set(state, 'state', value);
+  },
+
+  initialSession(state, value) {
+    Vue.set(state, 'initialSession', value);
+  },
+
+  initialState(state, value) {
+    Vue.set(state, 'initialState', value);
   }
 };
 

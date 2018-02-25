@@ -20,6 +20,7 @@ import 'vue-awesome/icons/trash';
 import 'vue-awesome/icons/exclamation-triangle';
 import 'vue-awesome/icons/chain-broken';
 import 'vue-awesome/icons/comments';
+import 'vue-awesome/icons/refresh';
 
 export default {
   name: 'icon-button',

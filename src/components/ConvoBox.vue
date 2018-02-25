@@ -12,7 +12,19 @@
         </div>
       </template>
     </div>
-    <input @keyup.enter="sendMessage()" v-model="message" placeholder="Enter your message here" type="text" />
+    <div class="input-box">
+      <input @keyup.enter="sendMessage()" v-model="message" placeholder="Enter your message here" type="text" />
+      <div class="space" />
+      <div class="buttons">
+        <IconButton
+          v-if="$store.state.demo.dialogs.length > 1"
+          @click="restartDemo()"
+          label="restart"
+          name="refresh"
+          :flat="true"
+          :shrinky="true"/>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -27,6 +39,9 @@
       sendMessage() {
         this.$store.dispatch('demo/sendMessage', this.message);
         this.message = '';
+      },
+      restartDemo() {
+        this.$store.dispatch('demo/restart');
       }
     },
     watch: {
@@ -82,15 +97,26 @@
 .space {
   flex: 1;
 }
-input {
+.input-box {
+  display: flex;
+  align-items: center;
+  background-color: white;
   font-size: 1rem;
-  padding: 1.5rem;
   border-top: none;
   border-left: none;
   border-right: none;
-  outline: none;
   border-radius: 0 0 0.5rem 0.5rem;
   box-shadow: 0px -7px 10px -3px rgba(0,0,0,0.3);
   z-index: 100;
+  .buttons {
+    padding: 0 1rem;
+  }
+}
+input {
+  outline: none;
+  border: none;
+  padding: 1.5rem;
+  width: 100%;
+  border-radius: 0 0 0.5rem 0.5rem;
 }
 </style>
