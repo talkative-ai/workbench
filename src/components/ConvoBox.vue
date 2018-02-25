@@ -75,7 +75,7 @@
   display: flex;
   flex-direction: column;
   flex: 1;
-  max-height: 40vh;
+  height: 40vh;
   overflow: scroll;
 }
 .ai-dialog {
