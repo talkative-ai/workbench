@@ -81,7 +81,8 @@
             <h2>{{ nextStepsToPublish }}</h2>
           </div>
         </div>
-        <div style="flex: 1; display: flex; height: 100%" v-if="!nextStepsToPublish">
+        <div style="flex: 1; display: flex; flex-direction: column; height: 100%" v-if="!nextStepsToPublish">
+          <h2>Demo project</h2>
           <ConvoBox />
         </div>
       </div>
