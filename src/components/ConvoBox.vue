@@ -31,7 +31,6 @@
     },
     watch: {
       '$store.state.demo.dialogs'() {
-        console.log('Updated', this.$refs.dialogs);
         this.$nextTick(() => {
           this.$refs.dialogs.scrollTop = this.$refs.dialogs.scrollHeight;
         });
