@@ -5,7 +5,9 @@
       <div class="vspacer" v-if="parentNode"></div>
       <div class="ball" v-if="parentNode"></div>
       <div class="cover-wrap">
-        <div class="cover opaque no-border">
+        <div
+          class="cover opaque no-border"
+          @click="$emit('click', { $event })">
           <h1>
             <slot></slot>
           </h1>
@@ -226,13 +228,13 @@
         <Dialogue
           dummy="true"
           v-if="showNewDialog"
-          @click.native="newConversation({ parentDialogID: dialogChain.slice(-1).pop() })"
+          @click="newConversation({ parentDialogID: dialogChain.slice(-1).pop() })"
           :parentNode="dialog.ID">
           <IconButton name="plus" flat="flat" />continue conversation</Dialogue>
         <Dialogue
           dummy="true"
           v-if="showNewDialog && !unknownHandlerDialogID"
-          @click.native="newConversation({ parentDialogID: dialogChain.slice(-1).pop(), unknownHandler: true })"
+          @click="newConversation({ parentDialogID: dialogChain.slice(-1).pop(), unknownHandler: true })"
           :parentNode="dialog.ID">
           <IconButton name="plus" flat="flat" />anything else</Dialogue>
         <Dialogue
@@ -254,13 +256,13 @@
         <div class="child-dialogs">
           <Dialogue
             dummy="true"
-            @click.native="newConversation({ parentDialogID: dialogChain.slice(-1).pop() })"
+            @click="newConversation({ parentDialogID: dialogChain.slice(-1).pop() })"
             :parentNode="dialog.ID">
             <IconButton name="plus" flat="flat" />continue conversation</Dialogue>
           <Dialogue
             dummy="true"
             v-if="!unknownHandlerDialogID && !hideSpecialDialogs"
-            @click.native="newConversation({ parentDialogID: dialogChain.slice(-1).pop(), unknownHandler: true })"
+            @click="newConversation({ parentDialogID: dialogChain.slice(-1).pop(), unknownHandler: true })"
             :parentNode="dialog.ID">
             <IconButton name="plus" flat="flat" />anything else</Dialogue>
         </div>
