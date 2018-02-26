@@ -34,9 +34,9 @@
             @click-child="clickDialog($event)" />
           <Dialogue
             dummy="true"
-            v-if="showNewDialog"
+            v-if="showNewDialog && !standardDialogBeingCreated"
             @click="topNewConversation()">
-            <IconButton name="plus" flat="flat"></IconButton>{{ dialogChain.length <= 1 ? 'new conversation' : 'continue conversation' }}</Dialogue>
+            <IconButton name="plus" flat="flat"></IconButton>{{ !dialogs[actorSelectedDialogID].parentDialogIDs.length ? 'new conversation' : 'continue conversation' }}</Dialogue>
           <Dialogue
             v-if="unknownHandlerDialogID"
             :dialog="dialogs[unknownHandlerDialogID]"
@@ -149,7 +149,10 @@ export default {
       lastViewedZone: 'lastViewedZone'
     }),
     showNewDialog() {
-      return !this.newDialog && !this.connectingFromDialogID && !this.disconnectingFromDialogID;
+      return !this.connectingFromDialogID && !this.disconnectingFromDialogID;
+    },
+    standardDialogBeingCreated() {
+      return this.newDialog && !this.newDialog.UnknownHandler && this.dialogChain[this.dialogChain.length - 1] !== this.newDialog.ID;
     },
     unknownHandlerDialogID() {
       let dialog = this.dialogAllSiblings.find(id => {
@@ -223,6 +226,7 @@ export default {
     },
     topNewConversation({ unknownHandler = false } = {}) {
       if (!this.showNewDialog) return;
+      this.$store.dispatch('dialogs/cancelEditDialog');
       if (this.dialogChain.length <= 1) {
         this.$store.dispatch('dialogs/startNewConversation', { unknownHandler });
       } else {

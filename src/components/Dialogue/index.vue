@@ -207,54 +207,53 @@
     </div>
     <template v-if="recurse">
       <ChildConnector
-        v-if="childDialogIDs && childDialogIDs.length"
         :width="`${calculateChildrenWidth()}px`"
         :height="`${childConnectorHeight}px`" />
-      <div class="child-dialogs" v-if="childDialogIDs && childDialogIDs.length">
-        <div v-for="(dialogID, idx) of childDialogIDs" :key="`dialog.${idHash}.${idx}`" v-if="dialogID !== unknownHandlerDialogID">
+      <template v-if="childDialogIDs && childDialogIDs.length">
+        <div class="child-dialogs">
+          <div v-for="(dialogID, idx) of childDialogIDs" :key="`dialog.${idHash}.${idx}`" v-if="dialogID !== unknownHandlerDialogID">
+            <Dialogue
+              :actor="actor"
+              :dialog="dialogs[dialogID]"
+              :parentNode="dialog.ID"
+              :recurse="false"
+              :filterChildren="filterChildren"
+              :filterDisconnectChildren="filterDisconnectChildren"
+              :hideTools="hideTools"
+              :hideSpecialDialogs="hideSpecialDialogs"
+              :parentIdHash="idHash"
+              @click="$emit('click-child', { $event: $event.$event || $event, dialogID, isChild: true })"
+              @click-child="$emit('click-child', { $event: $event.$event || $event, dialogID, isChild: true })" />
+          </div>
           <Dialogue
+            dummy="true"
+            v-if="showNewDialog && !standardDialogBeingCreated"
+            @click="newConversation({ parentDialogID: dialogChain.slice(-1).pop() })"
+            :parentNode="dialog.ID">
+            <IconButton name="plus" flat="flat" />continue conversation</Dialogue>
+          <Dialogue
+            dummy="true"
+            v-if="showNewDialog && !unknownHandlerDialogID"
+            @click="newConversation({ parentDialogID: dialogChain.slice(-1).pop(), unknownHandler: true })"
+            :parentNode="dialog.ID">
+            <IconButton name="plus" flat="flat" />anything else</Dialogue>
+          <Dialogue
+            v-if="unknownHandlerDialogID && (!disconnectingFromDialogID || dialogs[unknownHandlerDialogID].parentDialogIDs.length > 1)"
             :actor="actor"
-            :dialog="dialogs[dialogID]"
+            :dialog="dialogs[unknownHandlerDialogID]"
             :parentNode="dialog.ID"
             :recurse="false"
-            :filterChildren="filterChildren"
-            :filterDisconnectChildren="filterDisconnectChildren"
             :hideTools="hideTools"
             :hideSpecialDialogs="hideSpecialDialogs"
             :parentIdHash="idHash"
-            @click="$emit('click-child', { $event: $event.$event || $event, dialogID, isChild: true })"
-            @click-child="$emit('click-child', { $event: $event.$event || $event, dialogID, isChild: true })" />
+            @click="$emit('click-child', { $event: $event.$event || $event, dialogID: unknownHandlerDialogID, isChild: true })"
+            @click-child="$emit('click-child', { $event: $event.$event || $event, dialogID: unknownHandlerDialogID, isChild: true })" />
         </div>
-        <Dialogue
-          dummy="true"
-          v-if="showNewDialog"
-          @click="newConversation({ parentDialogID: dialogChain.slice(-1).pop() })"
-          :parentNode="dialog.ID">
-          <IconButton name="plus" flat="flat" />continue conversation</Dialogue>
-        <Dialogue
-          dummy="true"
-          v-if="showNewDialog && !unknownHandlerDialogID"
-          @click="newConversation({ parentDialogID: dialogChain.slice(-1).pop(), unknownHandler: true })"
-          :parentNode="dialog.ID">
-          <IconButton name="plus" flat="flat" />anything else</Dialogue>
-        <Dialogue
-          v-if="unknownHandlerDialogID && (!disconnectingFromDialogID || dialogs[unknownHandlerDialogID].parentDialogIDs.length > 1)"
-          :actor="actor"
-          :dialog="dialogs[unknownHandlerDialogID]"
-          :parentNode="dialog.ID"
-          :recurse="false"
-          :hideTools="hideTools"
-          :hideSpecialDialogs="hideSpecialDialogs"
-          :parentIdHash="idHash"
-          @click="$emit('click-child', { $event: $event.$event || $event, dialogID: unknownHandlerDialogID, isChild: true })"
-          @click-child="$emit('click-child', { $event: $event.$event || $event, dialogID: unknownHandlerDialogID, isChild: true })" />
-      </div>
+      </template>
       <template v-else-if="showNewDialog">
-        <ChildConnector
-          :width="`${calculateChildrenWidth(2)}px`"
-          :height="`${childConnectorHeight}px`" />
         <div class="child-dialogs">
           <Dialogue
+            v-if="!standardDialogBeingCreated"
             dummy="true"
             @click="newConversation({ parentDialogID: dialogChain.slice(-1).pop() })"
             :parentNode="dialog.ID">
@@ -335,6 +334,9 @@ export default {
       dialogEditingID: 'dialogEditingID',
       disconnectingFromDialogID: 'disconnectingFromDialogID',
       disconnectingToDialogID: 'disconnectingToDialogID',
+      actorSelectedDialogID(state) {
+        return state.actorSelectedDialogID[this.$route.params.id];
+      },
       dialogEditingCopy(state) {
         return state.dialogEditingCopy[this.dialog.ID];
       },
@@ -352,10 +354,16 @@ export default {
       dialogChain: 'currentDialogChain'
     }),
     showNewDialog() {
-      return !this.newDialog && !this.connectingFromDialogID && !this.hideTools && !this.disconnectingFromDialogID;
+      return !this.connectingFromDialogID && !this.hideTools && !this.disconnectingFromDialogID;
     },
     isEditing() {
       return this.dialogEditingID === this.dialog.ID;
+    },
+    standardDialogBeingCreated() {
+      return this.newDialog && !this.newDialog.UnknownHandler && this.dialogChain[this.dialogChain.length - 1] === this.newDialog.ID;
+    },
+    unknownHandlerBeingCreated() {
+      return this.newDialog && this.newDialog.UnknownHandler && this.dialogChain[this.dialogChain.length - 1] === this.newDialog.ID;
     },
     dialogAction() {
       let d = this.dialogEditingCopy || this.dialog;
@@ -387,7 +395,7 @@ export default {
       return this.dialog.childDialogIDs.filter(this.filterChildren);
     },
     unknownHandlerDialogID() {
-      let dialog = this.dialog.childDialogIDs.find(id => {
+      let dialog = this.dialogs[this.actorSelectedDialogID].childDialogIDs.find(id => {
         return this.dialogs[id].UnknownHandler;
       });
       return dialog;
@@ -398,26 +406,24 @@ export default {
   },
   methods: {
     beginConnect() {
+      this.$store.dispatch('dialogs/cancelEditDialog');
       this.$emit('click', { dialogID: this.dialog.ID });
       this.$store.dispatch('dialogs/beginConnectDialog', this.dialog.ID);
     },
     beginDisconnect() {
+      this.$store.dispatch('dialogs/cancelEditDialog');
       this.$emit('click', { dialogID: this.dialog.ID });
       this.$store.dispatch('dialogs/beginDisconnectDialog', this.dialog.ID);
     },
-    calculateChildrenWidth(childrenCount) {
-      let count = childrenCount || (this.childDialogIDs ? this.childDialogIDs.length : 0) || 0;
-      if (!childrenCount) {
-        if (this.showNewDialog) {
-          count += 1;
-        }
-        if (!this.unknownHandlerDialogID && !this.disconnectingFromDialogID) {
-          count += 1;
-        }
-      }
-      return (count - 1) * 400;
+    calculateChildrenWidth() {
+      let count = this.childDialogIDs ? this.childDialogIDs.length : 0;
+      if (this.showNewDialog) count += 1;
+      if (this.standardDialogBeingCreated) count -= 1;
+      if (this.unknownHandlerBeingCreated || this.unknownHandlerDialogID) count -= 1;
+      return count * 400;
     },
     beginEdit() {
+      this.$store.dispatch('dialogs/cancelEditDialog');
       this.$store.dispatch('dialogs/editDialog', this.dialog.ID);
     },
     stageDeleteDialog() {
@@ -488,6 +494,7 @@ export default {
     },
     newConversation({ parentDialogID, unknownHandler }) {
       if (!this.showNewDialog) return;
+      this.$store.dispatch('dialogs/cancelEditDialog');
       this.$store.dispatch('dialogs/startNewConversation', { parentDialogID, unknownHandler });
     },
     isConnectable() {
