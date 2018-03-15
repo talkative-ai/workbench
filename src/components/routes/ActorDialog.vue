@@ -36,7 +36,7 @@
             dummy="true"
             v-if="showNewDialog && !standardDialogBeingCreated"
             @click="topNewConversation()">
-            <IconButton name="plus" flat="flat"></IconButton>{{ !dialogs[actorSelectedDialogID].parentDialogIDs.length ? 'new conversation' : 'continue conversation' }}</Dialogue>
+            <IconButton name="plus" flat="flat"></IconButton>{{ !actorSelectedDialogID || !dialogs[actorSelectedDialogID].parentDialogIDs.length ? 'new conversation' : 'continue conversation' }}</Dialogue>
           <Dialogue
             v-if="unknownHandlerDialogID"
             :dialog="dialogs[unknownHandlerDialogID]"
