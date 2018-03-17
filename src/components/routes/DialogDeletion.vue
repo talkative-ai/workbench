@@ -9,7 +9,7 @@
         />
         <div class="space"></div>
       </div>
-      <div class="flex-column">
+      <div class="flex-column padded">
         <h1 class="left danger"><fa-icon name="exclamation-triangle"></fa-icon> Confirm Delete</h1>
         <h2 class="danger">
         All of these dialogs and conversations will be deleted. This action cannot be undone</h2>
@@ -32,19 +32,19 @@
             @click="clickDialog($event)"
             @click-child="clickDialog($event)" />
         </div>
+        <div class="action-buttons button-grid">
+          <w-button
+            class="Headline"
+            large="large"
+            @click="cancelDelete()">
+            Cancel</w-button>
+          <w-button
+            class="Headline danger"
+            large="large"
+            @click="confirmDeleteDialog()">
+            Confirm Delete</w-button>
+        </div>
       </div>
-    </div>
-    <div class="action-buttons button-grid">
-      <w-button
-        class="Headline"
-        large="large"
-        @click="cancelDelete()">
-        Cancel</w-button>
-      <w-button
-        class="Headline danger"
-        large="large"
-        @click="confirmDeleteDialog()">
-        Confirm Delete</w-button>
     </div>
   </div>
 </template>
@@ -182,5 +182,10 @@ hr {
 }
 .action-buttons {
   padding-top: 100pt;
+}
+
+.padded {
+  padding: 1rem;
+  margin-left: 342pt;
 }
 </style>

@@ -4,8 +4,15 @@
       <img src="./assets/images/talkative-logo-color.256.png" />
       <h1>Loading...</h1>
     </div>
-    <navbar />
-    <main id="route-pad" class="Block">
+    <navbar
+      v-if="!routeIsActorDialog"
+    />
+    <main
+      id="route-pad"
+      :class="{
+        Block: !routeIsActorDialog,
+        'absolute-fill': routeIsActorDialog,
+      }">
       <router-view></router-view>
     </main>
   </div>
@@ -31,7 +38,10 @@ export default {
   computed: {
     ...mapState('master', {
       isLoading: 'isLoading'
-    })
+    }),
+    routeIsActorDialog() {
+      return this.$route.name === 'ActorDialog' || this.$route.name === 'DialogDeletion';
+    }
   },
   methods: {
     generateAppClass(route) {
@@ -157,5 +167,14 @@ h2 {
   &.danger {
     color: $danger !important;
   }
+}
+.absolute-fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+
+.tall {
+  height: 100%;
 }
 </style>

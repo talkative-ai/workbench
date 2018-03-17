@@ -1,6 +1,6 @@
 <template>
-  <div ref="chain" class="chain">
-    <h1>Preview Conversation</h1>
+  <div ref="chain" class="tall chain">
+    <h1>Conversation Preview</h1>
     <hr>
     <template v-for="(dialogID, idx) of dialogChain">
       <Dialogue
@@ -88,14 +88,23 @@ export default {
 
 <style lang="scss" scoped>
 h1 {
-  text-align: center;
   color: var(--color-brand);
   &.left {
     text-align: left;
   }
 }
 .chain {
-  max-height: 85vh;
   overflow-y: scroll;
+  width: 332pt;
+  margin-right: 20pt;
+  -webkit-box-shadow: 0pt 0pt 5pt black;
+  box-shadow: 1pt 1pt 2pt rgba(0, 0, 0, 0.2);
+  padding: 16pt;
+  background-color: white;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 1000;
 }
 </style>

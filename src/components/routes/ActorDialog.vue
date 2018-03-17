@@ -1,17 +1,17 @@
 <template>
-  <div id="RouteActorDialog">
-    <div class="flex">
+  <div id="RouteActorDialog" class="absolute-fill">
+    <div class="flex absolute-fill">
       <div
         :class="{
           'flex-column': true,
-          'disabled': disconnectingFromDialogID
+          'disabled': disconnectingFromDialogID,
+          tall: true
         }">
         <DialogChain
           @select-dialog="clickChain($event)"
         />
-        <div class="space"></div>
       </div>
-      <div class="flex-column">
+      <div class="flex-column padded">
         <h1 class="left">Dialogues with {{ actor.Title }}</h1>
         <h2 v-if="disconnectingFromDialogID" class="left danger">Disconnect dialog</h2>
         <hr>
@@ -56,42 +56,42 @@
           @click="topNewConversation({ unknownHandler: true })">
           <IconButton name="plus" flat="flat"></IconButton>anything else</Dialogue>
         </div>
+      <div class="action-buttons button-grid">
+        <template v-if="disconnectingFromDialogID">
+          <w-button
+            class="Headline"
+            large="large"
+            @click="cancelDisconnectDialog()">
+            Cancel</w-button>
+          <w-button
+            v-if="disconnectingToDialogID"
+            class="Headline danger"
+            large="large"
+            @click="confirmDisconnectDialog()">
+            Confirm disconnect</w-button>
+        </template>
+        <template v-else-if="connectingFromDialogID">
+          <w-button
+            class="Headline"
+            large="large"
+            @click="cancelConnect()">
+            Cancel</w-button>
+          <w-button
+            v-if="connectingToDialogID"
+            class="Headline"
+            large="large"
+            @click="saveConnect()">
+            Save connect</w-button>
+        </template>
+        <template v-else>
+          <w-button
+            class="Headline"
+            large="large"
+            @click="exitBack()">
+            <span class="u-arrowWest"></span>Return</w-button>
+        </template>
       </div>
-    </div>
-    <div class="action-buttons button-grid">
-      <template v-if="disconnectingFromDialogID">
-        <w-button
-          class="Headline"
-          large="large"
-          @click="cancelDisconnectDialog()">
-          Cancel</w-button>
-        <w-button
-          v-if="disconnectingToDialogID"
-          class="Headline danger"
-          large="large"
-          @click="confirmDisconnectDialog()">
-          Confirm disconnect</w-button>
-      </template>
-      <template v-else-if="connectingFromDialogID">
-        <w-button
-          class="Headline"
-          large="large"
-          @click="cancelConnect()">
-          Cancel</w-button>
-        <w-button
-          v-if="connectingToDialogID"
-          class="Headline"
-          large="large"
-          @click="saveConnect()">
-          Save connect</w-button>
-      </template>
-      <template v-else>
-        <w-button
-          class="Headline"
-          large="large"
-          @click="exitBack()">
-          <span class="u-arrowWest"></span>Return</w-button>
-      </template>
+      </div>
     </div>
   </div>
 </template>
@@ -271,15 +271,6 @@ h1 {
     text-align: left;
   }
 }
-.chain {
-  width: 332pt;
-  margin-right: 20pt;
-  -webkit-box-shadow: 0pt 0pt 5pt black;
-  box-shadow: 1pt 1pt 2pt rgba(0, 0, 0, 0.2);
-  padding: 16pt;
-  background-color: white;
-  margin-bottom: 30pt;
-}
 .dialogs {
   width: 100%;
   display: flex;
@@ -300,5 +291,9 @@ hr {
   * {
     box-shadow: none;
   }
+}
+.padded {
+  padding: 1rem;
+  margin-left: 343pt;
 }
 </style>
