@@ -78,7 +78,7 @@
                   shrinky="true"
                   name="link"
                   label="connect"
-                  @click="beginConnect()" />
+                  @click="beginConnect($event)" />
                 <div class="hspacer" />
                 <IconButton
                   v-if="disconnectChildDialogIDs().length"
@@ -86,13 +86,13 @@
                   class="danger"
                   name="chain-broken"
                   label="disconnect"
-                  @click="beginDisconnect()" />
+                  @click="beginDisconnect($event)" />
                 <IconButton
                   shrinky="true"
                   class="danger"
                   name="trash"
                   label="delete"
-                  @click="stageDeleteDialog()" />
+                  @click="stageDeleteDialog($event)" />
               </div>
             </div>
           </template>
@@ -405,14 +405,14 @@ export default {
     }
   },
   methods: {
-    beginConnect() {
+    beginConnect($event) {
       this.$store.dispatch('dialogs/cancelEditDialog');
-      this.$emit('click', { dialogID: this.dialog.ID });
+      this.$emit('click', { $event, dialogID: this.dialog.ID });
       this.$store.dispatch('dialogs/beginConnectDialog', this.dialog.ID);
     },
-    beginDisconnect() {
+    beginDisconnect($event) {
       this.$store.dispatch('dialogs/cancelEditDialog');
-      this.$emit('click', { dialogID: this.dialog.ID });
+      this.$emit('click', { $event, dialogID: this.dialog.ID });
       this.$store.dispatch('dialogs/beginDisconnectDialog', this.dialog.ID);
     },
     calculateChildrenWidth() {
@@ -426,8 +426,8 @@ export default {
       this.$store.dispatch('dialogs/cancelEditDialog');
       this.$store.dispatch('dialogs/editDialog', this.dialog.ID);
     },
-    stageDeleteDialog() {
-      this.$emit('click', { dialogID: this.dialog.ID });
+    stageDeleteDialog($event) {
+      this.$emit('click', { $event, dialogID: this.dialog.ID });
       this.$store.dispatch('dialogs/stageDeletion', this.dialog.ID);
       this.$router.push({ name: 'DialogDeletion', params: this.$route.params });
     },

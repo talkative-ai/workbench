@@ -250,6 +250,7 @@ export default {
     },
     filterDisconnectChildren(id) {
       let dialog = this.dialogs[id];
+      if (!dialog) return false;
       return dialog.parentDialogIDs.length > 1;
     },
     exitBack() {
