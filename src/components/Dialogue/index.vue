@@ -15,7 +15,9 @@
       </div>
     </div>
   </div>
-
+  <div v-else-if="!dialog">
+    <!-- Empty Dialog -->
+  </div>
   <div v-else class="Dialogue">
     <div
       class="wrap"
@@ -301,6 +303,7 @@ export default {
     };
   },
   activated() {
+    if (!this.$refs.dialog) return;
     const rect = this.$refs.dialog.getBoundingClientRect();
     if (this.height !== rect.height) {
       this.height = rect.height;
@@ -308,6 +311,7 @@ export default {
     }
   },
   mounted() {
+    if (!this.$refs.dialog) return;
     const rect = this.$refs.dialog.getBoundingClientRect();
     if (this.height !== rect.height) {
       this.height = rect.height;
@@ -396,6 +400,7 @@ export default {
     },
     unknownHandlerDialogID() {
       let dialog = this.dialogs[this.actorSelectedDialogID].childDialogIDs.find(id => {
+        if (!this.dialogs[id]) return false;
         return this.dialogs[id].UnknownHandler;
       });
       return dialog;

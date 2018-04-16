@@ -156,6 +156,7 @@ export default {
     },
     unknownHandlerDialogID() {
       let dialog = this.dialogAllSiblings.find(id => {
+        if (!this.dialogs[id]) return false;
         return this.dialogs[id].UnknownHandler;
       });
       return dialog;
