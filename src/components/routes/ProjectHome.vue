@@ -82,7 +82,7 @@
           </div>
         </div>
         <div style="flex: 1; display: flex; flex-direction: column; height: 100%" v-if="!nextStepsToPublish">
-          <h2>Demo project</h2>
+          <h2>Preview / Demo</h2>
           <ConvoBox />
         </div>
       </div>

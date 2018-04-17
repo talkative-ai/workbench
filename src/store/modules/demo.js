@@ -6,6 +6,7 @@ import API from '@/api';
 const state = {
   initialized: false,
   state: null,
+  error: false,
   initialState: null,
   dialogs: []
 };
@@ -30,6 +31,7 @@ const actions = {
       return API.DemoMessage('', true);
     }).then(result => {
       commit('initialized', true);
+      commit('error', false);
       commit('state', result.State);
       commit('initialState', result.State);
       commit('pushDialog', {
@@ -37,6 +39,8 @@ const actions = {
         key: state.dialogs.length,
         text: result.Text
       });
+    }).catch(() => {
+      commit('error', true);
     });
   },
 
@@ -93,6 +97,10 @@ const mutations = {
 
   initialState(state, value) {
     Vue.set(state, 'initialState', value);
+  },
+
+  error(state, value) {
+    Vue.set(state, 'error', value);
   }
 };
 

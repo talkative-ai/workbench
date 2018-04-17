@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <div ref="dialogs" class="dialogs-wrap">
-      <template v-for="dialog of $store.state.demo.dialogs">
+      <template v-if="initialized" v-for="dialog of $store.state.demo.dialogs">
         <div v-if="dialog.type == 'user'" class="user-dialog dialog" :key="dialog.key">
           <div>You</div>
           {{ dialog.text }}
@@ -11,9 +11,21 @@
           {{ dialog.text }}
         </div>
       </template>
+      <template v-if="!initialized && !error">
+        <div class="ai-dialog dialog">
+          <div>Loading...</div>
+          Please wait.
+        </div>
+      </template>
+      <template v-if="error">
+        <div class="ai-dialog dialog">
+          <div>Error</div>
+          There was a problem loading the preview.
+        </div>
+      </template>
     </div>
     <div class="input-box">
-      <input @keyup.enter="sendMessage()" v-model="message" placeholder="Enter your message here" type="text" />
+      <input v-if="!error && initialized" @keyup.enter="sendMessage()" v-model="message" placeholder="Enter your message here" type="text" />
       <div class="space" />
       <div class="buttons">
         <IconButton
@@ -28,12 +40,19 @@
   </div>
 </template>
 <script>
+  import { mapState } from 'vuex';
   export default {
     name: 'ConvoBox',
     data() {
       return {
         message: ''
       };
+    },
+    computed: {
+      ...mapState('demo', {
+        initialized: 'initialized',
+        error: 'error'
+      })
     },
     methods: {
       sendMessage() {
