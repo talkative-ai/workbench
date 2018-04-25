@@ -174,7 +174,9 @@ function talkativeFetch(method, path, payload, server = API_TYPES.SHIVA) {
       }
       return result;
     }).then(result => {
-      store.dispatch('master/token', result.headers.get('x-token'), { root: true });
+      if (result.headers.get('x-token')) {
+        store.dispatch('master/token', result.headers.get('x-token'), { root: true });
+      }
       resolve(result);
     }).catch(err => {
       reject(err);
